@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2009 Hiram Chirino
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+     http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.hiramchirino.resty-gwt</groupId>
+  <artifactId>resty-gwt</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <name>RestyGWT</name>
+
+  <properties>
+    <gwt-version>1.7.1</gwt-version>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>java.net.m2</id>
+      <url>http://download.java.net/maven/2</url>
+    </repository>
+    <repository>
+      <id>java.net.m1</id>
+      <url>http://download.java.net/maven/1</url>
+      <layout>legacy</layout>
+    </repository>
+  </repositories>
+  
+  <distributionManagement>
+    <repository>
+      <id>hiramchirino.com-release</id>
+      <name>hiramchirino.com-release</name>
+      <url>scpexe://hiramchirino.com/home3/chirinow/public_html/hiramchirino.com/repo/release</url>
+      <uniqueVersion>false</uniqueVersion>
+    </repository>
+    <snapshotRepository>
+      <id>hiramchirino.com-snapshot</id>
+      <name>hiramchirino.com-snapshot</name>
+      <url>scpexe://hiramchirino.com/home3/chirinow/public_html/hiramchirino.com/repo/snapshot</url>
+      <uniqueVersion>false</uniqueVersion>
+    </snapshotRepository>
+  </distributionManagement>  
+  
+  <dependencies>
+
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>${gwt-version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-dev</artifactId>
+      <version>${gwt-version}</version>
+      <classifier>windows</classifier>
+      <!-- <classifier>${gwt-platform}</classifier> -->
+      <scope>provided</scope>
+    </dependency>        
+
+    <dependency>
+      <groupId>com.sun.grizzly</groupId>
+      <artifactId>grizzly-servlet-webserver</artifactId>
+	    <version>1.9.18</version>
+	    <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-server</artifactId>
+      <version>1.1.2-ea</version>
+	    <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-json</artifactId>
+      <version>1.1.2-ea</version>
+	    <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>jsr311-api</artifactId>
+      <version>1.1</version>
+      <scope>provided</scope>      
+    </dependency>
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>jsr250-api</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>      
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.5</version>
+      <scope>provided</scope>      
+    </dependency>
+    
+    <dependency>
+      <groupId>rome</groupId>
+      <artifactId>rome</artifactId>
+      <version>0.9</version>
+	    <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jettison</groupId>
+      <artifactId>jettison</artifactId>
+      <version>1.0</version>
+	    <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+        <version>4.1</version>
+ 	    <scope>test</scope>
+    </dependency>
+  </dependencies>
+  
+  <description>resty-gwt is a GWT generator for REST services and JSON encoded data transfer objects</description>
+  <inceptionYear>2009</inceptionYear>
+  
+  <developers>
+  	<developer>
+  		<id>chirino</id>
+  		<name>Hiram Chirino</name>
+  		<email>hiram@hiramchirino.com</email>
+  		<url>http://hiramchirino.com</url>
+  		<timezone>GMT-5</timezone>
+  	</developer>
+  </developers>
+  
+  <scm>
+    <connection>scm:git:git://github.com/chirino/resty-gwt.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com:chirino/resty-gwt.git</developerConnection>
+    <url>http://github.com/chirino/resty-gwt</url>
+  </scm>
+    
+  <organization>
+  	<url>http://hiramchirino.com</url>
+  </organization>
+
+  <build>
+    <plugins>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+            
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    
+  </build>
+  
+  <profiles>
+    <!-- <profile>
+      <id>gwt-dev-windows</id>
+      <properties>
+        <gwt-platform>windows</gwt-platform>
+      </properties>
+      <activation>
+        <os><family>windows</family></os>
+      </activation>
+    </profile>
+    <profile>
+      <id>gwt-dev-mac</id>
+      <properties>
+        <gwt-platform>mac</gwt-platform>
+      </properties>
+      <activation>
+        <os><family>mac</family></os>
+      </activation>
+    </profile>
+    <profile>
+      <id>gwt-dev-linux</id>
+      <properties>
+        <gwt-platform>linux</gwt-platform>
+      </properties>
+      <activation>
+        <os><name>linux</name></os>
+      </activation>
+    </profile> -->
+
+    <profile>
+      <id>jdk-1.5</id>
+      <activation><jdk>1.5</jdk></activation>
+      <dependencies>
+
+        <dependency>
+          <groupId>javax.xml.bind</groupId>
+          <artifactId>jaxb-api</artifactId>
+          <version>2.1</version>
+          <exclusions>
+            <exclusion>
+              <groupId>javax.xml</groupId>
+              <artifactId>jsr173</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+        <dependency>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-impl</artifactId>
+          <version>2.1.10</version>
+          <exclusions>
+            <exclusion>
+              <groupId>javax.jws</groupId>
+              <artifactId>jsr181-api</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+        <dependency>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-xjc</artifactId>
+          <version>2.1.10.1</version>
+        </dependency>
+
+        <dependency>
+          <groupId>stax</groupId>
+          <artifactId>stax-api</artifactId>
+          <version>1.0.1</version>
+        </dependency>
+        <dependency>
+          <groupId>stax</groupId>
+          <artifactId>stax</artifactId>
+          <version>1.2.0</version>
+        </dependency>
+
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>ibmjdk</id>
+      <activation>
+        <file><exists>${java.home}/../lib/tools.jar</exists></file>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-antrun-plugin</artifactId>
+              <dependencies>
+                <dependency>
+                  <groupId>com.sun</groupId>
+                  <artifactId>tools</artifactId>
+                  <!--the real JDK version could be 1.5 or 1.6-->
+                  <version>1.5.0</version>
+                  <scope>system</scope>
+                  <optional>true</optional>
+                  <systemPath>${java.home}/../lib/tools.jar</systemPath>
+                </dependency>
+              </dependencies>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+    
+  </profiles>  
+</project>

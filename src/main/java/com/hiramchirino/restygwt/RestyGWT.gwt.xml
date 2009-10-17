@@ -1,0 +1,15 @@
+<module>
+
+  <inherits name="com.google.gwt.http.HTTP" />
+  <inherits name="com.google.gwt.json.JSON" />
+  <inherits name="com.google.gwt.xml.XML" />
+  <!-- 
+  <set-property name="gwt.suppressNonStaticFinalFieldWarnings" value="false" />
+   -->
+  <generate-with class="com.hiramchirino.restygwt.rebind.RestServiceGenerator">
+    <when-type-assignable class="com.hiramchirino.restygwt.client.RestService" />
+  </generate-with>
+  
+  <source path="client"/>
+
+</module>
