@@ -168,6 +168,6 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         return name;
     }
 
-    abstract protected ClassSourceFileComposerFactory createComposerFactory();
+    abstract protected ClassSourceFileComposerFactory createComposerFactory() throws UnableToCompleteException;
     abstract protected void generate() throws UnableToCompleteException;
 }
