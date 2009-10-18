@@ -6,3 +6,10 @@ target
 .project
 .settings
 .DS_Store/
+src/it/resty-gwt-example/.gwt-tmp/
+src/it/resty-gwt-example/bin/
+src/it/resty-gwt-example/tomcat/
+src/it/resty-gwt-example/war/WEB-INF/classes/
+src/it/resty-gwt-example/war/WEB-INF/lib/
+src/it/resty-gwt-example/war/ui/
+
