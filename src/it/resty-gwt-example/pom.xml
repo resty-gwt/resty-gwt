@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2009 Hiram Chirino
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+     http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.hiramchirino.resty-gwt</groupId>
+  <artifactId>resty-gwt-example</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <name>RestyGWT Example</name>
+  
+  <description>
+    RestyGWT Examples
+  </description>
+
+  <properties>
+    <gwt-version>1.7.1</gwt-version>
+  </properties>
+
+  <dependencies>
+  
+    <dependency>
+      <groupId>com.hiramchirino.resty-gwt</groupId>
+      <artifactId>resty-gwt</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>jsr311-api</artifactId>
+      <version>1.1</version>
+      <scope>provided</scope>      
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>${gwt-version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-asl</artifactId>
+      <version>1.2.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+ 	    <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <repositories>
+    <repository>
+      <id>hiramchirino.com-release</id>
+      <url>http://hiramchirino.com/repo/release</url>
+      <releases><enabled>true</enabled></releases>
+      <snapshots><enabled>false</enabled></snapshots>
+    </repository>
+    <repository>
+      <id>java.net.m2</id>
+      <url>http://download.java.net/maven/2</url>
+    </repository>
+    <repository>
+      <id>java.net.m1</id>
+      <url>http://download.java.net/maven/1</url>
+      <layout>legacy</layout>
+    </repository>
+  </repositories>
+
+  <build>
+    <outputDirectory>${basedir}/war/WEB-INF/classes</outputDirectory>
+    <plugins>
+    
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.0.2</version>
+        <configuration>
+          <warSourceDirectory>war</warSourceDirectory>
+        </configuration>
+      </plugin>      
+      
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <logLevel>INFO</logLevel>
+          <style>DETAILED</style>
+          <treeLogger>true</treeLogger>
+          <extraJvmArgs>-Xmx512m</extraJvmArgs>
+          <runTarget>ui/ui.html</runTarget>
+        </configuration>
+      </plugin>
+      
+    </plugins>
+  </build>
+  
+  <profiles>
+    
+    <!-- To work around the gwt-dev-mac 1.7.1 not being properly deployed to the maven repo,
+         install GWT 1.7.1 and point your GWT_HOME env variable to it -->
+    <profile>
+      <id>use-gwt-home</id>
+      <activation>
+        <property><name>env.GWT_HOME</name></property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>gwt-maven-plugin</artifactId>
+            <configuration>
+              <gwtHome>${env.GWT_HOME}</gwtHome>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile> 
+        
+    <!-- Macs need the -XstartOnFirstThread option -->
+    <profile>
+      <id>mac</id>
+      <activation>
+        <os><family>mac</family></os>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>gwt-maven-plugin</artifactId>
+            <configuration>
+              <extraJvmArgs>-Xmx512m -XstartOnFirstThread</extraJvmArgs>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>    
+  </profiles>  
+  
+</project>

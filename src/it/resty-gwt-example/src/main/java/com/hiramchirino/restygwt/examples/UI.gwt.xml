@@ -1,0 +1,10 @@
+<module rename-to='ui'>
+
+  
+  <inherits name='com.google.gwt.user.User' />
+  <inherits name="com.hiramchirino.restygwt.RestyGWT" />
+
+  <entry-point class='com.hiramchirino.restygwt.examples.client.UI'/>
+  <stylesheet src='ui.css' />
+
+</module>
