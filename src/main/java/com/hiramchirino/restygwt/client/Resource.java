@@ -17,7 +17,6 @@ package com.hiramchirino.restygwt.client;
 
 import java.util.Map;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
 
 public class Resource {
@@ -49,13 +48,6 @@ public class Resource {
         this.uri = uri; 
         this.query = query;
     }
-	
-	@SuppressWarnings("unchecked")
-    public <T extends RestService> T bind(Class<T> service) {
-	    Object rc = GWT.create(service);
-	    ((RestServiceProxy)rc).setResource(this);
-	    return (T)rc;
-	}
 	
 	public Method head() {
 		return new Method(this, "HEAD").headers(headers);

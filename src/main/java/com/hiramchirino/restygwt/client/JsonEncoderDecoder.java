@@ -26,6 +26,7 @@ import java.util.Map.Entry;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
+import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -58,7 +59,7 @@ abstract public class JsonEncoderDecoder<T> {
     public static final JsonEncoderDecoder<Boolean> BOOLEAN = new JsonEncoderDecoder<Boolean>() {
         @Override
         public Boolean decode(JSONValue value) throws DecodingException {
-            if( value == null ) {
+            if( value == null || value.isNull()!=null ) {
                 return null;
             }
             JSONBoolean bool = value.isBoolean();
@@ -79,7 +80,7 @@ abstract public class JsonEncoderDecoder<T> {
     public static final JsonEncoderDecoder<Character> CHAR = new JsonEncoderDecoder<Character>() {
         @Override
         public Character decode(JSONValue value) throws DecodingException {
-            if( value == null ) {
+            if( value == null || value.isNull()!=null ) {
                 return null;
             }
             return (char)toDouble(value);
@@ -96,7 +97,7 @@ abstract public class JsonEncoderDecoder<T> {
     public static final JsonEncoderDecoder<Short> SHORT = new JsonEncoderDecoder<Short>() {
         @Override
         public Short decode(JSONValue value) throws DecodingException {
-            if( value == null ) {
+            if( value == null || value.isNull()!=null ) {
                 return null;
             }
             return (short)toDouble(value);
@@ -113,7 +114,7 @@ abstract public class JsonEncoderDecoder<T> {
     public static final JsonEncoderDecoder<Integer> INT = new JsonEncoderDecoder<Integer>() {
         @Override
         public Integer decode(JSONValue value) throws DecodingException {
-            if( value == null ) {
+            if( value == null || value.isNull()!=null ) {
                 return null;
             }
             return (int)toDouble(value);
@@ -130,7 +131,7 @@ abstract public class JsonEncoderDecoder<T> {
     public static final JsonEncoderDecoder<Long> LONG = new JsonEncoderDecoder<Long>() {
         @Override
         public Long decode(JSONValue value) throws DecodingException {
-            if( value == null ) {
+            if( value == null || value.isNull()!=null ) {
                 return null;
             }
             return (long)toDouble(value);
@@ -147,7 +148,7 @@ abstract public class JsonEncoderDecoder<T> {
     public static final JsonEncoderDecoder<Float> FLOAT = new JsonEncoderDecoder<Float>() {
         @Override
         public Float decode(JSONValue value) throws DecodingException {
-            if( value == null ) {
+            if( value == null || value.isNull()!=null ) {
                 return null;
             }
             return (float)toDouble(value);
@@ -164,7 +165,7 @@ abstract public class JsonEncoderDecoder<T> {
     public static final JsonEncoderDecoder<Double> DOUBLE = new JsonEncoderDecoder<Double>() {
         @Override
         public Double decode(JSONValue value) throws DecodingException {
-            if( value == null ) {
+            if( value == null || value.isNull()!=null ) {
                 return null;
             }
             return toDouble(value);
@@ -181,7 +182,7 @@ abstract public class JsonEncoderDecoder<T> {
     public static final JsonEncoderDecoder<String> STRING = new JsonEncoderDecoder<String>() {
         @Override
         public String decode(JSONValue value) throws DecodingException {
-            if( value == null ) {
+            if( value == null || value.isNull()!=null ) {
                 return null;
             }
             JSONString str = value.isString();
@@ -193,7 +194,7 @@ abstract public class JsonEncoderDecoder<T> {
         @Override
         public JSONValue encode(String value) throws EncodingException {
             if( value==null ) {
-                return null;
+                return JSONNull.getInstance();
             }
             return new JSONString(value);
         }
@@ -202,7 +203,7 @@ abstract public class JsonEncoderDecoder<T> {
     public static final JsonEncoderDecoder<Document> DOCUMENT = new JsonEncoderDecoder<Document>() {
         @Override
         public Document decode(JSONValue value) throws DecodingException {
-            if( value == null ) {
+            if( value == null || value.isNull()!=null ) {
                 return null;
             }
             JSONString str = value.isString();
@@ -214,7 +215,7 @@ abstract public class JsonEncoderDecoder<T> {
         @Override
         public JSONValue encode(Document value) throws EncodingException {
             if( value==null ) {
-                return null;
+                return JSONNull.getInstance();
             }
             return new JSONString(value.toString());
         }
@@ -251,7 +252,7 @@ abstract public class JsonEncoderDecoder<T> {
     }
         
     static protected <Type> List<Type> toList(JSONValue value, JsonEncoderDecoder<Type> encoder) {
-        if( value == null ) {
+        if( value == null || value.isNull()!=null ) {
             return null;
         }
         JSONArray array = value.isArray();
@@ -268,7 +269,7 @@ abstract public class JsonEncoderDecoder<T> {
     }
     
     static protected <Type> Set<Type> toSet(JSONValue value, JsonEncoderDecoder<Type> encoder) {
-        if( value == null ) {
+        if( value == null || value.isNull()!=null ) {
             return null;
         }
         JSONArray array = value.isArray();
@@ -285,7 +286,7 @@ abstract public class JsonEncoderDecoder<T> {
     }
 
     static protected <Type> Map<String,Type> toMap(JSONValue value, JsonEncoderDecoder<Type> encoder) {
-        if( value == null ) {
+        if( value == null || value.isNull()!=null ) {
             return null;
         }
         JSONObject object = value.isObject();
@@ -302,7 +303,7 @@ abstract public class JsonEncoderDecoder<T> {
     
     static protected <Type> JSONValue toJSON(Map<String, Type> value, JsonEncoderDecoder<Type> encoder) {
         if( value == null ) {
-            return null;
+            return JSONNull.getInstance();
         }
         JSONObject rc = new JSONObject();
         for (Entry<String, Type> t : value.entrySet()) {
@@ -312,7 +313,7 @@ abstract public class JsonEncoderDecoder<T> {
     }
     static protected <Type> JSONValue toJSON(Collection<Type> value, JsonEncoderDecoder<Type> encoder) {
         if( value == null ) {
-            return null;
+            return JSONNull.getInstance();
         }
         JSONArray rc = new JSONArray();
         int i=0;
