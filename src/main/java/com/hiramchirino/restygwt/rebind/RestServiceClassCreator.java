@@ -55,6 +55,10 @@ import com.hiramchirino.restygwt.client.RestServiceProxy;
 import com.hiramchirino.restygwt.client.TextCallback;
 import com.hiramchirino.restygwt.client.XmlCallback;
 
+/**
+ * 
+ * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
+ */
 public class RestServiceClassCreator extends BaseSourceCreator {
 
     private static final String REST_SERVICE_PROXY_SUFFIX = "_Generated_RestServiceProxy_";

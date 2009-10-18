@@ -19,6 +19,10 @@ import java.util.Map;
 
 import com.google.gwt.http.client.URL;
 
+/**
+ * 
+ * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
+ */
 public class Resource {
 	public static final String CONTENT_TYPE_TEXT = "plain/text";
 	public static final String CONTENT_TYPE_JSON = "application/json";

@@ -17,5 +17,9 @@ package com.hiramchirino.restygwt.client;
 
 import com.google.gwt.json.client.JSONValue;
 
+/**
+ * 
+ * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
+ */
 public interface JsonCallback extends MethodCallback<JSONValue> {
 }

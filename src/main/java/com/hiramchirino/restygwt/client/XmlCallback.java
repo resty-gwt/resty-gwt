@@ -17,5 +17,9 @@ package com.hiramchirino.restygwt.client;
 
 import com.google.gwt.xml.client.Document;
 
+/**
+ * 
+ * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
+ */
 public interface XmlCallback extends MethodCallback<Document> {
 }

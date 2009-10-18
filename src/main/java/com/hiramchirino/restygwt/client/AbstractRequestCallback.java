@@ -19,6 +19,10 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 
+/**
+ * 
+ * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
+ */
 public abstract class AbstractRequestCallback<T> implements RequestCallback {
     private final Method method;
     protected MethodCallback<T> callback;

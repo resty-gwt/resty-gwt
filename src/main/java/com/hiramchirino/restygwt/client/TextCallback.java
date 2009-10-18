@@ -15,5 +15,9 @@
  */
 package com.hiramchirino.restygwt.client;
 
+/**
+ * 
+ * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
+ */
 public interface TextCallback extends MethodCallback<String> {
 }

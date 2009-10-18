@@ -29,7 +29,7 @@ import com.google.gwt.user.rebind.SourceWriter;
 /**
  * provides additional helper methods for generating source..
  * 
- * @author chirino
+ * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public abstract class BaseSourceCreator extends AbstractSourceCreator {
     

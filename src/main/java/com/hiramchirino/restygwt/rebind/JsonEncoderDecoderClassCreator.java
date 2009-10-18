@@ -33,12 +33,16 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.xml.client.Document;
-import com.hiramchirino.restygwt.client.JsonEncoderDecoder;
+import com.hiramchirino.restygwt.client.AbstractJsonEncoderDecoder;
 
+/**
+ * 
+ * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
+ */
 public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private static final String JSON_ENCODER_SUFFIX = "_Generated_JsonEncoderDecoder_";
 
-    private static final String JSON_ENCODER_DECODER_CLASS = JsonEncoderDecoder.class.getName();
+    private static final String JSON_ENCODER_DECODER_CLASS = AbstractJsonEncoderDecoder.class.getName();
     private static final String JSON_VALUE_CLASS = JSONValue.class.getName();
     private static final String JSON_OBJECT_CLASS = JSONObject.class.getName();
 

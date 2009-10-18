@@ -15,6 +15,10 @@
  */
 package com.hiramchirino.restygwt.client;
 
+/**
+ * 
+ * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
+ */
 public class FailedStatusCodeException extends Exception {
 
 	private static final long serialVersionUID = -1699349575737765192L;

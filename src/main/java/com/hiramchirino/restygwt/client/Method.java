@@ -29,6 +29,10 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
 
+/**
+ * 
+ * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
+ */
 public class Method {
 
     /**
