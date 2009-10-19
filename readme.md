@@ -64,6 +64,16 @@ The JSON encoding style is compatible with the default [Jackson][2] Data Binding
       ]
     }
 
+A GWT client creates an instance of the REST service and associate it with a HTTP
+resource URL as follows:
+
+    Resource resource = new Resource( GWT.getModuleBaseURL() + "pizza-service");
+
+    PizzaService service = GWT.create(PizzaService.class);
+    ((RestServiceProxy)service).setResource(resource);
+
+    service.order(order, callback);
+    
 
 REST API
 --------
