@@ -44,7 +44,7 @@ public class OrderConfirmation {
         if( GWT.isClient() )  {
             // Shows how to access the code generated  json encoder/decoder.  
             // Only works in client code, won't work on the server side. 
-            JsonEncoderDecoder<OrderConfirmation> jed = GWT.create(OrderConfirmationJED.class);
+            OrderConfirmationJED jed = GWT.create(OrderConfirmationJED.class);
             return jed.encode(this).toString();
         }
         return super.toString();

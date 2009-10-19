@@ -38,9 +38,10 @@ public class ExtendedJsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     protected ClassSourceFileComposerFactory createComposerFactory() throws UnableToCompleteException {
         ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
-        JClassType encodedType = getEncodedType(logger, context, source);
+        JClassType encodedType = getEncodedType(logger, context, source);        
         JsonEncoderDecoderClassCreator generator = new JsonEncoderDecoderClassCreator(logger, context, encodedType);
         composerFactory.setSuperclass(generator.create());
+        composerFactory.addImplementedInterface(source.getQualifiedSourceName());
         return composerFactory;
     }
     
