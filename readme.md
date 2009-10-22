@@ -6,12 +6,20 @@ Description
 
 [RestyGWT][1] is a GWT generator for REST services and JSON encoded data transfer objects.
 
+Project Resources
+-----------------
+
+* Source Code: [http://github.com/chirino/resty-gwt](http://github.com/chirino/resty-gwt)
+* Discussions: [http://groups.google.com/group/restygwt](http://groups.google.com/group/restygwt)
+* Issue Tracker: [http://github.com/chirino/resty-gwt/issues](http://github.com/chirino/resty-gwt/issues)
+
 Features
 --------
 
 * Generates Async Restful JSON based service proxies
 * Java Object to JSON encoding/decoding
 * Easy to use REST API
+
 
 REST Services
 -------------
