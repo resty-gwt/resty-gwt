@@ -148,17 +148,22 @@ if your interested in things like the headers set on the response.
 Using as a Maven Dependency
 ---------------------------
 
-Just the following dependency to your pom.xml
+Just add the following dependency to your pom.xml
 
-    <dependency>
-      <groupId>com.hiramchirino.resty-gwt</groupId>
-      <artifactId>resty-gwt</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
+    <dependencies>
+    ...
+      <dependency>
+        <groupId>com.hiramchirino.resty-gwt</groupId>
+        <artifactId>resty-gwt</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+    ...
+    </dependencies>
     
 And also the following repository:
   
     <repositories>
+    ...
       <repository>
         <id>hiramchirino.com-snapshot</id>
         <name>Hiram Chirino's Snapshot Repository</name>
@@ -170,6 +175,7 @@ And also the following repository:
           <enabled>false</enabled>
         </releases>
       </repository>
+    ...
     </repositories>
 
 [1]: http://github.com/chirino/resty-gwt "resty-gwt"
