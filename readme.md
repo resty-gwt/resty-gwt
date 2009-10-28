@@ -145,6 +145,32 @@ The response to the HTTP request is supplied to the callback passed in the `send
 Once the callback is invoked, the `method.getRespose()` method to get the GWT `Response`
 if your interested in things like the headers set on the response.
 
+Using as a Maven Dependency
+---------------------------
+
+Just the following dependency to your pom.xml
+
+    <dependency>
+      <groupId>com.hiramchirino.resty-gwt</groupId>
+      <artifactId>resty-gwt</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    
+And also the following repository:
+  
+    <repositories>
+      <repository>
+        <id>hiramchirino.com-snapshot</id>
+        <name>Hiram Chirino's Snapshot Repository</name>
+        <url>http://hiramchirino.com/repo/snapshot</url>
+        <snapshots>
+          <enabled>true</enabled>
+        </snapshots>
+        <releases>
+          <enabled>false</enabled>
+        </releases>
+      </repository>
+    </repositories>
 
 [1]: http://github.com/chirino/resty-gwt "resty-gwt"
 [2]: http://wiki.fasterxml.com/JacksonHome "Jackson JSON Processor"
