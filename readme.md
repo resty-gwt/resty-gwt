@@ -177,6 +177,23 @@ And also the following repository:
       </repository>
     ...
     </repositories>
+    
+Building from Source
+--------------------
+    
+1. Download and install [Maven 2.10][3].  Set the `M2_HOME` environment variable to the installation directory.  Add the maven bin directory to your `PATH` environment variable and make sure your `JAVA_HOME` environment variable is set your your JDK install directory.
+2. Download and install [GWT 1.7.1][4]. Set the `GWT_HOME` environment variable  to the installation directory.
+3. Change to the resty-gwt source directory and run:
+
+        $ mvn install
+    
+The above command will produce a `target/resty-gwt-*.jar` file.
+
+To build and run the integration tests, use:    
+
+    $ mvn install -P run-its
 
 [1]: http://github.com/chirino/resty-gwt "resty-gwt"
 [2]: http://wiki.fasterxml.com/JacksonHome "Jackson JSON Processor"
+[3]: http://maven.apache.org/download.html#Maven_2.1.0 "Maven Download"
+[4]: http://code.google.com/webtoolkit/download.html "GWT Download"
