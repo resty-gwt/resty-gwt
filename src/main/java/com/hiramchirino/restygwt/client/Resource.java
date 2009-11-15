@@ -32,7 +32,7 @@ public class Resource {
 	
 	public static final String HEADER_ACCEPT = "Accept";
 	public static final String HEADER_CONTENT_TYPE = "Content-Type";
-	
+		
 	String uri;
 	String query;
 	

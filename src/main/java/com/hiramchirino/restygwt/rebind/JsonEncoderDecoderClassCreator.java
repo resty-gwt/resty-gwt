@@ -15,7 +15,9 @@
  */
 package com.hiramchirino.restygwt.rebind;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,10 @@ import com.hiramchirino.restygwt.client.AbstractJsonEncoderDecoder;
 /**
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
+ * 
+ * Updates:
+ * added getter & setter support, enhanced generics support
+ * @author <a href="http://www.acuedo.com">Dave Finch</a>
  */
 public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private static final String JSON_ENCODER_SUFFIX = "_Generated_JsonEncoderDecoder_";
@@ -63,7 +69,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     protected ClassSourceFileComposerFactory createComposerFactory() {
         ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
-        composerFactory.setSuperclass(JSON_ENCODER_DECODER_CLASS + "<" + source.getName() + ">");
+        composerFactory.setSuperclass(JSON_ENCODER_DECODER_CLASS + "<" + source.getParameterizedQualifiedSourceName() + ">");
         return composerFactory;
     }
 
@@ -99,6 +105,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         builtInEncoderDecoders.put(DOCUMENT_TYPE, JSON_ENCODER_DECODER_CLASS + ".DOCUMENT");
         builtInEncoderDecoders.put(JSON_VALUE_TYPE, JSON_ENCODER_DECODER_CLASS + ".JSON_VALUE");
 
+        builtInEncoderDecoders.put(find(Date.class), JSON_ENCODER_DECODER_CLASS + ".DATE");
+
         JClassType soruceClazz = source.isClass();
         if (soruceClazz == null) {
             error("Type is not a class");
@@ -110,24 +118,39 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         p();
         p("public static final " + shortName + " INSTANCE = new " + shortName + "();");
         p();
-        p("public " + JSON_VALUE_CLASS + " encode(" + source.getName() + " value) {").i(1);
+
+        p("public " + JSON_VALUE_CLASS + " encode(" + source.getParameterizedQualifiedSourceName() + " value) {").i(1);
         {
-            p(JSON_OBJECT_CLASS + " rc = new " + JSON_OBJECT_CLASS + "();");
+        	p(JSON_OBJECT_CLASS + " rc = new " + JSON_OBJECT_CLASS + "();");
 
-            for (final JField field : source.getFields()) {
+            for (final JField field : getFields(source)) {
 
+                final String getterName = getGetterName(field);
+                
                 // If can ignore some fields right off the back..
-                if (field.isStatic() || field.isFinal() || field.isTransient()) {
+                if (getterName == null && (field.isStatic() || field.isFinal() || field.isTransient())) {
                     continue;
                 }
                 
                 branch("Processing field: " + field.getName(), new Branch<Void>(){
                     public Void execute() throws UnableToCompleteException {
                         // TODO: try to get the field with a setter or JSNI
-                        if (field.isDefaultAccess() || field.isProtected() || field.isPublic()) {
+                        if (getterName != null || field.isDefaultAccess() || field.isProtected() || field.isPublic()) {
 
                             String name = field.getName();
-                            String expression = encodeExpression(field.getType(), "value." + name);
+                            
+                            String fieldExpr = "value." + name;
+                            if(getterName != null){
+                                fieldExpr = "value." + getterName+"()";
+                            }
+                            
+                            String expression = null;
+                        	if(null != field.getType().isEnum()){
+                        		expression = encodeExpression(STRING_TYPE, fieldExpr+".name()");
+                        	}else{
+                        		expression = encodeExpression(field.getType(), fieldExpr);
+                        	}
+                        	                            
 
                             p("{").i(1);
                             {
@@ -156,11 +179,13 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         p("public " + source.getName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
         {
             p(JSON_OBJECT_CLASS + " object = toObject(value);");
-            p("" + source.getName() + " rc = new " + source.getName() + "();");
-            for (final JField field : source.getFields()) {
+            p("" + source.getParameterizedQualifiedSourceName() + " rc = new " + source.getParameterizedQualifiedSourceName() + "();");
+            for (final JField field : getFields(source)) {
 
+                final String setterName = getSetterName(field);
+                
                 // If can ignore some fields right off the back..
-                if (field.isStatic() || field.isFinal() || field.isTransient()) {
+                if (setterName == null && (field.isStatic() || field.isFinal() || field.isTransient())) {
                     continue;
                 }
                 
@@ -168,12 +193,23 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     public Void execute() throws UnableToCompleteException {
 
                         // TODO: try to set the field with a setter or JSNI
-                        if (field.isDefaultAccess() || field.isProtected() || field.isPublic()) {
+                       if (setterName != null || field.isDefaultAccess() || field.isProtected() || field.isPublic()) {
 
                             String name = field.getName();
-                            String expression = decodeExpression(field.getType(), "object.get(" + wrap(name) + ")");
-
-                            p("rc." + name + "=" + expression + ";");
+                            String expression = null;
+                        	if(null != field.getType().isEnum()){
+                        		expression =  field.getType().getQualifiedSourceName()+".valueOf("+
+                        			decodeExpression(STRING_TYPE, "object.get(" + wrap(name) + "))");
+                        	}else{
+                        		expression = decodeExpression(field.getType(), "object.get(" + wrap(name) + ")");
+                        	}
+                        	
+                        	if(setterName != null){
+                                p("rc." + setterName + "(" + expression + ");");
+                        	}else{
+                                p("rc." + name + "=" + expression + ";");
+                        	}
+                        	
                         } else {
                             error("field must not be private.");
                         }
@@ -257,4 +293,116 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         return rc;
     }
 
+    /**
+     * 
+     * @param field
+     * @return the name for the setter for the specified field or null if a setter can't be found.
+     */
+    private String getSetterName( JField field){
+        String fieldName = field.getName();
+        fieldName = "set"+upperCaseFirstChar(fieldName);
+        JClassType type = field.getEnclosingType();
+        if(exists(type, field, fieldName, true)){
+            return fieldName;
+        }else{
+            return null;
+        }
+    }
+    
+    /**
+     * 
+     * @param field
+     * @return the name for the getter for the specified field or null if a getter can't be found.
+     */
+    private String getGetterName( JField field){
+        String fieldName = field.getName();
+        JType booleanType = null;
+        try{
+            booleanType = find(Boolean.class);
+        }catch(UnableToCompleteException e){
+            //do nothing
+        }
+        if(field.getType().equals(JPrimitiveType.BOOLEAN) || field.getType().equals(booleanType)){
+            fieldName = "is"+upperCaseFirstChar(fieldName);
+        }else{
+            fieldName = "get"+upperCaseFirstChar(fieldName);
+        }
+        JClassType type = field.getEnclosingType();
+        if(exists(type, field, fieldName, false)){
+            return fieldName;
+        }else{
+            return null;
+        }
+    }
+    
+    private String upperCaseFirstChar(String in){
+        if(in.length()==1){
+            return in.toUpperCase();
+        }else{
+            return in.substring(0, 1).toUpperCase()+in.substring(1);
+        }
+    }
+    
+    /**
+     * checks whether a getter or setter exists on the specified 
+     * type or any of its super classes excluding Object.
+     * 
+     * @param type
+     * @param field
+     * @param fieldName
+     * @param isSetter
+     * @return
+     */
+    private boolean exists(JClassType type, JField field, String fieldName, boolean isSetter){
+        JType[] args = null;
+        if(isSetter){
+            args = new JType[]{field.getType()};
+        }else{
+            args = new JType[]{};
+        }
+        
+        if(null != type.findMethod(fieldName, args)){
+            return true;
+        }else{
+            try{
+                JType objectType = find(Object.class);
+                JClassType superType = type.getSuperclass();
+                if(!objectType.equals(superType)){
+                    return exists(superType, field, fieldName, isSetter);
+                }
+            }catch(UnableToCompleteException e){
+                //do nothing
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Inspects the supplied type and all super classes
+     *  up to but excluding Object and returns a list of 
+     *  all fields found in these classes.
+     * 
+     * @param type
+     * @return
+     */
+    private List < JField > getFields( JClassType type){
+        return getFields(new ArrayList < JField >(), type);
+    }
+
+    private List < JField > getFields(List < JField > allFields, JClassType type){
+        JField[] fields = type.getFields();
+        for (JField field : fields) {
+            allFields.add(field);
+        }
+        try{
+            JType objectType = find(Object.class);
+            JClassType superType = type.getSuperclass();
+            if(!objectType.equals(superType)){
+                return getFields(allFields, superType);
+            }
+        }catch(UnableToCompleteException e){
+            //do nothing
+        }
+        return allFields;
+    }
 }
