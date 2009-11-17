@@ -169,7 +169,7 @@
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>gwt-maven-plugin</artifactId>
             <configuration>
-              <extraJvmArgs>-Xmx512m -XstartOnFirstThread</extraJvmArgs>
+              <extraJvmArgs>-d32 -XstartOnFirstThread -Xmx512m</extraJvmArgs>
             </configuration>
           </plugin>
         </plugins>

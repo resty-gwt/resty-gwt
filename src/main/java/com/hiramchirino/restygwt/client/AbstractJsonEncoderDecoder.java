@@ -236,7 +236,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
                 throw new DecodingException("Expected a json string, but was given: "+value);
             }
             
-            String format = Properties.getDateFormat();
+            String format = Defaults.getDateFormat();
             if(str.stringValue() == null || str.stringValue().length() == 0){
                 return null;
             }else if(format != null){
@@ -250,7 +250,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             if( value==null ) {
                 return JSONNull.getInstance();
             }
-            String format = Properties.getDateFormat();
+            String format = Defaults.getDateFormat();
             if(format != null){
                 return new JSONString(DateTimeFormat.getFormat(format).format(value));
             }else{

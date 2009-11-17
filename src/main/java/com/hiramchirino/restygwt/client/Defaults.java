@@ -18,13 +18,13 @@ package com.hiramchirino.restygwt.client;
 import com.google.gwt.core.client.GWT;
 
 /**
- * provides ability set date format and service root (defaults to GWT.getModuleBaseURL()).
+ * Provides ability to set the default date format and service root (defaults to GWT.getModuleBaseURL()).
  * 
  * 
  * @author <a href="http://www.acuedo.com">Dave Finch</a>
  *
  */
-public class Properties {
+public class Defaults {
 
     private static String serviceRoot = GWT.getModuleBaseURL();
     private static String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
@@ -39,7 +39,7 @@ public class Properties {
      * @param serviceRoot
      */
     public static void setServiceRoot(String serviceRoot) {
-        Properties.serviceRoot = serviceRoot;
+        Defaults.serviceRoot = serviceRoot;
     }
 
     public static String getDateFormat() {
@@ -52,7 +52,7 @@ public class Properties {
      * @param dateFormat
      */
     public static void setDateFormat(String dateFormat) {
-        Properties.dateFormat = dateFormat;
+        Defaults.dateFormat = dateFormat;
     }
 
 }

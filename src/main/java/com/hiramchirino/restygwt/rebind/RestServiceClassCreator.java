@@ -51,7 +51,7 @@ import com.hiramchirino.restygwt.client.AbstractRequestCallback;
 import com.hiramchirino.restygwt.client.JsonCallback;
 import com.hiramchirino.restygwt.client.Method;
 import com.hiramchirino.restygwt.client.MethodCallback;
-import com.hiramchirino.restygwt.client.Properties;
+import com.hiramchirino.restygwt.client.Defaults;
 import com.hiramchirino.restygwt.client.Resource;
 import com.hiramchirino.restygwt.client.RestServiceProxy;
 import com.hiramchirino.restygwt.client.TextCallback;
@@ -71,7 +71,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
     private static final String METHOD_CLASS = Method.class.getName();
     private static final String RESOURCE_CLASS = Resource.class.getName();
-    private static final String PROPERTIES_CLASS = Properties.class.getName();
+    private static final String DEFAULTS_CLASS = Defaults.class.getName();
     private static final String ABSTRACT_REQUEST_CALLBACK_CLASS = AbstractRequestCallback.class.getName();
     private static final String JSON_PARSER_CLASS = JSONParser.class.getName();
     private static final String REQUEST_EXCEPTION_CLASS = RequestException.class.getName();
@@ -137,7 +137,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         if(path != null){
             p("public "+shortName+"() {").i(1);
             {
-                p("this.resource = new " + RESOURCE_CLASS + "("+PROPERTIES_CLASS+".getServiceRoot()+\""
+                p("this.resource = new " + RESOURCE_CLASS + "("+DEFAULTS_CLASS+".getServiceRoot()+\""
                         +path+"\");");
             }
             i(-1).p("}");
