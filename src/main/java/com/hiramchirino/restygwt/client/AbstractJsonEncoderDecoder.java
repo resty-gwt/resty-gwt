@@ -17,6 +17,7 @@ package com.hiramchirino.restygwt.client;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONNull;
@@ -37,6 +39,10 @@ import com.google.gwt.xml.client.XMLParser;
 /**
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
+ * 
+ * Updates:
+ * added Date encoder & decoder
+ * @author <a href="http://www.acuedo.com">Dave Finch</a>
  */
 abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecoder<T> {
 
@@ -218,6 +224,40 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             return value;
         }
     }; 
+    
+    public static final AbstractJsonEncoderDecoder<Date> DATE = new AbstractJsonEncoderDecoder<Date>() {
+
+        public Date decode(JSONValue value) throws DecodingException {
+            if( value == null || value.isNull()!=null ) {
+                return null;
+            }
+            JSONString str = value.isString();
+            if( str==null ) {
+                throw new DecodingException("Expected a json string, but was given: "+value);
+            }
+            
+            String format = Properties.getDateFormat();
+            if(str.stringValue() == null || str.stringValue().length() == 0){
+                return null;
+            }else if(format != null){
+                return DateTimeFormat.getFormat(format).parse(str.stringValue());
+            }else{
+                return DateTimeFormat.getMediumDateTimeFormat().parse(str.stringValue());
+            }
+        }
+
+        public JSONValue encode(Date value) throws EncodingException {
+            if( value==null ) {
+                return JSONNull.getInstance();
+            }
+            String format = Properties.getDateFormat();
+            if(format != null){
+                return new JSONString(DateTimeFormat.getFormat(format).format(value));
+            }else{
+                return new JSONString(DateTimeFormat.getMediumDateTimeFormat().format(value));
+            }
+        }
+    };
     
     ///////////////////////////////////////////////////////////////////
     // Helper Methods.

@@ -44,12 +44,14 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.xml.client.Document;
 import com.hiramchirino.restygwt.client.AbstractRequestCallback;
 import com.hiramchirino.restygwt.client.JsonCallback;
 import com.hiramchirino.restygwt.client.Method;
 import com.hiramchirino.restygwt.client.MethodCallback;
+import com.hiramchirino.restygwt.client.Properties;
 import com.hiramchirino.restygwt.client.Resource;
 import com.hiramchirino.restygwt.client.RestServiceProxy;
 import com.hiramchirino.restygwt.client.TextCallback;
@@ -58,6 +60,10 @@ import com.hiramchirino.restygwt.client.XmlCallback;
 /**
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
+
+ * Updates:
+ * added automatically create resource from Path annotation, enhanced generics support
+ * @author <a href="http://www.acuedo.com">Dave Finch</a>
  */
 public class RestServiceClassCreator extends BaseSourceCreator {
 
@@ -65,6 +71,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
     private static final String METHOD_CLASS = Method.class.getName();
     private static final String RESOURCE_CLASS = Resource.class.getName();
+    private static final String PROPERTIES_CLASS = Properties.class.getName();
     private static final String ABSTRACT_REQUEST_CALLBACK_CLASS = AbstractRequestCallback.class.getName();
     private static final String JSON_PARSER_CLASS = JSONParser.class.getName();
     private static final String REQUEST_EXCEPTION_CLASS = RequestException.class.getName();
@@ -117,16 +124,32 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         this.STRING_TYPE = find(String.class);
         this.JSON_VALUE_TYPE = find(JSONValue.class);
 
+        String path = null;
+        Path pathAnnotation = source.getAnnotation(Path.class);
+        if(pathAnnotation != null){
+            path = pathAnnotation.value();
+        }
+        RemoteServiceRelativePath relativePath = source.getAnnotation(RemoteServiceRelativePath.class);
+        if(relativePath != null){
+            path = relativePath.value();
+        }
+        
+        if(path != null){
+            p("public "+shortName+"() {").i(1);
+            {
+                p("this.resource = new " + RESOURCE_CLASS + "("+PROPERTIES_CLASS+".getServiceRoot()+\""
+                        +path+"\");");
+            }
+            i(-1).p("}");
+        }
+        
+        
         if (source.isInterface() == null) {
             error("Type is not an interface.");
         }
         p("private " + RESOURCE_CLASS + " resource;");
         p();
         
-        // TODO: init the resource if this is set:
-        // Path pathAnnotation = source.getAnnotation(Path.class);
-        // Path pathAnnotation = source.getAnnotation(RemoteServiceRelativePath.class);
-
         p("public void setResource(" + RESOURCE_CLASS + " resource) {").i(1);
         {
             p("this.resource = resource;");
@@ -176,7 +199,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                     if (pathExpression == null) {
                         error("Invalid rest method.  Invalid @PathParam annotation. Method is missing the @Path annotation: " + method.getReadableDeclaration());
                     }
-                    pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath + "}"), "\"+" + toStringExpression(arg.getType(), arg.getName()) + "+\"");
+                    pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+" + toStringExpression(arg.getType(), arg.getName()) + "+\"");
                     continue;
                 }
                 
@@ -252,9 +275,9 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 p(".header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + ".CONTENT_TYPE_JSON);");
                 p("try {").i(1);
                 {
-                    p("__method.send(new "+ABSTRACT_REQUEST_CALLBACK_CLASS+"<"+resultType.getQualifiedSourceName()+">(__method, "+callbackArg.getName()+") {").i(1);
+                    p("__method.send(new "+ABSTRACT_REQUEST_CALLBACK_CLASS+"<"+resultType.getParameterizedQualifiedSourceName()+">(__method, "+callbackArg.getName()+") {").i(1);
                     {
-                        p("protected "+resultType.getQualifiedSourceName()+" parseResult() throws Exception {").i(1);
+                        p("protected "+resultType.getParameterizedQualifiedSourceName()+" parseResult() throws Exception {").i(1);
                         {
                             p("return "+createJsonEncoder(resultType)+".INSTANCE.decode("+JSON_PARSER_CLASS+".parse(__method.getResponse().getText()));");
                         }
