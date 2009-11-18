@@ -16,31 +16,19 @@
 package com.hiramchirino.restygwt.examples.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.junit.client.GWTTestCase;
 import com.hiramchirino.restygwt.client.Method;
 import com.hiramchirino.restygwt.client.MethodCallback;
-import com.hiramchirino.restygwt.client.Resource;
-import com.hiramchirino.restygwt.client.RestServiceProxy;
-import com.hiramchirino.restygwt.examples.client.OrderConfirmation;
-import com.hiramchirino.restygwt.examples.client.PizzaOrder;
-import com.hiramchirino.restygwt.examples.client.PizzaService;
 
 /**
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
-public class GwtTestPizzaService extends GWTTestCase {
-
-    public String getModuleName() {
-        return "com.hiramchirino.restygwt.examples.UI";
-    }
+public class PizzaServiceUITestGWT extends UITestGWT {
 
     public void testSomething() {
         
         // Initialize the pizza service..
         PizzaService service = GWT.create(PizzaService.class);
-        Resource resource = new Resource( GWT.getModuleBaseURL() + "pizza-service");
-        ((RestServiceProxy)service).setResource(resource);
         
         PizzaOrder order = new PizzaOrder();
         order.delivery = true;

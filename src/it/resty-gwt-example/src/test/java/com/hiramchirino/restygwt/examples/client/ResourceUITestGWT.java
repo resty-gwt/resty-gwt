@@ -17,7 +17,6 @@ package com.hiramchirino.restygwt.examples.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.junit.client.GWTTestCase;
 import com.hiramchirino.restygwt.client.JsonCallback;
 import com.hiramchirino.restygwt.client.Method;
 import com.hiramchirino.restygwt.client.Resource;
@@ -27,7 +26,7 @@ import com.hiramchirino.restygwt.examples.client.PizzaOrder.PizzaOrderJED;
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
-public class GwtTestResource extends GWTTestCase {
+public class ResourceUITestGWT extends UITestGWT {
 
     public String getModuleName() {
         return "com.hiramchirino.restygwt.examples.UI";

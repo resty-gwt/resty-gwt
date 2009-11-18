@@ -15,6 +15,7 @@
  */
 package com.hiramchirino.restygwt.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
@@ -46,8 +47,16 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
 		} else {
             T value;
             try {
-                value = parseResult();
+                GWT.log("Received http response for request: "+method.builder.getHTTPMethod()+" "+method.builder.getUrl(), null);                
+                String content = response.getText();
+                if( content!=null && content.length()>0 ) {
+                	GWT.log(content, null);           	
+                    value = parseResult();
+                } else {
+                	value = null;
+                }
             } catch (Throwable e) {
+                GWT.log("Could not parse response: "+e, e);           	
                 callback.onFailure(this.method, e);
                 return;
             }

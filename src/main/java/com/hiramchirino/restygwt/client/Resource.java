@@ -68,6 +68,9 @@ public class Resource {
 	public Method delete() {
 		return new Method(this, "DELETE").headers(headers);
 	}
+	public Method options() {
+		return new Method(this, "OPTIONS").headers(headers);
+	}
 
 	public String getUri() {
 		return uri;

@@ -44,12 +44,31 @@ public class UI implements EntryPoint {
             public void onClick(ClickEvent event) {
                 placeOrder();
             }
-        });
-        
+        });       
+        RootPanel.get().add(button);
+
+        button = new Button("Do Put");
+        button.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                doPut();
+            }
+        });       
         RootPanel.get().add(button);
     }
     
-    private void placeOrder() {
+    protected void doPut() {
+        MethodService service = GWT.create(MethodService.class);
+		service.put(new MethodCallback<String>() {
+			public void onFailure(Method method, Throwable exception) {
+                Window.alert("Error x: "+exception);
+			}
+			public void onSuccess(Method method, String response) {
+                RootPanel.get().add(new Label("done."));
+			}
+		});
+	}
+
+	private void placeOrder() {
         PizzaService service = GWT.create(PizzaService.class);
         Resource resource = new Resource( GWT.getModuleBaseURL() + "pizza-service");
         ((RestServiceProxy)service).setResource(resource);

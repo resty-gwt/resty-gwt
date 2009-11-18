@@ -8,6 +8,14 @@
     <servlet-name>pizza-service</servlet-name>
     <servlet-class>com.hiramchirino.restygwt.examples.server.PizzaServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>test-service</servlet-name>
+    <servlet-class>com.hiramchirino.restygwt.examples.server.TestServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>test-service</servlet-name>
+    <url-pattern>/ui/test/*</url-pattern>
+  </servlet-mapping> 
   <servlet-mapping>
     <servlet-name>pizza-service</servlet-name>
     <url-pattern>/ui/pizza-service</url-pattern>

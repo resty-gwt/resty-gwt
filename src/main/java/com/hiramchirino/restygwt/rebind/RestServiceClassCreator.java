@@ -48,11 +48,12 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.xml.client.Document;
 import com.hiramchirino.restygwt.client.AbstractRequestCallback;
+import com.hiramchirino.restygwt.client.Defaults;
 import com.hiramchirino.restygwt.client.JsonCallback;
 import com.hiramchirino.restygwt.client.Method;
 import com.hiramchirino.restygwt.client.MethodCallback;
-import com.hiramchirino.restygwt.client.Defaults;
 import com.hiramchirino.restygwt.client.Resource;
+import com.hiramchirino.restygwt.client.ResponseFormatException;
 import com.hiramchirino.restygwt.client.RestServiceProxy;
 import com.hiramchirino.restygwt.client.TextCallback;
 import com.hiramchirino.restygwt.client.XmlCallback;
@@ -75,6 +76,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private static final String ABSTRACT_REQUEST_CALLBACK_CLASS = AbstractRequestCallback.class.getName();
     private static final String JSON_PARSER_CLASS = JSONParser.class.getName();
     private static final String REQUEST_EXCEPTION_CLASS = RequestException.class.getName();
+    private static final String RESPONSE_FORMAT_EXCEPTION_CLASS = ResponseFormatException.class.getName();
     
     private static final String METHOD_PUT = "put";
     private static final String METHOD_POST = "post";
@@ -102,6 +104,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private JClassType METHOD_TYPE;
     private JClassType STRING_TYPE;
     private JClassType JSON_VALUE_TYPE;
+    private JsonEncoderDecoderInstanceLocator locator;
 
     public RestServiceClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) throws UnableToCompleteException {
         super(logger, context, source, REST_SERVICE_PROXY_SUFFIX);
@@ -115,6 +118,9 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     }
 
     protected void generate() throws UnableToCompleteException {
+    	
+    	locator = new JsonEncoderDecoderInstanceLocator(context, logger);
+    	
         this.XML_CALLBACK_TYPE = find(XmlCallback.class);
         this.METHOD_CALLBACK_TYPE = find(MethodCallback.class);
         this.TEXT_CALLBACK_TYPE = find(TextCallback.class);
@@ -135,10 +141,15 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         }
         
         if(path != null){
+        	
+        	// Strip leading '/' chars
+        	if( path.startsWith("/") ) {
+        		path = path.substring(1);
+        	}
+        	
             p("public "+shortName+"() {").i(1);
             {
-                p("this.resource = new " + RESOURCE_CLASS + "("+DEFAULTS_CLASS+".getServiceRoot()+\""
-                        +path+"\");");
+            	p("this.resource = new " + RESOURCE_CLASS + "("+DEFAULTS_CLASS+".getServiceRoot()+"+quote(path)+");");
             }
             i(-1).p("}");
         }
@@ -159,6 +170,11 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             writeMethodImpl(method);
         }
     }
+
+	private String quote(String path) {
+		// TODO: unlikely to occur. but we should escape chars like newlines..
+		return "\""+path+"\"";
+	}
 
 
     private void writeMethodImpl(JMethod method) throws UnableToCompleteException {
@@ -264,7 +280,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                         error("Content argument must be a class.");
                     }
                     // example: .json(Listings$_Generated_JsonEncoder_$.INSTANCE.encode(arg0) )
-                    p(".json("+createJsonEncoder(contentClass)+".INSTANCE.encode("+contentArg.getName()+"))");
+                    p(".json("+locator.getEncoderDecoder(contentClass, logger)+".encode("+contentArg.getName()+"))");
                 }
             }
             
@@ -279,7 +295,15 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                     {
                         p("protected "+resultType.getParameterizedQualifiedSourceName()+" parseResult() throws Exception {").i(1);
                         {
-                            p("return "+createJsonEncoder(resultType)+".INSTANCE.decode("+JSON_PARSER_CLASS+".parse(__method.getResponse().getText()));");
+                        	p("try {").i(1);
+                            {
+                            	p("return "+locator.getEncoderDecoder(resultType, logger)+".decode("+JSON_PARSER_CLASS+".parse(__method.getResponse().getText()));");
+                            } 
+                            i(-1).p("} catch (Throwable __e) {").i(1); 
+                            {
+	                            p("throw new "+RESPONSE_FORMAT_EXCEPTION_CLASS+"(\"Response was NOT a valid JSON document\", __e);");
+	                        }
+	                        i(-1).p("}");
                         }
                         i(-1).p("}");
                     }
@@ -357,11 +381,6 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             }
         }
         return restMethod;
-    }
-
-    private String createJsonEncoder(JClassType jsonEncoder) throws UnableToCompleteException {
-        JsonEncoderDecoderClassCreator generator = new JsonEncoderDecoderClassCreator(logger, context, jsonEncoder);
-        return generator.create();
     }
 
 }

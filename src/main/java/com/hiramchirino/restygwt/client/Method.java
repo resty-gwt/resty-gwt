@@ -131,8 +131,6 @@ public class Method {
         try {
             send(new AbstractRequestCallback<String>(this, callback) {
                 protected String parseResult() throws Exception {
-                    GWT.log("Received http response for: "+builder.getHTTPMethod()+" "+builder.getUrl(), null);
-                    GWT.log(response.getText(), null);
                     return response.getText();
                 }
             });
@@ -147,9 +145,11 @@ public class Method {
         try {
             send(new AbstractRequestCallback<JSONValue>(this, callback) {
                 protected JSONValue parseResult() throws Exception {
-                    GWT.log("Received http response for: "+builder.getHTTPMethod()+" "+builder.getUrl(), null);
-                    GWT.log(response.getText(), null);
-                    return JSONParser.parse(response.getText());
+                    try {
+						return JSONParser.parse(response.getText());
+					} catch (Throwable e) {
+						throw new ResponseFormatException("Response was NOT a valid JSON document",e );
+					}
                 }
             });
         } catch (RequestException e) {
@@ -163,9 +163,11 @@ public class Method {
         try {
             send(new AbstractRequestCallback<Document>(this, callback) {
                 protected Document parseResult() throws Exception {
-                    GWT.log("Received http response for: "+builder.getHTTPMethod()+" "+builder.getUrl(), null);
-                    GWT.log(response.getText(), null);
-                    return XMLParser.parse(response.getText());
+                    try {
+                    	return XMLParser.parse(response.getText());
+					} catch (Throwable e) {
+						throw new ResponseFormatException("Response was NOT a valid XML document", e);
+					}
                 }
             });
         } catch (RequestException e) {

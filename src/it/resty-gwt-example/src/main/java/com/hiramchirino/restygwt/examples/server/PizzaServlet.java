@@ -30,13 +30,15 @@ import com.hiramchirino.restygwt.examples.client.OrderConfirmation;
 import com.hiramchirino.restygwt.examples.client.PizzaOrder;
 
 /**
+ * A simple example of how you can use the Jackson object mapper
+ * reuse the RestyGWT DTOs to process the RestyGWT service requests.  
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class PizzaServlet extends HttpServlet {
 
     private static final long serialVersionUID = -5364009274470240593L;
-
+    
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         
