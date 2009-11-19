@@ -122,7 +122,10 @@ public class Method {
 	public void send(RequestCallback callback) throws RequestException {
 		builder.setCallback(callback);
         GWT.log("Sending http request: "+builder.getHTTPMethod()+" "+builder.getUrl(), null);
-        GWT.log(builder.getRequestData(), null);
+        String content = builder.getRequestData();
+        if( content!=null && content.length()>0) {
+            GWT.log(content, null);
+        }
         request = builder.send();
 	}
 

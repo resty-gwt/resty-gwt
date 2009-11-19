@@ -60,7 +60,7 @@
   </repositories>
   
   <properties>
-    <gwt-version>1.7.1</gwt-version>
+    <gwt-version>2.0.0-rc1</gwt-version>
   </properties>
 
   <distributionManagement>
@@ -188,9 +188,8 @@
           <groupId>com.google.gwt</groupId>
           <artifactId>gwt-dev</artifactId>
           <version>${gwt-version}</version>
-          <classifier>${gwt-platform}</classifier>
           <scope>system</scope>
-          <systemPath>${env.GWT_HOME}/gwt-dev-${gwt-platform}.jar</systemPath>
+          <systemPath>${env.GWT_HOME}/gwt-dev.jar</systemPath>
           <optional>true</optional>
         </dependency>        
       </dependencies>
