@@ -47,22 +47,6 @@
     <url>http://github.com/chirino/resty-gwt</url>
   </scm>
 
-  <repositories>
-    <repository>
-      <id>java.net.m2</id>
-      <url>http://download.java.net/maven/2</url>
-    </repository>
-    <repository>
-      <id>java.net.m1</id>
-      <url>http://download.java.net/maven/1</url>
-      <layout>legacy</layout>
-    </repository>
-  </repositories>
-  
-  <properties>
-    <gwt-version>2.0.0-rc1</gwt-version>
-  </properties>
-
   <distributionManagement>
     <repository>
       <id>hiramchirino.com-release</id>
@@ -78,8 +62,33 @@
     </snapshotRepository>
   </distributionManagement>  
   
-  <dependencies>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>hiramchirino.com-release</id>
+      <url>http://hiramchirino.com/repo/release</url>
+      <snapshots><enabled>false</enabled></snapshots>
+      <releases><enabled>true</enabled></releases>
+    </pluginRepository>
+  </pluginRepositories>
+  
+  <repositories>
+    <repository>
+      <id>java.net.m2</id>
+      <url>http://download.java.net/maven/2</url>
+    </repository>
+    <repository>
+      <id>java.net.m1</id>
+      <url>http://download.java.net/maven/1</url>
+      <layout>legacy</layout>
+    </repository>
+  </repositories>
+    
+  <properties>
+    <gwt-version>2.0.0-rc1</gwt-version>
+  </properties>
 
+  <dependencies>
+    
     <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>jsr311-api</artifactId>
@@ -87,11 +96,28 @@
       <scope>provided</scope>      
     </dependency>
     
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>${gwt-version}</version>
+      <scope>system</scope>
+      <systemPath>${env.GWT_HOME}/gwt-user.jar</systemPath>
+      <optional>true</optional>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-dev</artifactId>
+      <version>${gwt-version}</version>
+      <scope>system</scope>
+      <systemPath>${env.GWT_HOME}/gwt-dev.jar</systemPath>
+      <optional>true</optional>
+    </dependency>        
+    
   </dependencies>
 
   <build>
     <plugins>
-      
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -104,7 +130,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <version>1.1</version>
+        <version>1.2-chirino</version>
         <executions>
           <execution>
             <goals>
@@ -112,100 +138,15 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <gwtHome>${env.GWT_HOME}</gwtHome>
+        </configuration>
       </plugin>
     </plugins>
     
   </build>
   
   <profiles>
-    
-    <profile>
-      <id>default</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>com.google.gwt</groupId>
-          <artifactId>gwt-user</artifactId>
-          <version>${gwt-version}</version>
-          <scope>provided</scope>
-        </dependency>
-        <!-- <dependency>
-          <groupId>com.google.gwt</groupId>
-          <artifactId>gwt-dev</artifactId>
-          <version>${gwt-version}</version>
-          <classifier>${gwt-platform}</classifier>
-          <scope>provided</scope>
-        </dependency>         -->
-      </dependencies>
-    </profile> 
-
-    <profile>
-      <id>gwt-dev-windows</id>
-      <activation>
-        <os><family>windows</family></os>
-      </activation>
-      <properties>
-        <gwt-platform>windows</gwt-platform>
-      </properties>
-    </profile>
-       
-    <profile>
-      <id>gwt-dev-mac</id>
-      <properties>
-        <gwt-platform>mac</gwt-platform>
-      </properties>
-      <activation>
-        <os><family>mac</family></os>
-      </activation>
-    </profile>
-    <profile>
-      <id>gwt-dev-linux</id>
-      <properties>
-        <gwt-platform>linux</gwt-platform>
-      </properties>
-      <activation>
-        <os><name>linux</name></os>
-      </activation>
-    </profile>
-    
-    <profile>
-      <id>use-gwt-home</id>
-      <activation>
-        <property><name>env.GWT_HOME</name></property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>com.google.gwt</groupId>
-          <artifactId>gwt-user</artifactId>
-          <version>${gwt-version}</version>
-          <scope>system</scope>
-          <systemPath>${env.GWT_HOME}/gwt-user.jar</systemPath>
-          <optional>true</optional>
-        </dependency>
-        <dependency>
-          <groupId>com.google.gwt</groupId>
-          <artifactId>gwt-dev</artifactId>
-          <version>${gwt-version}</version>
-          <scope>system</scope>
-          <systemPath>${env.GWT_HOME}/gwt-dev.jar</systemPath>
-          <optional>true</optional>
-        </dependency>        
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>gwt-maven-plugin</artifactId>
-            <configuration>
-              <gwtHome>${env.GWT_HOME}</gwtHome>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>      
-    </profile> 
-        
     <profile>
       <id>run-its</id>
       <build>
@@ -242,6 +183,6 @@
         </plugins>
       </build>
     </profile>
-        
-  </profiles>  
+  </profiles>
+  
 </project>
