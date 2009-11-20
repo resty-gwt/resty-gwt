@@ -182,7 +182,7 @@ Building from Source
 --------------------
     
 1. Download and install [Maven 2.10][3].  Set the `M2_HOME` environment variable to the installation directory.  Add the maven bin directory to your `PATH` environment variable and make sure your `JAVA_HOME` environment variable is set your your JDK install directory.
-2. Download and install [GWT 1.7.1][4]. Set the `GWT_HOME` environment variable  to the installation directory.
+2. Download and install [GWT 2.0.0-rc1][4]. Set the `GWT_HOME` environment variable  to the installation directory.
 3. Change to the resty-gwt source directory and run:
 
         $ mvn install
