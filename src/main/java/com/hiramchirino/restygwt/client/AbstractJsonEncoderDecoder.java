@@ -39,9 +39,6 @@ import com.google.gwt.xml.client.XMLParser;
 /**
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
- * 
- * Updates:
- * added Date encoder & decoder
  * @author <a href="http://www.acuedo.com">Dave Finch</a>
  */
 abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecoder<T> {

@@ -84,7 +84,7 @@
   </repositories>
     
   <properties>
-    <gwt-version>2.0.0-rc1</gwt-version>
+    <gwt-version>2.0.0</gwt-version>
   </properties>
 
   <dependencies>
@@ -100,19 +100,15 @@
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
       <version>${gwt-version}</version>
-      <scope>system</scope>
-      <systemPath>${env.GWT_HOME}/gwt-user.jar</systemPath>
-      <optional>true</optional>
-    </dependency>
-    
+      <scope>provided</scope>      
+    </dependency>     
+
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-dev</artifactId>
       <version>${gwt-version}</version>
-      <scope>system</scope>
-      <systemPath>${env.GWT_HOME}/gwt-dev.jar</systemPath>
-      <optional>true</optional>
-    </dependency>        
+      <scope>provided</scope>      
+    </dependency>     
     
   </dependencies>
 
@@ -130,7 +126,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <version>1.2-chirino</version>
+        <version>1.2</version>
         <executions>
           <execution>
             <goals>
@@ -139,7 +135,7 @@
           </execution>
         </executions>
         <configuration>
-          <gwtHome>${env.GWT_HOME}</gwtHome>
+          <!-- <gwtHome>${env.GWT_HOME}</gwtHome> -->
         </configuration>
       </plugin>
     </plugins>
