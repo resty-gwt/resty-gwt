@@ -22,8 +22,16 @@ package com.hiramchirino.restygwt.client;
 public class FailedStatusCodeException extends Exception {
 
 	private static final long serialVersionUID = -1699349575737765192L;
+    private final int statusCode;
 
-	public FailedStatusCodeException(String message) {
+	public FailedStatusCodeException(String message, int statusCode) {
 		super(message);
+        this.statusCode = statusCode;
 	}
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+	
+	
 }

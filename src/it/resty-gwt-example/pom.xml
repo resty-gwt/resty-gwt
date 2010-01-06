@@ -56,7 +56,7 @@
   </repositories>
 
   <properties>
-    <gwt-version>2.0.0-rc1</gwt-version>
+    <gwt-version>2.0.0</gwt-version>
   </properties>
 
   <dependencies>

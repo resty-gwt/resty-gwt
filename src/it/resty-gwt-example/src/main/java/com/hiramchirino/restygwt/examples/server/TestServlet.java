@@ -48,7 +48,15 @@ public class TestServlet extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     	
     	String method = req.getMethod().toLowerCase();
-    	String path = req.getPathInfo().substring(1);
+    	String path = req.getRequestURI();
+    	
+    	// Strip off the path prefix.. it's different if run in mvn junit vs hosted mode. (not sure why)
+    	if( path.startsWith("/ui/test/") ) {
+    	    path = path.substring("/ui/test/".length());
+    	} else if( path.startsWith("/com.hiramchirino.restygwt.examples.UI.JUnit/test/") ) {
+            path = path.substring("/com.hiramchirino.restygwt.examples.UI.JUnit/test/".length());
+        }
+    	
     	System.out.println("Servicing request: "+path);
     	
     	URL responseHeaders = resource(path+"."+method+".response-headers");
@@ -97,15 +105,21 @@ public class TestServlet extends HttpServlet {
     	}
     	
     	// Send the response header and content 
+        HashMap<String, String> headers;
     	if( responseHeaders!=null ) {
-    		HashMap<String, String> rc = hashmap(properties(responseHeaders));			
-			for (Entry<String, String> entry : rc.entrySet()) {
-				resp.setHeader(entry.getKey(), entry.getValue());
+            headers = hashmap(properties(responseHeaders));			
+			for (Entry<String, String> entry : headers.entrySet()) {
+			    if( "Status-Code".equals(entry.getKey()) ) {
+			        resp.setStatus(Integer.parseInt(entry.getValue()));
+			    } else {
+			        resp.setHeader(entry.getKey(), entry.getValue());
+			    }
 			}			
     	}
     	if( responseContent!=null ) {
     		transfer(responseContent.openStream(), resp.getOutputStream());
     	}
+    	
     	
     }
 

@@ -12,10 +12,16 @@
     <servlet-name>test-service</servlet-name>
     <servlet-class>com.hiramchirino.restygwt.examples.server.TestServlet</servlet-class>
   </servlet>
+
   <servlet-mapping>
     <servlet-name>test-service</servlet-name>
-    <url-pattern>/ui/test/*</url-pattern>
+    <url-pattern>/ui/test/method</url-pattern>
   </servlet-mapping> 
+  <servlet-mapping>
+    <servlet-name>test-service</servlet-name>
+    <url-pattern>/ui/test/fail</url-pattern>
+  </servlet-mapping> 
+
   <servlet-mapping>
     <servlet-name>pizza-service</servlet-name>
     <url-pattern>/ui/pizza-service</url-pattern>

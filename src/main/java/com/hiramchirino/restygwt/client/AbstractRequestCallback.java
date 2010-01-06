@@ -42,8 +42,7 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
 		this.method.request = request;
 		this.method.response = response;
 		if (response.getStatusCode() != this.method.expectedStatus) {
-			callback.onFailure(this.method, new FailedStatusCodeException(
-					response.getStatusText()));
+			callback.onFailure(this.method, new FailedStatusCodeException(response.getStatusText(), response.getStatusCode()));
 		} else {
             T value;
             try {
