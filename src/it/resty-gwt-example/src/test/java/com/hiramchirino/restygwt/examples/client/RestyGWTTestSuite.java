@@ -29,8 +29,8 @@ public class RestyGWTTestSuite extends GWTTestSuite {
 		TestSuite suite = new TestSuite("GWT Tests for RestyGWT");
 		suite.addTestSuite(PizzaServiceUITestGWT.class);
 		suite.addTestSuite(ResourceUITestGWT.class);
-//        suite.addTestSuite(FailServiceUITestGWT.class);
-//		suite.addTestSuite(MethodServiceUITestGWT.class);
+        suite.addTestSuite(FailServiceUITestGWT.class);
+		suite.addTestSuite(MethodServiceUITestGWT.class);
 		return suite;
 	}
 }

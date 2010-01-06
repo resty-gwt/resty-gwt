@@ -119,8 +119,15 @@ public class Method {
         this.expectedStatus = status;
     }
 
-	public void send(RequestCallback callback) throws RequestException {
-		builder.setCallback(callback);
+	public void send(final RequestCallback callback) throws RequestException {
+		builder.setCallback(new RequestCallback() {
+            public void onResponseReceived(Request request, Response response) {
+                callback.onResponseReceived(request, response);
+            }
+            public void onError(Request request, Throwable exception) {
+                callback.onResponseReceived(request, response);
+            }
+        });
         GWT.log("Sending http request: "+builder.getHTTPMethod()+" "+builder.getUrl(), null);
         String content = builder.getRequestData();
         if( content!=null && content.length()>0) {

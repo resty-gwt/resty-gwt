@@ -30,7 +30,8 @@ import com.hiramchirino.restygwt.client.RestServiceProxy;
  */
 public class FailServiceUITestGWT extends UITestGWT {
 
-	private MethodService service;
+	private static final int REQUEST_TIMEOUT = 2000;
+    private MethodService service;
 
 	@Override
 	protected void gwtSetUp() throws Exception {
@@ -41,7 +42,7 @@ public class FailServiceUITestGWT extends UITestGWT {
 	
     public void testGet() {
         service.get(expectFailedStatusCodeException(501));
-        delayTestFinish(10000);
+        delayTestFinish(REQUEST_TIMEOUT);
     }
 
 	private MethodCallback<String> expectFailedStatusCodeException(final int expectedStatusCode) {
@@ -55,6 +56,7 @@ public class FailServiceUITestGWT extends UITestGWT {
                 assertTrue(exception instanceof FailedStatusCodeException);
                 FailedStatusCodeException fsce = (FailedStatusCodeException) exception;
                 assertEquals(expectedStatusCode, fsce.getStatusCode());
+                finishTest();
             }
         };
 	}
