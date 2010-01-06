@@ -15,8 +15,6 @@
  */
 package com.hiramchirino.restygwt.examples.client;
 
-import org.junit.Ignore;
-
 import com.google.gwt.core.client.GWT;
 import com.hiramchirino.restygwt.client.Method;
 import com.hiramchirino.restygwt.client.MethodCallback;
@@ -29,7 +27,7 @@ import com.hiramchirino.restygwt.client.MethodCallback;
  */
 public class MethodServiceUITestGWT extends UITestGWT {
 
-	private static final int REQUEST_TIMEOUT = 2000*1000;
+	private static final int REQUEST_TIMEOUT = 2000;
     private MethodService service;
 
 	@Override

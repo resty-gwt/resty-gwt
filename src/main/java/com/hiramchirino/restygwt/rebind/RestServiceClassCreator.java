@@ -280,7 +280,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                         error("Content argument must be a class.");
                     }
                     // example: .json(Listings$_Generated_JsonEncoder_$.INSTANCE.encode(arg0) )
-                    p(".json("+locator.getEncoderDecoder(contentClass, logger)+".encode("+contentArg.getName()+"))");
+                    p(".json("+locator.encodeExpression(contentClass, contentArg.getName())+")");
                 }
             }
             
@@ -297,7 +297,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                         {
                         	p("try {").i(1);
                             {
-                            	p("return "+locator.getEncoderDecoder(resultType, logger)+".decode("+JSON_PARSER_CLASS+".parse(__method.getResponse().getText()));");
+                            	p("return "+locator.decodeExpression(resultType, JSON_PARSER_CLASS+".parse(__method.getResponse().getText())")+";");
                             } 
                             i(-1).p("} catch (Throwable __e) {").i(1); 
                             {
@@ -343,7 +343,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                             if (parameters[0].getType() == METHOD_TYPE) {
                                 debug("checking 2nd param: "+parameters[1].getType());
                                 JType param2Type = parameters[1].getType();
-                                JClassType type = param2Type.isClass();
+                                JClassType type = param2Type.isClassOrInterface();
                                 if (type == null) {
                                     error("The type of the callback not supported: " + param2Type.getJNISignature());
                                 }

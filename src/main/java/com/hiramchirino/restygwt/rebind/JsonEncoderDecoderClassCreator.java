@@ -17,15 +17,12 @@ package com.hiramchirino.restygwt.rebind;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
-import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.json.client.JSONObject;
@@ -42,10 +39,6 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
  */
 public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private static final String JSON_ENCODER_SUFFIX = "_Generated_JsonEncoderDecoder_";
-
-    private JClassType MAP_TYPE = null;
-    private JClassType SET_TYPE = null;
-    private JClassType LIST_TYPE;
 
 	private String JSON_ENCODER_DECODER_CLASS = JsonEncoderDecoderInstanceLocator.JSON_ENCODER_DECODER_CLASS;
 	private static final String JSON_VALUE_CLASS = JSONValue.class.getName();
@@ -67,11 +60,6 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         
     	locator = new JsonEncoderDecoderInstanceLocator(context, logger);
     	
-        this.LIST_TYPE = find(List.class);
-        this.MAP_TYPE = find(Map.class);
-        this.SET_TYPE = find(Set.class);
-        
-
         JClassType soruceClazz = source.isClass();
         if (soruceClazz == null) {
             error("Type is not a class");
@@ -109,13 +97,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                 fieldExpr = "value." + getterName+"()";
                             }
                             
-                            String expression = null;
-                        	if(null != field.getType().isEnum()){
-                        		expression = encodeExpression(locator.STRING_TYPE, fieldExpr+".name()");
-                        	}else{
-                        		expression = encodeExpression(field.getType(), fieldExpr);
-                        	}
-                        	                            
+                            String expression = locator.encodeExpression(field.getType(), fieldExpr);
 
                             p("{").i(1);
                             {
@@ -161,13 +143,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                        if (setterName != null || field.isDefaultAccess() || field.isProtected() || field.isPublic()) {
 
                             String name = field.getName();
-                            String expression = null;
-                        	if(null != field.getType().isEnum()){
-                        		expression =  field.getType().getQualifiedSourceName()+".valueOf("+
-                        			decodeExpression(locator.STRING_TYPE, "object.get(" + wrap(name) + "))");
-                        	}else{
-                        		expression = decodeExpression(field.getType(), "object.get(" + wrap(name) + ")");
-                        	}
+                            String expression = locator.decodeExpression(field.getType(), "object.get(" + wrap(name) + ")");
                         	
                         	if(setterName != null){
                                 p("rc." + setterName + "(" + expression + ");");
@@ -187,63 +163,6 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         }
         i(-1).p("}");
         p();
-    }
-
-    private String encodeExpression(JType type, String expression) throws UnableToCompleteException {
-        return encodeDecodeExpression(type, expression, "encode", "toJSON", "toJSON", "toJSON");
-    }
-
-    private String decodeExpression(JType type, String expression) throws UnableToCompleteException {
-        return encodeDecodeExpression(type, expression, "decode", "toMap", "toSet", "toList");
-    }
-    
-    private String encodeDecodeExpression(JType type, String expression, String encoderMethod, String mapMethod, String setMethod, String listMethod) throws UnableToCompleteException {
-        String encoderDecoder = locator.getEncoderDecoder(type, logger);
-        if (encoderDecoder != null) {
-            return encoderDecoder + "." + encoderMethod + "(" + expression + ")";
-        }
-
-        JClassType clazz = type.isClassOrInterface();
-        if (clazz != null && clazz.isAssignableTo(locator.COLLECTION_CLASS)) {
-            JParameterizedType parameterizedType = type.isParameterized();
-            if (parameterizedType == null || parameterizedType.getTypeArgs() == null) {
-                error("Collection types must be parameterized.");
-            }
-            JClassType[] types = parameterizedType.getTypeArgs();
-            
-            if (parameterizedType.isAssignableTo(MAP_TYPE)) {
-                if (types.length != 2) {
-                    error("Map must define two and only two type parameters");
-                }
-                if( types[0]!= locator.STRING_TYPE ) {
-                    error("Map's frst type parameter must be of type String");
-                }
-                encoderDecoder = locator.getEncoderDecoder(types[1], logger);
-                if (encoderDecoder != null) {
-                    return mapMethod + "(" + expression + ", " + encoderDecoder + ")";
-                }
-            } else if (parameterizedType.isAssignableTo(SET_TYPE)) {
-                if (types.length != 1) {
-                    error("Set must define one and only one type parameter");
-                }
-                encoderDecoder = locator.getEncoderDecoder(types[0], logger);
-                if (encoderDecoder != null) {
-                    return setMethod + "(" + expression + ", " + encoderDecoder + ")";
-                }
-            } else if ( parameterizedType.isAssignableFrom(LIST_TYPE) ) {
-                if (types.length != 1) {
-                    error("List must define one and only one type parameter");
-                }
-                encoderDecoder = locator.getEncoderDecoder(types[0], logger);
-                debug("type encoder for: "+types[0]+" is "+encoderDecoder);
-                if (encoderDecoder != null) {
-                    return listMethod + "(" + expression + ", " + encoderDecoder + ")";
-                }
-            }
-        }
-
-        error("Do not know how to encode/decode " + type + " to JSON");
-        return null;
     }
 
     /**

@@ -23,6 +23,7 @@
   <servlet path='/pizza-service' class='com.hiramchirino.restygwt.examples.server.PizzaServlet'/>
   <servlet path='/test/method' class='com.hiramchirino.restygwt.examples.server.TestServlet'/>
   <servlet path='/test/fail' class='com.hiramchirino.restygwt.examples.server.TestServlet'/>
+  <servlet path='/test/list' class='com.hiramchirino.restygwt.examples.server.TestServlet'/>
 
   <entry-point class='com.hiramchirino.restygwt.examples.client.UI'/>
   <stylesheet src='ui.css' />

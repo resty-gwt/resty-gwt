@@ -18,16 +18,22 @@ package com.hiramchirino.restygwt.rebind;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.xml.client.Document;
 import com.hiramchirino.restygwt.client.AbstractJsonEncoderDecoder;
+
+import static com.hiramchirino.restygwt.rebind.BaseSourceCreator.*;
 
 /**
  * 
@@ -41,6 +47,9 @@ public class JsonEncoderDecoderInstanceLocator {
 	public final JClassType JSON_VALUE_TYPE;
 	public final JClassType DOCUMENT_TYPE;
 	public final JClassType COLLECTION_CLASS;
+	public final JClassType MAP_TYPE;
+	public final JClassType SET_TYPE;
+	public final JClassType LIST_TYPE;
 
     public final HashMap<JType, String> builtInEncoderDecoders = new HashMap<JType, String>();
 
@@ -56,6 +65,9 @@ public class JsonEncoderDecoderInstanceLocator {
         this.JSON_VALUE_TYPE = find(JSONValue.class);
         this.DOCUMENT_TYPE = find(Document.class);
         this.COLLECTION_CLASS = find(Collection.class); 
+        this.MAP_TYPE = find(Map.class); 
+        this.SET_TYPE = find(Set.class); 
+        this.LIST_TYPE = find(List.class); 
 
         builtInEncoderDecoders.put(JPrimitiveType.BOOLEAN, JSON_ENCODER_DECODER_CLASS + ".BOOLEAN");
         builtInEncoderDecoders.put(JPrimitiveType.BYTE, JSON_ENCODER_DECODER_CLASS + ".BYTE");
@@ -89,7 +101,7 @@ public class JsonEncoderDecoderInstanceLocator {
         return RestServiceGenerator.find(logger, context, type);
     }
     
-    public String getEncoderDecoder(JType type, TreeLogger logger) throws UnableToCompleteException {
+    private String getEncoderDecoder(JType type, TreeLogger logger) throws UnableToCompleteException {
         String rc = builtInEncoderDecoders.get(type);
         if (rc == null) {
             JClassType ct = type.isClass();
@@ -101,4 +113,90 @@ public class JsonEncoderDecoderInstanceLocator {
         return rc;
     }
 
+    public String encodeExpression(JType type, String expression) throws UnableToCompleteException {
+        return encodeDecodeExpression(type, expression, "encode", 
+                JSON_ENCODER_DECODER_CLASS+".toJSON", 
+                JSON_ENCODER_DECODER_CLASS+".toJSON", 
+                JSON_ENCODER_DECODER_CLASS+".toJSON");
+    }
+
+    public String decodeExpression(JType type, String expression) throws UnableToCompleteException {
+        return encodeDecodeExpression(type, expression, "decode", 
+                JSON_ENCODER_DECODER_CLASS+".toMap", 
+                JSON_ENCODER_DECODER_CLASS+".toSet", 
+                JSON_ENCODER_DECODER_CLASS+".toList");
+    }
+    
+    private String encodeDecodeExpression(JType type, String expression, String encoderMethod, String mapMethod, String setMethod, String listMethod) throws UnableToCompleteException {
+        
+        if( null != type.isEnum() ){
+            return type.getQualifiedSourceName()+".valueOf("+encodeDecodeExpression(STRING_TYPE, expression, encoderMethod, mapMethod, setMethod, listMethod);
+        }
+
+        String encoderDecoder = getEncoderDecoder(type, logger);
+        if (encoderDecoder != null) {
+            return encoderDecoder + "." + encoderMethod + "(" + expression + ")";
+        }
+
+        JClassType clazz = type.isClassOrInterface();
+        if (clazz != null && clazz.isAssignableTo(COLLECTION_CLASS)) {
+            JParameterizedType parameterizedType = type.isParameterized();
+            if (parameterizedType == null || parameterizedType.getTypeArgs() == null) {
+                error("Collection types must be parameterized.");
+            }
+            JClassType[] types = parameterizedType.getTypeArgs();
+            
+            if (parameterizedType.isAssignableTo(MAP_TYPE)) {
+                if (types.length != 2) {
+                    error("Map must define two and only two type parameters");
+                }
+                if( types[0]!= STRING_TYPE ) {
+                    error("Map's frst type parameter must be of type String");
+                }
+                encoderDecoder = getEncoderDecoder(types[1], logger);
+                if (encoderDecoder != null) {
+                    return mapMethod + "(" + expression + ", " + encoderDecoder + ")";
+                }
+            } else if (parameterizedType.isAssignableTo(SET_TYPE)) {
+                if (types.length != 1) {
+                    error("Set must define one and only one type parameter");
+                }
+                encoderDecoder = getEncoderDecoder(types[0], logger);
+                if (encoderDecoder != null) {
+                    return setMethod + "(" + expression + ", " + encoderDecoder + ")";
+                }
+            } else if ( parameterizedType.isAssignableFrom(LIST_TYPE) ) {
+                if (types.length != 1) {
+                    error("List must define one and only one type parameter");
+                }
+                encoderDecoder = getEncoderDecoder(types[0], logger);
+                debug("type encoder for: "+types[0]+" is "+encoderDecoder);
+                if (encoderDecoder != null) {
+                    return listMethod + "(" + expression + ", " + encoderDecoder + ")";
+                }
+            }
+        }
+        
+        error("Do not know how to encode/decode " + type + " to JSON");
+        return null;
+    }
+    
+    protected void error(String msg) throws UnableToCompleteException {
+        logger.log(ERROR, msg);
+        throw new UnableToCompleteException();
+    }
+    protected void warn(String msg) throws UnableToCompleteException {
+        logger.log(WARN, msg);
+        throw new UnableToCompleteException();
+    }
+    protected void info(String msg) throws UnableToCompleteException {
+        logger.log(INFO, msg);
+    }
+    protected void debug(String msg) throws UnableToCompleteException {
+        logger.log(DEBUG, msg);
+    }
+    protected void trace(String msg) throws UnableToCompleteException {
+        logger.log(TRACE, msg);
+    }
+    
 }
