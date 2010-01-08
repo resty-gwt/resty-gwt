@@ -15,7 +15,8 @@
 
   <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/method</url-pattern></servlet-mapping> 
   <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/fail</url-pattern></servlet-mapping> 
-  <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/list</url-pattern></servlet-mapping> 
+  <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/JSONBinding/getListOfStrings</url-pattern></servlet-mapping> 
+  <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/JSONBinding/getStringMapResponse</url-pattern></servlet-mapping> 
 
   <servlet-mapping>
     <servlet-name>pizza-service</servlet-name>

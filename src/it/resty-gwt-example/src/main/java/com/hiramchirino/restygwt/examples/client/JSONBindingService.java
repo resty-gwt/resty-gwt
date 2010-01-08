@@ -15,7 +15,9 @@
  */
 package com.hiramchirino.restygwt.examples.client;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -27,11 +29,31 @@ import com.hiramchirino.restygwt.client.RestService;
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
-@Path("/test/list")
-public interface ListService extends RestService {
+@Path("/test/JSONBinding")
+public interface JSONBindingService extends RestService {
     
     @GET
-    public void get(MethodCallback<List<String>> callback);
+    @Path("/getListOfStrings")
+    public void getListOfStrings(MethodCallback<List<String>> callback);
 
+    static public class StringMapResponse {
+        public Map<String, String> data = new HashMap<String, String>();
+
+        @Override
+        public int hashCode() {
+            return data.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            StringMapResponse other = (StringMapResponse) obj;
+            return data.equals(other.data);
+        }
+        
+    }
     
+    @GET
+    @Path("/getStringMapResponse")
+    public void getStringMapResponse(MethodCallback<StringMapResponse> callback);
+
 }

@@ -15,7 +15,6 @@
  */
 package com.hiramchirino.restygwt.rebind;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +45,6 @@ public class JsonEncoderDecoderInstanceLocator {
 	public final JClassType STRING_TYPE;
 	public final JClassType JSON_VALUE_TYPE;
 	public final JClassType DOCUMENT_TYPE;
-	public final JClassType COLLECTION_CLASS;
 	public final JClassType MAP_TYPE;
 	public final JClassType SET_TYPE;
 	public final JClassType LIST_TYPE;
@@ -64,7 +62,6 @@ public class JsonEncoderDecoderInstanceLocator {
         this.STRING_TYPE = find(String.class);
         this.JSON_VALUE_TYPE = find(JSONValue.class);
         this.DOCUMENT_TYPE = find(Document.class);
-        this.COLLECTION_CLASS = find(Collection.class); 
         this.MAP_TYPE = find(Map.class); 
         this.SET_TYPE = find(Set.class); 
         this.LIST_TYPE = find(List.class); 
@@ -105,7 +102,7 @@ public class JsonEncoderDecoderInstanceLocator {
         String rc = builtInEncoderDecoders.get(type);
         if (rc == null) {
             JClassType ct = type.isClass();
-            if (ct != null && !ct.isAssignableTo(COLLECTION_CLASS)) {
+            if (ct != null && !isCollectionType(ct)) {
                 JsonEncoderDecoderClassCreator generator = new JsonEncoderDecoderClassCreator(logger, context, ct);
                 return generator.create()+".INSTANCE";
             }
@@ -139,7 +136,7 @@ public class JsonEncoderDecoderInstanceLocator {
         }
 
         JClassType clazz = type.isClassOrInterface();
-        if (clazz != null && clazz.isAssignableTo(COLLECTION_CLASS)) {
+        if (isCollectionType(clazz)) {
             JParameterizedType parameterizedType = type.isParameterized();
             if (parameterizedType == null || parameterizedType.getTypeArgs() == null) {
                 error("Collection types must be parameterized.");
@@ -151,7 +148,7 @@ public class JsonEncoderDecoderInstanceLocator {
                     error("Map must define two and only two type parameters");
                 }
                 if( types[0]!= STRING_TYPE ) {
-                    error("Map's frst type parameter must be of type String");
+                    error("Map's first type parameter must be of type String");
                 }
                 encoderDecoder = getEncoderDecoder(types[1], logger);
                 if (encoderDecoder != null) {
@@ -177,8 +174,16 @@ public class JsonEncoderDecoderInstanceLocator {
             }
         }
         
-        error("Do not know how to encode/decode " + type + " to JSON");
+        error("Do not know how to encode/decode " + type);
         return null;
+    }
+
+    private boolean isCollectionType(JClassType clazz) {
+        return clazz != null && ( 
+                clazz.isAssignableTo(SET_TYPE) || 
+                clazz.isAssignableTo(LIST_TYPE) ||
+                clazz.isAssignableTo(MAP_TYPE)
+           );
     }
     
     protected void error(String msg) throws UnableToCompleteException {

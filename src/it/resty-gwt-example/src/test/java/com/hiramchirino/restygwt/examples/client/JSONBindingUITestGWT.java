@@ -18,9 +18,12 @@ package com.hiramchirino.restygwt.examples.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
+
 import com.google.gwt.core.client.GWT;
 import com.hiramchirino.restygwt.client.Method;
 import com.hiramchirino.restygwt.client.MethodCallback;
+import com.hiramchirino.restygwt.examples.client.JSONBindingService.StringMapResponse;
 
 /**
  * This test verifies that all the http methods 
@@ -31,16 +34,27 @@ import com.hiramchirino.restygwt.client.MethodCallback;
 public class JSONBindingUITestGWT extends UITestGWT {
 
 	private static final int REQUEST_TIMEOUT = 2000;
+    private JSONBindingService service;
 	
+    protected void gwtSetUp() throws Exception {
+        service = GWT.create(JSONBindingService.class);
+	}
+
     public void testGetListOfStrings() {
         
-        ListService service = GWT.create(ListService.class);
         List<String> expected = new ArrayList<String>();
         expected.add("hello");
         expected.add("world");
-        service.get(expectResult(expected));
+        service.getListOfStrings(expectResult(expected));
         delayTestFinish(REQUEST_TIMEOUT);
         
+    }
+
+    public void testGetStringMapResponse() {
+        StringMapResponse expected = new StringMapResponse();
+        expected.data.put("hello", "world");
+        service.getStringMapResponse(expectResult(expected));
+        delayTestFinish(REQUEST_TIMEOUT);
     }
 
     private <T> MethodCallback<T> expectResult(final T expectedResult) {
