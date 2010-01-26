@@ -49,6 +49,7 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.xml.client.Document;
 import com.hiramchirino.restygwt.client.AbstractRequestCallback;
 import com.hiramchirino.restygwt.client.Defaults;
+import com.hiramchirino.restygwt.client.Json;
 import com.hiramchirino.restygwt.client.JsonCallback;
 import com.hiramchirino.restygwt.client.Method;
 import com.hiramchirino.restygwt.client.MethodCallback;
@@ -57,6 +58,7 @@ import com.hiramchirino.restygwt.client.ResponseFormatException;
 import com.hiramchirino.restygwt.client.RestServiceProxy;
 import com.hiramchirino.restygwt.client.TextCallback;
 import com.hiramchirino.restygwt.client.XmlCallback;
+import com.hiramchirino.restygwt.client.Json.Style;
 
 /**
  * 
@@ -181,7 +183,10 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         if( method.getReturnType().isPrimitive() != JPrimitiveType.VOID ) {
             error("Invalid rest method. Method must have void return type: " + method.getReadableDeclaration());
         }
-        
+
+        Json jsonAnnotation = source.getAnnotation(Json.class);
+        final Style classStyle = jsonAnnotation!=null ? jsonAnnotation.style() : Style.DEFAULT;
+
         p(method.getReadableDeclaration(false, false, false, false, true) + " {").i(1);
         {
             String restMethod = getRestMethod(method);
@@ -279,8 +284,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                     if( contentClass==null ) {
                         error("Content argument must be a class.");
                     }
+
+                    jsonAnnotation = contentArg.getAnnotation(Json.class);
+                    Style style = jsonAnnotation!=null ? jsonAnnotation.style() : classStyle;
+
                     // example: .json(Listings$_Generated_JsonEncoder_$.INSTANCE.encode(arg0) )
-                    p(".json("+locator.encodeExpression(contentClass, contentArg.getName())+")");
+                    p(".json("+locator.encodeExpression(contentClass, contentArg.getName(), style)+")");
                 }
             }
             
@@ -297,7 +306,9 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                         {
                         	p("try {").i(1);
                             {
-                            	p("return "+locator.decodeExpression(resultType, JSON_PARSER_CLASS+".parse(__method.getResponse().getText())")+";");
+                                jsonAnnotation = method.getAnnotation(Json.class);
+                                Style style = jsonAnnotation!=null ? jsonAnnotation.style() : classStyle;
+                            	p("return "+locator.decodeExpression(resultType, JSON_PARSER_CLASS+".parse(__method.getResponse().getText())", style)+";");
                             } 
                             i(-1).p("} catch (Throwable __e) {").i(1); 
                             {

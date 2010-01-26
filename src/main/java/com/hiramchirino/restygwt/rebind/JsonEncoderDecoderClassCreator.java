@@ -28,6 +28,8 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
+import com.hiramchirino.restygwt.client.Json;
+import com.hiramchirino.restygwt.client.Json.Style;
 
 /**
  * 
@@ -68,6 +70,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             error("No default constuctor");
         }
 
+        Json jsonAnnotation = source.getAnnotation(Json.class);
+        final Style classStyle = jsonAnnotation!=null ? jsonAnnotation.style() : Style.DEFAULT;
+
         p();
         p("public static final " + shortName + " INSTANCE = new " + shortName + "();");
         p();
@@ -97,7 +102,10 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                 fieldExpr = "value." + getterName+"()";
                             }
                             
-                            String expression = locator.encodeExpression(field.getType(), fieldExpr);
+                            Json jsonAnnotation = field.getAnnotation(Json.class);
+                            Style style = jsonAnnotation!=null ? jsonAnnotation.style() : classStyle;
+                            
+                            String expression = locator.encodeExpression(field.getType(), fieldExpr, style);
 
                             p("{").i(1);
                             {
@@ -142,8 +150,11 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         // TODO: try to set the field with a setter or JSNI
                        if (setterName != null || field.isDefaultAccess() || field.isProtected() || field.isPublic()) {
 
+                            Json jsonAnnotation = field.getAnnotation(Json.class);
+                            Style style = jsonAnnotation!=null ? jsonAnnotation.style() : classStyle;
+
                             String name = field.getName();
-                            String expression = locator.decodeExpression(field.getType(), "object.get(" + wrap(name) + ")");
+                            String expression = locator.decodeExpression(field.getType(), "object.get(" + wrap(name) + ")", style);
                         	
                         	if(setterName != null){
                                 p("rc." + setterName + "(" + expression + ");");
