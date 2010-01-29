@@ -53,6 +53,7 @@
 
   <properties>
     <gwt-version>2.0.0</gwt-version>
+    <restygwt-version>1.0-SNAPSHOT</restygwt-version>
     <jersey-version>1.1.2-ea</jersey-version>
   </properties>
 
@@ -68,7 +69,7 @@
     <dependency>
       <groupId>com.hiramchirino.resty-gwt</groupId>
       <artifactId>resty-gwt</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>${restygwt-version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -86,9 +87,8 @@
     </dependency>
     <dependency>
       <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-mapper-asl</artifactId>
-      <version>1.2.1</version>
-      <scope>provided</scope>
+      <artifactId>jackson-jaxrs</artifactId>
+      <version>1.4.1</version>
     </dependency>
     
     <dependency>

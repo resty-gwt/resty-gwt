@@ -10,22 +10,13 @@
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
     <init-param>
       <param-name>com.sun.jersey.config.property.packages</param-name>
-      <param-value>com.hiramchirino.examples.server</param-value>
+      <param-value>com.hiramchirino.restygwt.examples.server;org.codehaus.jackson.jaxrs</param-value>
     </init-param>
   </servlet>
-  <servlet>
-    <servlet-name>junit</servlet-name>
-    <servlet-class>com.google.gwt.junit.server.JUnitHostImpl</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>junit</servlet-name>
-    <url-pattern>/jaxb/junithost</url-pattern>
-  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>jersey</servlet-name>
-    <url-pattern>/jaxb/rest/*</url-pattern>
+    <url-pattern>/example/rest/*</url-pattern>
   </servlet-mapping>
    
 </web-app>

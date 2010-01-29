@@ -27,10 +27,10 @@ import com.hiramchirino.restygwt.client.MethodCallback;
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
-public class JaxrsJaxsonTestGWT extends GWTTestCase {
+public class JerseyJaxsonTestGWT extends GWTTestCase {
 
     public String getModuleName() {
-        return "com.hiramchirino.restygwt.examples.Jaxson";
+        return "com.hiramchirino.restygwt.examples.JERSEY_JAXSON";
     }
 
     private static final int REQUEST_TIMEOUT = 2000;
