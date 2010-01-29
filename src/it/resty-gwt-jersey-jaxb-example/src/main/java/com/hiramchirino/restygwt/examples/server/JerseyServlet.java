@@ -17,8 +17,10 @@ package com.hiramchirino.restygwt.examples.server;
 
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Properties;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -30,34 +32,43 @@ import javax.servlet.http.HttpServletResponse;
  *  
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
-public class Jersey extends com.sun.jersey.spi.container.servlet.ServletContainer {
+public class JerseyServlet extends com.sun.jersey.spi.container.servlet.ServletContainer {
 
     private static final long serialVersionUID = -273961734543645503L;
-    private static final String PACKAGE_PROP_NAME = "com.sun.jersey.config.property.packages";
-
-    @Override
-    public Enumeration<String> getInitParameterNames() {
-        Vector<String> v = new Vector<String>();
-        v.add(PACKAGE_PROP_NAME);
-        return v.elements();
+    
+    private static Properties initParams = new Properties();
+    static {
+        initParams.put("com.sun.jersey.config.property.packages", "com.hiramchirino.restygwt.examples.server");
     }
     
-    @Override
-    public String getInitParameter(String name) {
-        if( PACKAGE_PROP_NAME.equals(name) ) {
-            return "com.hiramchirino.restygwt.examples.server";
-        }
-        return null;
+    public void init(final ServletConfig servletConfig) throws ServletException {
+        super.init(new ServletConfig() {
+            public String getServletName() {
+                return servletConfig.getServletName();
+            }
+            
+            public ServletContext getServletContext() {
+                return servletConfig.getServletContext();
+            }
+            
+            @SuppressWarnings("unchecked")
+            public Enumeration getInitParameterNames() {
+                return initParams.keys();
+            }
+            
+            public String getInitParameter(String name) {
+                return initParams.getProperty(name);
+            }
+        });
     }
-    
     
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request) {
             @Override
             public String getServletPath() {
-                if( getPathInfo().startsWith("/com.hiramchirino.restygwt.examples.JAXB.JUnit/rest") ) {
-                    return "/com.hiramchirino.restygwt.examples.JAXB.JUnit/rest";
+                if( getPathInfo().startsWith("/com.hiramchirino.restygwt.examples.JERSEY_JAXB.JUnit/rest") ) {
+                    return "/com.hiramchirino.restygwt.examples.JERSEY_JAXB.JUnit/rest";
                 }
                 return super.getServletPath();
             }

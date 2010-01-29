@@ -13,19 +13,10 @@
       <param-value>com.hiramchirino.examples.server</param-value>
     </init-param>
   </servlet>
-  <servlet>
-    <servlet-name>junit</servlet-name>
-    <servlet-class>com.google.gwt.junit.server.JUnitHostImpl</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>junit</servlet-name>
-    <url-pattern>/jaxb/junithost</url-pattern>
-  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>jersey</servlet-name>
-    <url-pattern>/jaxb/rest/*</url-pattern>
+    <url-pattern>/example/rest/*</url-pattern>
   </servlet-mapping>
    
 </web-app>

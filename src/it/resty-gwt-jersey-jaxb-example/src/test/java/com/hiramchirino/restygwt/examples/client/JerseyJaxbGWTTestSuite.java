@@ -24,10 +24,10 @@ import com.google.gwt.junit.tools.GWTTestSuite;
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
-public class JaxrsJaxbGWTTestSuite extends GWTTestSuite {
+public class JerseyJaxbGWTTestSuite extends GWTTestSuite {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("GWT Tests for RestyGWT");
-		suite.addTestSuite(JaxrsJaxbTestGWT.class);
+		suite.addTestSuite(JerseyJaxbTestGWT.class);
 		return suite;
 	}
 }
