@@ -165,6 +165,9 @@
                 <goal>clean</goal>
                 <goal>install</goal>
               </goals>
+              <properties>
+                <restygwt-version>${pom.version}</restygwt-version>
+              </properties>
             </configuration>
             <executions>
               <execution>
