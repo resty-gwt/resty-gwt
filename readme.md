@@ -1,5 +1,5 @@
-RestyGWT
-========
+![RestyGWT][5]
+==============
 
 Description
 -----------
@@ -197,3 +197,4 @@ To build and run the integration tests, use:
 [2]: http://wiki.fasterxml.com/JacksonHome "Jackson JSON Processor"
 [3]: http://maven.apache.org/download.html#Maven_2.1.0 "Maven Download"
 [4]: http://code.google.com/webtoolkit/download.html "GWT Download"
+[5]: http://github.com/chirino/resty-gwt/raw/master/webgen/src/images/restygwt-logo.png "resty-gwt logo"
