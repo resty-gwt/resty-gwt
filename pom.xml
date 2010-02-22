@@ -26,19 +26,20 @@
   <name>RestyGWT</name>
   <description>resty-gwt is a GWT generator for REST services and JSON encoded data transfer objects</description>
   <inceptionYear>2009</inceptionYear>
+  <url>http://github.com/chirino/resty-gwt</url>
 
   <organization>
-  	<url>http://hiramchirino.com</url>
+    <url>http://hiramchirino.com</url>
   </organization>
   
   <developers>
-  	<developer>
-  		<id>chirino</id>
-  		<name>Hiram Chirino</name>
-  		<email>hiram@hiramchirino.com</email>
-  		<url>http://hiramchirino.com</url>
-  		<timezone>GMT-5</timezone>
-  	</developer>
+    <developer>
+      <id>chirino</id>
+      <name>Hiram Chirino</name>
+      <email>hiram@hiramchirino.com</email>
+      <url>http://hiramchirino.com</url>
+      <timezone>GMT-5</timezone>
+    </developer>
   </developers>
   
   <scm>
@@ -49,40 +50,17 @@
 
   <distributionManagement>
     <repository>
-      <id>hiramchirino.com-release</id>
-      <name>hiramchirino.com-release</name>
-      <url>scpexe://hiramchirino.com/home3/chirinow/public_html/hiramchirino.com/repo/release</url>
-      <uniqueVersion>false</uniqueVersion>
+      <id>sonatype-nexus-staging</id>
+      <name>Nexus Release Repository</name>
+      <url>http://oss.sonatype.org/service/local/staging/deploy/maven2</url>
     </repository>
     <snapshotRepository>
-      <id>hiramchirino.com-snapshot</id>
-      <name>hiramchirino.com-snapshot</name>
-      <url>scpexe://hiramchirino.com/home3/chirinow/public_html/hiramchirino.com/repo/snapshot</url>
-      <uniqueVersion>false</uniqueVersion>
+      <id>sonatype-nexus-snapshots</id>
+      <name>Sonatype Nexus Snapshots</name>
+      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
   </distributionManagement>  
   
-  <pluginRepositories>
-    <pluginRepository>
-      <id>hiramchirino.com-release</id>
-      <url>http://hiramchirino.com/repo/release</url>
-      <snapshots><enabled>false</enabled></snapshots>
-      <releases><enabled>true</enabled></releases>
-    </pluginRepository>
-  </pluginRepositories>
-  
-  <repositories>
-    <repository>
-      <id>java.net.m2</id>
-      <url>http://download.java.net/maven/2</url>
-    </repository>
-    <repository>
-      <id>java.net.m1</id>
-      <url>http://download.java.net/maven/1</url>
-      <layout>legacy</layout>
-    </repository>
-  </repositories>
-    
   <properties>
     <gwt-version>2.0.0</gwt-version>
   </properties>

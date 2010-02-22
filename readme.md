@@ -165,9 +165,9 @@ And also the following repository:
     <repositories>
     ...
       <repository>
-        <id>hiramchirino.com-snapshot</id>
-        <name>Hiram Chirino's Snapshot Repository</name>
-        <url>http://hiramchirino.com/repo/snapshot</url>
+        <id>sonatype-nexus-snapshots</id>
+        <name>Sonatype Nexus Snapshots</name>
+        <url>http://oss.sonatype.org/content/repositories/snapshots</url>
         <snapshots>
           <enabled>true</enabled>
         </snapshots>
