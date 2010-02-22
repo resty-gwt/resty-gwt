@@ -12,11 +12,17 @@
     <servlet-name>test-service</servlet-name>
     <servlet-class>com.hiramchirino.restygwt.examples.server.TestServlet</servlet-class>
   </servlet>
-
+  <servlet>
+    <servlet-name>jsonp-service</servlet-name>
+    <servlet-class>com.hiramchirino.restygwt.examples.server.JsonpServlet</servlet-class>
+  </servlet>
+   
   <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/method</url-pattern></servlet-mapping> 
   <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/fail</url-pattern></servlet-mapping> 
   <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/JSONBinding/getListOfStrings</url-pattern></servlet-mapping> 
   <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/JSONBinding/getStringMapResponse</url-pattern></servlet-mapping> 
+
+  <servlet-mapping><servlet-name>jsonp-service</servlet-name><url-pattern>/ui/jsonp-service</url-pattern></servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>pizza-service</servlet-name>

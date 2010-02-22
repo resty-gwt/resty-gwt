@@ -33,7 +33,7 @@ public class Resource {
 	public static final String HEADER_ACCEPT = "Accept";
 	public static final String HEADER_CONTENT_TYPE = "Content-Type";
 		
-	String uri;
+	String path;
 	String query;
 	
 	private Map<String, String> headers = defaultHeaders();
@@ -41,15 +41,15 @@ public class Resource {
 	public Resource(String uri) {
 		int pos = uri.indexOf('?');
 		if( pos>=0 ) {
-            this.uri = uri.substring(0,pos); 
+            this.path = uri.substring(0,pos); 
             this.query = uri.substring(pos+1);
 		} else {
-	        this.uri = uri;
+	        this.path = uri;
 		}
 	}
 	
     public Resource(String uri, String query) {
-        this.uri = uri; 
+        this.path = uri; 
         this.query = query;
     }
 	
@@ -72,12 +72,23 @@ public class Resource {
 		return new Method(this, "OPTIONS").headers(headers);
 	}
 
-	public String getUri() {
-		return uri;
+	public JsonpMethod jsonp() {
+        return new JsonpMethod(this);
+    }
+
+	public String getPath() {
+		return path;
 	}
 	
     public String getQuery() {
         return query;
+    }
+
+    public String getUri() {
+        if( query!=null ) {
+            return path + "?" + query;
+        }
+        return path;
     }
 	
 	protected Map<String, String> defaultHeaders() {
@@ -86,14 +97,14 @@ public class Resource {
 
 	// TODO: support fancier resolutions
     public Resource resolve(String path) {
-        return new Resource(uri+path);
+        return new Resource(this.path+path);
     }
     
     public Resource addQueryParam(String key, String value) {
         key = URL.encodeComponent(key);
         value = URL.encodeComponent(value);
         String q = query==null ? "" : query+"&";
-        return new Resource(uri, q + key+"="+value);
+        return new Resource(path, q + key+"="+value);
     }
     
 }

@@ -21,6 +21,7 @@
   <inherits name="com.hiramchirino.restygwt.RestyGWT" />
 
   <servlet path='/pizza-service' class='com.hiramchirino.restygwt.examples.server.PizzaServlet'/>
+  <servlet path='/jsonp-service' class='com.hiramchirino.restygwt.examples.server.JsonpServlet'/>
   <servlet path='/test/method' class='com.hiramchirino.restygwt.examples.server.TestServlet'/>
   <servlet path='/test/fail' class='com.hiramchirino.restygwt.examples.server.TestServlet'/>
   <servlet path='/test/JSONBinding/getListOfStrings' class='com.hiramchirino.restygwt.examples.server.TestServlet'/>

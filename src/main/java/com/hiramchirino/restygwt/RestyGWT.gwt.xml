@@ -2,6 +2,7 @@
 
   <inherits name="com.google.gwt.http.HTTP" />
   <inherits name="com.google.gwt.json.JSON" />
+  <inherits name='com.google.gwt.jsonp.Jsonp' />
   <inherits name="com.google.gwt.xml.XML" />
 
   <generate-with class="com.hiramchirino.restygwt.rebind.RestServiceGenerator">

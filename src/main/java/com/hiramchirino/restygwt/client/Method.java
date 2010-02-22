@@ -60,12 +60,11 @@ public class Method {
 	Request request;
 	Response response;
 
+    protected Method() {
+    }
+    
 	public Method(Resource resource, String method) {
-		String uri = resource.getUri();
-		if( resource.getQuery()!=null ) {
-		    uri += "?"+resource.getQuery();
-		}
-        builder = new MethodRequestBuilder(method, uri);
+        builder = new MethodRequestBuilder(method,  resource.getUri());
 	}
 
 	public Method user(String user) {

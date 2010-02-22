@@ -19,10 +19,13 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.hiramchirino.restygwt.client.JsonCallback;
 import com.hiramchirino.restygwt.client.Method;
 import com.hiramchirino.restygwt.client.MethodCallback;
 import com.hiramchirino.restygwt.client.Resource;
@@ -53,6 +56,15 @@ public class UI implements EntryPoint {
                 doPut();
             }
         });       
+        RootPanel.get().add(button);
+
+        button = new Button("Do A Search on Yahoo /w Jsonp");
+        button.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                doJsonp();
+            }
+        });       
+        
         RootPanel.get().add(button);
     }
     
@@ -101,6 +113,19 @@ public class UI implements EntryPoint {
                 Window.alert("Error: "+exception);
             }
         });
+    }
+	
+    protected void doJsonp() {        
+        Resource resource = new Resource("http://search.yahooapis.com/WebSearchService/V1/webSearch?appid=YahooDemo&query=finances&format=pdf&output=json&callback=callback");
+        resource.jsonp().send(new JsonCallback() {
+            public void onSuccess(Method method, JSONValue response) {
+                JSONObject obj = (JSONObject)((JSONObject)response).get("ResultSet");
+                RootPanel.get().add(new Label("Search Results Available: "+obj.get("totalResultsAvailable")));
+            }            
+            public void onFailure(Method method, Throwable exception) {
+                Window.alert("Error x: "+exception);
+            }
+        });  
     }
 
 }
