@@ -1,17 +1,9 @@
-![RestyGWT][5]
-==============
+# RestyGWT User Guide
 
-Description
------------
+* Table of contents
+{:toc}
 
-[RestyGWT][1] is a GWT generator for REST services and JSON encoded data transfer objects.
-
-Project Resources
------------------
-
-* Source Code: [http://github.com/chirino/resty-gwt](http://github.com/chirino/resty-gwt)
-* Discussions: [http://groups.google.com/group/restygwt](http://groups.google.com/group/restygwt)
-* Issue Tracker: [http://github.com/chirino/resty-gwt/issues](http://github.com/chirino/resty-gwt/issues)
+RestyGWT is a GWT generator for REST services and JSON encoded data transfer objects.
 
 Features
 --------
@@ -19,7 +11,6 @@ Features
 * Generates Async Restful JSON based service proxies
 * Java Object to JSON encoding/decoding
 * Easy to use REST API
-
 
 REST Services
 -------------
@@ -56,7 +47,7 @@ look like for the `PizzaOrder` and `OrderConfirmation` in the previous example:
         public Long ready_time;
     }
 
-The JSON encoding style is compatible with the default [Jackson][2] Data Binding.  En example,
+The JSON encoding style is compatible with the default [Jackson](http://wiki.fasterxml.com/JacksonHome) Data Binding.  En example,
 `PizzaOrder` JSON representation would look like:
 
     {
@@ -181,8 +172,8 @@ And also the following repository:
 Building from Source
 --------------------
     
-1. Download and install [Maven 2.10][3].  Set the `M2_HOME` environment variable to the installation directory.  Add the maven bin directory to your `PATH` environment variable and make sure your `JAVA_HOME` environment variable is set your your JDK install directory.
-2. Download and install [GWT 2.0.0-rc1][4]. Set the `GWT_HOME` environment variable  to the installation directory.
+1. Download and install [Maven 2.10](http://code.google.com/webtoolkit/download.html).  Set the `M2_HOME` environment variable to the installation directory.  Add the maven bin directory to your `PATH` environment variable and make sure your `JAVA_HOME` environment variable is set your your JDK install directory.
+2. Download and install [GWT 2.0.0-rc1](http://code.google.com/webtoolkit/download.html). Set the `GWT_HOME` environment variable  to the installation directory.
 3. Change to the resty-gwt source directory and run:
 
         $ mvn install
@@ -193,8 +184,3 @@ To build and run the integration tests, use:
 
     $ mvn install -P run-its
 
-[1]: http://github.com/chirino/resty-gwt "resty-gwt"
-[2]: http://wiki.fasterxml.com/JacksonHome "Jackson JSON Processor"
-[3]: http://maven.apache.org/download.html#Maven_2.1.0 "Maven Download"
-[4]: http://code.google.com/webtoolkit/download.html "GWT Download"
-[5]: http://github.com/chirino/resty-gwt/raw/master/restygwt-website/src/images/restygwt-logo.png "resty-gwt logo"

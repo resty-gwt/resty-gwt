@@ -1,0 +1,35 @@
+--- name:paths
+#
+# You cand define metainfo for mutliple pages in this file.
+#
+
+**/*.page: # <-- That means the following attributes get applied to all pages
+     # in the site.
+
+  # -------------------------------------------------------------------
+  # You can easily switch the site from one look to another here:
+  # -------------------------------------------------------------------
+  #template: /styles/default/default.template
+  template: /styles/impact/main.template
+  
+  # -------------------------------------------------------------------
+  # Define the project properties here, these can be accessed in the 
+  # pages using the {var:} syntax.
+  # -------------------------------------------------------------------
+  project_name: "restygwt"
+  project_slogan: 'RestyGWT: Making Restful Services Accessible to GWT Applicaions'
+  project_id: 'restygwt'
+  project_issue_url: 'http://github.com/chirino/resty-gwt/issues'
+  project_forums_url: 'http://groups.google.com/group/restygwt'
+  project_wiki_url: 'http://github.com/chirino/resty-gwt/'
+  project_logo: "/images/restygwt-logo.png"
+
+  # -------------------------------------------------------------------
+  # TODO it would be nice to define these in terms of the project_id variable!
+  # -------------------------------------------------------------------
+  project_maven_groupId: 'com.hiramchirino.restygwt'
+  project_maven_artifactId: restygwt
+
+blog/*/**/*:
+  template: /styles/impact/blog.template
+  output_path_style: [:parent, :year, /, :month, /, :cnbase, [., :lang], :ext]
