@@ -29,13 +29,15 @@
   <properties>
     <forge-project-id>restygwt</forge-project-id>
     <forge-project-id-uc>RESTYGWT</forge-project-id-uc>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <release-altGitURL>scm:git:ssh://git@forge.fusesource.com/${forge-project-id}.git</release-altGitURL>
     
     <gwt-version>2.0.0</gwt-version>
   </properties>
 
-
   <url>http://${forge-project-id}.fusesource.org</url>
-  <inceptionYear>2009</inceptionYear>
+  <inceptionYear>2010</inceptionYear>
 
   <organization>
     <name>Progress Software Inc.</name>
@@ -47,16 +49,6 @@
     <url>http://fusesource.com/issues/browse/${forge-project-id-uc}</url>
   </issueManagement>
   
-  <developers>
-    <developer>
-      <id>chirino</id>
-      <name>Hiram Chirino</name>
-      <email>hiram@hiramchirino.com</email>
-      <url>http://hiramchirino.com</url>
-      <timezone>GMT-5</timezone>
-    </developer>
-  </developers>
-
   <mailingLists>
     <mailingList>
       <name>${forge-project-id} dev</name>
@@ -71,11 +63,6 @@
   </mailingLists>
 
   <licenses>
-    <license>
-      <name>Eclipse Public License - v 1.0</name>
-      <url>http://www.eclipse.org/legal/epl-v10.html</url>
-      <distribution>repo</distribution>
-    </license>
     <license>
       <name>The Apache Software License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
@@ -108,6 +95,16 @@
     </site>
   </distributionManagement> 
 
+  <developers>
+    <developer>
+      <id>chirino</id>
+      <name>Hiram Chirino</name>
+      <email>hiram@hiramchirino.com</email>
+      <url>http://hiramchirino.com</url>
+      <timezone>GMT-5</timezone>
+    </developer>
+  </developers>
+
   <build>
     <defaultGoal>install</defaultGoal>
 
@@ -115,7 +112,7 @@
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-webdav-jackrabbit</artifactId>
-        <version>1.0-beta-5</version>
+        <version>1.0-beta-6</version>
       </extension>
     </extensions>
 
@@ -138,19 +135,10 @@
 
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.0.2</version>
+        <version>2.1</version>
         <configuration>
           <source>1.5</source>
           <target>1.5</target>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.3</version>
-        <configuration>
-          <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
         
@@ -186,7 +174,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <version>2.0-beta-9</version>
+        <version>2.0</version>
         <configuration>
           <autoVersionSubmodules>true</autoVersionSubmodules>
           <allowTimestampedSnapshots>false</allowTimestampedSnapshots>
@@ -199,12 +187,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-scm-plugin</artifactId>
-        <version>1.2</version>
+        <version>1.3</version>
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.scm</groupId>
             <artifactId>maven-scm-provider-gitexe</artifactId>
-            <version>1.2</version>
+            <version>1.3</version>
           </dependency>
         </dependencies>
       </plugin>          
@@ -225,7 +213,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.5</version>
+        <version>2.6</version>
         <configuration>
           <excludePackageNames>*.internal</excludePackageNames>
           <linksource>true</linksource>
@@ -288,12 +276,16 @@
 
     <profile>
       <id>release</id>
+      <modules>
+        <module>restygwt-website</module>
+      </modules>
       <build>
         <plugins>
           <!-- We want to sign the artifact, the POM, and all attached artifacts -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.0</version>
             <configuration>
               <passphrase>${gpg.passphrase}</passphrase>
             </configuration>
@@ -309,11 +301,12 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
+            <version>2.1.1</version>
             <executions>
               <execution>
                 <id>attach-sources</id>
                 <goals>
-                  <goal>jar</goal>
+                  <goal>jar-no-fork</goal>
                 </goals>
               </execution>
             </executions>
@@ -322,15 +315,17 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.5</version>
+            <version>2.6</version>
+            
             <configuration>
               <encoding>${project.build.sourceEncoding}</encoding>
             </configuration>
+            
             <executions>
               <execution>
                 <id>attach-javadocs</id>
                 <goals>
-                  <goal>javadoc:aggregate</goal>
+                  <goal>jar</goal>
                 </goals>
               </execution>
             </executions>
@@ -340,50 +335,16 @@
     </profile>
 
     <profile>
-      <id>run-its</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-invoker-plugin</artifactId>
-            <version>1.3</version>
-            <configuration>
-              <debug>true</debug>
-              <projectsDirectory>src/it</projectsDirectory>
-              <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
-              <pomIncludes>
-                <pomInclude>*/pom.xml</pomInclude>
-              </pomIncludes>
-              <preBuildHookScript>setup</preBuildHookScript>
-              <postBuildHookScript>verify</postBuildHookScript>
-              <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
-              <settingsFile>src/it/settings.xml</settingsFile>
-              <goals>
-                <goal>clean</goal>
-                <goal>install</goal>
-              </goals>
-              <properties>
-                <restygwt-version>${pom.version}</restygwt-version>
-              </properties>
-            </configuration>
-            <executions>
-              <execution>
-                <id>integration-test</id>
-                <goals>
-                  <goal>install</goal>
-                  <goal>run</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
+      <id>website</id>
+      <modules>
+        <module>restygwt-website</module>
+      </modules>
     </profile>
 
   </profiles>
 
   <modules>
     <module>restygwt</module>
-    <module>restygwt-website</module>
   </modules>
 
 </project>
