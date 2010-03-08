@@ -153,7 +153,7 @@ Just add the following dependency to your pom.xml
     <dependencies>
     ...
       <dependency>
-        <groupId>com.hiramchirino.resty-gwt</groupId>
+        <groupId>org.fusesource.resty-gwt</groupId>
         <artifactId>resty-gwt</artifactId>
         <version>1.0-SNAPSHOT</version>
       </dependency>

@@ -1,0 +1,17 @@
+<module>
+
+  <inherits name="com.google.gwt.http.HTTP" />
+  <inherits name="com.google.gwt.json.JSON" />
+  <inherits name='com.google.gwt.jsonp.Jsonp' />
+  <inherits name="com.google.gwt.xml.XML" />
+
+  <generate-with class="org.fusesource.restygwt.rebind.RestServiceGenerator">
+    <when-type-assignable class="org.fusesource.restygwt.client.RestService" />
+  </generate-with>
+  <generate-with class="org.fusesource.restygwt.rebind.JsonEncoderDecoderGenerator">
+    <when-type-assignable class="org.fusesource.restygwt.client.JsonEncoderDecoder" />
+  </generate-with>
+  
+  <source path="client"/>
+
+</module>

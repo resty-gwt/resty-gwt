@@ -27,7 +27,7 @@
   # -------------------------------------------------------------------
   # TODO it would be nice to define these in terms of the project_id variable!
   # -------------------------------------------------------------------
-  project_maven_groupId: 'com.hiramchirino.restygwt'
+  project_maven_groupId: 'org.fusesource.restygwt'
   project_maven_artifactId: restygwt
 
 blog/*/**/*:

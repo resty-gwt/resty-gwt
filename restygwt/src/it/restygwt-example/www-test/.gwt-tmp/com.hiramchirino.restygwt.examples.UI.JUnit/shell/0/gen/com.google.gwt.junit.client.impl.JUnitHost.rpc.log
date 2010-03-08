@@ -1,0 +1,557 @@
+====================================
+Types potentially sent from browser:
+====================================
+
+Reachable types computed on: Fri Jan 08 16:26:44 EST 2010
+E
+   Serialization status
+      Not serializable
+   Path
+      'E' is reachable from field 'exposeElement' of type 'java.util.Vector<E>'
+      'java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+E
+   Serialization status
+      Not serializable
+   Path
+      'E' is reachable from field 'exposeElement' of type 'java.util.ArrayList<E>'
+      'java.util.ArrayList<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+E
+   Serialization status
+      Not serializable
+   Path
+      'E' is reachable from field 'exposeElement' of type 'java.util.LinkedList<E>'
+      'java.util.LinkedList<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+E[]
+   Serialization status
+      Not serializable
+   Path
+      'E[]' is reachable from field 'array' of type 'java.util.Arrays.ArrayList<E>'
+      'java.util.Arrays.ArrayList<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+K
+   Serialization status
+      Not serializable
+   Path
+      'K' is reachable from field 'exposeKey' of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<java.lang.String, java.lang.String>' is reachable as a subtype of type 'interface java.util.Map<java.lang.String, java.lang.String>'
+      'java.util.Map<java.lang.String, java.lang.String>' is reachable from field 'variables' of type 'com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable as a subtype of type 'class com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable from type argument 0 of type 'java.util.Vector<E>'
+      'java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+K
+   Serialization status
+      Not serializable
+   Path
+      'K' is reachable from field 'exposeKey' of type 'java.util.IdentityHashMap<K, V>'
+      'java.util.IdentityHashMap<java.lang.String, java.lang.String>' is reachable as a subtype of type 'interface java.util.Map<java.lang.String, java.lang.String>'
+      'java.util.Map<java.lang.String, java.lang.String>' is reachable from field 'variables' of type 'com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable as a subtype of type 'class com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable from type argument 0 of type 'java.util.Vector<E>'
+      'java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+K
+   Serialization status
+      Not serializable
+   Path
+      'K' is reachable from field 'exposeKeyType' of type 'java.util.TreeMap<K, V>'
+      'java.util.TreeMap<java.lang.String, java.lang.String>' is reachable as a subtype of type 'interface java.util.Map<java.lang.String, java.lang.String>'
+      'java.util.Map<java.lang.String, java.lang.String>' is reachable from field 'variables' of type 'com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable as a subtype of type 'class com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable from type argument 0 of type 'java.util.Vector<E>'
+      'java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+V
+   Serialization status
+      Not serializable
+   Path
+      'V' is reachable from field 'exposeValue' of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<java.lang.String, java.lang.String>' is reachable as a subtype of type 'interface java.util.Map<java.lang.String, java.lang.String>'
+      'java.util.Map<java.lang.String, java.lang.String>' is reachable from field 'variables' of type 'com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable as a subtype of type 'class com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable from type argument 0 of type 'java.util.Vector<E>'
+      'java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+V
+   Serialization status
+      Not serializable
+   Path
+      'V' is reachable from field 'exposeValueType' of type 'java.util.TreeMap<K, V>'
+      'java.util.TreeMap<java.lang.String, java.lang.String>' is reachable as a subtype of type 'interface java.util.Map<java.lang.String, java.lang.String>'
+      'java.util.Map<java.lang.String, java.lang.String>' is reachable from field 'variables' of type 'com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable as a subtype of type 'class com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable from type argument 0 of type 'java.util.Vector<E>'
+      'java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+com.google.gwt.benchmarks.client.impl.BenchmarkResults
+   Serialization status
+      Instantiable
+   Path
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+com.google.gwt.benchmarks.client.impl.Trial
+   Serialization status
+      Instantiable
+   Path
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable from type argument 0 of type 'java.util.Vector<E>'
+      'java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+com.google.gwt.benchmarks.client.impl.Trial[]
+   Serialization status
+      Instantiable
+   Path
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable from type argument 0 of type 'java.util.Arrays.ArrayList<E>'
+      'java.util.Arrays.ArrayList<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+com.google.gwt.junit.client.impl.ExceptionWrapper
+   Serialization status
+      Instantiable
+   Path
+      'com.google.gwt.junit.client.impl.ExceptionWrapper' is reachable from field 'exceptionWrapper' of type 'com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+com.google.gwt.junit.client.impl.JUnitHost.ClientInfo
+   Serialization status
+      Instantiable
+   Path
+      Started from 'com.google.gwt.junit.client.impl.JUnitHost.ClientInfo'
+
+com.google.gwt.junit.client.impl.JUnitHost.TestInfo
+   Serialization status
+      Instantiable
+   Path
+      'com.google.gwt.junit.client.impl.JUnitHost.TestInfo' is reachable from type argument 0 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+com.google.gwt.junit.client.impl.JUnitResult
+   Serialization status
+      Instantiable
+   Path
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+com.google.gwt.junit.client.impl.StackTraceWrapper
+   Serialization status
+      Instantiable
+   Path
+      Type 'com.google.gwt.junit.client.impl.StackTraceWrapper' is reachable from array type 'com.google.gwt.junit.client.impl.StackTraceWrapper[]'
+      'com.google.gwt.junit.client.impl.StackTraceWrapper[]' is reachable from field 'stackTrace' of type 'com.google.gwt.junit.client.impl.ExceptionWrapper'
+      'com.google.gwt.junit.client.impl.ExceptionWrapper' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.ExceptionWrapper'
+      'com.google.gwt.junit.client.impl.ExceptionWrapper' is reachable from field 'exceptionWrapper' of type 'com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+com.google.gwt.junit.client.impl.StackTraceWrapper[]
+   Serialization status
+      Instantiable
+   Path
+      'com.google.gwt.junit.client.impl.StackTraceWrapper[]' is reachable from field 'stackTrace' of type 'com.google.gwt.junit.client.impl.ExceptionWrapper'
+      'com.google.gwt.junit.client.impl.ExceptionWrapper' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.ExceptionWrapper'
+      'com.google.gwt.junit.client.impl.ExceptionWrapper' is reachable from field 'exceptionWrapper' of type 'com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException
+   Serialization status
+      Instantiable
+   Path
+      Started from 'com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+
+double
+   Serialization status
+      Not serializable
+   Path
+      'double' is reachable from field 'runTimeMillis' of type 'com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable as a subtype of type 'class com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable from type argument 0 of type 'java.util.Vector<E>'
+      'java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+int
+   Serialization status
+      Not serializable
+   Path
+      'int' is reachable from field 'sessionId' of type 'com.google.gwt.junit.client.impl.JUnitHost.ClientInfo'
+      'com.google.gwt.junit.client.impl.JUnitHost.ClientInfo' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitHost.ClientInfo'
+      Started from 'com.google.gwt.junit.client.impl.JUnitHost.ClientInfo'
+
+java.lang.Exception
+   Serialization status
+      Field serializable
+   Path
+      'java.lang.Exception' is reachable as a supertype of type 'class java.lang.RuntimeException'
+      'java.lang.RuntimeException' is reachable as a supertype of type 'class com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+      'com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException' is reachable as a subtype of type 'class com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+      Started from 'com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+
+java.lang.RuntimeException
+   Serialization status
+      Field serializable
+   Path
+      'java.lang.RuntimeException' is reachable as a supertype of type 'class com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+      'com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException' is reachable as a subtype of type 'class com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+      Started from 'com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+
+java.lang.String
+   Serialization status
+      Instantiable
+   Path
+      Started from 'java.lang.String'
+
+java.lang.Throwable
+   Serialization status
+      Field serializable
+   Path
+      'java.lang.Throwable' is reachable as a supertype of type 'class java.lang.Exception'
+      'java.lang.Exception' is reachable as a supertype of type 'class java.lang.RuntimeException'
+      'java.lang.RuntimeException' is reachable as a supertype of type 'class com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+      'com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException' is reachable as a subtype of type 'class com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+      Started from 'com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+
+java.util.ArrayList<com.google.gwt.benchmarks.client.impl.Trial>
+   Serialization status
+      Instantiable
+   Path
+      'java.util.ArrayList<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+java.util.Arrays.ArrayList<com.google.gwt.benchmarks.client.impl.Trial>
+   Serialization status
+      Instantiable
+   Path
+      'java.util.Arrays.ArrayList<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+java.util.Comparator<? super K>
+   Serialization status
+      Not serializable
+   Path
+      'java.util.Comparator<? super K>' is reachable from field 'cmp' of type 'java.util.TreeMap<K, V>'
+      'java.util.TreeMap<java.lang.String, java.lang.String>' is reachable as a subtype of type 'interface java.util.Map<java.lang.String, java.lang.String>'
+      'java.util.Map<java.lang.String, java.lang.String>' is reachable from field 'variables' of type 'com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable as a subtype of type 'class com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable from type argument 0 of type 'java.util.Vector<E>'
+      'java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+java.util.HashMap<java.lang.String, java.lang.String>
+   Serialization status
+      Instantiable
+   Path
+      'java.util.HashMap<java.lang.String, java.lang.String>' is reachable as a subtype of type 'interface java.util.Map<java.lang.String, java.lang.String>'
+      'java.util.Map<java.lang.String, java.lang.String>' is reachable from field 'variables' of type 'com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable as a subtype of type 'class com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable from type argument 0 of type 'java.util.Vector<E>'
+      'java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>
+   Serialization status
+      Instantiable
+   Path
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+java.util.IdentityHashMap<java.lang.String, java.lang.String>
+   Serialization status
+      Instantiable
+   Path
+      'java.util.IdentityHashMap<java.lang.String, java.lang.String>' is reachable as a subtype of type 'interface java.util.Map<java.lang.String, java.lang.String>'
+      'java.util.Map<java.lang.String, java.lang.String>' is reachable from field 'variables' of type 'com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable as a subtype of type 'class com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable from type argument 0 of type 'java.util.Vector<E>'
+      'java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+java.util.LinkedHashMap<java.lang.String, java.lang.String>
+   Serialization status
+      Instantiable
+   Path
+      'java.util.LinkedHashMap<java.lang.String, java.lang.String>' is reachable as a subtype of type 'interface java.util.Map<java.lang.String, java.lang.String>'
+      'java.util.Map<java.lang.String, java.lang.String>' is reachable from field 'variables' of type 'com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable as a subtype of type 'class com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable from type argument 0 of type 'java.util.Vector<E>'
+      'java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+java.util.LinkedHashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>
+   Serialization status
+      Instantiable
+   Path
+      'java.util.LinkedHashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+java.util.LinkedList<com.google.gwt.benchmarks.client.impl.Trial>
+   Serialization status
+      Instantiable
+   Path
+      'java.util.LinkedList<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+java.util.LinkedList.Node<E>
+   Serialization status
+      Not serializable
+   Path
+      'java.util.LinkedList.Node<E>' is reachable from field 'header' of type 'java.util.LinkedList<E>'
+      'java.util.LinkedList<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+java.util.List<com.google.gwt.benchmarks.client.impl.Trial>
+   Serialization status
+      Not serializable
+   Path
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+java.util.Map<java.lang.String, java.lang.String>
+   Serialization status
+      Not serializable
+   Path
+      'java.util.Map<java.lang.String, java.lang.String>' is reachable from field 'variables' of type 'com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable as a subtype of type 'class com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable from type argument 0 of type 'java.util.Vector<E>'
+      'java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+java.util.Stack<com.google.gwt.benchmarks.client.impl.Trial>
+   Serialization status
+      Instantiable
+   Path
+      'java.util.Stack<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+java.util.TreeMap<java.lang.String, java.lang.String>
+   Serialization status
+      Instantiable
+   Path
+      'java.util.TreeMap<java.lang.String, java.lang.String>' is reachable as a subtype of type 'interface java.util.Map<java.lang.String, java.lang.String>'
+      'java.util.Map<java.lang.String, java.lang.String>' is reachable from field 'variables' of type 'com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable as a subtype of type 'class com.google.gwt.benchmarks.client.impl.Trial'
+      'com.google.gwt.benchmarks.client.impl.Trial' is reachable from type argument 0 of type 'java.util.Vector<E>'
+      'java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>
+   Serialization status
+      Instantiable
+   Path
+      'java.util.Vector<com.google.gwt.benchmarks.client.impl.Trial>' is reachable as a subtype of type 'interface java.util.List<com.google.gwt.benchmarks.client.impl.Trial>'
+      'java.util.List<com.google.gwt.benchmarks.client.impl.Trial>' is reachable from field 'trials' of type 'com.google.gwt.benchmarks.client.impl.BenchmarkResults'
+      'com.google.gwt.benchmarks.client.impl.BenchmarkResults' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitResult'
+      'com.google.gwt.junit.client.impl.JUnitResult' is reachable from type argument 1 of type 'java.util.HashMap<K, V>'
+      'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>' is reachable as a subtype of type 'class java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+      Started from 'java.util.HashMap<com.google.gwt.junit.client.impl.JUnitHost.TestInfo, com.google.gwt.junit.client.impl.JUnitResult>'
+
+===================================
+Types potentially sent from server:
+===================================
+
+Reachable types computed on: Fri Jan 08 16:26:44 EST 2010
+com.google.gwt.junit.client.TimeoutException
+   Serialization status
+      Instantiable
+   Path
+      Started from 'com.google.gwt.junit.client.TimeoutException'
+
+com.google.gwt.junit.client.impl.JUnitHost.InitialResponse
+   Serialization status
+      Instantiable
+   Path
+      Started from 'com.google.gwt.junit.client.impl.JUnitHost.InitialResponse'
+
+com.google.gwt.junit.client.impl.JUnitHost.TestBlock
+   Serialization status
+      Instantiable
+   Path
+      'com.google.gwt.junit.client.impl.JUnitHost.TestBlock' is reachable from field 'testBlock' of type 'com.google.gwt.junit.client.impl.JUnitHost.InitialResponse'
+      'com.google.gwt.junit.client.impl.JUnitHost.InitialResponse' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitHost.InitialResponse'
+      Started from 'com.google.gwt.junit.client.impl.JUnitHost.InitialResponse'
+
+com.google.gwt.junit.client.impl.JUnitHost.TestInfo
+   Serialization status
+      Instantiable
+   Path
+      Type 'com.google.gwt.junit.client.impl.JUnitHost.TestInfo' is reachable from array type 'com.google.gwt.junit.client.impl.JUnitHost.TestInfo[]'
+      'com.google.gwt.junit.client.impl.JUnitHost.TestInfo[]' is reachable from field 'tests' of type 'com.google.gwt.junit.client.impl.JUnitHost.TestBlock'
+      'com.google.gwt.junit.client.impl.JUnitHost.TestBlock' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitHost.TestBlock'
+      'com.google.gwt.junit.client.impl.JUnitHost.TestBlock' is reachable from field 'testBlock' of type 'com.google.gwt.junit.client.impl.JUnitHost.InitialResponse'
+      'com.google.gwt.junit.client.impl.JUnitHost.InitialResponse' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitHost.InitialResponse'
+      Started from 'com.google.gwt.junit.client.impl.JUnitHost.InitialResponse'
+
+com.google.gwt.junit.client.impl.JUnitHost.TestInfo[]
+   Serialization status
+      Instantiable
+   Path
+      'com.google.gwt.junit.client.impl.JUnitHost.TestInfo[]' is reachable from field 'tests' of type 'com.google.gwt.junit.client.impl.JUnitHost.TestBlock'
+      'com.google.gwt.junit.client.impl.JUnitHost.TestBlock' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitHost.TestBlock'
+      'com.google.gwt.junit.client.impl.JUnitHost.TestBlock' is reachable from field 'testBlock' of type 'com.google.gwt.junit.client.impl.JUnitHost.InitialResponse'
+      'com.google.gwt.junit.client.impl.JUnitHost.InitialResponse' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitHost.InitialResponse'
+      Started from 'com.google.gwt.junit.client.impl.JUnitHost.InitialResponse'
+
+com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException
+   Serialization status
+      Instantiable
+   Path
+      Started from 'com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+
+int
+   Serialization status
+      Not serializable
+   Path
+      'int' is reachable from field 'sessionId' of type 'com.google.gwt.junit.client.impl.JUnitHost.InitialResponse'
+      'com.google.gwt.junit.client.impl.JUnitHost.InitialResponse' is reachable as a subtype of type 'class com.google.gwt.junit.client.impl.JUnitHost.InitialResponse'
+      Started from 'com.google.gwt.junit.client.impl.JUnitHost.InitialResponse'
+
+java.lang.Exception
+   Serialization status
+      Field serializable
+   Path
+      'java.lang.Exception' is reachable as a supertype of type 'class java.lang.RuntimeException'
+      'java.lang.RuntimeException' is reachable as a supertype of type 'class com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+      'com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException' is reachable as a subtype of type 'class com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+      Started from 'com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+
+java.lang.RuntimeException
+   Serialization status
+      Field serializable
+   Path
+      'java.lang.RuntimeException' is reachable as a supertype of type 'class com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+      'com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException' is reachable as a subtype of type 'class com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+      Started from 'com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+
+java.lang.String
+   Serialization status
+      Instantiable
+   Path
+      Started from 'java.lang.String'
+
+java.lang.Throwable
+   Serialization status
+      Field serializable
+   Path
+      'java.lang.Throwable' is reachable as a supertype of type 'class java.lang.Exception'
+      'java.lang.Exception' is reachable as a supertype of type 'class java.lang.RuntimeException'
+      'java.lang.RuntimeException' is reachable as a supertype of type 'class com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+      'com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException' is reachable as a subtype of type 'class com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+      Started from 'com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException'
+

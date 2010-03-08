@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  
+  <servlet>
+    <servlet-name>cxf</servlet-name>
+    <servlet-class>org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet</servlet-class>
+    <init-param>
+      <param-name>jaxrs.serviceClasses</param-name>
+      <param-value>org.fusesource.examples.server.MapService</param-value>
+    </init-param>
+    <init-param>
+      <param-name>jaxrs.providers</param-name>
+      <param-value>org.codehaus.jackson.jaxrs.JacksonJsonProvider</param-value>
+    </init-param>
+    <init-param>
+      <param-name>jaxrs.address</param-name>
+      <param-value>/example/rest/</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>cxf</servlet-name>
+    <url-pattern>/example/rest/*</url-pattern>
+  </servlet-mapping>
+   
+</web-app>
