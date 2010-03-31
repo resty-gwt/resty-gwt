@@ -159,14 +159,16 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                             Style style = jsonAnnotation!=null ? jsonAnnotation.style() : classStyle;
 
                             String name = field.getName();
-                            String expression = locator.decodeExpression(field.getType(), "object.get(" + wrap(name) + ")", style);
-                        	
-                        	if(setterName != null){
-                                p("rc." + setterName + "(" + expression + ");");
-                        	}else{
-                                p("rc." + name + "=" + expression + ";");
-                        	}
-                        	
+                            String objectGetter = "object.get(" + wrap(name) + ")";
+                            String expression = locator.decodeExpression(field.getType(), objectGetter, style);
+                        
+                            p("if(" + objectGetter + " != null) {").i(1);
+                            if (setterName != null) {
+                                p("rc." + setterName + "(" + expression+ ");");
+                            } else {
+                            	p("rc." + name + "=" + expression + ";");
+                        	} i(-1).p("}");
+
                         } else {
                             error("field must not be private.");
                         }
