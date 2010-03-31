@@ -81,6 +81,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
         p("public " + JSON_VALUE_CLASS + " encode(" + source.getParameterizedQualifiedSourceName() + " value) {").i(1);
         {
+			p("if( value==null ) {").i(1); {
+        		p("return null;");
+			} i(-1).p("}");         
         	p(JSON_OBJECT_CLASS + " rc = new " + JSON_OBJECT_CLASS + "();");
 
             for (final JField field : getFields(source)) {
