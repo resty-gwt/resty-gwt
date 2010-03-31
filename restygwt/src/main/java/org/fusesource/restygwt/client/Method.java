@@ -92,6 +92,12 @@ public class Method {
 		return this;
 	}
 
+	private void doSetTimeout(){
+		if(Defaults.getRequestTimeout()>-1){
+			builder.setTimeoutMillis(Defaults.getRequestTimeout());
+		}
+	}
+
 	public Method text(String data) {
 		defaultContentType(Resource.CONTENT_TYPE_TEXT);
 		builder.setRequestData(data);
@@ -120,6 +126,7 @@ public class Method {
     }
 
 	public void send(final RequestCallback callback) throws RequestException {
+		doSetTimeout();
 		builder.setCallback(new RequestCallback() {
             public void onResponseReceived(Request request, Response response) {
                 callback.onResponseReceived(request, response);
@@ -128,7 +135,7 @@ public class Method {
                 callback.onResponseReceived(request, response);
             }
         });
-        GWT.log("Sending http request: "+builder.getHTTPMethod()+" "+builder.getUrl(), null);
+        GWT.log("Sending http request: "+builder.getHTTPMethod()+" "+builder.getUrl()+" ,timeout:"+builder.getTimeoutMillis(), null);
         String content = builder.getRequestData();
         if( content!=null && content.length()>0) {
             GWT.log(content, null);

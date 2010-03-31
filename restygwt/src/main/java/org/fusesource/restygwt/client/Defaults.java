@@ -30,6 +30,9 @@ public class Defaults {
     private static String serviceRoot = GWT.getModuleBaseURL();
     private static String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
+    //patch TNY: timeout
+    private static int requestTimeout= -1;//ms, if >-1, used in Method class to set timeout
+
     public static String getServiceRoot() {
         return serviceRoot;
     }
@@ -55,5 +58,12 @@ public class Defaults {
     public static void setDateFormat(String dateFormat) {
         Defaults.dateFormat = dateFormat;
     }
+    public static final int getRequestTimeout() {
+               return requestTimeout;
+       }
+
+       public static final void setRequestTimeout(int requestTimeout) {
+               Defaults.requestTimeout = requestTimeout;
+       }
 
 }
