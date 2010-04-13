@@ -144,21 +144,21 @@ Just add the following dependency to your pom.xml
     <dependencies>
     ...
       <dependency>
-        <groupId>org.fusesource.resty-gwt</groupId>
-        <artifactId>resty-gwt</artifactId>
+        <groupId>org.fusesource.restygwt</groupId>
+        <artifactId>restygwt</artifactId>
         <version>1.0-SNAPSHOT</version>
       </dependency>
     ...
     </dependencies>
     
-And also the following repository:
+And until a non-snapshot release is made available, you will need to also add the following repository:
   
     <repositories>
     ...
       <repository>
-        <id>sonatype-nexus-snapshots</id>
-        <name>Sonatype Nexus Snapshots</name>
-        <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+        <id>fusesource-nexus-snapshots</id>
+        <name>Fusesource Nexus Snapshots</name>
+        <url>http://repo.fusesource.com/nexus/content/repositories/snapshots</url>
         <snapshots>
           <enabled>true</enabled>
         </snapshots>
@@ -178,7 +178,7 @@ Building from Source
 
         $ mvn install
     
-The above command will produce a `target/resty-gwt-*.jar` file.
+The above command will produce a `restygwt/target/resty-gwt-*.jar` file.
 
 To build and run the integration tests, use:    
 

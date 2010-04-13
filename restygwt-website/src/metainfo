@@ -16,14 +16,20 @@
   # Define the project properties here, these can be accessed in the 
   # pages using the {var:} syntax.
   # -------------------------------------------------------------------
-  project_name: "restygwt"
+  project_name: "RestyGWT"
   project_slogan: 'RestyGWT: Making Restful Services Accessible to GWT Applicaions'
   project_id: 'restygwt'
   project_issue_url: 'http://github.com/chirino/resty-gwt/issues'
   project_forums_url: 'http://groups.google.com/group/restygwt'
   project_wiki_url: 'http://github.com/chirino/resty-gwt/'
   project_logo: "/images/restygwt-logo.png"
-
+  project_release_version: 1.0
+  project_snapshot_version: 1.0-SNAPSHOT
+  
+  github_page: http://github.com/chirino/resty-gwt
+  git_user_url: git://github.com/chirino/resty-gwt.git
+  git_commiter_url: git@github.com:chirino/resty-gwt.git
+  
   # -------------------------------------------------------------------
   # TODO it would be nice to define these in terms of the project_id variable!
   # -------------------------------------------------------------------

@@ -31,7 +31,7 @@
     <forge-project-id-uc>RESTYGWT</forge-project-id-uc>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <release-altGitURL>scm:git:ssh://git@forge.fusesource.com/${forge-project-id}.git</release-altGitURL>
+    <release-altGitURL>scm:git:ssh://git@github.com:chirino/resty-gwt.git</release-altGitURL>
     
     <gwt-version>2.0.0</gwt-version>
   </properties>
@@ -72,28 +72,27 @@
   
   <scm>
     <connection>scm:git:git://github.com/chirino/resty-gwt.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com:chirino/resty-gwt.git</developerConnection>
+    <developerConnection>${release-altGitURL}</developerConnection>
     <url>http://github.com/chirino/resty-gwt</url>
   </scm>
 
   <distributionManagement>
     <repository>
-      <id>release.fusesource.org</id>
-      <name>Release Repository</name>
-      <url>dav:http://fusesource.com/forge/dav/${forge-project-id}/repo/release</url>
+      <id>fusesource-nexus-staging</id>
+      <name>Fusesource Release Repository</name>
+      <url>http://repo.fusesource.com/nexus/service/local/staging/deploy/maven2</url>
     </repository>
     <snapshotRepository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>snapshot.fusesource.org</id>
-      <name>Snapshot Repository</name>
-      <url>dav:http://fusesource.com/forge/dav/${forge-project-id}/repo/snapshot</url>
+      <id>fusesource-nexus-snapshots</id>
+      <name>Fusesource Nexus Snapshots</name>
+      <url>http://repo.fusesource.com/nexus/content/repositories/snapshots</url>
     </snapshotRepository>
     <site>
       <id>website.fusesource.org</id>
       <name>website</name>
       <url>dav:http://fusesource.com/forge/dav/${forge-project-id}/maven/${project.version}</url>
     </site>
-  </distributionManagement> 
+  </distributionManagement>
 
   <developers>
     <developer>
