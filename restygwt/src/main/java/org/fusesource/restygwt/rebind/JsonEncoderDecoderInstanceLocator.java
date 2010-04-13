@@ -133,7 +133,11 @@ public class JsonEncoderDecoderInstanceLocator {
     private String encodeDecodeExpression(JType type, String expression, Style style, String encoderMethod, String mapMethod, String setMethod, String listMethod) throws UnableToCompleteException {
         
         if( null != type.isEnum() ){
-            return type.getQualifiedSourceName()+".valueOf("+encodeDecodeExpression(STRING_TYPE, expression, style, encoderMethod, mapMethod, setMethod, listMethod);
+            if(encoderMethod.equals("encode")) {
+                return encodeDecodeExpression(STRING_TYPE, expression+".toString()", style, encoderMethod, mapMethod, setMethod, listMethod);
+            } else {
+                return type.getQualifiedSourceName()+".valueOf("+encodeDecodeExpression(STRING_TYPE, expression, style, encoderMethod, mapMethod, setMethod, listMethod)+")";
+            }
         }
 
         String encoderDecoder = getEncoderDecoder(type, logger);
