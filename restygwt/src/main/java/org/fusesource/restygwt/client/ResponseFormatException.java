@@ -22,9 +22,9 @@ package org.fusesource.restygwt.client;
  */
 public class ResponseFormatException extends RuntimeException {
 
-	private static final long serialVersionUID = 1819275788939805070L;
+    private static final long serialVersionUID = 1819275788939805070L;
 
-	public ResponseFormatException(String message, Throwable e) {
-		super(message, e);
-	}
+    public ResponseFormatException(String message, Throwable e) {
+        super(message, e);
+    }
 }

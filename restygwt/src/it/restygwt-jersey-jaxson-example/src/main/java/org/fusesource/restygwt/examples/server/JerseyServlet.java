@@ -28,47 +28,47 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * This servlet is a horible hack to integrate jersey /w gwt hosted mode 
- * junit tests.
- *  
+ * This servlet is a horible hack to integrate jersey /w gwt hosted mode junit
+ * tests.
+ * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class JerseyServlet extends com.sun.jersey.spi.container.servlet.ServletContainer {
 
     private static final long serialVersionUID = -273961734543645503L;
-    
+
     private static Properties initParams = new Properties();
     static {
         initParams.put("com.sun.jersey.config.property.packages", "org.fusesource.restygwt.examples.server;org.codehaus.jackson.jaxrs");
     }
-    
+
     public void init(final ServletConfig servletConfig) throws ServletException {
         super.init(new ServletConfig() {
             public String getServletName() {
                 return servletConfig.getServletName();
             }
-            
+
             public ServletContext getServletContext() {
                 return servletConfig.getServletContext();
             }
-            
+
             @SuppressWarnings("unchecked")
             public Enumeration getInitParameterNames() {
                 return initParams.keys();
             }
-            
+
             public String getInitParameter(String name) {
                 return initParams.getProperty(name);
             }
         });
     }
-    
+
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request) {
             @Override
             public String getServletPath() {
-                if( getPathInfo().startsWith("/org.fusesource.restygwt.examples.JERSEY_JAXSON.JUnit/rest") ) {
+                if (getPathInfo().startsWith("/org.fusesource.restygwt.examples.JERSEY_JAXSON.JUnit/rest")) {
                     return "/org.fusesource.restygwt.examples.JERSEY_JAXSON.JUnit/rest";
                 }
                 return super.getServletPath();

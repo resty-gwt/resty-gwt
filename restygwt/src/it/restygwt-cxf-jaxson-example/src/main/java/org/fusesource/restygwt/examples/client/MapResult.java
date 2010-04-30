@@ -26,20 +26,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MapResult {
-    
+
     public Map<String, String> result = new LinkedHashMap<String, String>();
 
     public MapResult() {
     }
+
     public MapResult(Map<String, String> map) {
         this.result = map;
     }
-    
+
     @Override
     public int hashCode() {
         return result.hashCode();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         try {
@@ -49,6 +50,5 @@ public class MapResult {
             return false;
         }
     }
-    
-    
+
 }

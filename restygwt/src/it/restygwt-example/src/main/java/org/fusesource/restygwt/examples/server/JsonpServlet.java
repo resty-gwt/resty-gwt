@@ -29,15 +29,15 @@ import javax.servlet.http.HttpServletResponse;
 public class JsonpServlet extends HttpServlet {
 
     private static final long serialVersionUID = -5364009274470240593L;
-    
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String function = req.getParameter("callback");
         resp.setContentType("application/javascript");
         String data = "{\"first\":\"Hiram\",\"last\":\"Chirino\",\"city\":\"Tampa\"}";
-        String jsonp = function+"(" +data +")";
-        System.out.println("Responding with: "+jsonp);
+        String jsonp = function + "(" + data + ")";
+        System.out.println("Responding with: " + jsonp);
         resp.getWriter().println(jsonp);
     }
-    
+
 }

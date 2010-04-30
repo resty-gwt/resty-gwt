@@ -26,33 +26,34 @@ import org.fusesource.restygwt.examples.client.MethodService;
 import com.google.gwt.core.client.GWT;
 
 /**
- * This test verifies that all the http methods 
- * can be accessed via a RestService.
+ * This test verifies that all the http methods can be accessed via a
+ * RestService.
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class FailServiceUITestGWT extends UITestGWT {
 
-	private static final int REQUEST_TIMEOUT = 2000;
+    private static final int REQUEST_TIMEOUT = 2000;
     private MethodService service;
 
-	@Override
-	protected void gwtSetUp() throws Exception {
-	    Resource resource = new Resource( GWT.getModuleBaseURL() + "test/fail");
+    @Override
+    protected void gwtSetUp() throws Exception {
+        Resource resource = new Resource(GWT.getModuleBaseURL() + "test/fail");
         service = GWT.create(MethodService.class);
-        ((RestServiceProxy)service).setResource(resource);
-	}
-	
+        ((RestServiceProxy) service).setResource(resource);
+    }
+
     public void testGet() {
         service.get(expectFailedStatusCodeException(501));
         delayTestFinish(REQUEST_TIMEOUT);
     }
 
-	private MethodCallback<String> expectFailedStatusCodeException(final int expectedStatusCode) {
-		return new MethodCallback<String>() {
+    private MethodCallback<String> expectFailedStatusCodeException(final int expectedStatusCode) {
+        return new MethodCallback<String>() {
             public void onSuccess(Method method, String response) {
                 fail("Expected Failure with Status Code ");
             }
+
             public void onFailure(Method method, Throwable exception) {
                 assertNotNull(method);
                 assertNotNull(exception);
@@ -62,6 +63,6 @@ public class FailServiceUITestGWT extends UITestGWT {
                 finishTest();
             }
         };
-	}
-    
+    }
+
 }

@@ -16,12 +16,14 @@
  */
 package org.fusesource.restygwt.client;
 
-
 /**
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public interface MethodCallback<T> {
-	public void onFailure(Method method, Throwable exception);
+    
+    public void onFailure(Method method, Throwable exception);
+
     public void onSuccess(Method method, T response);
+    
 }

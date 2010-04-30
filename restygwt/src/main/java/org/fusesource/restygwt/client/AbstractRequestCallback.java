@@ -26,45 +26,46 @@ import com.google.gwt.http.client.Response;
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public abstract class AbstractRequestCallback<T> implements RequestCallback {
+
     private final Method method;
     protected MethodCallback<T> callback;
-	
-	public AbstractRequestCallback(Method method, MethodCallback<T> callback) {
+
+    public AbstractRequestCallback(Method method, MethodCallback<T> callback) {
         this.method = method;
-		this.callback = callback;
-	}
+        this.callback = callback;
+    }
 
-	final public void onError(Request request, Throwable exception) {
-		this.method.request = request;
-		callback.onFailure(this.method, exception);
-	}
+    final public void onError(Request request, Throwable exception) {
+        this.method.request = request;
+        callback.onFailure(this.method, exception);
+    }
 
-	final public void onResponseReceived(Request request, Response response) {
-		this.method.request = request;
-		this.method.response = response;
-		if (response==null) {
-			callback.onFailure(this.method, new FailedStatusCodeException("TIMEOUT", 999));
-		} else if (response.getStatusCode() != this.method.expectedStatus) {
-			callback.onFailure(this.method, new FailedStatusCodeException(response.getStatusText(), response.getStatusCode()));
-		} else {
+    final public void onResponseReceived(Request request, Response response) {
+        this.method.request = request;
+        this.method.response = response;
+        if (response == null) {
+            callback.onFailure(this.method, new FailedStatusCodeException("TIMEOUT", 999));
+        } else if (response.getStatusCode() != this.method.expectedStatus) {
+            callback.onFailure(this.method, new FailedStatusCodeException(response.getStatusText(), response.getStatusCode()));
+        } else {
             T value;
             try {
-                GWT.log("Received http response for request: "+method.builder.getHTTPMethod()+" "+method.builder.getUrl(), null);                
+                GWT.log("Received http response for request: " + method.builder.getHTTPMethod() + " " + method.builder.getUrl(), null);
                 String content = response.getText();
-                if( content!=null && content.length()>0 ) {
-                	GWT.log(content, null);           	
+                if (content != null && content.length() > 0) {
+                    GWT.log(content, null);
                     value = parseResult();
                 } else {
-                	value = null;
+                    value = null;
                 }
             } catch (Throwable e) {
-                GWT.log("Could not parse response: "+e, e);           	
+                GWT.log("Could not parse response: " + e, e);
                 callback.onFailure(this.method, e);
                 return;
             }
-            callback.onSuccess(this.method, value );            
-		}
-	}
-	
-	abstract protected T parseResult() throws Exception;
+            callback.onSuccess(this.method, value);
+        }
+    }
+
+    abstract protected T parseResult() throws Exception;
 }

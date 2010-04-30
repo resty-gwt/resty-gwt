@@ -26,13 +26,13 @@ import com.google.gwt.junit.tools.GWTTestSuite;
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class RestyGWTTestSuite extends GWTTestSuite {
-	public static Test suite() {
-		TestSuite suite = new TestSuite("GWT Tests for RestyGWT");
-		suite.addTestSuite(PizzaServiceUITestGWT.class);
-		suite.addTestSuite(ResourceUITestGWT.class);
+    public static Test suite() {
+        TestSuite suite = new TestSuite("GWT Tests for RestyGWT");
+        suite.addTestSuite(PizzaServiceUITestGWT.class);
+        suite.addTestSuite(ResourceUITestGWT.class);
         suite.addTestSuite(FailServiceUITestGWT.class);
-		suite.addTestSuite(MethodServiceUITestGWT.class);
+        suite.addTestSuite(MethodServiceUITestGWT.class);
         suite.addTestSuite(JSONBindingUITestGWT.class);
-		return suite;
-	}
+        return suite;
+    }
 }

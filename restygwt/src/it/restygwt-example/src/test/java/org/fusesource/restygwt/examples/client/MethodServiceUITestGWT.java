@@ -23,21 +23,21 @@ import org.fusesource.restygwt.examples.client.MethodService;
 import com.google.gwt.core.client.GWT;
 
 /**
- * This test verifies that all the http methods 
- * can be accessed via a RestService.
+ * This test verifies that all the http methods can be accessed via a
+ * RestService.
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class MethodServiceUITestGWT extends UITestGWT {
 
-	private static final int REQUEST_TIMEOUT = 2000;
+    private static final int REQUEST_TIMEOUT = 2000;
     private MethodService service;
 
-	@Override
-	protected void gwtSetUp() throws Exception {
+    @Override
+    protected void gwtSetUp() throws Exception {
         service = GWT.create(MethodService.class);
-	}
-	
+    }
+
     public void testDelete() {
         service.delete(expectHeaderIsSetTo("echo_method", "delete"));
         delayTestFinish(REQUEST_TIMEOUT);
@@ -64,24 +64,25 @@ public class MethodServiceUITestGWT extends UITestGWT {
     }
 
     /**
-     * Seems like PUT is not working.. request is not making it back
-     * to the server.
+     * Seems like PUT is not working.. request is not making it back to the
+     * server.
      */
     public void xtestPut() {
         service.put(expectHeaderIsSetTo("echo_method", "put"));
         delayTestFinish(REQUEST_TIMEOUT);
     }
-    
-	private MethodCallback<String> expectHeaderIsSetTo(final String name, final String value) {
-		return new MethodCallback<String>() {
+
+    private MethodCallback<String> expectHeaderIsSetTo(final String name, final String value) {
+        return new MethodCallback<String>() {
             public void onSuccess(Method method, String response) {
-				assertEquals( value, method.getResponse().getHeader(name));
+                assertEquals(value, method.getResponse().getHeader(name));
                 finishTest();
             }
+
             public void onFailure(Method method, Throwable exception) {
                 fail(exception.getMessage());
             }
         };
-	}
-    
+    }
+
 }

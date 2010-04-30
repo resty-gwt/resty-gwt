@@ -26,25 +26,25 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
 
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
- @Json(style=Style.JETTISON_NATURAL)
+@Json(style = Style.JETTISON_NATURAL)
 public class MapResult {
-    
+
     public Map<String, String> result = new LinkedHashMap<String, String>();
 
     public MapResult() {
     }
+
     public MapResult(Map<String, String> map) {
         this.result = map;
     }
-    
+
     @Override
     public int hashCode() {
         return result.hashCode();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         try {
@@ -54,6 +54,5 @@ public class MapResult {
             return false;
         }
     }
-    
-    
+
 }

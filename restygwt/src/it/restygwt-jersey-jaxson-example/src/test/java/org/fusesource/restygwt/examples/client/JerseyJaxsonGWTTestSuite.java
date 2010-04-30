@@ -26,9 +26,9 @@ import com.google.gwt.junit.tools.GWTTestSuite;
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class JerseyJaxsonGWTTestSuite extends GWTTestSuite {
-	public static Test suite() {
-		TestSuite suite = new TestSuite("GWT Tests for RestyGWT");
-		suite.addTestSuite(JerseyJaxsonTestGWT.class);
-		return suite;
-	}
+    public static Test suite() {
+        TestSuite suite = new TestSuite("GWT Tests for RestyGWT");
+        suite.addTestSuite(JerseyJaxsonTestGWT.class);
+        return suite;
+    }
 }

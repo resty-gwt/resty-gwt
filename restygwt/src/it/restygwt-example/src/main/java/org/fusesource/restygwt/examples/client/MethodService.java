@@ -27,30 +27,29 @@ import javax.ws.rs.Path;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
-
 /**
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 @Path("/test/method")
 public interface MethodService extends RestService {
-    
+
     @POST
     public void post(MethodCallback<String> callback);
 
     @GET
     public void get(MethodCallback<String> callback);
-    
+
     @PUT
     public void put(MethodCallback<String> callback);
 
     @DELETE
     public void delete(MethodCallback<String> callback);
-        
+
     @HEAD
     public void head(MethodCallback<String> callback);
-    
+
     @OPTIONS
     public void options(MethodCallback<String> callback);
-    
+
 }

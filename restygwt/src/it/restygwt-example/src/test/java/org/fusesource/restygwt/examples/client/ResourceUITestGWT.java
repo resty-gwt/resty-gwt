@@ -37,24 +37,25 @@ public class ResourceUITestGWT extends UITestGWT {
     }
 
     public void testJsonResource() {
-        
+
         // Initialize the pizza service..
-        Resource resource = new Resource( GWT.getModuleBaseURL() + "pizza-service");
-        
+        Resource resource = new Resource(GWT.getModuleBaseURL() + "pizza-service");
+
         JSONValue request = createRequestObject();
-        
+
         resource.post().json(request).send(new JsonCallback() {
             public void onSuccess(Method method, JSONValue response) {
                 assertNotNull(response);
                 System.out.println(response);
                 finishTest();
             }
+
             public void onFailure(Method method, Throwable exception) {
                 exception.printStackTrace();
                 fail(exception.getMessage());
             }
         });
-        
+
         delayTestFinish(2000);
     }
 
@@ -63,7 +64,7 @@ public class ResourceUITestGWT extends UITestGWT {
         order.delivery = true;
         order.delivery_address.add("3434 Pinerun Ave.");
         order.delivery_address.add("Tampa, FL  33734");
-        
+
         Pizza pizza = new Pizza();
         pizza.crust = "thin";
         pizza.quantity = 1;
@@ -71,7 +72,7 @@ public class ResourceUITestGWT extends UITestGWT {
         pizza.toppings.add("ham");
         pizza.toppings.add("pineapple");
         order.pizzas.add(pizza);
-        
+
         PizzaOrderJED jed = GWT.create(PizzaOrderJED.class);
         JSONValue value = jed.encode(order);
         return value;

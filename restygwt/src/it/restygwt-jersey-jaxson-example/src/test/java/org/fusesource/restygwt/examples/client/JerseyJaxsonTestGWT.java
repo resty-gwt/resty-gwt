@@ -38,7 +38,7 @@ public class JerseyJaxsonTestGWT extends GWTTestCase {
     }
 
     private static final int REQUEST_TIMEOUT = 2000;
-    
+
     public void testGet() {
         MapService service = GWT.create(MapService.class);
         Map<String, String> map = new LinkedHashMap<String, String>();
@@ -47,18 +47,18 @@ public class JerseyJaxsonTestGWT extends GWTTestCase {
         service.get(expectResult(new MapResult(map)));
         delayTestFinish(REQUEST_TIMEOUT);
     }
-    
-    
+
     private <T> MethodCallback<T> expectResult(final T expectedResult) {
         return new MethodCallback<T>() {
             public void onSuccess(Method method, T result) {
-                assertEquals( expectedResult, result);
+                assertEquals(expectedResult, result);
                 finishTest();
             }
+
             public void onFailure(Method method, Throwable exception) {
                 fail(exception.getMessage());
             }
         };
-    } 
-    
+    }
+
 }

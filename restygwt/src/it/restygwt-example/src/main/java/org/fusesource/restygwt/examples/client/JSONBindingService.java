@@ -26,14 +26,13 @@ import javax.ws.rs.Path;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
-
 /**
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 @Path("/test/JSONBinding")
 public interface JSONBindingService extends RestService {
-    
+
     @GET
     @Path("/getListOfStrings")
     public void getListOfStrings(MethodCallback<List<String>> callback);
@@ -51,9 +50,9 @@ public interface JSONBindingService extends RestService {
             StringMapResponse other = (StringMapResponse) obj;
             return data.equals(other.data);
         }
-        
+
     }
-    
+
     @GET
     @Path("/getStringMapResponse")
     public void getStringMapResponse(MethodCallback<StringMapResponse> callback);

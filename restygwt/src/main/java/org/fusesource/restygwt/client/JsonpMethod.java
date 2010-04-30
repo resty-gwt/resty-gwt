@@ -31,18 +31,18 @@ import com.google.gwt.xml.client.Document;
 
 /**
  * A specialized method which accesses a resource as a JSONP request.
- *  
+ * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class JsonpMethod extends Method {
 
     private final Resource resource;
     private final JsonpRequestBuilder builder = new JsonpRequestBuilder();
-    
+
     public JsonpMethod(Resource resource) {
         this.resource = resource;
     }
-    
+
     @Override
     public Method timeout(int timeout) {
         builder.setTimeout(timeout);
@@ -54,7 +54,8 @@ public class JsonpMethod extends Method {
         builder.requestObject(resource.getUri(), new AsyncCallback<JavaScriptObject>() {
             public void onSuccess(JavaScriptObject result) {
                 callback.onSuccess(JsonpMethod.this, new JSONObject(result));
-            }            
+            }
+
             public void onFailure(Throwable caught) {
                 callback.onFailure(JsonpMethod.this, caught);
             }
@@ -66,7 +67,8 @@ public class JsonpMethod extends Method {
         builder.requestString(resource.getUri(), new AsyncCallback<String>() {
             public void onSuccess(String result) {
                 callback.onSuccess(JsonpMethod.this, result);
-            }            
+            }
+
             public void onFailure(Throwable caught) {
                 callback.onFailure(JsonpMethod.this, caught);
             }
@@ -136,5 +138,5 @@ public class JsonpMethod extends Method {
     private UnsupportedOperationException unsupported() {
         return new UnsupportedOperationException("The jasonp method is restricted in what it can be configured with.");
     }
-    
+
 }

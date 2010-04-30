@@ -23,7 +23,7 @@ import com.google.gwt.json.client.JSONValue;
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public interface JsonEncoderDecoder<T> {
-    
+
     @SuppressWarnings("serial")
     public static class EncodingException extends RuntimeException {
         public EncodingException(String msg) {
@@ -37,8 +37,9 @@ public interface JsonEncoderDecoder<T> {
             super(msg);
         }
     }
-    
+
     public JSONValue encode(T value) throws EncodingException;
+
     public T decode(JSONValue value) throws DecodingException;
 
 }

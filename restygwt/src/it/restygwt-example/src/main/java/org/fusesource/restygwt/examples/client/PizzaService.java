@@ -22,16 +22,14 @@ import javax.ws.rs.Path;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
-
 /**
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 @Path("/pizza-service")
 public interface PizzaService extends RestService {
-    
+
     @POST
     public void order(PizzaOrder request, MethodCallback<OrderConfirmation> callback);
-    
 
 }
