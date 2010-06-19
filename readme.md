@@ -153,9 +153,9 @@ Just add the following dependency to your pom.xml
     <dependencies>
     ...
       <dependency>
-        <groupId>org.fusesource.resty-gwt</groupId>
-        <artifactId>resty-gwt</artifactId>
-        <version>1.0-SNAPSHOT</version>
+          <groupId>org.fusesource.restygwt</groupId>
+          <artifactId>restygwt</artifactId>
+          <version>1.0-SNAPSHOT</version>
       </dependency>
     ...
     </dependencies>
