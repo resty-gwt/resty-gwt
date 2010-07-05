@@ -37,4 +37,5 @@ public @interface Json {
     }
 
     Style style() default DEFAULT;
+    String name() default "";
 }
