@@ -49,7 +49,7 @@ public class UI implements EntryPoint {
             public void onClick(ClickEvent event) {
                 placeOrder();
             }
-        });       
+        });
         RootPanel.get().add(button);
 
         button = new Button("Do Put");
@@ -57,7 +57,7 @@ public class UI implements EntryPoint {
             public void onClick(ClickEvent event) {
                 doPut();
             }
-        });       
+        });
         RootPanel.get().add(button);
 
         button = new Button("Do A Search on Yahoo /w Jsonp");
@@ -65,33 +65,34 @@ public class UI implements EntryPoint {
             public void onClick(ClickEvent event) {
                 doJsonp();
             }
-        });       
-        
+        });
+
         RootPanel.get().add(button);
     }
-    
+
     protected void doPut() {
         MethodService service = GWT.create(MethodService.class);
-		service.put(new MethodCallback<String>() {
-			public void onFailure(Method method, Throwable exception) {
-                Window.alert("Error x: "+exception);
-			}
-			public void onSuccess(Method method, String response) {
-                RootPanel.get().add(new Label("done."));
-			}
-		});
-	}
+        service.put(new MethodCallback<String>() {
+            public void onFailure(Method method, Throwable exception) {
+                Window.alert("Error x: " + exception);
+            }
 
-	private void placeOrder() {
+            public void onSuccess(Method method, String response) {
+                RootPanel.get().add(new Label("done."));
+            }
+        });
+    }
+
+    private void placeOrder() {
         PizzaService service = GWT.create(PizzaService.class);
-        Resource resource = new Resource( GWT.getModuleBaseURL() + "pizza-service");
-        ((RestServiceProxy)service).setResource(resource);
-        
+        Resource resource = new Resource(GWT.getModuleBaseURL() + "pizza-service");
+        ((RestServiceProxy) service).setResource(resource);
+
         PizzaOrder order = new PizzaOrder();
         order.delivery = true;
         order.delivery_address.add("3434 Pinerun Ave.");
         order.delivery_address.add("Tampa, FL  33734");
-        
+
         Pizza pizza = new Pizza();
         pizza.crust = "thin";
         pizza.quantity = 1;
@@ -99,35 +100,37 @@ public class UI implements EntryPoint {
         pizza.toppings.add("ham");
         pizza.toppings.add("pineapple");
         order.pizzas.add(pizza);
-        
+
         pizza = new Pizza();
         pizza.crust = "thin";
         pizza.quantity = 1;
         pizza.size = 16;
         pizza.toppings.add("extra cheese");
-        order.pizzas.add(pizza);        
-        
+        order.pizzas.add(pizza);
+
         service.order(order, new MethodCallback<OrderConfirmation>() {
             public void onSuccess(Method method, OrderConfirmation receipt) {
-                RootPanel.get().add(new Label("got receipt: "+receipt));
+                RootPanel.get().add(new Label("got receipt: " + receipt));
             }
+
             public void onFailure(Method method, Throwable exception) {
-                Window.alert("Error: "+exception);
+                Window.alert("Error: " + exception);
             }
         });
     }
-	
-    protected void doJsonp() {        
+
+    protected void doJsonp() {
         Resource resource = new Resource("http://search.yahooapis.com/WebSearchService/V1/webSearch?appid=YahooDemo&query=finances&format=pdf&output=json&callback=callback");
         resource.jsonp().send(new JsonCallback() {
             public void onSuccess(Method method, JSONValue response) {
-                JSONObject obj = (JSONObject)((JSONObject)response).get("ResultSet");
-                RootPanel.get().add(new Label("Search Results Available: "+obj.get("totalResultsAvailable")));
-            }            
-            public void onFailure(Method method, Throwable exception) {
-                Window.alert("Error x: "+exception);
+                JSONObject obj = (JSONObject) ((JSONObject) response).get("ResultSet");
+                RootPanel.get().add(new Label("Search Results Available: " + obj.get("totalResultsAvailable")));
             }
-        });  
+
+            public void onFailure(Method method, Throwable exception) {
+                Window.alert("Error x: " + exception);
+            }
+        });
     }
 
 }

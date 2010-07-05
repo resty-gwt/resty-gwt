@@ -48,5 +48,4 @@ public class RestServiceGenerator extends Generator {
         return rc;
     }
 
-
 }

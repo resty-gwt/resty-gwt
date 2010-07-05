@@ -27,45 +27,44 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
 /**
- * This test verifies that all the http methods 
- * can be accessed via a RestService.
+ * This test verifies that all the http methods can be accessed via a
+ * RestService.
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class JsonpTestGWT extends UITestGWT {
 
-	private static final int REQUEST_TIMEOUT = 2000;
+    private static final int REQUEST_TIMEOUT = 2000;
     private Resource resource;
 
-	@Override
-	protected void gwtSetUp() throws Exception {
-        resource = new Resource( GWT.getModuleBaseURL() + "jsonp-service");
-	}
-	   
+    @Override
+    protected void gwtSetUp() throws Exception {
+        resource = new Resource(GWT.getModuleBaseURL() + "jsonp-service");
+    }
+
     public void testJsonpMethod() {
-        
+
         JSONObject expected = new JSONObject();
         expected.put("first", new JSONString("Hiram"));
         expected.put("last", new JSONString("Chirino"));
         expected.put("city", new JSONString("Tampa"));
         resource.jsonp().send(expectJsonIsSetTo(expected));
         // a bit of an oddity.. the jsonp() request is NOT done async.
-//        delayTestFinish(REQUEST_TIMEOUT);
+        // delayTestFinish(REQUEST_TIMEOUT);
     }
 
-    
-	private JsonCallback expectJsonIsSetTo(final JSONObject expected) {
-		return new JsonCallback() {
+    private JsonCallback expectJsonIsSetTo(final JSONObject expected) {
+        return new JsonCallback() {
             public void onSuccess(Method method, JSONValue response) {
-                System.out.println("Got: "+response.toString());
+                System.out.println("Got: " + response.toString());
                 assertEquals(expected.toString(), response.toString());
-//                finishTest();
+                // finishTest();
             }
-            
+
             public void onFailure(Method method, Throwable exception) {
                 fail(exception.getMessage());
             }
-        };        
-	}
-    
+        };
+    }
+
 }

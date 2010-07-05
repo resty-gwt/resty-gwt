@@ -37,19 +37,18 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  * 
- * Updates:
- * added getter & setter support, enhanced generics support
+ *         Updates: added getter & setter support, enhanced generics support
  * @author <a href="http://www.acuedo.com">Dave Finch</a>
  */
 public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private static final String JSON_ENCODER_SUFFIX = "_Generated_JsonEncoderDecoder_";
 
-	private String JSON_ENCODER_DECODER_CLASS = JsonEncoderDecoderInstanceLocator.JSON_ENCODER_DECODER_CLASS;
-	private static final String JSON_VALUE_CLASS = JSONValue.class.getName();
-	private static final String JSON_OBJECT_CLASS = JSONObject.class.getName();
+    private String JSON_ENCODER_DECODER_CLASS = JsonEncoderDecoderInstanceLocator.JSON_ENCODER_DECODER_CLASS;
+    private static final String JSON_VALUE_CLASS = JSONValue.class.getName();
+    private static final String JSON_OBJECT_CLASS = JSONObject.class.getName();
 
-	JsonEncoderDecoderInstanceLocator locator;
-	
+    JsonEncoderDecoderInstanceLocator locator;
+
     public JsonEncoderDecoderClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) throws UnableToCompleteException {
         super(logger, context, source, JSON_ENCODER_SUFFIX);
     }
@@ -61,9 +60,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     }
 
     public void generate() throws UnableToCompleteException {
-        
-    	locator = new JsonEncoderDecoderInstanceLocator(context, logger);
-    	
+
+        locator = new JsonEncoderDecoderInstanceLocator(context, logger);
+
         JClassType soruceClazz = source.isClass();
         if (soruceClazz == null) {
             error("Type is not a class");
@@ -73,7 +72,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         }
 
         Json jsonAnnotation = source.getAnnotation(Json.class);
-        final Style classStyle = jsonAnnotation!=null ? jsonAnnotation.style() : Style.DEFAULT;
+        final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
 
         p();
         p("public static final " + shortName + " INSTANCE = new " + shortName + "();");
@@ -81,21 +80,23 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
         p("public " + JSON_VALUE_CLASS + " encode(" + source.getParameterizedQualifiedSourceName() + " value) {").i(1);
         {
-			p("if( value==null ) {").i(1); {
-        		p("return null;");
-			} i(-1).p("}");         
-        	p(JSON_OBJECT_CLASS + " rc = new " + JSON_OBJECT_CLASS + "();");
+            p("if( value==null ) {").i(1);
+            {
+                p("return null;");
+            }
+            i(-1).p("}");
+            p(JSON_OBJECT_CLASS + " rc = new " + JSON_OBJECT_CLASS + "();");
 
             for (final JField field : getFields(source)) {
 
                 final String getterName = getGetterName(field);
-                
+
                 // If can ignore some fields right off the back..
                 if (getterName == null && (field.isStatic() || field.isFinal() || field.isTransient())) {
                     continue;
                 }
-                
-                branch("Processing field: " + field.getName(), new Branch<Void>(){
+
+                branch("Processing field: " + field.getName(), new Branch<Void>() {
                     public Void execute() throws UnableToCompleteException {
                         // TODO: try to get the field with a setter or JSNI
                         if (getterName != null || field.isDefaultAccess() || field.isProtected() || field.isPublic()) {
@@ -110,12 +111,11 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                             }
 
                             String fieldExpr = "value." + name;
-                            if(getterName != null){
-                                fieldExpr = "value." + getterName+"()";
+                            if (getterName != null) {
+                                fieldExpr = "value." + getterName + "()";
                             }
-                            
-                            Style style = jsonAnnotation!=null ? jsonAnnotation.style() : classStyle;
-                            
+
+                            Style style = jsonAnnotation!=null ? jsonAnnotation.style() : classStyle;                            
                             String expression = locator.encodeExpression(field.getType(), fieldExpr, style);
 
                             p("{").i(1);
@@ -128,7 +128,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                 i(-1).p("}");
                             }
                             i(-1).p("}");
-                            
+
                         } else {
                             error("field must not be private: " + field.getEnclosingType().getQualifiedSourceName() + "." + field.getName());
                         }
@@ -149,20 +149,20 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             for (final JField field : getFields(source)) {
 
                 final String setterName = getSetterName(field);
-                
+
                 // If can ignore some fields right off the back..
                 if (setterName == null && (field.isStatic() || field.isFinal() || field.isTransient())) {
                     continue;
                 }
-                
-                branch("Processing field: " + field.getName(), new Branch<Void>(){
+
+                branch("Processing field: " + field.getName(), new Branch<Void>() {
                     public Void execute() throws UnableToCompleteException {
 
                         // TODO: try to set the field with a setter or JSNI
-                       if (setterName != null || field.isDefaultAccess() || field.isProtected() || field.isPublic()) {
+                        if (setterName != null || field.isDefaultAccess() || field.isProtected() || field.isPublic()) {
 
                             Json jsonAnnotation = field.getAnnotation(Json.class);
-                            Style style = jsonAnnotation!=null ? jsonAnnotation.style() : classStyle;
+                            Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
 
                             String name = field.getName();
                             String jsonName = field.getName();
@@ -173,13 +173,14 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
                             String objectGetter = "object.get(" + wrap(jsonName) + ")";
                             String expression = locator.decodeExpression(field.getType(), objectGetter, style);
-                        
+
                             p("if(" + objectGetter + " != null) {").i(1);
                             if (setterName != null) {
-                                p("rc." + setterName + "(" + expression+ ");");
+                                p("rc." + setterName + "(" + expression + ");");
                             } else {
-                            	p("rc." + name + "=" + expression + ";");
-                        	} i(-1).p("}");
+                                p("rc." + name + "=" + expression + ";");
+                            }
+                            i(-1).p("}");
 
                         } else {
                             error("field must not be private.");
@@ -198,56 +199,58 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     /**
      * 
      * @param field
-     * @return the name for the setter for the specified field or null if a setter can't be found.
+     * @return the name for the setter for the specified field or null if a
+     *         setter can't be found.
      */
-    private String getSetterName( JField field){
+    private String getSetterName(JField field) {
         String fieldName = field.getName();
-        fieldName = "set"+upperCaseFirstChar(fieldName);
+        fieldName = "set" + upperCaseFirstChar(fieldName);
         JClassType type = field.getEnclosingType();
-        if(exists(type, field, fieldName, true)){
+        if (exists(type, field, fieldName, true)) {
             return fieldName;
-        }else{
+        } else {
             return null;
         }
     }
-    
+
     /**
      * 
      * @param field
-     * @return the name for the getter for the specified field or null if a getter can't be found.
+     * @return the name for the getter for the specified field or null if a
+     *         getter can't be found.
      */
-    private String getGetterName( JField field){
+    private String getGetterName(JField field) {
         String fieldName = field.getName();
         JType booleanType = null;
-        try{
+        try {
             booleanType = find(Boolean.class);
-        }catch(UnableToCompleteException e){
-            //do nothing
+        } catch (UnableToCompleteException e) {
+            // do nothing
         }
-        if(field.getType().equals(JPrimitiveType.BOOLEAN) || field.getType().equals(booleanType)){
-            fieldName = "is"+upperCaseFirstChar(fieldName);
-        }else{
-            fieldName = "get"+upperCaseFirstChar(fieldName);
+        if (field.getType().equals(JPrimitiveType.BOOLEAN) || field.getType().equals(booleanType)) {
+            fieldName = "is" + upperCaseFirstChar(fieldName);
+        } else {
+            fieldName = "get" + upperCaseFirstChar(fieldName);
         }
         JClassType type = field.getEnclosingType();
-        if(exists(type, field, fieldName, false)){
+        if (exists(type, field, fieldName, false)) {
             return fieldName;
-        }else{
+        } else {
             return null;
         }
     }
-    
-    private String upperCaseFirstChar(String in){
-        if(in.length()==1){
+
+    private String upperCaseFirstChar(String in) {
+        if (in.length() == 1) {
             return in.toUpperCase();
-        }else{
-            return in.substring(0, 1).toUpperCase()+in.substring(1);
+        } else {
+            return in.substring(0, 1).toUpperCase() + in.substring(1);
         }
     }
-    
+
     /**
-     * checks whether a getter or setter exists on the specified 
-     * type or any of its super classes excluding Object.
+     * checks whether a getter or setter exists on the specified type or any of
+     * its super classes excluding Object.
      * 
      * @param type
      * @param field
@@ -255,55 +258,54 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
      * @param isSetter
      * @return
      */
-    private boolean exists(JClassType type, JField field, String fieldName, boolean isSetter){
+    private boolean exists(JClassType type, JField field, String fieldName, boolean isSetter) {
         JType[] args = null;
-        if(isSetter){
-            args = new JType[]{field.getType()};
-        }else{
-            args = new JType[]{};
+        if (isSetter) {
+            args = new JType[] { field.getType() };
+        } else {
+            args = new JType[] {};
         }
-        
-        if(null != type.findMethod(fieldName, args)){
+
+        if (null != type.findMethod(fieldName, args)) {
             return true;
-        }else{
-            try{
+        } else {
+            try {
                 JType objectType = find(Object.class);
                 JClassType superType = type.getSuperclass();
-                if(!objectType.equals(superType)){
+                if (!objectType.equals(superType)) {
                     return exists(superType, field, fieldName, isSetter);
                 }
-            }catch(UnableToCompleteException e){
-                //do nothing
+            } catch (UnableToCompleteException e) {
+                // do nothing
             }
         }
         return false;
     }
-    
+
     /**
-     * Inspects the supplied type and all super classes
-     *  up to but excluding Object and returns a list of 
-     *  all fields found in these classes.
+     * Inspects the supplied type and all super classes up to but excluding
+     * Object and returns a list of all fields found in these classes.
      * 
      * @param type
      * @return
      */
-    private List < JField > getFields( JClassType type){
-        return getFields(new ArrayList < JField >(), type);
+    private List<JField> getFields(JClassType type) {
+        return getFields(new ArrayList<JField>(), type);
     }
 
-    private List < JField > getFields(List < JField > allFields, JClassType type){
+    private List<JField> getFields(List<JField> allFields, JClassType type) {
         JField[] fields = type.getFields();
         for (JField field : fields) {
             allFields.add(field);
         }
-        try{
+        try {
             JType objectType = find(Object.class);
             JClassType superType = type.getSuperclass();
-            if(!objectType.equals(superType)){
+            if (!objectType.equals(superType)) {
                 return getFields(allFields, superType);
             }
-        }catch(UnableToCompleteException e){
-            //do nothing
+        } catch (UnableToCompleteException e) {
+            // do nothing
         }
         return allFields;
     }

@@ -26,14 +26,14 @@ import com.sun.jersey.api.json.JSONJAXBContext;
 
 @Provider
 public class JsonJaxbProvider {
-    
+
     private JAXBContext context;
     private Class<?>[] types = { MapResult.class };
 
     public JsonJaxbProvider() throws Exception {
         JSONConfiguration config = JSONConfiguration.natural().build();
         context = new JSONJAXBContext(config, types);
-    } 
+    }
 
     public JAXBContext getContext(Class<?> objectType) {
         for (Class<?> type : types) {

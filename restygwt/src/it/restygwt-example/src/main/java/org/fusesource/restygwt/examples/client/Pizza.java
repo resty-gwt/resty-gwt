@@ -29,5 +29,5 @@ public class Pizza {
     public int size;
     public String crust;
     public List<String> toppings = new ArrayList<String>(10);
-    
+
 }

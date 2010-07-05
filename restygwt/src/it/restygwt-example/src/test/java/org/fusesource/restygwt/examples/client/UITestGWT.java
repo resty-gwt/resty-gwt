@@ -28,5 +28,4 @@ abstract public class UITestGWT extends GWTTestCase {
         return "org.fusesource.restygwt.examples.UI";
     }
 
-    
 }

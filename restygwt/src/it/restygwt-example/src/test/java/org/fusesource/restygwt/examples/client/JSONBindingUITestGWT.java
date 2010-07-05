@@ -28,28 +28,28 @@ import org.junit.Before;
 import com.google.gwt.core.client.GWT;
 
 /**
- * This test verifies that all the http methods 
- * can be accessed via a RestService.
+ * This test verifies that all the http methods can be accessed via a
+ * RestService.
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class JSONBindingUITestGWT extends UITestGWT {
 
-	private static final int REQUEST_TIMEOUT = 2000;
+    private static final int REQUEST_TIMEOUT = 2000;
     private JSONBindingService service;
-	
+
     protected void gwtSetUp() throws Exception {
         service = GWT.create(JSONBindingService.class);
-	}
+    }
 
     public void testGetListOfStrings() {
-        
+
         List<String> expected = new ArrayList<String>();
         expected.add("hello");
         expected.add("world");
         service.getListOfStrings(expectResult(expected));
         delayTestFinish(REQUEST_TIMEOUT);
-        
+
     }
 
     public void testGetStringMapResponse() {
@@ -62,13 +62,14 @@ public class JSONBindingUITestGWT extends UITestGWT {
     private <T> MethodCallback<T> expectResult(final T expectedResult) {
         return new MethodCallback<T>() {
             public void onSuccess(Method method, T result) {
-                assertEquals( expectedResult, result);
+                assertEquals(expectedResult, result);
                 finishTest();
             }
+
             public void onFailure(Method method, Throwable exception) {
                 fail(exception.getMessage());
             }
         };
     }
-    
+
 }

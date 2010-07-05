@@ -19,19 +19,20 @@ package org.fusesource.restygwt.client;
 import com.google.gwt.core.client.GWT;
 
 /**
- * Provides ability to set the default date format and service root (defaults to GWT.getModuleBaseURL()).
+ * Provides ability to set the default date format and service root (defaults to
+ * GWT.getModuleBaseURL()).
  * 
  * 
  * @author <a href="http://www.acuedo.com">Dave Finch</a>
- *
+ * 
  */
 public class Defaults {
 
     private static String serviceRoot = GWT.getModuleBaseURL();
     private static String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-
-    //patch TNY: timeout
-    private static int requestTimeout= -1;//ms, if >-1, used in Method class to set timeout
+    // patch TNY: timeout ms,
+    // if >-1, used in Method class to set timeout
+    private static int requestTimeout = -1;
 
     public static String getServiceRoot() {
         return serviceRoot;
@@ -58,12 +59,13 @@ public class Defaults {
     public static void setDateFormat(String dateFormat) {
         Defaults.dateFormat = dateFormat;
     }
-    public static final int getRequestTimeout() {
-               return requestTimeout;
-       }
 
-       public static final void setRequestTimeout(int requestTimeout) {
-               Defaults.requestTimeout = requestTimeout;
-       }
+    public static final int getRequestTimeout() {
+        return requestTimeout;
+    }
+
+    public static final void setRequestTimeout(int requestTimeout) {
+        Defaults.requestTimeout = requestTimeout;
+    }
 
 }

@@ -24,15 +24,16 @@ public class MapResult {
 
     public MapResult() {
     }
+
     public MapResult(Map<String, String> map) {
         this.result = map;
     }
-    
+
     @Override
     public int hashCode() {
         return result.hashCode();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         try {
@@ -42,6 +43,5 @@ public class MapResult {
             return false;
         }
     }
-    
-    
+
 }

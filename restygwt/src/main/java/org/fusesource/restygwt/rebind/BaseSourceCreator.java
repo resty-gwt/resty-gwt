@@ -33,7 +33,7 @@ import com.google.gwt.user.rebind.SourceWriter;
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public abstract class BaseSourceCreator extends AbstractSourceCreator {
-    
+
     public static final TreeLogger.Type ERROR = TreeLogger.ERROR;
     public static final TreeLogger.Type WARN = TreeLogger.WARN;
     public static final TreeLogger.Type INFO = TreeLogger.INFO;
@@ -41,43 +41,43 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
     public static final TreeLogger.Type DEBUG = TreeLogger.DEBUG;
     public static final TreeLogger.Type SPAM = TreeLogger.SPAM;
     public static final TreeLogger.Type ALL = TreeLogger.ALL;
-    
+
     protected final GeneratorContext context;
     protected final JClassType source;
     protected final String packageName;
     protected final String shortName;
     protected final String name;
-
     protected TreeLogger logger;
     protected SourceWriter sourceWriter;
     private PrintWriter writer;
 
     static final private ThreadLocal<HashSet<String>> GENERATED_CLASSES = new ThreadLocal<HashSet<String>>();
-    static public HashSet<String> getGeneratedClasses() { 
+
+    static public HashSet<String> getGeneratedClasses() {
         HashSet<String> rc = GENERATED_CLASSES.get();
-        if( rc == null ) {
+        if (rc == null) {
             rc = new HashSet<String>();
             GENERATED_CLASSES.set(rc);
         }
         return rc;
     }
-    
-    static public void clearGeneratedClasses() { 
+
+    static public void clearGeneratedClasses() {
         GENERATED_CLASSES.set(null);
-    }    
-    
+    }
+
     public BaseSourceCreator(TreeLogger logger, GeneratorContext context, JClassType source, String suffix) {
         this.logger = logger;
         this.context = context;
         this.source = source;
         this.packageName = source.getPackage().getName();
-        this.shortName = source.getSimpleSourceName()+suffix;
+        this.shortName = source.getSimpleSourceName() + suffix;
         this.name = packageName + "." + shortName;
     }
 
     protected PrintWriter writer() throws UnableToCompleteException {
         HashSet<String> classes = getGeneratedClasses();
-        if( classes.contains(name) ) {
+        if (classes.contains(name)) {
             return null;
         }
         classes.add(name);
@@ -87,16 +87,15 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         }
         return writer;
     }
-    
-    
+
     public interface Branch<R> {
         R execute() throws UnableToCompleteException;
     }
-    
+
     protected <R> R branch(String msg, Branch<R> callable) throws UnableToCompleteException {
         return branch(DEBUG, msg, callable);
     }
-    
+
     protected <R> R branch(TreeLogger.Type level, String msg, Branch<R> callable) throws UnableToCompleteException {
         TreeLogger original = logger;
         try {
@@ -106,21 +105,25 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
             logger = original;
         }
     }
-    
+
     protected void error(String msg) throws UnableToCompleteException {
         logger.log(ERROR, msg);
         throw new UnableToCompleteException();
     }
+
     protected void warn(String msg) throws UnableToCompleteException {
         logger.log(WARN, msg);
         throw new UnableToCompleteException();
     }
+
     protected void info(String msg) throws UnableToCompleteException {
         logger.log(INFO, msg);
     }
+
     protected void debug(String msg) throws UnableToCompleteException {
         logger.log(DEBUG, msg);
     }
+
     protected void trace(String msg) throws UnableToCompleteException {
         logger.log(TRACE, msg);
     }
@@ -132,7 +135,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
     protected JClassType find(String type) throws UnableToCompleteException {
         return RestServiceGenerator.find(logger, context, type);
     }
-    
+
     protected BaseSourceCreator i(int i) {
         if (i == 1) {
             this.sourceWriter.indent();
@@ -153,22 +156,23 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         this.sourceWriter.println();
         return this;
     }
-    
+
     final public String create() throws UnableToCompleteException {
         writer = writer();
-        if( writer==null ) {
+        if (writer == null) {
             return name;
         }
         logger = logger.branch(TreeLogger.DEBUG, "Generating: " + name);
 
         ClassSourceFileComposerFactory composerFactory = createComposerFactory();
         sourceWriter = composerFactory.createSourceWriter(context, writer);
-        
+
         generate();
         sourceWriter.commit(logger);
         return name;
     }
 
     abstract protected ClassSourceFileComposerFactory createComposerFactory() throws UnableToCompleteException;
+
     abstract protected void generate() throws UnableToCompleteException;
 }

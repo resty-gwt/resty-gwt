@@ -37,114 +37,115 @@ import com.google.gwt.xml.client.XMLParser;
 public class Method {
 
     /**
-     * GWT hides the full spectrum of methods because safari
-     * has a bug: http://bugs.webkit.org/show_bug.cgi?id=3812
-     *
-     * We extend assume the server side will also check the 
+     * GWT hides the full spectrum of methods because safari has a bug:
+     * http://bugs.webkit.org/show_bug.cgi?id=3812
+     * 
+     * We extend assume the server side will also check the
      * X-HTTP-Method-Override header.
      * 
-     * TODO: add an option to support using this approach to bypass
-     * restrictive firewalls even if the browser does support the
-     * setting all the method types.
+     * TODO: add an option to support using this approach to bypass restrictive
+     * firewalls even if the browser does support the setting all the method
+     * types.
      * 
      * @author chirino
      */
-	static private class MethodRequestBuilder extends RequestBuilder {
-		public MethodRequestBuilder(String method, String url) {
-			super(method, url);
-	        setHeader("X-HTTP-Method-Override", method);
-		}
-	}
+    static private class MethodRequestBuilder extends RequestBuilder {
+        public MethodRequestBuilder(String method, String url) {
+            super(method, url);
+            setHeader("X-HTTP-Method-Override", method);
+        }
+    }
 
-	RequestBuilder builder;
-	int expectedStatus = 200;
-	Request request;
-	Response response;
+    RequestBuilder builder;
+    int expectedStatus = 200;
+    Request request;
+    Response response;
 
     protected Method() {
     }
-    
-	public Method(Resource resource, String method) {
-        builder = new MethodRequestBuilder(method,  resource.getUri());
-	}
 
-	public Method user(String user) {
-		builder.setUser(user);
-		return this;
-	}
+    public Method(Resource resource, String method) {
+        builder = new MethodRequestBuilder(method, resource.getUri());
+    }
 
-	public Method password(String password) {
-		builder.setPassword(password);
-		return this;
-	}
+    public Method user(String user) {
+        builder.setUser(user);
+        return this;
+    }
 
-	public Method header(String header, String value) {
-		builder.setHeader(header, value);
-		return this;
-	}
+    public Method password(String password) {
+        builder.setPassword(password);
+        return this;
+    }
 
-	public Method headers(Map<String, String> headers) {
-		if (headers != null) {
-			for (Entry<String, String> entry : headers.entrySet()) {
-				builder.setHeader(entry.getKey(), entry.getValue());
-			}
-		}
-		return this;
-	}
+    public Method header(String header, String value) {
+        builder.setHeader(header, value);
+        return this;
+    }
 
-	private void doSetTimeout(){
-		if(Defaults.getRequestTimeout()>-1){
-			builder.setTimeoutMillis(Defaults.getRequestTimeout());
-		}
-	}
+    public Method headers(Map<String, String> headers) {
+        if (headers != null) {
+            for (Entry<String, String> entry : headers.entrySet()) {
+                builder.setHeader(entry.getKey(), entry.getValue());
+            }
+        }
+        return this;
+    }
 
-	public Method text(String data) {
-		defaultContentType(Resource.CONTENT_TYPE_TEXT);
-		builder.setRequestData(data);
-		return this;
-	}
+    private void doSetTimeout() {
+        if (Defaults.getRequestTimeout() > -1) {
+            builder.setTimeoutMillis(Defaults.getRequestTimeout());
+        }
+    }
 
-	public Method json(JSONValue data) {
-		defaultContentType(Resource.CONTENT_TYPE_JSON);
-		builder.setRequestData(data.toString());
-		return this;
-	}
+    public Method text(String data) {
+        defaultContentType(Resource.CONTENT_TYPE_TEXT);
+        builder.setRequestData(data);
+        return this;
+    }
 
-	public Method xml(Document data) {
-		defaultContentType(Resource.CONTENT_TYPE_XML);
-		builder.setRequestData(data.toString());
-		return this;
-	}
+    public Method json(JSONValue data) {
+        defaultContentType(Resource.CONTENT_TYPE_JSON);
+        builder.setRequestData(data.toString());
+        return this;
+    }
 
-	public Method timeout(int timeout) {
-		builder.setTimeoutMillis(timeout);
-		return this;
-	}
-	
+    public Method xml(Document data) {
+        defaultContentType(Resource.CONTENT_TYPE_XML);
+        builder.setRequestData(data.toString());
+        return this;
+    }
+
+    public Method timeout(int timeout) {
+        builder.setTimeoutMillis(timeout);
+        return this;
+    }
+
     public void expect(int status) throws RequestException {
         this.expectedStatus = status;
     }
 
-	public void send(final RequestCallback callback) throws RequestException {
-		doSetTimeout();
-		builder.setCallback(new RequestCallback() {
+    public void send(final RequestCallback callback) throws RequestException {
+        doSetTimeout();
+        builder.setCallback(new RequestCallback() {
             public void onResponseReceived(Request request, Response response) {
                 callback.onResponseReceived(request, response);
             }
+
             public void onError(Request request, Throwable exception) {
                 callback.onResponseReceived(request, response);
             }
         });
-        GWT.log("Sending http request: "+builder.getHTTPMethod()+" "+builder.getUrl()+" ,timeout:"+builder.getTimeoutMillis(), null);
+        GWT.log("Sending http request: " + builder.getHTTPMethod() + " " + builder.getUrl() + " ,timeout:" + builder.getTimeoutMillis(), null);
         String content = builder.getRequestData();
-        if( content!=null && content.length()>0) {
+        if (content != null && content.length() > 0) {
             GWT.log(content, null);
         }
         request = builder.send();
-	}
+    }
 
-	public void send(final TextCallback callback) {
-		defaultAcceptType(Resource.CONTENT_TYPE_TEXT);
+    public void send(final TextCallback callback) {
+        defaultAcceptType(Resource.CONTENT_TYPE_TEXT);
         try {
             send(new AbstractRequestCallback<String>(this, callback) {
                 protected String parseResult() throws Exception {
@@ -152,65 +153,65 @@ public class Method {
                 }
             });
         } catch (RequestException e) {
-            GWT.log("Received http error for: "+builder.getHTTPMethod()+" "+builder.getUrl(), e);
+            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
             callback.onFailure(this, e);
         }
-	}
+    }
 
-	public void send(final JsonCallback callback) {
-		defaultAcceptType(Resource.CONTENT_TYPE_JSON);
+    public void send(final JsonCallback callback) {
+        defaultAcceptType(Resource.CONTENT_TYPE_JSON);
         try {
             send(new AbstractRequestCallback<JSONValue>(this, callback) {
                 protected JSONValue parseResult() throws Exception {
                     try {
-						return JSONParser.parse(response.getText());
-					} catch (Throwable e) {
-						throw new ResponseFormatException("Response was NOT a valid JSON document",e );
-					}
+                        return JSONParser.parse(response.getText());
+                    } catch (Throwable e) {
+                        throw new ResponseFormatException("Response was NOT a valid JSON document", e);
+                    }
                 }
             });
         } catch (RequestException e) {
-            GWT.log("Received http error for: "+builder.getHTTPMethod()+" "+builder.getUrl(), e);
+            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
             callback.onFailure(this, e);
         }
-	}
+    }
 
-	public void send(final XmlCallback callback) {
-		defaultAcceptType(Resource.CONTENT_TYPE_XML);
+    public void send(final XmlCallback callback) {
+        defaultAcceptType(Resource.CONTENT_TYPE_XML);
         try {
             send(new AbstractRequestCallback<Document>(this, callback) {
                 protected Document parseResult() throws Exception {
                     try {
-                    	return XMLParser.parse(response.getText());
-					} catch (Throwable e) {
-						throw new ResponseFormatException("Response was NOT a valid XML document", e);
-					}
+                        return XMLParser.parse(response.getText());
+                    } catch (Throwable e) {
+                        throw new ResponseFormatException("Response was NOT a valid XML document", e);
+                    }
                 }
             });
         } catch (RequestException e) {
-            GWT.log("Received http error for: "+builder.getHTTPMethod()+" "+builder.getUrl(), e);
+            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
             callback.onFailure(this, e);
         }
-	}
+    }
 
-	public Request getRequest() {
-		return request;
-	}
+    public Request getRequest() {
+        return request;
+    }
 
-	public Response getResponse() {
-		return response;
-	}
+    public Response getResponse() {
+        return response;
+    }
 
-	protected void defaultContentType(String type) {
-		if (builder.getHeader(Resource.HEADER_CONTENT_TYPE) == null) {
-		    header(Resource.HEADER_CONTENT_TYPE, type);
-		}
-	}
-	protected void defaultAcceptType(String type) {
-		if (builder.getHeader(Resource.HEADER_ACCEPT) == null) {
-			header(Resource.HEADER_ACCEPT, type);
-		}
-	}
+    protected void defaultContentType(String type) {
+        if (builder.getHeader(Resource.HEADER_CONTENT_TYPE) == null) {
+            header(Resource.HEADER_CONTENT_TYPE, type);
+        }
+    }
 
-	
+    protected void defaultAcceptType(String type) {
+        if (builder.getHeader(Resource.HEADER_ACCEPT) == null) {
+            header(Resource.HEADER_ACCEPT, type);
+        }
+    }
+
 }

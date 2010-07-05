@@ -48,5 +48,4 @@ public class JsonEncoderDecoderGenerator extends Generator {
         return rc;
     }
 
-
 }

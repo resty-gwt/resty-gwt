@@ -16,10 +16,9 @@
  */
 package org.fusesource.restygwt.client;
 
-
 /**
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
-public interface RestService {    
+public interface RestService {
 }

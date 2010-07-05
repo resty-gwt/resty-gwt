@@ -22,16 +22,14 @@ import javax.ws.rs.Path;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
-
 /**
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 @Path("/rest/mapservice")
 public interface MapService extends RestService {
-    
+
     @GET
     public void get(MethodCallback<MapResult> callback);
 
-    
 }
