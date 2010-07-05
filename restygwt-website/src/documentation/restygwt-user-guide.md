@@ -73,6 +73,15 @@ resource URL as follows:
 
     service.order(order, callback);
     
+### Custom Property Names 
+
+If you want to map a field name to a different json property name, you
+can use the `@Json` annotation to configure the desired name.  Example:
+
+    public class Message {
+        @Json(name="message-id")
+        public String messageId;
+    }
 
 REST API
 --------
