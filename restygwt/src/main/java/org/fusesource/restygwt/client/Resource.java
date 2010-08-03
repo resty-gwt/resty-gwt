@@ -26,7 +26,7 @@ import com.google.gwt.http.client.URL;
  */
 public class Resource {
 
-    public static final String CONTENT_TYPE_TEXT = "plain/text";
+    public static final String CONTENT_TYPE_TEXT = "text/plain";
     public static final String CONTENT_TYPE_JSON = "application/json";
     public static final String CONTENT_TYPE_XML = "application/xml";
     public static final String CONTENT_TYPE_RSS = "application/rss+xml";

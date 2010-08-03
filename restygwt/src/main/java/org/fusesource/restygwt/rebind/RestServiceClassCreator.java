@@ -295,8 +295,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             }
 
             if (acceptTypeBuiltIn != null) {
-                p(".header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + "." + acceptTypeBuiltIn + ");");
-                p(".send(" + callbackArg.getClass() + ");");
+                p(".header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + "." + acceptTypeBuiltIn + ")");
+                p(".send(" + callbackArg.getName() + ");");
             } else {
                 p(".header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + ".CONTENT_TYPE_JSON);");
                 p("try {").i(1);
@@ -347,7 +347,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         return branch("getCallbackTypeGenericClass()", new Branch<JClassType>() {
             public JClassType execute() throws UnableToCompleteException {
 
-                for (JMethod method : callbackType.getMethods()) {
+                for (JMethod method : callbackType.getOverridableMethods()) {
                     debug("checking method: " + method.getName());
                     if (method.getName().equals("onSuccess")) {
                         JParameter[] parameters = method.getParameters();
