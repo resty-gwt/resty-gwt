@@ -101,16 +101,21 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         // TODO: try to get the field with a setter or JSNI
                         if (getterName != null || field.isDefaultAccess() || field.isProtected() || field.isPublic()) {
 
+                            Json jsonAnnotation = field.getAnnotation(Json.class);
+
                             String name = field.getName();
+                            String jsonName = name;
+
+                            if( jsonAnnotation !=null && jsonAnnotation.name().length() > 0  ) {
+                                jsonName = jsonAnnotation.name();
+                            }
 
                             String fieldExpr = "value." + name;
                             if (getterName != null) {
                                 fieldExpr = "value." + getterName + "()";
                             }
 
-                            Json jsonAnnotation = field.getAnnotation(Json.class);
-                            Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
-
+                            Style style = jsonAnnotation!=null ? jsonAnnotation.style() : classStyle;                            
                             String expression = locator.encodeExpression(field.getType(), fieldExpr, style);
 
                             p("{").i(1);
@@ -118,7 +123,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                 p(JSON_VALUE_CLASS + " v=" + expression + ";");
                                 p("if( v!=null ) {").i(1);
                                 {
-                                    p("rc.put(" + wrap(name) + ", v);");
+                                    p("rc.put(" + wrap(jsonName) + ", v);");
                                 }
                                 i(-1).p("}");
                             }
@@ -160,7 +165,13 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                             Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
 
                             String name = field.getName();
-                            String objectGetter = "object.get(" + wrap(name) + ")";
+                            String jsonName = field.getName();
+
+                            if( jsonAnnotation !=null && jsonAnnotation.name().length() > 0  ) {
+                                jsonName = jsonAnnotation.name();
+                            }
+
+                            String objectGetter = "object.get(" + wrap(jsonName) + ")";
                             String expression = locator.decodeExpression(field.getType(), objectGetter, style);
 
                             p("if(" + objectGetter + " != null) {").i(1);

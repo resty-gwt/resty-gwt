@@ -19,7 +19,8 @@ package org.fusesource.restygwt.examples.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fusesource.restygwt.client.JsonEncoderDecoder;
+import org.fusesource.restygwt.client.*;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.google.gwt.core.client.GWT;
 
@@ -32,6 +33,9 @@ public class PizzaOrder {
     public String phone_number;
 
     public boolean delivery;
+    
+    @Json(name="delivery-address")
+    @JsonProperty("delivery-address")
     public List<String> delivery_address = new ArrayList<String>(4);
 
     public List<Pizza> pizzas = new ArrayList<Pizza>(10);
