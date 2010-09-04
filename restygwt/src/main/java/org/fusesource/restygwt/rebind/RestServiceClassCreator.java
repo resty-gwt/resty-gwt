@@ -40,6 +40,7 @@ import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.JsonCallback;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.OverlayCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.ResponseFormatException;
 import org.fusesource.restygwt.client.RestServiceProxy;
@@ -47,6 +48,7 @@ import org.fusesource.restygwt.client.TextCallback;
 import org.fusesource.restygwt.client.XmlCallback;
 import org.fusesource.restygwt.client.Json.Style;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -56,6 +58,7 @@ import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -79,6 +82,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private static final String DEFAULTS_CLASS = Defaults.class.getName();
     private static final String ABSTRACT_REQUEST_CALLBACK_CLASS = AbstractRequestCallback.class.getName();
     private static final String JSON_PARSER_CLASS = JSONParser.class.getName();
+    private static final String JSON_OBJECT_CLASS = JSONObject.class.getName();
     private static final String REQUEST_EXCEPTION_CLASS = RequestException.class.getName();
     private static final String RESPONSE_FORMAT_EXCEPTION_CLASS = ResponseFormatException.class.getName();
 
@@ -103,10 +107,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private JClassType METHOD_CALLBACK_TYPE;
     private JClassType TEXT_CALLBACK_TYPE;
     private JClassType JSON_CALLBACK_TYPE;
+    private JClassType OVERLAY_CALLBACK_TYPE;
     private JClassType DOCUMENT_TYPE;
     private JClassType METHOD_TYPE;
     private JClassType STRING_TYPE;
     private JClassType JSON_VALUE_TYPE;
+    private JClassType OVERLAY_VALUE_TYPE;
     private JsonEncoderDecoderInstanceLocator locator;
 
     public RestServiceClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) throws UnableToCompleteException {
@@ -128,10 +134,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         this.METHOD_CALLBACK_TYPE = find(MethodCallback.class);
         this.TEXT_CALLBACK_TYPE = find(TextCallback.class);
         this.JSON_CALLBACK_TYPE = find(JsonCallback.class);
+        this.OVERLAY_CALLBACK_TYPE = find(OverlayCallback.class);
         this.DOCUMENT_TYPE = find(Document.class);
         this.METHOD_TYPE = find(Method.class);
         this.STRING_TYPE = find(String.class);
         this.JSON_VALUE_TYPE = find(JSONValue.class);
+        this.OVERLAY_VALUE_TYPE = find(JavaScriptObject.class);
 
         String path = null;
         Path pathAnnotation = source.getAnnotation(Path.class);
@@ -246,6 +254,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 acceptTypeBuiltIn = "CONTENT_TYPE_TEXT";
             } else if (callbackType.equals(JSON_CALLBACK_TYPE)) {
                 acceptTypeBuiltIn = "CONTENT_TYPE_JSON";
+            } else if (callbackType.isAssignableTo(OVERLAY_CALLBACK_TYPE)) {
+                acceptTypeBuiltIn = "CONTENT_TYPE_JSON";
             } else if (callbackType.equals(XML_CALLBACK_TYPE)) {
                 acceptTypeBuiltIn = "CONTENT_TYPE_XML";
             }
@@ -276,6 +286,9 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                     p(".text(" + contentArg.getName() + ")");
                 } else if (contentArg.getType() == JSON_VALUE_TYPE) {
                     p(".json(" + contentArg.getName() + ")");
+                } else if (contentArg.getType().isClass() != null &&
+                           contentArg.getType().isClass().isAssignableTo(OVERLAY_VALUE_TYPE)) {
+                    p(".json(new " + JSON_OBJECT_CLASS + "(" + contentArg.getName() + "))");
                 } else if (contentArg.getType() == DOCUMENT_TYPE) {
                     p(".xml(" + contentArg.getName() + ")");
                 } else {
@@ -340,6 +353,11 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         if (STRING_TYPE == type) {
             return expr;
         }
+        if (type.isClass() != null &&
+            OVERLAY_VALUE_TYPE.isAssignableFrom(type.isClass())) {
+          return "(new " + JSON_OBJECT_CLASS + "(" + expr + ")).toString()";
+        }
+
         return expr + ".toString()";
     }
 
