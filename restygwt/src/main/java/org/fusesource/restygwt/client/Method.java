@@ -20,11 +20,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONException;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.xml.client.Document;
@@ -185,6 +187,30 @@ public class Method {
                         return XMLParser.parse(response.getText());
                     } catch (Throwable e) {
                         throw new ResponseFormatException("Response was NOT a valid XML document", e);
+                    }
+                }
+            });
+        } catch (RequestException e) {
+            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            callback.onFailure(this, e);
+        }
+    }
+
+    public <T extends JavaScriptObject> void send(final OverlayCallback<T> callback) {
+        defaultAcceptType(Resource.CONTENT_TYPE_JSON);
+        try {
+            send(new AbstractRequestCallback<T>(this, callback) {
+                protected T parseResult() throws Exception {
+                    try {
+                        JSONValue val = JSONParser.parse(response.getText());
+                        if (val.isObject() == null) {
+                            throw new ResponseFormatException("Response was NOT a JSON object");
+                        }
+                        return (T) val.isObject().getJavaScriptObject();
+                    } catch (JSONException e) {
+                        throw new ResponseFormatException("Response was NOT a valid JSON document", e);
+                    } catch (IllegalArgumentException e) {
+                        throw new ResponseFormatException("Response was NOT a valid JSON document", e);
                     }
                 }
             });

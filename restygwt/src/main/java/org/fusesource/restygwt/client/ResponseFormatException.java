@@ -27,4 +27,8 @@ public class ResponseFormatException extends RuntimeException {
     public ResponseFormatException(String message, Throwable e) {
         super(message, e);
     }
+
+    public ResponseFormatException(String message) {
+        super(message);
+    }
 }
