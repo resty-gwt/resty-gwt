@@ -78,6 +78,42 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         p("public static final " + shortName + " INSTANCE = new " + shortName + "();");
         p();
 
+        if(null != soruceClazz.isEnum()) {
+        	            p();
+        	            p("public " + JSON_VALUE_CLASS + " encode(" + source.getParameterizedQualifiedSourceName() + " value) {").i(1);
+        	            {
+        	                p("if( value==null ) {").i(1);
+        	                {
+        	                    p("return com.google.gwt.json.client.JSONNull.getInstance();").i(-1);
+        	                }
+        	                p("}");
+        	                p("return new com.google.gwt.json.client.JSONString(value.toString());");
+        	            }
+        	            i(-1).p("}");
+        	            p();
+        	            p("public " + source.getName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
+        	            {
+        	                p("if( value == null || value.isNull()!=null ) {").i(1);
+        	                {
+        	                    p("return null;").i(-1);
+        	                }
+        	                p("}");
+        	                p("com.google.gwt.json.client.JSONString str = value.isString();");
+        	                p("if( null == str ) {").i(1);
+        	                {
+        	                    p("throw new DecodingException(\"Expected a json string (for enum), but was given: \"+value);").i(-1);
+        	                }
+        	                p("}");
+        	                p("return Enum.valueOf("+source.getParameterizedQualifiedSourceName()+".class, str.stringValue());").i(-1);
+        	            }
+        	            p("}");
+        	            p();
+        	            return;
+        	        }
+        	
+        	
+        
+        
         p("public " + JSON_VALUE_CLASS + " encode(" + source.getParameterizedQualifiedSourceName() + " value) {").i(1);
         {
             p("if( value==null ) {").i(1);
@@ -120,12 +156,23 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
                             p("{").i(1);
                             {
+                            	if(null != field.getType().isEnum()) {
+                            		p("if("+fieldExpr+" == null) {").i(1);
+                            		p("rc.put(" + wrap(name) + ", null);");
+                            		i(-1).p("} else {").i(1);
+                            	}
+                            	
                                 p(JSON_VALUE_CLASS + " v=" + expression + ";");
                                 p("if( v!=null ) {").i(1);
                                 {
                                     p("rc.put(" + wrap(jsonName) + ", v);");
                                 }
                                 i(-1).p("}");
+                                
+                                if(null != field.getType().isEnum()) {
+                                	i(-1).p("}");
+                                }
+                                
                             }
                             i(-1).p("}");
 
