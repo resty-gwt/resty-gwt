@@ -1,5 +1,5 @@
 ---
-title: Blog
+title: RestyGWT Blog
 in_menu: false
 sort_info: 7
 --- name:head pipeline:tags
@@ -9,7 +9,7 @@ sort_info: 7
 <h1>
 {project_name:} Blog <a href="{relocatable:index.rss}"><img src="{relocatable:/images/rss.gif}"/></a>
 </h1>
-Updates you can't afford to miss!
+The latest greatest news from the {project_name:} team
 
 --- name:blog pipeline:erb,tags,blocks
 
@@ -25,7 +25,7 @@ nodes.sort.reverse.slice(0,max_posts_per_page).each do |path, n|
   	    <h2><%= context.dest_node.link_to(n) %></h2>
         <div class="details">Posted by <%= n['author']%> on <%= n['created_at']%></div>
     	  <p>
-    	  <webgen:block name="content" chain="<%= n.absolute_cn %>"/>
+    	  <webgen:block name="content" chain="<%= n.acn %>"/>
         </p>
     	  <% if n.node_info[:page].blocks.has_key?('full_story') %> 
       	  <div class="read-more">
