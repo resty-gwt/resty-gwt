@@ -27,7 +27,7 @@ import com.google.gwt.http.client.Response;
  */
 public abstract class AbstractRequestCallback<T> implements RequestCallback {
 
-    private final Method method;
+    protected final Method method;
     protected MethodCallback<T> callback;
 
     public AbstractRequestCallback(Method method, MethodCallback<T> callback) {
@@ -45,7 +45,7 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
         this.method.response = response;
         if (response == null) {
             callback.onFailure(this.method, new FailedStatusCodeException("TIMEOUT", 999));
-        } else if (response.getStatusCode() != this.method.expectedStatus) {
+        } else if (isFailedStatus(response)) {
             callback.onFailure(this.method, new FailedStatusCodeException(response.getStatusText(), response.getStatusCode()));
         } else {
             T value;
@@ -65,6 +65,13 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
             }
             callback.onSuccess(this.method, value);
         }
+    }
+
+    protected boolean isFailedStatus(Response response) {
+        if( this.method.expectedStatus < 0 ) {
+            return false;
+        }
+        return response.getStatusCode() != this.method.expectedStatus;
     }
 
     abstract protected T parseResult() throws Exception;

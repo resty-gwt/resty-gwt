@@ -20,7 +20,7 @@ package org.fusesource.restygwt.client;
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
-public class FailedStatusCodeException extends Exception {
+public class FailedStatusCodeException extends RuntimeException {
 
     private static final long serialVersionUID = -1699349575737765192L;
 

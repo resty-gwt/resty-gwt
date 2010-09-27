@@ -123,8 +123,14 @@ public class Method {
         return this;
     }
 
-    public void expect(int status) throws RequestException {
+    /**
+     * sets the expected response status code.  If the response status code does not match
+     * this value then the request is considered to have failed.  Defaults to 200.  If set to
+     * -1 then any status code is considered a success.
+     */
+    public Method expect(int status) {
         this.expectedStatus = status;
+        return this;
     }
 
     public void send(final RequestCallback callback) throws RequestException {
