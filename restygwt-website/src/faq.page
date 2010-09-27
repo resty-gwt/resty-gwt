@@ -24,7 +24,7 @@ General questions on the *{project_name:}* project.
 
 The license is [Apache 2 License](http://www.apache.org/licenses/LICENSE-2.0)
 
-### How do I build Scalate
+### How do I build {project_name:}
 
 See the [building guide](building.html)
 
