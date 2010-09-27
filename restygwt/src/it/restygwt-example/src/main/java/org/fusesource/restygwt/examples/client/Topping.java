@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010, Progress Software Corporation and/or its 
+ *  Copyright (C) 2009, Progress Software Corporation and/or its
  * subsidiaries or affiliates.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,30 +16,21 @@
  */
 package org.fusesource.restygwt.examples.client;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
-
-import java.util.List;
-
 /**
- * 
+ * <p>
+ * </p>
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
-@Path("/pizza-service")
-public interface PizzaService extends RestService {
+public class Topping {
 
-    @POST
-    public void order(PizzaOrder request, MethodCallback<OrderConfirmation> callback);
+    public String name;
+    public Double price;
 
-    @GET
-    @Path("/toppings")
-    @Produces( MediaType.APPLICATION_JSON )
-    public void listToppings(MethodCallback<List<Topping>> callback);
-
+    public Topping() {
+    }
+    public Topping(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
 }

@@ -18,6 +18,7 @@ package org.fusesource.restygwt.examples.server;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,6 +29,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.examples.client.OrderConfirmation;
 import org.fusesource.restygwt.examples.client.PizzaOrder;
+import org.fusesource.restygwt.examples.client.Topping;
 
 /**
  * A simple example of how you can use the Jackson object mapper reuse the
@@ -77,4 +79,30 @@ public class PizzaServlet extends HttpServlet {
 
     }
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        System.out.println("Processing Toppings Listing");
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            ArrayList<Topping> toppings = new ArrayList<Topping>();
+            toppings.add(new Topping("pineapple", 0.50));
+            toppings.add(new Topping("ham", 0.50));
+            toppings.add(new Topping("peperoni", 0.50));
+
+            StringWriter sw = new StringWriter();
+            mapper.writeValue(sw, toppings);
+            System.out.println("Response: " + sw.toString());
+
+            resp.setContentType(Resource.CONTENT_TYPE_JSON);
+            mapper.writeValue(resp.getOutputStream(), toppings);
+
+        } catch (Throwable e) {
+            e.printStackTrace();
+        } finally {
+            System.out.flush();
+            System.err.flush();
+        }
+    }
 }

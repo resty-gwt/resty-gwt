@@ -28,6 +28,10 @@
     <servlet-name>pizza-service</servlet-name>
     <url-pattern>/ui/pizza-service</url-pattern>
   </servlet-mapping> 
+  <servlet-mapping>
+    <servlet-name>pizza-service</servlet-name>
+    <url-pattern>/ui/pizza-service/toppings</url-pattern>
+  </servlet-mapping>
 
   <welcome-file-list>
     <welcome-file>ui/ui.html</welcome-file>

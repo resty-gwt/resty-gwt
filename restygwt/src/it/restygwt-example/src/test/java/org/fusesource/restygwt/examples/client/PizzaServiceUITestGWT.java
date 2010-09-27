@@ -18,12 +18,10 @@ package org.fusesource.restygwt.examples.client;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.examples.client.OrderConfirmation;
-import org.fusesource.restygwt.examples.client.Pizza;
-import org.fusesource.restygwt.examples.client.PizzaOrder;
-import org.fusesource.restygwt.examples.client.PizzaService;
 
 import com.google.gwt.core.client.GWT;
+
+import java.util.List;
 
 /**
  * 
@@ -31,7 +29,28 @@ import com.google.gwt.core.client.GWT;
  */
 public class PizzaServiceUITestGWT extends UITestGWT {
 
-    public void testSomething() {
+        public void testListToppings() {
+
+        // Initialize the pizza service..
+        PizzaService service = GWT.create(PizzaService.class);
+
+        service.listToppings(new MethodCallback<List<Topping>>(){
+            public void onSuccess(Method method, List<Topping> response) {
+                System.out.println(response);
+                assertNotNull(response);
+                assertEquals(3, response.size());
+                finishTest();
+            }
+            public void onFailure(Method method, Throwable exception) {
+                exception.printStackTrace();
+                fail(exception.getMessage());
+            }
+
+        });
+        delayTestFinish(2000);
+    }
+
+    public void testOrder() {
 
         // Initialize the pizza service..
         PizzaService service = GWT.create(PizzaService.class);
