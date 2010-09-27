@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2009 Hiram Chirino
-  
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-  
-     http://www.apache.org/licenses/LICENSE-2.0
-  
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+
+    Copyright (C) 2009-2010 the original author or authors.
+    See the notice.md file distributed with this work for additional
+    information regarding copyright ownership.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
 -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -222,27 +227,23 @@
                   <include>**/pom.xml</include>
               </includes>
               <excludes>
-                <!-- can remove once http://code.google.com/p/maven-license-plugin/issues/detail?id=72 is resolved -->
-                <exclude>**/license.txt</exclude>
-                <exclude>**/*.md</exclude>
-                <exclude>**/.git/**</exclude>
-            
                 <!-- ignore files produced during a build -->
                 <exclude>**/target/**</exclude>
+                <exclude>**/WEB-INF/classes/**</exclude>
+
+                <exclude>**/*.response-headers</exclude>
+                <exclude>**/*.response</exclude>
             
                 <!-- ignore binary files -->
                 <exclude>**/*.jpg</exclude>
                 <exclude>**/*.png</exclude>
                 <exclude>**/*.gif</exclude>
                 <exclude>**/*.ico</exclude>
-                <exclude>**/*.keystore</exclude>
+                <exclude>**/*.ipr</exclude>
+                <exclude>**/*.iml</exclude>
+                <exclude>**/*.iws</exclude>
               </excludes>
               <useDefaultExcludes>false</useDefaultExcludes>
-              <!-- <mapping>
-                  <jj>JAVADOC_STYLE</jj>
-                  <proto>DOUBLESLASH_STYLE</proto>
-                  <index>SCRIPT_STYLE</index>
-              </mapping> -->
             </configuration>
             <executions>
               <execution>
