@@ -18,12 +18,15 @@ REST Services
 RestyGWT Rest Services allow you to define an asynchronous Service API which is then implemented via
 GWT deferred binding by a RestyGWT generator.  See the following listing for an example:
 
-    import javax.ws.rs.POST;
-    ...
-    public interface PizzaService extends RestService {
-        @POST
-        public void order(PizzaOrder request, MethodCallback<OrderConfirmation> callback);
-    }
+{pygmentize::java}
+import javax.ws.rs.POST;
+...
+public interface PizzaService extends RestService {
+    @POST
+    public void order(PizzaOrder request, 
+                      MethodCallback<OrderConfirmation> callback);
+}
+{pygmentize}
 
 JAX-RS annotations are used to control how the methods interface map to HTTP requests.  The 
 interface methods MUST return void.  Each method must declare at least one callback argument.  
@@ -33,55 +36,94 @@ body.
 Java beans can be sent and received via JSON encoding/decoding.  Here what the classes declarations
 look like for the `PizzaOrder` and `OrderConfirmation` in the previous example:
 
-    public class PizzaOrder {
-        public String phone_number;
-        public boolean delivery;
-        public List<String> delivery_address = new ArrayList<String>(4);
-        public List<Pizza> pizzas = new ArrayList<Pizza>(10);
-    }
-    
-    public class OrderConfirmation {
-        public long order_id;
-        public PizzaOrder order;
-        public double price;
-        public Long ready_time;
-    }
+{pygmentize::java}
+public class PizzaOrder {
+    public String phone_number;
+    public boolean delivery;
+    public List<String> delivery_address = new ArrayList<String>(4);
+    public List<Pizza> pizzas = new ArrayList<Pizza>(10);
+}
+
+public class OrderConfirmation {
+    public long order_id;
+    public PizzaOrder order;
+    public double price;
+    public Long ready_time;
+}
+{pygmentize}
 
 The JSON encoding style is compatible with the default [Jackson](http://wiki.fasterxml.com/JacksonHome) Data Binding.  En example,
 `PizzaOrder` JSON representation would look like:
 
-    {
-      "phone_number":null,
-      "delivery":true,
-      "delivery_address":[
-        "3434 Pinerun Ave.",
-        "Wesley Chapel, FL 33734"
-      ],
-      "pizzas":[
-        {"quantity":1,"size":16,"crust":"thin","toppings":["ham","pineapple"]},
-        {"quantity":1,"size":16,"crust":"thin","toppings":["extra cheese"]}
-      ]
-    }
+{pygmentize::js}
+{
+  "phone_number":null,
+  "delivery":true,
+  "delivery_address":[
+    "3434 Pinerun Ave.",
+    "Wesley Chapel, FL 33734"
+  ],
+  "pizzas":[
+    {"quantity":1,"size":16,"crust":"thin","toppings":["ham","pineapple"]},
+    {"quantity":1,"size":16,"crust":"thin","toppings":["extra cheese"]}
+  ]
+}
+{pygmentize}
 
 A GWT client creates an instance of the REST service and associate it with a HTTP
 resource URL as follows:
 
-    Resource resource = new Resource( GWT.getModuleBaseURL() + "pizza-service");
+{pygmentize::java}
+Resource resource = new Resource( GWT.getModuleBaseURL() + "pizza-service");
 
-    PizzaService service = GWT.create(PizzaService.class);
-    ((RestServiceProxy)service).setResource(resource);
+PizzaService service = GWT.create(PizzaService.class);
+((RestServiceProxy)service).setResource(resource);
 
-    service.order(order, callback);
+service.order(order, callback);
+{pygmentize}
     
+### Perhaps you want access to the Object to JSON encoders/decoders?
+
+If you want to manually access the JSON encoder/decoder for a given type just define
+an interface that extends JsonEncoderDecoder and RestyGWT will implement it for you using
+GWT deferred binding.
+
+Example:
+
+First you define the interface:
+ 
+{pygmentize::java}
+import javax.ws.rs.POST;
+...
+public interface PizzaOrderCodec extends JsonEncoderDecoder<PizzaOrder> {
+}
+{pygmentize}
+
+Then you use it as follows
+ 
+{pygmentize::java}
+// GWT will implement the interface for you
+PizzaOrderCodec codec = GWT.create(PizzaOrderCodec.class);
+
+// Encoding an object to json
+PizzaOrder order = ... 
+JSONValue json = codec.encode(order);
+
+// decoding an object to from json
+PizzaOrder other = codec.decode(json);
+{pygmentize}
+
 ### Custom Property Names 
 
 If you want to map a field name to a different json property name, you
 can use the `@Json` annotation to configure the desired name.  Example:
 
-    public class Message {
-        @Json(name="message-id")
-        public String messageId;
-    }
+{pygmentize::java}
+public class Message {
+    @Json(name="message-id")
+    public String messageId;
+}
+{pygmentize}
 
 REST API
 --------
@@ -94,18 +136,20 @@ It will set the HTTP `Accept` and `Content-Type` and `X-HTTP-Method-Override` he
 o the expected values.  It will also expect a HTTP 200 response code, otherwise it will 
 consider request the request a failure.
 
-    Resource resource = new Resource( GWT.getModuleBaseURL() + "pizza-service");
+{pygmentize::java}
+Resource resource = new Resource( GWT.getModuleBaseURL() + "pizza-service");
 
-    JSONValue request = ...
+JSONValue request = ...
 
-    resource.post().json(request).send(new JsonCallback() {
-        public void onSuccess(Method method, JSONValue response) {
-            System.out.println(response);
-        }
-        public void onFailure(Method method, Throwable exception) {
-            Window.alert("Error: "+exception);
-        }
-    });
+resource.post().json(request).send(new JsonCallback() {
+    public void onSuccess(Method method, JSONValue response) {
+        System.out.println(response);
+    }
+    public void onFailure(Method method, Throwable exception) {
+        Window.alert("Error: "+exception);
+    }
+});
+{pygmentize}
 
 All the standard HTTP methods are supported: 
 
@@ -150,46 +194,51 @@ Using as a Maven Dependency
 
 Just add the following dependency to your pom.xml
 
-    <dependencies>
-    ...
-      <dependency>
-        <groupId>org.fusesource.restygwt</groupId>
-        <artifactId>restygwt</artifactId>
-        <version>1.0-SNAPSHOT</version>
-      </dependency>
-    ...
-    </dependencies>
-    
-And until a non-snapshot release is made available, you will need to also add the following repository:
+{pygmentize::xml}
+  <dependencies>
+  ...
+    <dependency>
+      <groupId>org.fusesource.restygwt</groupId>
+      <artifactId>restygwt</artifactId>
+      <version>{project_release_version:}</version>
+    </dependency>
+  ...
+  </dependencies>
+{pygmentize}    
+
+If you are using a snapshot version, then you will also need to also add the following repository:
   
-    <repositories>
-    ...
-      <repository>
-        <id>fusesource-nexus-snapshots</id>
-        <name>Fusesource Nexus Snapshots</name>
-        <url>http://repo.fusesource.com/nexus/content/repositories/snapshots</url>
-        <snapshots>
-          <enabled>true</enabled>
-        </snapshots>
-        <releases>
-          <enabled>false</enabled>
-        </releases>
-      </repository>
-    ...
-    </repositories>
+{pygmentize::xml}
+  <repositories>
+  ...
+    <repository>
+      <id>fusesource-nexus-snapshots</id>
+      <name>Fusesource Nexus Snapshots</name>
+      <url>http://repo.fusesource.com/nexus/content/repositories/snapshots</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  ...
+  </repositories>
+{pygmentize}
     
 Building from Source
 --------------------
     
-1. Download and install [Maven 2.10](http://code.google.com/webtoolkit/download.html).  Set the `M2_HOME` environment variable to the installation directory.  Add the maven bin directory to your `PATH` environment variable and make sure your `JAVA_HOME` environment variable is set your your JDK install directory.
-2. Download and install [GWT 2.0.0-rc1](http://code.google.com/webtoolkit/download.html). Set the `GWT_HOME` environment variable  to the installation directory.
-3. Change to the resty-gwt source directory and run:
+1. Download and install [Maven 2](http://maven.apache.org/download.html).  Set the `M2_HOME` 
+   environment variable to the installation directory.  Add the maven bin directory to your `PATH` environment 
+  variable and make sure your `JAVA_HOME` environment variable is set your your JDK install directory.
+2. Change to the resty-gwt source directory and run:
 
-        $ mvn install
+    $ mvn install
+
     
 The above command will produce a `restygwt/target/resty-gwt-*.jar` file.
 
 To build and run the integration tests, use:    
 
     $ mvn install -P run-its
-

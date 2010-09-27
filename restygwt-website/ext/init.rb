@@ -14,6 +14,7 @@ load 'fuse/pygmentize.rb'
 
 config = Webgen::WebsiteAccess.website.config
 config['contentprocessor.map']['asciidoc'] = 'Fuse::AsciiDoc'
+config['contentprocessor.map']['markdown'] = 'Webgen::ContentProcessor::Maruku'
 
 module Fuse 
   autoload :AsciiDoc, 'fuse/asciidoc'

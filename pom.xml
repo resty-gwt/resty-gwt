@@ -18,47 +18,43 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>org.fusesource</groupId>
+    <artifactId>fusesource-pom</artifactId>
+    <version>1.0</version>
+  </parent>
+
   <groupId>org.fusesource.restygwt</groupId>
   <artifactId>restygwt-project</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   
-  <name>RestyGWT</name>
+  <name>${artifactId}</name>
   <description>RestyGWT is a GWT generator for REST services and JSON encoded data transfer objects</description>
 
   <properties>
     <forge-project-id>restygwt</forge-project-id>
     <forge-project-id-uc>RESTYGWT</forge-project-id-uc>
 
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <release-altGitURL>scm:git:ssh://git@github.com:chirino/resty-gwt.git</release-altGitURL>
-    
     <gwt-version>2.0.0</gwt-version>
   </properties>
 
   <url>http://${forge-project-id}.fusesource.org</url>
   <inceptionYear>2010</inceptionYear>
 
-  <organization>
-    <name>Progress Software Inc.</name>
-    <url>http://fusesource.com/</url>
-  </organization> 
-
   <issueManagement>
     <system>jira</system>
-    <url>http://fusesource.com/issues/browse/${forge-project-id-uc}</url>
+    <url>http://github.com/chirino/resty-gwt/issues</url>
   </issueManagement>
   
   <mailingLists>
     <mailingList>
-      <name>${forge-project-id} dev</name>
-      <post>${forge-project-id}-dev@fusesource.org</post>
-      <subscribe>${forge-project-id}-dev-subscribe@fusesource.org</subscribe>
-    </mailingList>
-    <mailingList>
-      <name>${forge-project-id} commits</name>
-      <post>${forge-project-id}-commits@fusesource.org</post>
-      <subscribe>${forge-project-id}-commits-subscribe@fusesource.org</subscribe>
+      <name>RestyGWT Development List</name>
+      <archive>http://groups.google.com/group/restygwt</archive>
+      <post>restygwt@googlegroups.com</post>
+      <subscribe>restygwt+subscribe@googlegroups.com</subscribe>
+      <unsubscribe>restygwt+unsubscribe@googlegroups.com</unsubscribe>
     </mailingList>
   </mailingLists>
 
@@ -75,25 +71,14 @@
     <developerConnection>${release-altGitURL}</developerConnection>
     <url>http://github.com/chirino/resty-gwt</url>
   </scm>
-
   <distributionManagement>
-    <repository>
-      <id>fusesource-nexus-staging</id>
-      <name>Fusesource Release Repository</name>
-      <url>http://repo.fusesource.com/nexus/service/local/staging/deploy/maven2</url>
-    </repository>
-    <snapshotRepository>
-      <id>fusesource-nexus-snapshots</id>
-      <name>Fusesource Nexus Snapshots</name>
-      <url>http://repo.fusesource.com/nexus/content/repositories/snapshots</url>
-    </snapshotRepository>
     <site>
       <id>website.fusesource.org</id>
       <name>website</name>
       <url>dav:http://fusesource.com/forge/dav/${forge-project-id}/maven/${project.version}</url>
     </site>
   </distributionManagement>
-
+  
   <developers>
     <developer>
       <id>chirino</id>
@@ -106,14 +91,6 @@
 
   <build>
     <defaultGoal>install</defaultGoal>
-
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-webdav-jackrabbit</artifactId>
-        <version>1.0-beta-6</version>
-      </extension>
-    </extensions>
 
     <plugins>
       <plugin>
@@ -140,26 +117,6 @@
           <target>1.5</target>
         </configuration>
       </plugin>
-        
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-idea-plugin</artifactId>
-        <version>2.2</version>
-        <configuration>
-          <downloadSources>true</downloadSources>
-          <downloadJavadocs>true</downloadJavadocs>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-eclipse-plugin</artifactId>
-        <version>2.5.1</version>
-        <configuration>
-          <downloadSources>true</downloadSources>
-          <downloadJavadocs>true</downloadJavadocs>
-        </configuration>
-      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -169,32 +126,6 @@
           <failIfNoTests>false</failIfNoTests>
         </configuration>
       </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>2.0</version>
-        <configuration>
-          <autoVersionSubmodules>true</autoVersionSubmodules>
-          <allowTimestampedSnapshots>false</allowTimestampedSnapshots>
-          <preparationGoals>clean install</preparationGoals>
-          <goals>deploy</goals>
-          <arguments>-Prelease</arguments>
-        </configuration>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-scm-plugin</artifactId>
-        <version>1.3</version>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.scm</groupId>
-            <artifactId>maven-scm-provider-gitexe</artifactId>
-            <version>1.3</version>
-          </dependency>
-        </dependencies>
-      </plugin>          
 
     </plugins>
   </build>
@@ -256,81 +187,11 @@
 
   <profiles>
 
-    <!--
-      To generate a graph of the project dependencies, run: mvn -P graph
-      graph:project
-    -->
-    <profile>
-      <id>graph</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.fusesource.mvnplugins</groupId>
-            <artifactId>maven-graph-plugin</artifactId>
-            <version>1.5</version>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
     <profile>
       <id>release</id>
       <modules>
         <module>restygwt-website</module>
       </modules>
-      <build>
-        <plugins>
-          <!-- We want to sign the artifact, the POM, and all attached artifacts -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.0</version>
-            <configuration>
-              <passphrase>${gpg.passphrase}</passphrase>
-            </configuration>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <version>2.1.1</version>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar-no-fork</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.6</version>
-            
-            <configuration>
-              <encoding>${project.build.sourceEncoding}</encoding>
-            </configuration>
-            
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
 
     <profile>

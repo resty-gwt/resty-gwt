@@ -13,12 +13,11 @@ Download it today!
   %h1 Just need a jar?
   
 .right
-  -#
-    The latest released is version: {project_release_version:}
-    %ul
-      %li
-        %a{:href => "http://repo.fusesource.com/nexus/content/groups/public/org/fusesource/{project_id:}/{project_id:}/{project_release_version:}/{project_id:}-{project_release_version:}.jar"}
-          {project_id:}-{project_version:}.jar
+  The latest released is version: {project_release_version:} it should be available on maven central, but it it has not yet been mirrored there you can get it from:
+  %ul
+    %li
+      %a{:href => "http://repo.fusesource.com/nexus/content/groups/public/org/fusesource/{project_id:}/{project_id:}/{project_release_version:}/{project_id:}-{project_release_version:}.jar"}
+        {project_id:}-{project_release_version:}.jar
 
   Nightly snapshots are available for:
   %ul
@@ -34,19 +33,19 @@ Download it today!
     %code pom.xml
     
     :plain
-      {coderay:: xml}
+      {pygmentize:: xml}
       <dependency>
         <groupId>org.fusesource.{project_id:}</groupId>
         <artifactId>{project_id:}</artifactId>
-        <version>{project_snapshot_version:}</version>
+        <version>{project_release_version:}</version>
       </dependency>
-      {coderay}
+      {pygmentize}
 
   %p    
     If your using a snapshot version, make sure you add the following maven repository to your
     %code pom.xml
     :plain
-      {coderay:: xml}  
+      {pygmentize:: xml}  
       <repositories>
         <repository>
           <id>fusesource-nexus-snapshots</id>
@@ -60,4 +59,4 @@ Download it today!
           </releases>
         </repository>
       </repositories>
-      {coderay}
+      {pygmentize}

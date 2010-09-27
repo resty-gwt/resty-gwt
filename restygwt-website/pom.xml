@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>restygwt-website</artifactId>
-  <name>RestyGWT :: Website</name>
+  <name>${artifactId}</name>
 
   <build>
     <resources>

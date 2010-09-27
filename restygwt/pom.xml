@@ -30,7 +30,7 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   
-  <name>RestyGWT :: Core</name>
+  <name>${artifactId}</name>
   <description>RestyGWT is a GWT generator for REST services and JSON encoded data transfer objects</description>
 
   <dependencies>
