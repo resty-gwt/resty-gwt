@@ -45,12 +45,12 @@ public class JsonpMethod extends Method {
         this.resource = resource;
     }
     
-    public Method callbackParam(String callbackParam) {
+    public JsonpMethod callbackParam(String callbackParam) {
         builder.setCallbackParam(callbackParam);
         return this;
     }
 
-    public Method failureCallbackParam(String failureCallbackParam) {
+    public JsonpMethod failureCallbackParam(String failureCallbackParam) {
         builder.setFailureCallbackParam(failureCallbackParam);
         return this;
     }
