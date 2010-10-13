@@ -224,12 +224,29 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                             String expression = locator.decodeExpression(field.getType(), objectGetter, style);
 
                             p("if(" + objectGetter + " != null) {").i(1);
+
+                            if (field.getType().isPrimitive() == null) {
+                                p("if(" + objectGetter + " instanceof com.google.gwt.json.client.JSONNull) {").i(1);
+
+                                if (setterName != null) {
+                                    p("rc." + setterName + "(null);");
+                                } else {
+                                    p("rc." + name + "=null;");
+                                }
+
+                                i(-1).p("} else {").i(1);
+                            }
+
                             if (setterName != null) {
                                 p("rc." + setterName + "(" + expression + ");");
                             } else {
                                 p("rc." + name + "=" + expression + ";");
                             }
                             i(-1).p("}");
+
+                            if (field.getType().isPrimitive() == null) {
+                                i(-1).p("}");
+                            }
 
                         } else {
                             error("field must not be private.");
