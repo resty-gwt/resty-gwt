@@ -70,10 +70,7 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
     }
 
     protected boolean isFailedStatus(Response response) {
-        if( this.method.expectedStatus < 0 ) {
-            return false;
-        }
-        return response.getStatusCode() != this.method.expectedStatus;
+        return !this.method.isExpected(response.getStatusCode());
     }
 
     abstract protected T parseResult() throws Exception;
