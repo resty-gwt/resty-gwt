@@ -18,8 +18,10 @@
 
 package org.fusesource.restygwt.client;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -33,7 +35,6 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
-
 /**
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
@@ -61,7 +62,15 @@ public class Method {
     }
 
     RequestBuilder builder;
-    int expectedStatus = 200;
+    final Set<Integer> expectedStatuses;
+    {
+      expectedStatuses = new HashSet<Integer>();
+      expectedStatuses.add(200);
+      expectedStatuses.add(201);
+      expectedStatuses.add(204);
+    };
+    boolean anyStatus;
+
     Request request;
     Response response;
 
@@ -127,12 +136,26 @@ public class Method {
 
     /**
      * sets the expected response status code.  If the response status code does not match
-     * this value then the request is considered to have failed.  Defaults to 200.  If set to
-     * -1 then any status code is considered a success.
+     * this value then the request is considered to have failed.  Defaults to accepting
+     * 200,201,204. If set to -1 then any status code is considered a success.
      */
     public Method expect(int status) {
-        this.expectedStatus = status;
+        if (status < 0) {
+            anyStatus = true;
+        } else {
+            anyStatus = false;
+            this.expectedStatuses.clear();
+            this.expectedStatuses.add(status);
+        }
         return this;
+    }
+
+    public boolean isExpected(int status) {
+        if (anyStatus) {
+            return true;
+        } else {
+            return this.expectedStatuses.contains(status);
+        }
     }
 
     public void send(final RequestCallback callback) throws RequestException {
