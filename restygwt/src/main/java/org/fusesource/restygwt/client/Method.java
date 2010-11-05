@@ -211,10 +211,13 @@ public class Method {
                 protected T parseResult() throws Exception {
                     try {
                         JSONValue val = JSONParser.parse(response.getText());
-                        if (val.isObject() == null) {
+                        if (val.isObject() != null) {
+                            return (T) val.isObject().getJavaScriptObject();
+                        } else if (val.isArray() != null) {
+                            return (T) val.isArray().getJavaScriptObject();
+                        } else {
                             throw new ResponseFormatException("Response was NOT a JSON object");
                         }
-                        return (T) val.isObject().getJavaScriptObject();
                     } catch (JSONException e) {
                         throw new ResponseFormatException("Response was NOT a valid JSON document", e);
                     } catch (IllegalArgumentException e) {
