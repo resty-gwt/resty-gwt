@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.ws.rs.DELETE;
@@ -51,6 +52,11 @@ import org.fusesource.restygwt.client.XmlCallback;
 import org.fusesource.restygwt.client.Json.Style;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayBoolean;
+import com.google.gwt.core.client.JsArrayInteger;
+import com.google.gwt.core.client.JsArrayNumber;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -60,6 +66,7 @@ import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -84,6 +91,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private static final String DEFAULTS_CLASS = Defaults.class.getName();
     private static final String ABSTRACT_REQUEST_CALLBACK_CLASS = AbstractRequestCallback.class.getName();
     private static final String JSON_PARSER_CLASS = JSONParser.class.getName();
+    private static final String JSON_ARRAY_CLASS = JSONArray.class.getName();
     private static final String JSON_OBJECT_CLASS = JSONObject.class.getName();
     private static final String REQUEST_EXCEPTION_CLASS = RequestException.class.getName();
     private static final String RESPONSE_FORMAT_EXCEPTION_CLASS = ResponseFormatException.class.getName();
@@ -115,6 +123,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private JClassType STRING_TYPE;
     private JClassType JSON_VALUE_TYPE;
     private JClassType OVERLAY_VALUE_TYPE;
+    private Set<JClassType> OVERLAY_ARRAY_TYPES;
     private JsonEncoderDecoderInstanceLocator locator;
 
     public RestServiceClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) throws UnableToCompleteException {
@@ -142,6 +151,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         this.STRING_TYPE = find(String.class);
         this.JSON_VALUE_TYPE = find(JSONValue.class);
         this.OVERLAY_VALUE_TYPE = find(JavaScriptObject.class);
+        this.OVERLAY_ARRAY_TYPES = new HashSet<JClassType>();
+        this.OVERLAY_ARRAY_TYPES.add(find(JsArray.class));
+        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayBoolean.class));
+        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayInteger.class));
+        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayNumber.class));
+        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayString.class));
 
         String path = null;
         Path pathAnnotation = source.getAnnotation(Path.class);
@@ -186,6 +201,15 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private String quote(String path) {
         // TODO: unlikely to occur. but we should escape chars like newlines..
         return "\"" + path + "\"";
+    }
+
+    private boolean isOverlayArrayType(JClassType type) {
+        for (JClassType arrayType : OVERLAY_ARRAY_TYPES) {
+            if (type.isAssignableTo(arrayType)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void writeMethodImpl(JMethod method) throws UnableToCompleteException {
@@ -289,6 +313,9 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 } else if (contentArg.getType() == JSON_VALUE_TYPE) {
                     p(".json(" + contentArg.getName() + ")");
                 } else if (contentArg.getType().isClass() != null &&
+                           isOverlayArrayType(contentArg.getType().isClass())) {
+                    p(".json(new " + JSON_ARRAY_CLASS + "(" + contentArg.getName() + "))");
+                } else if (contentArg.getType().isClass() != null &&
                            contentArg.getType().isClass().isAssignableTo(OVERLAY_VALUE_TYPE)) {
                     p(".json(new " + JSON_OBJECT_CLASS + "(" + contentArg.getName() + "))");
                 } else if (contentArg.getType() == DOCUMENT_TYPE) {
@@ -354,6 +381,10 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         }
         if (STRING_TYPE == type) {
             return expr;
+        }
+        if (type.isClass() != null &&
+            isOverlayArrayType(type.isClass())) {
+          return "(new " + JSON_ARRAY_CLASS + "(" + expr + ")).toString()";
         }
         if (type.isClass() != null &&
             OVERLAY_VALUE_TYPE.isAssignableFrom(type.isClass())) {
