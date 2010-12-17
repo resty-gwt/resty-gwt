@@ -5,7 +5,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.fusesource.restygwt.client.BasicTestGwt;
-import org.fusesource.restygwt.client.flaky.FlakyTestGwt;
+import org.fusesource.restygwt.client.restygwt.flaky.FlakyTestGwt;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
 

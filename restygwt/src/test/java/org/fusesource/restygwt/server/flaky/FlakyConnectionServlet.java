@@ -37,7 +37,7 @@ import org.mortbay.jetty.HttpStatus;
  */
 public class FlakyConnectionServlet extends HttpServlet {
 
-	private int NUMBER_OF_SERVER_FAILURES_TO_SIMULATE = 2;
+	private int NUMBER_OF_SERVER_FAILURES_TO_SIMULATE = 0;
 
 	private static int currentNumberOfServerFailures = 0;
 

@@ -1,4 +1,4 @@
-package org.fusesource.restygwt.client.flaky;
+package org.fusesource.restygwt.client.restygwt.flaky;
 
 import javax.ws.rs.GET;
 

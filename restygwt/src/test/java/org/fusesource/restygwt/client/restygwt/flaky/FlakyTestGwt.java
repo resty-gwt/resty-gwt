@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client.flaky;
+package org.fusesource.restygwt.client.restygwt.flaky;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
