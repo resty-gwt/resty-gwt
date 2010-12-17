@@ -7,7 +7,7 @@ This is a fork of excellent restyGWT. The idea is to merge it back to master whe
 BIG GOALS:
 
 * integration of error handling async callback (class Method?)
-* establishing "something" (central dispatcher) that can be injected and can be used to do batching and cacheing of stuff
+* establishing "something" (central dispatcher) that can be injected and can be used to do batching and caching of stuff
 
 SMALL GOALS:
 
