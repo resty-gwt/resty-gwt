@@ -41,7 +41,7 @@
     <forge-project-id-uc>RESTYGWT</forge-project-id-uc>
 
     <release-altGitURL>scm:git:ssh://git@github.com:chirino/resty-gwt.git</release-altGitURL>
-    <gwt-version>2.0.0</gwt-version>
+    <gwt-version>2.1.0</gwt-version>
   </properties>
 
   <url>http://${forge-project-id}.fusesource.org</url>
@@ -100,7 +100,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <version>1.2</version>
+        <version>${gwt-version}</version>
         <executions>
           <execution>
             <goals>
@@ -117,8 +117,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.1</version>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
         </configuration>
       </plugin>
 
