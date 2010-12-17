@@ -5,10 +5,12 @@ FORK NOTES
 This is a fork of excellent restyGWT. The idea is to merge it back to master when stuff is done and merge is "ok" for developers...
 
 BIG GOALS:
+
 * integration of error handling async callback (class Method?)
 * establishing "something" (central dispatcher) that can be injected and can be used to do batching and cacheing of stuff
 
 SMALL GOALS:
+
 * DONE: update to Java 1.6
 * DONE: udpate to GWT maven pugin 2.1
 * DONE: update to GWT 2.1
