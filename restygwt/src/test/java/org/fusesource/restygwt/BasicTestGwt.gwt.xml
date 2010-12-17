@@ -17,9 +17,6 @@
 -->
 
 <module>
-  <inherits name='com.google.gwt.user.User' />
-<!--
-  <servlet path='/api/*'
-  class='todo' />
-   -->
+	<inherits name='com.google.gwt.user.User' />
+	<inherits name='org.fusesource.restygwt.RestyGWT'/>
 </module>

@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletResponse;
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
-public class TestServlet extends HttpServlet {
+public class TheTestServlet extends HttpServlet {
 
     private static final long serialVersionUID = -5364009274470240593L;
 
@@ -123,7 +123,7 @@ public class TestServlet extends HttpServlet {
     }
 
     private URL resource(String name) {
-        return TestServlet.class.getResource(name);
+        return TheTestServlet.class.getResource(name);
     }
 
     private HashMap<String, String> hashmap(Properties properties) {

@@ -1,10 +1,11 @@
-package org.fusesource;
+package org.fusesource.restygwt;
 
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.fusesource.client.BasicTestGwt;
+import org.fusesource.restygwt.client.BasicTestGwt;
+import org.fusesource.restygwt.client.flaky.FlakyTestGwt;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
 
@@ -36,6 +37,7 @@ public class GwtCompleteTestSuite extends TestCase {
         GWTTestSuite suite = new GWTTestSuite("all GwtTestCases" );
 
         suite.addTestSuite(BasicTestGwt.class);
+        suite.addTestSuite(FlakyTestGwt.class);
 
 
         return suite;

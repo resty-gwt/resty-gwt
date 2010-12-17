@@ -15,6 +15,7 @@ SMALL GOALS:
 * DONE: udpate to GWT maven pugin 2.1
 * DONE: update to GWT 2.1
 * DONE: simpler testing and debugging of resty GWT (one project with goal integration-test) or something like http://mojo.codehaus.org/gwt-maven-plugin/user-guide/productivity.html
+* DONE: support for eclipse as IDE (debugging of GWT inside IDE)
 
 
 

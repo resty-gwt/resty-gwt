@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.fusesource.client;
+package org.fusesource.restygwt.client;
 
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.ui.Label;
@@ -29,7 +29,7 @@ public class BasicTestGwt extends GWTTestCase {
 
     @Override
     public String getModuleName() {
-        return "org.fusesource.BasicTestGwt";
+        return "org.fusesource.restygwt.BasicTestGwt";
     }
 
     public void testGetExampleAction() {
