@@ -4,8 +4,9 @@ package org.fusesource.restygwt;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.fusesource.restygwt.client.BasicTestGwt;
-import org.fusesource.restygwt.client.restygwt.flaky.FlakyTestGwt;
+import org.fusesource.restygwt.client.basic.CachingTestGwt;
+import org.fusesource.restygwt.client.basic.FlakyTestGwt;
+import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
 
@@ -36,9 +37,9 @@ public class GwtCompleteTestSuite extends TestCase {
     public static Test suite() {
         GWTTestSuite suite = new GWTTestSuite("all GwtTestCases" );
 
-        suite.addTestSuite(BasicTestGwt.class);
         suite.addTestSuite(FlakyTestGwt.class);
-
+        suite.addTestSuite(TimeoutTestGwt.class);
+        suite.addTestSuite(CachingTestGwt.class);
 
         return suite;
     }

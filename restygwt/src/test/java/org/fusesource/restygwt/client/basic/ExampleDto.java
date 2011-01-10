@@ -1,4 +1,4 @@
-package org.fusesource.restygwt.client.restygwt.flaky;
+package org.fusesource.restygwt.client.basic;
 
 public class ExampleDto {
 

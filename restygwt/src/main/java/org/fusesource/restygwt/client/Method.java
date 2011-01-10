@@ -22,9 +22,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Logger;
+
+import org.fusesource.restygwt.client.dispatcher.CallbackRetrying;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.http.client.Header;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -36,27 +40,32 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class Method {
 
+
+    private static Logger logger = Logger.getLogger(Method.class.getName());
+
     /**
      * GWT hides the full spectrum of methods because safari has a bug:
      * http://bugs.webkit.org/show_bug.cgi?id=3812
-     * 
+     *
      * We extend assume the server side will also check the
      * X-HTTP-Method-Override header.
-     * 
+     *
      * TODO: add an option to support using this approach to bypass restrictive
      * firewalls even if the browser does support the setting all the method
      * types.
-     * 
+     *
      * @author chirino
      */
     static private class MethodRequestBuilder extends RequestBuilder {
         public MethodRequestBuilder(String method, String url) {
+
             super(method, url);
+
             setHeader("X-HTTP-Method-Override", method);
         }
     }
@@ -120,6 +129,8 @@ public class Method {
     public Method json(JSONValue data) {
         defaultContentType(Resource.CONTENT_TYPE_JSON);
         builder.setRequestData(data.toString());
+
+
         return this;
     }
 
@@ -159,22 +170,13 @@ public class Method {
     }
 
     public void send(final RequestCallback callback) throws RequestException {
-        doSetTimeout();
-        builder.setCallback(new RequestCallback() {
-            public void onResponseReceived(Request request, Response response) {
-                callback.onResponseReceived(request, response);
-            }
 
-            public void onError(Request request, Throwable exception) {
-                callback.onResponseReceived(request, response);
-            }
-        });
-        GWT.log("Sending http request: " + builder.getHTTPMethod() + " " + builder.getUrl() + " ,timeout:" + builder.getTimeoutMillis(), null);
-        String content = builder.getRequestData();
-        if (content != null && content.length() > 0) {
-            GWT.log(content, null);
-        }
-        request = builder.send();
+        doSetTimeout();
+
+        IDispatcher dispatcher = Defaults.getDispatcher(builder, callback);
+
+        dispatcher.send();
+
     }
 
     public void send(final TextCallback callback) {
@@ -193,6 +195,7 @@ public class Method {
 
     public void send(final JsonCallback callback) {
         defaultAcceptType(Resource.CONTENT_TYPE_JSON);
+
         try {
             send(new AbstractRequestCallback<JSONValue>(this, callback) {
                 protected JSONValue parseResult() throws Exception {
@@ -228,6 +231,8 @@ public class Method {
     }
 
     public <T extends JavaScriptObject> void send(final OverlayCallback<T> callback) {
+
+
         defaultAcceptType(Resource.CONTENT_TYPE_JSON);
         try {
             send(new AbstractRequestCallback<T>(this, callback) {

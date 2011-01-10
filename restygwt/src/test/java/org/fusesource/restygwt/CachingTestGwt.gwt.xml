@@ -21,6 +21,6 @@
 
 	<inherits name='org.fusesource.restygwt.RestyGWT'/>
   <servlet path='/api/*'
-  class='org.fusesource.restygwt.server.FlakyConnectionServlet' />
+  class='org.fusesource.restygwt.server.CachingTestServlet' />
 
 </module>

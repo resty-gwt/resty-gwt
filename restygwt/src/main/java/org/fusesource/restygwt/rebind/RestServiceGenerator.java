@@ -25,7 +25,7 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class RestServiceGenerator extends Generator {
@@ -35,7 +35,9 @@ public class RestServiceGenerator extends Generator {
         try {
             JClassType restService = find(logger, context, source);
             RestServiceClassCreator generator = new RestServiceClassCreator(logger, context, restService);
-            return generator.create();
+
+            String generated = generator.create();
+            return generated;
         } finally {
             BaseSourceCreator.clearGeneratedClasses();
         }

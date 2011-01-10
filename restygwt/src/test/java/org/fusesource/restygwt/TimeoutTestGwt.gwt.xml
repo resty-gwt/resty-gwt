@@ -18,9 +18,8 @@
 
 <module>
 	<inherits name='com.google.gwt.user.User' />
-
 	<inherits name='org.fusesource.restygwt.RestyGWT'/>
-  <servlet path='/api/*'
-  class='org.fusesource.restygwt.server.FlakyConnectionServlet' />
 
+	  <servlet path='/api/*'
+  class='org.fusesource.restygwt.server.TimeoutConnectionServlet' />
 </module>

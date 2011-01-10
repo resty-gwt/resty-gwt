@@ -32,7 +32,7 @@
   <generate-with class="org.fusesource.restygwt.rebind.JsonEncoderDecoderGenerator">
     <when-type-assignable class="org.fusesource.restygwt.client.JsonEncoderDecoder" />
   </generate-with>
-  
+
   <source path="client"/>
 
 </module>
