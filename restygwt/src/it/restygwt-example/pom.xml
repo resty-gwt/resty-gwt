@@ -22,9 +22,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.fusesource.restygwt</groupId>
+  <parent>
+    <groupId>org.fusesource.restygwt</groupId>
+    <artifactId>restygwt-it-parent</artifactId>
+    <version>@project.version@</version>
+  </parent>
   <artifactId>restygwt-example</artifactId>
-  <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <name>RestyGWT Example</name>
@@ -33,53 +36,8 @@
     RestyGWT Examples
   </description>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>hiramchirino.com-release</id>
-      <url>http://hiramchirino.com/repo/release</url>
-      <releases><enabled>true</enabled></releases>
-      <snapshots><enabled>false</enabled></snapshots>
-    </pluginRepository>
-  </pluginRepositories>
-
-  <repositories>
-    <repository>
-      <id>hiramchirino.com-release</id>
-      <url>http://hiramchirino.com/repo/release</url>
-      <releases><enabled>true</enabled></releases>
-      <snapshots><enabled>false</enabled></snapshots>
-    </repository>
-    <repository>
-      <id>java.net.m2</id>
-      <url>http://download.java.net/maven/2</url>
-    </repository>
-    <repository>
-      <id>java.net.m1</id>
-      <url>http://download.java.net/maven/1</url>
-      <layout>legacy</layout>
-    </repository>
-  </repositories>
-
-  <properties>
-    <gwt-version>2.0.0</gwt-version>
-    <restygwt-version>1.0-SNAPSHOT</restygwt-version>
-  </properties>
-
   <dependencies>
-  
-    <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-user</artifactId>
-      <version>${gwt-version}</version>
-      <scope>provided</scope>      
-    </dependency>     
 
-    <dependency>
-      <groupId>org.fusesource.restygwt</groupId>
-      <artifactId>restygwt</artifactId>
-      <version>${restygwt-version}</version>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>jsr311-api</artifactId>
@@ -93,82 +51,7 @@
       <version>1.4.1</version>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.7</version>
- 	    <scope>test</scope>
-    </dependency>
 
   </dependencies>
 
-  <build>
-    <outputDirectory>${basedir}/war/WEB-INF/classes</outputDirectory>
-    <plugins>
-    
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.0.2</version>
-        <configuration>
-          <warSourceDirectory>war</warSourceDirectory>
-        </configuration>
-      </plugin>      
-      
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>gwt-maven-plugin</artifactId>
-        <version>1.2</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-              <goal>test</goal>
-            </goals>
-          </execution>
-        </executions>        
-        <configuration>
-          <logLevel>INFO</logLevel>
-          <style>DETAILED</style>
-          <treeLogger>true</treeLogger>
-          <extraJvmArgs>-Xmx512m</extraJvmArgs>
-          <runTarget>ui/ui.html</runTarget>
-          <includes>**/RestyGWTTestSuite.java</includes>
-          <!-- <gwtHome>${env.GWT_HOME}</gwtHome> -->
-        </configuration>
-      </plugin>
-      
-    </plugins>
-  </build>
-  
-  <profiles>
-    <!-- Macs need the -d32 -XstartOnFirstThread options -->
-    <profile>
-      <id>mac</id>
-      <activation>
-        <os><family>mac</family></os>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>gwt-maven-plugin</artifactId>
-            <configuration>
-              <extraJvmArgs>-d32 -XstartOnFirstThread -Xmx512m</extraJvmArgs>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>    
-  </profiles>  
-  
 </project>
