@@ -28,7 +28,7 @@
   </parent>
 
   <artifactId>restygwt-website</artifactId>
-  <name>${artifactId}</name>
+  <name>${project.artifactId}</name>
 
   <build>
     <resources>
