@@ -46,6 +46,10 @@ public class Defaults {
      * @param serviceRoot
      */
     public static void setServiceRoot(String serviceRoot) {
+        // GWT.getModuleBaseURL() is guaranteed to end with a slash, so should any custom service root
+        if (!serviceRoot.endsWith("/")) {
+            serviceRoot += "/";
+        }
         Defaults.serviceRoot = serviceRoot;
     }
 
