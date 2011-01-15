@@ -26,16 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.OPTIONS;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 
 import org.fusesource.restygwt.client.AbstractRequestCallback;
 import org.fusesource.restygwt.client.Defaults;
@@ -286,9 +277,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 acceptTypeBuiltIn = "CONTENT_TYPE_XML";
             }
 
-            if (acceptTypeBuiltIn == null) {
-                p("final " + METHOD_CLASS + "  __method =");
-            }
+            p("final " + METHOD_CLASS + " __method =");
 
             p("this.resource");
             if (pathExpression != null) {
@@ -300,26 +289,45 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 p(".addQueryParam(" + wrap(entry.getKey()) + ", " + toStringExpression(entry.getValue().getType(), expr) + ")");
             }
             // example: .get()
-            p("." + restMethod + "()");
+            p("." + restMethod + "();");
 
+
+            Produces producesAnnotation = method.getAnnotation(Produces.class);
+            if (producesAnnotation != null) {
+                p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, "+wrap(producesAnnotation.value()[0])+");");
+            } else {
+                // set the default accept header....
+                if (acceptTypeBuiltIn != null) {
+                    p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + "." + acceptTypeBuiltIn + ");");
+                } else {
+                    p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + ".CONTENT_TYPE_JSON);");
+                }
+            }
+
+            Consumes consumesAnnotation = method.getAnnotation(Consumes.class);
+            if (consumesAnnotation != null) {
+                p("__method.header(" + RESOURCE_CLASS + ".HEADER_CONTENT_TYPE, "+wrap(consumesAnnotation.value()[0])+");");
+            }
+
+            // and set the explicit headers now (could override the accept header)
             for (Map.Entry<String, JParameter> entry : headerParams.entrySet()) {
                 String expr = entry.getValue().getName();
-                p(".header(" + wrap(entry.getKey()) + ", " + toStringExpression(entry.getValue().getType(), expr) + ")");
+                p("__method.header(" + wrap(entry.getKey()) + ", " + toStringExpression(entry.getValue().getType(), expr) + ");");
             }
 
             if (contentArg != null) {
                 if (contentArg.getType() == STRING_TYPE) {
-                    p(".text(" + contentArg.getName() + ")");
+                    p("__method.text(" + contentArg.getName() + ");");
                 } else if (contentArg.getType() == JSON_VALUE_TYPE) {
-                    p(".json(" + contentArg.getName() + ")");
+                    p("__method.json(" + contentArg.getName() + ");");
                 } else if (contentArg.getType().isClass() != null &&
                            isOverlayArrayType(contentArg.getType().isClass())) {
-                    p(".json(new " + JSON_ARRAY_CLASS + "(" + contentArg.getName() + "))");
+                    p("__method.json(new " + JSON_ARRAY_CLASS + "(" + contentArg.getName() + "));");
                 } else if (contentArg.getType().isClass() != null &&
                            contentArg.getType().isClass().isAssignableTo(OVERLAY_VALUE_TYPE)) {
-                    p(".json(new " + JSON_OBJECT_CLASS + "(" + contentArg.getName() + "))");
+                    p("__method.json(new " + JSON_OBJECT_CLASS + "(" + contentArg.getName() + "));");
                 } else if (contentArg.getType() == DOCUMENT_TYPE) {
-                    p(".xml(" + contentArg.getName() + ")");
+                    p("__method.xml(" + contentArg.getName() + ");");
                 } else {
                     JClassType contentClass = contentArg.getType().isClass();
                     if (contentClass == null) {
@@ -332,15 +340,13 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                     // example:
                     // .json(Listings$_Generated_JsonEncoder_$.INSTANCE.encode(arg0)
                     // )
-                    p(".json(" + locator.encodeExpression(contentClass, contentArg.getName(), style) + ")");
+                    p("__method.json(" + locator.encodeExpression(contentClass, contentArg.getName(), style) + ");");
                 }
             }
 
             if (acceptTypeBuiltIn != null) {
-                p(".header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + "." + acceptTypeBuiltIn + ")");
-                p(".send(" + callbackArg.getName() + ");");
+                p("__method.send(" + callbackArg.getName() + ");");
             } else {
-                p(".header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + ".CONTENT_TYPE_JSON);");
                 p("try {").i(1);
                 {
                     p(
