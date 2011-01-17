@@ -41,7 +41,7 @@
     <forge-project-id-uc>RESTYGWT</forge-project-id-uc>
 
     <release-altGitURL>scm:git:ssh://git@github.com:chirino/resty-gwt.git</release-altGitURL>
-    <gwt-version>2.1.1</gwt-version>
+    <gwt-version>2.1.0</gwt-version>
   </properties>
 
   <url>http://${forge-project-id}.fusesource.org</url>
@@ -159,7 +159,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.1.1</version>
+        <version>2.1.0</version>
         <reportSets>
           <reportSet>
             <reports>

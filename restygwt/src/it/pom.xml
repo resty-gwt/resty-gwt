@@ -43,7 +43,7 @@
   </repositories>
 
   <properties>
-    <gwt-version>2.1.1</gwt-version>
+    <gwt-version>2.1.0</gwt-version>
   </properties>
 
   <dependencies>
@@ -100,7 +100,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <version>2.1.0</version>
+        <version>${gwt-version}</version>
         <executions>
           <execution>
             <goals>
