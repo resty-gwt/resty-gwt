@@ -33,7 +33,7 @@
   <version>1.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   
-  <name>${artifactId}</name>
+  <name>${project.artifactId}</name>
   <description>RestyGWT is a GWT generator for REST services and JSON encoded data transfer objects</description>
 
   <dependencies>
@@ -146,7 +146,7 @@
                 <goal>install</goal>
               </goals>
               <properties>
-                <restygwt-version>${pom.version}</restygwt-version>
+                <restygwt-version>${project.version}</restygwt-version>
               </properties>
             </configuration>
             <executions>
