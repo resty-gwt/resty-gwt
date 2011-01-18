@@ -46,11 +46,19 @@ public class Resource {
             this.path = uri.substring(0, pos);
             this.query = uri.substring(pos + 1);
         } else {
+            // Strip off trailing "/" so we have a known format to work off of when concatenating paths
+            if (uri.endsWith("/")) {
+                uri = uri.substring(0, uri.length() - 1);
+            }
             this.path = uri;
         }
     }
 
     public Resource(String uri, String query) {
+        // Strip off trailing "/" so we have a known format to work off of when concatenating paths
+        if (uri.endsWith("/")) {
+            uri = uri.substring(0, uri.length() - 1);
+        }
         this.path = uri;
         this.query = query;
     }
@@ -104,7 +112,10 @@ public class Resource {
 
     // TODO: support fancier resolutions
     public Resource resolve(String path) {
-        return new Resource(this.path + path);
+        if (path.startsWith("/")) {
+            path = path.substring(1);
+        }
+        return new Resource(this.path + "/" + path);
     }
 
     public Resource addQueryParam(String key, String value) {
