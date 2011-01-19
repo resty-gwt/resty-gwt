@@ -76,7 +76,10 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private static final String JSON_OBJECT_CLASS = JSONObject.class.getName();
     private static final String REQUEST_EXCEPTION_CLASS = RequestException.class.getName();
     private static final String RESPONSE_FORMAT_EXCEPTION_CLASS = ResponseFormatException.class.getName();
+    private static final String JSONP_METHOD_CLASS = JsonpMethod.class.getName();
 
+
+    private static final String METHOD_JSONP = "jsonp";
     private static final String METHOD_PUT = "put";
     private static final String METHOD_POST = "post";
     private static final String METHOD_OPTIONS = "options";
@@ -92,6 +95,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         REST_METHODS.add(METHOD_OPTIONS);
         REST_METHODS.add(METHOD_POST);
         REST_METHODS.add(METHOD_PUT);
+        REST_METHODS.add(METHOD_JSONP);
     }
 
     private JClassType XML_CALLBACK_TYPE;
@@ -300,6 +304,17 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             // example: .get()
             p("." + restMethod + "();");
 
+            // Handle JSONP specific configuration...
+            JSONP jsonpAnnotation = method.getAnnotation(JSONP.class);
+            if( restMethod.equals(METHOD_JSONP) && jsonpAnnotation!=null ) {
+                if( jsonpAnnotation.callbackParam().length() > 0 ) {
+                    p("(("+JSONP_METHOD_CLASS+")__method).callbackParam("+wrap(jsonpAnnotation.callbackParam())+");");
+                }
+                if( jsonpAnnotation.failureCallbackParam().length() > 0 ) {
+                    p("(("+JSONP_METHOD_CLASS+")__method).failureCallbackParam("+wrap(jsonpAnnotation.failureCallbackParam())+");");
+                }
+            }
+
             // configure the dispatcher
             if( options!=null && options.dispatcher()!=Dispatcher.class ) {
                 // use the dispatcher configured for the method.
@@ -480,6 +495,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             restMethod = METHOD_POST;
         } else if (method.getAnnotation(PUT.class) != null) {
             restMethod = METHOD_PUT;
+        } else if (method.getAnnotation(JSONP.class) != null) {
+            restMethod = METHOD_JSONP;
         } else {
             restMethod = method.getName();
             if (!REST_METHODS.contains(restMethod)) {

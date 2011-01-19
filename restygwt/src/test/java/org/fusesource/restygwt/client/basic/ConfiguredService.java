@@ -1,5 +1,6 @@
 package org.fusesource.restygwt.client.basic;
 
+import org.fusesource.restygwt.client.JSONP;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Options;
 import org.fusesource.restygwt.client.RestService;
@@ -20,6 +21,10 @@ public interface ConfiguredService extends RestService {
     @GET
     @Options(expect = {200}, timeout = 1000*10)
     public void getExampleDto(MethodCallback<ExampleDto> callback);
+
+
+    @JSONP(callbackParam = "foo")
+    public void someJsonp(MethodCallback<ExampleDto> callback);
 
 
 }
