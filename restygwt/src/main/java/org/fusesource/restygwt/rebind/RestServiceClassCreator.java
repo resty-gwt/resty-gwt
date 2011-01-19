@@ -318,6 +318,15 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 p("__method.expect("+join(classOptions.expect(), ", ")+");");
             }
 
+            // configure the timeout
+            if( options!=null && options.timeout() >= 0 ) {
+                // Using method level defined value
+                p("__method.timeout("+options.timeout()+");");
+            } else if( classOptions!=null && classOptions.timeout() >= 0 ) {
+                // Using class level defined value
+                p("__method.timeout("+classOptions.timeout()+");");
+            }
+
             Produces producesAnnotation = method.getAnnotation(Produces.class);
             if (producesAnnotation != null) {
                 p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, "+wrap(producesAnnotation.value()[0])+");");

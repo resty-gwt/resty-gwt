@@ -40,4 +40,10 @@ public @interface Options {
      */
     int[] expect() default {};
 
+    /**
+     * Sets the number of milliseconds to wait for a request to complete.  A value of zero disables timeouts.
+     *
+     * @return
+     */
+    long timeout() default -1;
 }
