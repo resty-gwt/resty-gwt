@@ -28,6 +28,7 @@
     <version>@project.version@</version>
   </parent>
   <artifactId>restygwt-cxf-jaxson-example</artifactId>
+  <version>@project.version@</version>
   <packaging>war</packaging>
 
   <name>RestyGWT CXF JAXB Example</name>

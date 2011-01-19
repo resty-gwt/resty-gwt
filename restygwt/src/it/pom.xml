@@ -33,13 +33,31 @@
     RestyGWT Parent POM for integration tests
   </description>
 
-  <repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>hiramchirino.com-release</id>
+      <url>http://hiramchirino.com/repo/release</url>
+      <releases><enabled>true</enabled></releases>
+      <snapshots><enabled>false</enabled></snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 
+  <repositories>
+    <repository>
+      <id>hiramchirino.com-release</id>
+      <url>http://hiramchirino.com/repo/release</url>
+      <releases><enabled>true</enabled></releases>
+      <snapshots><enabled>false</enabled></snapshots>
+    </repository>
     <repository>
       <id>java.net.m2</id>
       <url>http://download.java.net/maven/2</url>
     </repository>
-
+    <repository>
+      <id>java.net.m1</id>
+      <url>http://download.java.net/maven/1</url>
+      <layout>legacy</layout>
+    </repository>
   </repositories>
 
   <properties>
@@ -110,6 +128,7 @@
           </execution>
         </executions>        
         <configuration>
+          <gen>${project.build.directory}</gen>
           <logLevel>INFO</logLevel>
           <style>DETAILED</style>
           <treeLogger>true</treeLogger>

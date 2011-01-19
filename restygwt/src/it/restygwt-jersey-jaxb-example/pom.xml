@@ -28,6 +28,7 @@
     <version>@project.version@</version>
   </parent>
   <artifactId>restygwt-jersey-jaxb-example</artifactId>
+  <version>@project.version@</version>
   <packaging>war</packaging>
 
   <name>RestyGWT Jersey JAXB Example</name>
@@ -65,5 +66,5 @@
     </dependency>
 
   </dependencies>
-  
+
 </project>
