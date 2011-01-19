@@ -93,7 +93,7 @@ public class JsonpMethod extends Method {
     }
 
     @Override
-    public Method expect(int status) {
+    public Method expect(int ...status) {
         throw unsupported();
     }
 

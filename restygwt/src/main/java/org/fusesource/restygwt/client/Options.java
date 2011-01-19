@@ -31,10 +31,13 @@ import static org.fusesource.restygwt.client.Json.Style.DEFAULT;
 @Target( { METHOD, TYPE })
 public @interface Options {
 
-    public enum Style {
-        DEFAULT, SIMPLE, JETTISON_NATURAL,
-    }
-
     Class<? extends Dispatcher> dispatcher() default Dispatcher.class;
+
+    /**
+     * sets the expected response status code.  If the response status code does not match
+     * any of the values specified then the request is considered to have failed.  Defaults to accepting
+     * 200,201,204. If set to -1 then any status code is considered a success.
+     */
+    int[] expect() default {};
 
 }

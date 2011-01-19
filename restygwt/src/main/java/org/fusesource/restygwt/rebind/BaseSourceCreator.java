@@ -161,6 +161,28 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         return this;
     }
 
+    static String join(int []values, String sep) {
+        StringBuilder sb = new StringBuilder();
+        for(int i =0; i < values.length; i++) {
+            if( i!=0 ) {
+                sb.append(sep);
+            }
+            sb.append(values[i]);
+        }
+        return sb.toString();
+    }
+
+    static String join(Object []values, String sep) {
+        StringBuilder sb = new StringBuilder();
+        for(int i =0; i < values.length; i++) {
+            if( i!=0 ) {
+                sb.append(sep);
+            }
+            sb.append(values[i]);
+        }
+        return sb.toString();
+    }
+
     final public String create() throws UnableToCompleteException {
         writer = writer();
         if (writer == null) {

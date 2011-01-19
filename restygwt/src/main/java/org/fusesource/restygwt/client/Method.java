@@ -145,19 +145,22 @@ public class Method {
 
     /**
      * sets the expected response status code.  If the response status code does not match
-     * this value then the request is considered to have failed.  Defaults to accepting
+     * any of the values specified then the request is considered to have failed.  Defaults to accepting
      * 200,201,204. If set to -1 then any status code is considered a success.
      */
-    public Method expect(int status) {
-        if (status < 0) {
+    public Method expect(int ... statuses) {
+        if ( statuses.length==1 && statuses[0] < 0) {
             anyStatus = true;
         } else {
             anyStatus = false;
             this.expectedStatuses.clear();
-            this.expectedStatuses.add(status);
+            for( int status : statuses ) {
+                this.expectedStatuses.add(status);
+            }
         }
         return this;
     }
+
 
     public boolean isExpected(int status) {
         if (anyStatus) {

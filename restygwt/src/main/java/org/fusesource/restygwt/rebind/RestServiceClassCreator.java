@@ -217,6 +217,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         Json jsonAnnotation = source.getAnnotation(Json.class);
         final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
 
+        Options classOptions = source.getAnnotation(Options.class);
         Options options = method.getAnnotation(Options.class);
 
         p(method.getReadableDeclaration(false, false, false, false, true) + " {").i(1);
@@ -306,6 +307,15 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             } else {
                 // use the default dispatcher configured for the service..
                 p("__method.setDispatcher(this.dispatcher);");
+            }
+
+            // configure the expected statuses..
+            if( options!=null && options.expect().length!=0 ) {
+                // Using method level defined expected status
+                p("__method.expect("+join(options.expect(), ", ")+");");
+            } else if( classOptions!=null && classOptions.expect().length!=0 ) {
+                // Using class level defined expected status
+                p("__method.expect("+join(classOptions.expect(), ", ")+");");
             }
 
             Produces producesAnnotation = method.getAnnotation(Produces.class);
