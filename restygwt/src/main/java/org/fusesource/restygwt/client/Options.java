@@ -18,14 +18,23 @@
 
 package org.fusesource.restygwt.client;
 
-/**
- * 
- * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
- */
-public interface RestServiceProxy {
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-    void setResource(Resource resource);
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static org.fusesource.restygwt.client.Json.Style.DEFAULT;
 
-    void setDispatcher(Dispatcher dispatcher);
+@Documented
+@Retention(RUNTIME)
+@Target( { METHOD, TYPE })
+public @interface Options {
+
+    public enum Style {
+        DEFAULT, SIMPLE, JETTISON_NATURAL,
+    }
+
+    Class<? extends Dispatcher> dispatcher() default Dispatcher.class;
 
 }

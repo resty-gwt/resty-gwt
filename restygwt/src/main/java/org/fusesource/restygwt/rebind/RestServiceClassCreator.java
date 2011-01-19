@@ -28,18 +28,7 @@ import java.util.regex.Pattern;
 
 import javax.ws.rs.*;
 
-import org.fusesource.restygwt.client.AbstractRequestCallback;
-import org.fusesource.restygwt.client.Defaults;
-import org.fusesource.restygwt.client.Json;
-import org.fusesource.restygwt.client.JsonCallback;
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.OverlayCallback;
-import org.fusesource.restygwt.client.Resource;
-import org.fusesource.restygwt.client.ResponseFormatException;
-import org.fusesource.restygwt.client.RestServiceProxy;
-import org.fusesource.restygwt.client.TextCallback;
-import org.fusesource.restygwt.client.XmlCallback;
+import org.fusesource.restygwt.client.*;
 import org.fusesource.restygwt.client.Json.Style;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -79,6 +68,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
     private static final String METHOD_CLASS = Method.class.getName();
     private static final String RESOURCE_CLASS = Resource.class.getName();
+    private static final String DISPATCHER_CLASS = Dispatcher.class.getName();
     private static final String DEFAULTS_CLASS = Defaults.class.getName();
     private static final String ABSTRACT_REQUEST_CALLBACK_CLASS = AbstractRequestCallback.class.getName();
     private static final String JSON_PARSER_CLASS = JSONParser.class.getName();
@@ -184,6 +174,22 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             p("this.resource = resource;");
         }
         i(-1).p("}");
+
+
+        Options options = source.getAnnotation(Options.class);
+        if( options!=null && options.dispatcher()!=Dispatcher.class ) {
+            p("private " + DISPATCHER_CLASS + " dispatcher = "+options.dispatcher().getName()+".INSTANCE;");
+        } else {
+            p("private " + DISPATCHER_CLASS + " dispatcher = "+DEFAULTS_CLASS+".getDispatcher();");
+        }
+
+        p();
+        p("public void setDispatcher(" + DISPATCHER_CLASS + " dispatcher) {").i(1);
+        {
+            p("this.dispatcher = dispatcher;");
+        }
+        i(-1).p("}");
+
         for (JMethod method : source.getMethods()) {
             writeMethodImpl(method);
         }
@@ -210,6 +216,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
         Json jsonAnnotation = source.getAnnotation(Json.class);
         final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
+
+        Options options = method.getAnnotation(Options.class);
 
         p(method.getReadableDeclaration(false, false, false, false, true) + " {").i(1);
         {
@@ -291,6 +299,14 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             // example: .get()
             p("." + restMethod + "();");
 
+            // configure the dispatcher
+            if( options!=null && options.dispatcher()!=Dispatcher.class ) {
+                // use the dispatcher configured for the method.
+                p("__method.setDispatcher("+options.dispatcher().getName()+".INSTANCE);");
+            } else {
+                // use the default dispatcher configured for the service..
+                p("__method.setDispatcher(this.dispatcher);");
+            }
 
             Produces producesAnnotation = method.getAnnotation(Produces.class);
             if (producesAnnotation != null) {
