@@ -14,31 +14,35 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client;
+package org.fusesource.restygwt.server.basic;
 
-import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.user.client.ui.Label;
+import java.io.IOException;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
+ * Super simple servlet that simply does nothing to check if
+ * timeout management is okay.
  *
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
  *
  */
-public class BasicTestGwt extends GWTTestCase {
+public class BasicTestGwtServlet extends HttpServlet {
 
-    @Override
-    public String getModuleName() {
-        return "org.fusesource.restygwt.BasicTestGwt";
-    }
-
-    public void testGetExampleAction() {
-
-        String text = "hihi";
-        Label label = new Label(text);
-        assertEquals(label.getText(), text);
+	String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
 
 
-    }
+	@Override
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+
+
+			response.getWriter().print(DUMMY_RESPONSE);
+
+
+	}
 
 }

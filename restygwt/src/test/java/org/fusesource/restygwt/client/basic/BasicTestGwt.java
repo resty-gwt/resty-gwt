@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client.restygwt.flaky;
+package org.fusesource.restygwt.client.basic;
 
+import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
+import org.fusesource.restygwt.client.dispatcher.DispatcherFactoryDefault;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
@@ -30,18 +32,20 @@ import com.google.gwt.junit.client.GWTTestCase;
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
  *
  */
-public class FlakyTestGwt extends GWTTestCase {
+public class BasicTestGwt extends GWTTestCase {
 
     @Override
     public String getModuleName() {
-        return "org.fusesource.restygwt.FlakyTestGwt";
+        return "org.fusesource.restygwt.BasicTestGwt";
     }
 
-    public void testFlakyConnection() {
+    public void testDefaultFunction() {
+
+        //configure RESTY
+    	Defaults.setDispatcherFactory(new DispatcherFactoryDefault());
 
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
 
-        System.out.println("resouce is: " + GWT.getModuleBaseURL() + "api/getendpoint");
 
         ExampleService service = GWT.create(ExampleService.class);
         ((RestServiceProxy) service).setResource(resource);
@@ -51,7 +55,6 @@ public class FlakyTestGwt extends GWTTestCase {
             @Override
             public void onSuccess(Method method, ExampleDto response) {
 
-                System.out.println("finish");
                 assertEquals(response.name, "myName");
                 finishTest();
 
@@ -65,10 +68,7 @@ public class FlakyTestGwt extends GWTTestCase {
         });
 
         // wait... we are in async testing...
-        System.out.println("waiting");
-        delayTestFinish(1000);
-
-
+        delayTestFinish(10000);
 
     }
 

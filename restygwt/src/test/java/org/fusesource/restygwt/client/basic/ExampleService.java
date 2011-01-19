@@ -1,4 +1,4 @@
-package org.fusesource.restygwt.client.restygwt.flaky;
+package org.fusesource.restygwt.client.basic;
 
 import javax.ws.rs.GET;
 
@@ -7,9 +7,7 @@ import org.fusesource.restygwt.client.RestService;
 
 /**
  *
- * Supersimple example service.
- *
- * Simply to test if connection is retried automatically.
+ * Supersimple example service for testing...
  *
  *
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>

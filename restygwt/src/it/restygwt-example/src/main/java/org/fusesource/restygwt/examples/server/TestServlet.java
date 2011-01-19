@@ -36,11 +36,11 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Implements a restful servlet which uses classpath resource files to provide
  * responses and validate expected requests.
- * 
+ *
  * issues a 500 http response code if the request was not what was expected.
  * Handy for implementing test cases.
- * 
- * 
+ *
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class TestServlet extends HttpServlet {

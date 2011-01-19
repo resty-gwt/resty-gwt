@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.server.flaky;
+package org.fusesource.restygwt.server;
 
 import java.io.IOException;
 
@@ -22,42 +22,45 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mortbay.jetty.HttpStatus;
-
 /**
  *
- * Servlet component of the FlakyConnectionTestGwt.
- * <p>
- * Simulates 2 times a 500 server error. And answers the third time with a 200
- * (ok). => Used to test the retrying async callback.
- * </p>
+ * Super simple servlet that simply does nothing to check if
+ * timeout management is okay.
  *
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
  *
  */
-public class FlakyConnectionServlet extends HttpServlet {
+public class CachingTestServlet extends HttpServlet {
 
-	private int NUMBER_OF_SERVER_FAILURES_TO_SIMULATE = 0;
 
-	private static int currentNumberOfServerFailures = 0;
+    /**
+     * How many times this servlet was contacted.
+     * This is there to test if application test is working.
+     */
+    public static int contactCounter = 0;
 
+
+	//5 seconds timeout:
+	long TIMEOUT = 100000;
 
 	String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
+
 
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 
-	    System.out.println("flakyMODE");
 
-		if (currentNumberOfServerFailures < NUMBER_OF_SERVER_FAILURES_TO_SIMULATE) {
+	    if (request.getPathInfo().equals("/getnumberofcontacts")) {
+	        response.getWriter().print(contactCounter);
 
-			response.setStatus(HttpStatus.ORDINAL_500_Internal_Server_Error);
-			currentNumberOfServerFailures++;
+	    } else {
 
-		} else {
-			response.getWriter().print(DUMMY_RESPONSE);
-		}
+	        contactCounter++;
+	        response.getWriter().print(DUMMY_RESPONSE);
+
+	    }
+
 
 	}
 

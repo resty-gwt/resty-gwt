@@ -31,7 +31,7 @@ import com.google.gwt.user.rebind.SourceWriter;
 
 /**
  * provides additional helper methods for generating source..
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public abstract class BaseSourceCreator extends AbstractSourceCreator {
@@ -151,6 +151,8 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
 
     protected BaseSourceCreator p(String value) {
         this.sourceWriter.println(value);
+
+        //System.out.println(value);
         return this;
     }
 
