@@ -24,11 +24,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.fusesource.restygwt.client.dispatcher.CallbackRetrying;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.http.client.Header;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -82,6 +79,7 @@ public class Method {
 
     Request request;
     Response response;
+    Dispatcher dispatcher = Defaults.getDispatcher();
 
     protected Method() {
     }
@@ -170,13 +168,8 @@ public class Method {
     }
 
     public void send(final RequestCallback callback) throws RequestException {
-
         doSetTimeout();
-
-        IDispatcher dispatcher = Defaults.getDispatcher(builder, callback);
-
-        dispatcher.send();
-
+        dispatcher.send(this, callback);
     }
 
     public void send(final TextCallback callback) {
@@ -279,4 +272,15 @@ public class Method {
         }
     }
 
+    public RequestBuilder getBuilder() {
+        return builder;
+    }
+
+    public Dispatcher getDispatcher() {
+        return dispatcher;
+    }
+
+    public void setDispatcher(Dispatcher dispatcher) {
+        this.dispatcher = dispatcher;
+    }
 }

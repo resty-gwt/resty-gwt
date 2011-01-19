@@ -21,7 +21,7 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
-import org.fusesource.restygwt.client.dispatcher.DispatcherFactoryCachingRetrying;
+import org.fusesource.restygwt.client.dispatcher.CachingRetryingDispatcher;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
@@ -41,7 +41,7 @@ public class FlakyTestGwt extends GWTTestCase {
 
     public void testFlakyConnection() {
 
-        Defaults.setDispatcherFactory(new DispatcherFactoryCachingRetrying());
+        Defaults.setDispatcher(CachingRetryingDispatcher.INSTANCE);
 
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
 

@@ -16,15 +16,12 @@
 
 package org.fusesource.restygwt.client.basic;
 
-import org.fusesource.restygwt.client.Defaults;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.junit.client.GWTTestCase;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
-import org.fusesource.restygwt.client.dispatcher.DispatcherFactoryDefault;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  *
@@ -42,8 +39,6 @@ public class BasicTestGwt extends GWTTestCase {
     public void testDefaultFunction() {
 
         //configure RESTY
-    	Defaults.setDispatcherFactory(new DispatcherFactoryDefault());
-
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
 
 

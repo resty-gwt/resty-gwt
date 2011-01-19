@@ -21,8 +21,7 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
-import org.fusesource.restygwt.client.dispatcher.DispatcherFactoryCachingRetrying;
-import org.fusesource.restygwt.client.dispatcher.DispatcherFactoryDefault;
+import org.fusesource.restygwt.client.dispatcher.CachingRetryingDispatcher;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
@@ -64,7 +63,7 @@ public class CachingTestGwt extends GWTTestCase {
     public void testIfCachingWorks() {
 
         //configure RESTY to use cache:
-        Defaults.setDispatcherFactory(new DispatcherFactoryCachingRetrying());
+        Defaults.setDispatcher(CachingRetryingDispatcher.INSTANCE);
 
 
         Resource resource = new Resource(GWT.getModuleBaseURL()

@@ -15,32 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fusesource.restygwt.client.dispatcher;
+package org.fusesource.restygwt.client;
 
-import java.util.HashMap;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
 
-import com.google.gwt.http.client.Response;
+/**
+ *
+ * Do the dispatch.
+ * Check out default implementation DispatcherDefault.
+ *
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
+ *
+ */
+public interface Dispatcher {
 
-public class CacheStorage {
-
-    private static HashMap<CacheKey, Response> cache = new HashMap<CacheKey, Response>();
-
-    // private static HashMap<Integer, ArrayList<AsyncCallback<Integer>>>
-    // pendingCallbacks
-    // = new HashMap<Integer, ArrayList<AsyncCallback<Integer>>>();
-
-    public static Response getResultOrReturnNull(CacheKey key) {
-
-        Response val = cache.get(key);
-
-        return val;
-
-    }
-
-    public static void putResult(CacheKey key, Response response) {
-
-        cache.put(key, response);
-
-    }
+    public Request send(Method method, RequestCallback callback) throws RequestException;
 
 }
