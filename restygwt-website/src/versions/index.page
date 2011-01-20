@@ -14,26 +14,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-title: The ${project_name} Blog
+title: Website Versions
 in_menu: false
-sort_info: 7
-
---- name:head pipeline:ssp
-<link rel="alternate" title="${project_name} RSS" href="index.rss" type="application/rss+xml">
-
+sort_info: 5
 --- name:overview
 
-The latest and greatest news from the ${project_name} team
+# Documentation Versions
+Website Versions
 
---- name:blog pipeline:jade
+--- name:content
 
-:ssp
-  <h1>${project_name} Blog <a href="index.rss"><img src="${uri("/images/rss.gif")}"/></a></h1>
+# Released Websites
 
-- import org.fusesource.scalate.page.BlogHelper._
-- for(post <- posts)
-  .post
-    a(href={post.link})
-      h2= post.title
-    .details Posted by #{post.author} on #{post.createdAt}
-    !~~ post.render()
+Apollo has not been released yet.
+
+<!--
+* [1.0 Website](${website_base_url}/versions/1.0/website/index.html)
+* [1.0 Maven Report](${website_base_url}/versions/1.0/maven/index.html)
+ -->
+# Nightly Development Snapshots
+
+* [${project_snapshot_version} Website](${website_base_url}/versions/${project_snapshot_version}/website/index.html)
+* [${project_snapshot_version} Maven Report](${website_base_url}/versions/${project_snapshot_version}/maven/index.html)

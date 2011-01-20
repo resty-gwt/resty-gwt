@@ -1,9 +1,9 @@
 # RestyGWT User Guide
 
-* Table of contents
-{:toc}
-
 RestyGWT is a GWT generator for REST services and JSON encoded data transfer objects.
+
+{:toc:2-5}
+
 
 Features
 --------

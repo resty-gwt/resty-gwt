@@ -14,26 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-title: The ${project_name} Blog
+title: Developers
 in_menu: false
-sort_info: 7
-
---- name:head pipeline:ssp
-<link rel="alternate" title="${project_name} RSS" href="index.rss" type="application/rss+xml">
-
 --- name:overview
 
-The latest and greatest news from the ${project_name} team
+# Developers
+Ready to start hacking on ${project_name}?
 
---- name:blog pipeline:jade
+--- name:content
 
-:ssp
-  <h1>${project_name} Blog <a href="index.rss"><img src="${uri("/images/rss.gif")}"/></a></h1>
+# Developer Links
 
-- import org.fusesource.scalate.page.BlogHelper._
-- for(post <- posts)
-  .post
-    a(href={post.link})
-      h2= post.title
-    .details Posted by #{post.author} on #{post.createdAt}
-    !~~ post.render()
+* [Source Code](source.html)
+* [Building](building.html)
+* [Contributing](contributing.html)
+* [Release Guide](release-guide.html)
+* [Maven Site Reports](${website_base_url}/versions/${project_version}/maven/)
+
+Looking for the website documentation of a different ${project_name} [version](${website_base_url}/versions/index.html)?

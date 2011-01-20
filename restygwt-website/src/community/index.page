@@ -14,34 +14,42 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-title: Download
+title: Community
 in_menu: true
-sort_info: 5
+sort_info: 50
 --- name:overview
 
-# ${project_name}
-Download it today!
+# Lets Talk
+The ${project_name} community is here to help you
 
 --- name:content pipeline:jade
 
-.left
-  :markdown
-    # Latest Releases
-.right
-  - val release_base= "http://repo.fusesource.com/nexus/content/groups/public/org/fusesource/%s/%s".format(project_id,project_id)
-  :&markdown
-  
-    *  [#{project_id}-1.0.jar](#{release_base}/1.0/#{project_id}-1.0.jar) 
+/
+  .left
+    h1 Blog
+  .right
+    :markdown
+      Keep up to date on the latest and greatest releases by following the
+      [${project_name} Blog](../blog/index.html)
 
 .left
-  :markdown
-    # Nightly Snapshot
-    
+  h1 Mailing Lists / Forums
 .right
-  :&markdown
+  :markdown
 
-    Want to help stablize the latest and greatest nightly development
-    build?  **Warnning**: This build may be extremely bleeding edge!
+    We really want you to get involved in the ${project_name} and we love
+    [contributions](contributing.html). One of the easiest ways to get
+    involved is to join the community discussions.
 
-    *  [#{project_id}-#{project_snapshot_version}.jar](http://repo.fusesource.com/nexus/service/local/artifact/maven/redirect?r=snapshots&g=org.fusesource.#{project_id}&a=#{project_id}&v=#{project_snapshot_version}&e=jar) 
-    
+    The mailing lists are hosted on Google Groups:
+
+    * [restygwt-dev](http://groups.google.com/group/restygwt)
+
+.left
+  h1 Support
+.right
+  :markdown
+    If you have a problem you can [get help](support.html) or try surfing
+    our [Issue Tracker](${project_issue_url})
+
+
