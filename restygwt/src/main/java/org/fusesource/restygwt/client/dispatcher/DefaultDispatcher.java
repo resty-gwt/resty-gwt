@@ -43,11 +43,7 @@ public class DefaultDispatcher implements Dispatcher {
 
     public static final DefaultDispatcher INSTANCE = new DefaultDispatcher();
 
-    public Request send(Method method, RequestCallback requestCallback) throws RequestException {
-
-        RequestBuilder builder = method.getBuilder();
-        builder.setCallback(requestCallback);
-
+    public Request send(Method method, RequestBuilder builder) throws RequestException {
         GWT.log("Sending http request: " + builder.getHTTPMethod() + " "
                 + builder.getUrl() + " ,timeout:"
                 + builder.getTimeoutMillis(), null);
@@ -56,7 +52,6 @@ public class DefaultDispatcher implements Dispatcher {
         if (content != null && content.length() > 0) {
             GWT.log(content, null);
         }
-
         return builder.send();
     }
 

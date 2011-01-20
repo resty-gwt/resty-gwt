@@ -18,6 +18,7 @@
 package org.fusesource.restygwt.client;
 
 import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 
@@ -32,6 +33,6 @@ import com.google.gwt.http.client.RequestException;
  */
 public interface Dispatcher {
 
-    public Request send(Method method, RequestCallback callback) throws RequestException;
+    public Request send(Method method, RequestBuilder builder) throws RequestException;
 
 }

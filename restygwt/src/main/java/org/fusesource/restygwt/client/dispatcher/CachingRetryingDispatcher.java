@@ -46,10 +46,9 @@ public class CachingRetryingDispatcher implements Dispatcher {
 
     private static CacheStorage cacheStorage = new CacheStorage();
 
-    public Request send(Method method, RequestCallback outerRequestCallback) throws RequestException {
+    public Request send(Method method, RequestBuilder builder) throws RequestException {
 
-        RequestBuilder builder = method.getBuilder();
-        // requested key:
+        RequestCallback outerRequestCallback = builder.getCallback();
         final CacheKey cacheKey = new CacheKey(builder);
 
 

@@ -172,7 +172,8 @@ public class Method {
 
     public void send(final RequestCallback callback) throws RequestException {
         doSetTimeout();
-        dispatcher.send(this, callback);
+        builder.setCallback(callback);
+        dispatcher.send(this, builder);
     }
 
     public void send(final TextCallback callback) {
@@ -273,10 +274,6 @@ public class Method {
         if (builder.getHeader(Resource.HEADER_ACCEPT) == null) {
             header(Resource.HEADER_ACCEPT, type);
         }
-    }
-
-    public RequestBuilder getBuilder() {
-        return builder;
     }
 
     public Dispatcher getDispatcher() {
