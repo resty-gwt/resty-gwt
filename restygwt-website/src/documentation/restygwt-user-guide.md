@@ -5,15 +5,13 @@ RestyGWT is a GWT generator for REST services and JSON encoded data transfer obj
 {:toc:2-5}
 
 
-Features
---------
+## Features
 
 * Generates Async Restful JSON based service proxies
 * Java Object to JSON encoding/decoding
 * Easy to use REST API
 
-REST Services
--------------
+## REST Services
 
 RestyGWT Rest Services allow you to define an asynchronous Service API which is then implemented via
 GWT deferred binding by a RestyGWT generator.  See the following listing for an example:
@@ -81,9 +79,107 @@ PizzaService service = GWT.create(PizzaService.class);
 
 service.order(order, callback);
 {pygmentize}
-    
-### Perhaps you want access to the Object to JSON encoders/decoders?
 
+### Request Dispatchers
+
+The request dispatcher intercepts all requests being made and can supply
+additional features or behavior.  For example, RestyGWT also supports a 
+`CachingRetryingDispatcher` which will automatically retry requests if 
+they fail.
+
+To configure the `CachingRetryingDispatcher`, you can configure it on
+your service interface at either the class or method level.  Example:
+
+{pygmentize::java}
+    @POST
+    @Options(dispatcher=CachingRetryingDispatcher.class)
+    public void order(PizzaOrder request, 
+                      MethodCallback<OrderConfirmation> callback);
+{pygmentize}
+
+### Creating Custom Request Dispatchers
+
+You can create a custom request dispatcher by implementing the following `Dispatcher`
+interface:
+
+{pygmentize::java}
+public interface Dispatcher {
+    public Request send(Method method, RequestBuilder builder) throws RequestException;
+}
+{pygmentize}
+
+Your dispatcher implementation must also define a static singleton instance in a public
+`INSTANCE` field.  Example:
+
+{pygmentize::java}
+public class SimpleDispatcher implements Dispatcher {
+    public static final SimpleDispatcher INSTANCE = new SimpleDispatcher();
+
+    public Request send(Method method, RequestBuilder builder) throws RequestException {
+        return builder.send();
+    }
+}
+{pygmentize}
+
+When the dispatcher's `send` method is called, the provided builder will already
+be configured with all the options needed to do the request.
+
+### Configuring the Request Timeout
+
+You can use the @Options annotation to configure the timeout for requests
+at either the class or method level.  The timeout is specified in milliseconds,
+For example, to set a 5 second timeout:
+
+{pygmentize::java}
+    @POST
+    @Options(timeout=5000)
+    public void order(PizzaOrder request, 
+                      MethodCallback<OrderConfirmation> callback);
+{pygmentize}
+
+
+### Configuring the Expected HTTP Status Code
+
+By default results that have a 200, 201, or 204 HTTP status code are considered
+to have succeeded. You can customize these defaults by setting the 
+@Options annotations at either the class or method level of the service interface.
+
+Example:
+
+{pygmentize::java}
+    @POST
+    @Options(expect={200,201})
+    public void order(PizzaOrder request, 
+                      MethodCallback<OrderConfirmation> callback);
+{pygmentize}
+
+### Configuring the `Accept` and `Content-Type` and HTTP Headers
+
+RestyGWT rest calls will automatically set the `Accept` and `Content-Type` 
+and HTTP Headers to match the type of data being sent and the type of
+data expected by the callback, you you can override these default values
+by adding JAXRS `@Produces` and `@Consumes` annotations to the method 
+declaration.
+
+### Mapping to a JSONP request
+
+If you need to access JSONP URl, then use the @JSONP annotation on the method
+for example:
+
+{pygmentize::java}
+import org.fusesource.restygwt.client.JSONP;
+...
+public interface FlickrService extends RestService {  
+    @Path("http://www.flickr.com/services/feeds/photos_public.gne?format=json")
+    @JSONP(callbackParam="jsonFlickrFeed")
+    public void photoFeed(JsonCallback callback);    
+}
+{pygmentize}
+
+
+
+## JSON Encoder/Decoders
+    
 If you want to manually access the JSON encoder/decoder for a given type just define
 an interface that extends JsonEncoderDecoder and RestyGWT will implement it for you using
 GWT deferred binding.
@@ -113,7 +209,7 @@ JSONValue json = codec.encode(order);
 PizzaOrder other = codec.decode(json);
 {pygmentize}
 
-### Custom Property Names 
+### Customizing the JSON Property Names 
 
 If you want to map a field name to a different json property name, you
 can use the `@Json` annotation to configure the desired name.  Example:
@@ -125,8 +221,7 @@ public class Message {
 }
 {pygmentize}
 
-REST API
---------
+## REST API
 
 The RestyGWT REST API is handy when you don't want to go through the trouble of creating 
 service interfaces.
@@ -188,57 +283,3 @@ the following methods will set the `Accept` header for you:
 The response to the HTTP request is supplied to the callback passed in the `send` method.
 Once the callback is invoked, the `method.getRespose()` method to get the GWT `Response`
 if your interested in things like the headers set on the response.
-
-Using as a Maven Dependency
----------------------------
-
-Just add the following dependency to your pom.xml
-
-{pygmentize::xml}
-  <dependencies>
-  ...
-    <dependency>
-      <groupId>org.fusesource.restygwt</groupId>
-      <artifactId>restygwt</artifactId>
-      <version>{project_release_version:}</version>
-    </dependency>
-  ...
-  </dependencies>
-{pygmentize}    
-
-If you are using a snapshot version, then you will also need to also add the following repository:
-  
-{pygmentize::xml}
-  <repositories>
-  ...
-    <repository>
-      <id>fusesource-nexus-snapshots</id>
-      <name>Fusesource Nexus Snapshots</name>
-      <url>http://repo.fusesource.com/nexus/content/repositories/snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </repository>
-  ...
-  </repositories>
-{pygmentize}
-    
-Building from Source
---------------------
-    
-1. Download and install [Maven 2](http://maven.apache.org/download.html).  Set the `M2_HOME` 
-   environment variable to the installation directory.  Add the maven bin directory to your `PATH` environment 
-  variable and make sure your `JAVA_HOME` environment variable is set your your JDK install directory.
-2. Change to the resty-gwt source directory and run:
-
-    $ mvn install
-
-    
-The above command will produce a `restygwt/target/resty-gwt-*.jar` file.
-
-To build and run the integration tests, use:    
-
-    $ mvn install -P run-its

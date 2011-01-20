@@ -45,3 +45,33 @@ Download it today!
 
     *  [#{project_id}-#{project_snapshot_version}.jar](http://repo.fusesource.com/nexus/service/local/artifact/maven/redirect?r=snapshots&g=org.fusesource.#{project_id}&a=#{project_id}&v=#{project_snapshot_version}&e=jar) 
     
+.left
+  :markdown
+    # As a Maven Dependency
+
+.right
+  :&markdown
+
+    If your a maven user, then just add the following dependency to your `pom.xml`
+
+    {pygmentize::xml}
+    <dependency>
+      <groupId>org.fusesource.restygwt</groupId>
+      <artifactId>restygwt</artifactId>
+      <version>#{project_version}</version>
+    </dependency>
+    {pygmentize}    
+
+    If you are using a snapshot version, then you will also need to 
+    also add the following snapshot repository to your pom:
+  
+    {pygmentize::xml}
+    <repository>
+      <id>fusesource-snapshots</id>
+      <name>Fusesource Snapshots</name>
+      <url>http://repo.fusesource.com/nexus/content/repositories/snapshots</url>
+      <snapshots><enabled>true</enabled></snapshots>
+      <releases><enabled>false</enabled></releases>
+    </repository>
+    {pygmentize}
+    
