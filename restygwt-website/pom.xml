@@ -107,8 +107,9 @@
         
         <configuration>
           <warSourceDirectory>${basedir}/src</warSourceDirectory>
-          <remoteServerId>restygwt-website</remoteServerId>
-          <remoteServerUrl>${website-base-url}/versions/${project.version}/website/</remoteServerUrl>
+          <remoteServerId>website.fusesource.org</remoteServerId>
+          <remoteServerUrl>dav:http://fusesource.com/forge/dav/${forge-project-id}/versions/${project.version}/website</remoteServerUrl>
+          <!-- <remoteServerUrl>dav:https://fusesource.com/forge/dav/${forge-project-id}</remoteServerUrl> -->
         </configuration>
         
         <executions>
