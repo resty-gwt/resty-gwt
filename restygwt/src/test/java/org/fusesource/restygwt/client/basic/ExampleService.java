@@ -1,9 +1,9 @@
 package org.fusesource.restygwt.client.basic;
 
-import javax.ws.rs.GET;
-
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
+
+import javax.ws.rs.GET;
 
 /**
  *
