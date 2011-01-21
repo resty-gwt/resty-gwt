@@ -32,6 +32,6 @@ import javax.ws.rs.DELETE;
 public interface DeleteAction<O, R> extends RestAction<O, R> {
 
     @DELETE
-    void doAction(O object, MethodCallback<R> callback);
+    void send(O object, MethodCallback<R> callback);
 
 }

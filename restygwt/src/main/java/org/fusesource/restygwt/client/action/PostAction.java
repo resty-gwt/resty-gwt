@@ -32,5 +32,5 @@ import javax.ws.rs.POST;
 public interface PostAction<O, R> extends RestAction<O, R> {
 
     @POST
-    void doAction(O object, MethodCallback<R> callback);
+    void send(O object, MethodCallback<R> callback);
 }

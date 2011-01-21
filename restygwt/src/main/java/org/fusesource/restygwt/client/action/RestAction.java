@@ -34,5 +34,5 @@ import org.fusesource.restygwt.client.RestService;
  */
 public interface RestAction<O, R> extends RestService {
 
-    void doAction(O object, MethodCallback<R> callback);
+    void send(O object, MethodCallback<R> callback);
 }

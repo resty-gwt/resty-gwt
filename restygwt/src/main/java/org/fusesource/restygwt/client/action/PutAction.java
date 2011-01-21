@@ -33,5 +33,5 @@ import javax.ws.rs.PUT;
 public interface PutAction<O, R> extends RestAction<O, R> {
 
     @PUT
-    void doAction(O object, MethodCallback<R> callback);
+    void send(O object, MethodCallback<R> callback);
 }

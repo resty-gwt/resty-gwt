@@ -31,6 +31,6 @@ import javax.ws.rs.GET;
 public interface GetAction<O, R> extends RestAction<O, R> {
 
     @GET
-    void doAction(O object, MethodCallback<R> callback);
+    void send(O object, MethodCallback<R> callback);
 
 }

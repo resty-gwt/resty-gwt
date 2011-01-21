@@ -31,5 +31,5 @@ import javax.ws.rs.HEAD;
 public interface HeadAction<O, R> extends RestAction<O, R> {
 
     @HEAD
-    void doAction(O object, MethodCallback<R> callback);
+    void send(O object, MethodCallback<R> callback);
 }
