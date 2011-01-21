@@ -295,7 +295,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 }
 
                 if (contentArg != null) {
-                    error("Invalid rest method. Only one content paramter is supported: " + method.getReadableDeclaration());
+                    error("Invalid rest method. Only one content parameter is supported: " + method.getReadableDeclaration());
                 }
                 contentArg = arg;
             }
