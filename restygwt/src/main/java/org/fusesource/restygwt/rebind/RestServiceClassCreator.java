@@ -265,7 +265,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             String pathExpression = null;
             Path pathAnnotation = method.getAnnotation(Path.class);
             if (pathAnnotation != null) {
-                pathExpression = pathAnnotation.value();
+                pathExpression = wrap(pathAnnotation.value());
             }
 
             JParameter contentArg = null;
@@ -295,7 +295,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 }
 
                 if (contentArg != null) {
-                    error("Invalid rest method. Only one content paramter is supported: " + method.getReadableDeclaration());
+                    error("Invalid rest method. Only one content parameter is supported: " + method.getReadableDeclaration());
                 }
                 contentArg = arg;
             }
@@ -315,7 +315,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
             p("this.resource");
             if (pathExpression != null) {
-                p(".resolve(" + wrap(pathExpression) + ")");
+                p(".resolve(" + pathExpression + ")");
             }
             for (Map.Entry<String, JParameter> entry : queryParams.entrySet()) {
                 String expr = entry.getValue().getName();
