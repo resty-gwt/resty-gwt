@@ -124,6 +124,10 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
     protected void generate() throws UnableToCompleteException {
 
+        if (source.isInterface() == null) {
+            error("Type is not an interface.");
+        }
+
         locator = new JsonEncoderDecoderInstanceLocator(context, logger);
 
         this.XML_CALLBACK_TYPE = find(XmlCallback.class);
@@ -148,29 +152,17 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         if (pathAnnotation != null) {
             path = pathAnnotation.value();
         }
+
         RemoteServiceRelativePath relativePath = source.getAnnotation(RemoteServiceRelativePath.class);
         if (relativePath != null) {
             path = relativePath.value();
         }
 
-        if (path != null) {
-
-            // Strip leading '/' chars
-            if (path.startsWith("/")) {
-                path = path.substring(1);
-            }
-
-            p("public " + shortName + "() {").i(1);
-            {
-                p("this.resource = new " + RESOURCE_CLASS + "(" + DEFAULTS_CLASS + ".getServiceRoot()+" + quote(path) + ");");
-            }
-            i(-1).p("}");
+        if (path == null) {
+            p("private " + RESOURCE_CLASS + " resource = new " + RESOURCE_CLASS + "(" + DEFAULTS_CLASS + ".getServiceRoot());");
+        } else {
+            p("private " + RESOURCE_CLASS + " resource = new " + RESOURCE_CLASS + "(" + DEFAULTS_CLASS + ".getServiceRoot()).resolve("+quote(path)+");");
         }
-
-        if (source.isInterface() == null) {
-            error("Type is not an interface.");
-        }
-        p("private " + RESOURCE_CLASS + " resource;");
         p();
 
         p("public void setResource(" + RESOURCE_CLASS + " resource) {").i(1);
@@ -244,7 +236,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             String pathExpression = null;
             Path pathAnnotation = method.getAnnotation(Path.class);
             if (pathAnnotation != null) {
-                pathExpression = wrap(pathAnnotation.value());
+                pathExpression = pathAnnotation.value();
             }
 
             JParameter contentArg = null;
@@ -294,8 +286,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
             p("this.resource");
             if (pathExpression != null) {
-                // example: .resolve("path/"+arg0+"/id")
-                p(".resolve(" + pathExpression + ")");
+                p(".resolve(" + wrap(pathExpression) + ")");
             }
             for (Map.Entry<String, JParameter> entry : queryParams.entrySet()) {
                 String expr = entry.getValue().getName();

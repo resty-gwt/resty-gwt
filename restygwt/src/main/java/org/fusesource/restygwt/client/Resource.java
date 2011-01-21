@@ -112,6 +112,13 @@ public class Resource {
 
     // TODO: support fancier resolutions
     public Resource resolve(String path) {
+
+        // it might be an absolute path...
+        if (path.startsWith("http:") || path.startsWith("https:") || path.startsWith("file:")) {
+            return new Resource(path);
+        }
+
+        // strip prefix / if needed...
         if (path.startsWith("/")) {
             path = path.substring(1);
         }
