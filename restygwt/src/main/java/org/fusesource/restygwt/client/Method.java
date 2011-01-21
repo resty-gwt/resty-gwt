@@ -184,7 +184,7 @@ public class Method {
                     return response.getText();
                 }
             });
-        } catch (RequestException e) {
+        } catch (Throwable e) {
             GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
             callback.onFailure(this, e);
         }
@@ -203,7 +203,7 @@ public class Method {
                     }
                 }
             });
-        } catch (RequestException e) {
+        } catch (Throwable e) {
             GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
             callback.onFailure(this, e);
         }
@@ -221,7 +221,7 @@ public class Method {
                     }
                 }
             });
-        } catch (RequestException e) {
+        } catch (Throwable e) {
             GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
             callback.onFailure(this, e);
         }
@@ -250,7 +250,7 @@ public class Method {
                     }
                 }
             });
-        } catch (RequestException e) {
+        } catch (Throwable e) {
             GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
             callback.onFailure(this, e);
         }
