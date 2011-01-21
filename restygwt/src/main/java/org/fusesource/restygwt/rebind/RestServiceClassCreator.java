@@ -18,19 +18,6 @@
 
 package org.fusesource.restygwt.rebind;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import javax.ws.rs.*;
-
-import org.fusesource.restygwt.client.*;
-import org.fusesource.restygwt.client.Json.Style;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayBoolean;
@@ -54,10 +41,49 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.xml.client.Document;
 
+import org.fusesource.restygwt.client.AbstractRequestCallback;
+import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.Dispatcher;
+import org.fusesource.restygwt.client.JSONP;
+import org.fusesource.restygwt.client.Json;
+import org.fusesource.restygwt.client.Json.Style;
+import org.fusesource.restygwt.client.JsonCallback;
+import org.fusesource.restygwt.client.JsonpMethod;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.Options;
+import org.fusesource.restygwt.client.OverlayCallback;
+import org.fusesource.restygwt.client.Resource;
+import org.fusesource.restygwt.client.ResponseFormatException;
+import org.fusesource.restygwt.client.RestServiceProxy;
+import org.fusesource.restygwt.client.TextCallback;
+import org.fusesource.restygwt.client.XmlCallback;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.OPTIONS;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
- * 
+ *
  *         Updates: added automatically create resource from Path annotation,
  *         enhanced generics support
  * @author <a href="http://www.acuedo.com">Dave Finch</a>
@@ -115,6 +141,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         super(logger, context, source, REST_SERVICE_PROXY_SUFFIX);
     }
 
+    @Override
     protected ClassSourceFileComposerFactory createComposerFactory() {
         ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
         composerFactory.addImplementedInterface(source.getName());
@@ -122,6 +149,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         return composerFactory;
     }
 
+    @Override
     protected void generate() throws UnableToCompleteException {
 
         if (source.isInterface() == null) {
@@ -186,7 +214,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         }
         i(-1).p("}");
 
-        for (JMethod method : source.getMethods()) {
+
+        for (JMethod method : source.getInheritableMethods()) {
             writeMethodImpl(method);
         }
     }
@@ -414,7 +443,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 }
                 i(-1).p("} catch (" + REQUEST_EXCEPTION_CLASS + " __e) {").i(1);
                 {
-                    p("callback.onFailure(__method,__e);");
+                    p(callbackArg.getName() + ".onFailure(__method,__e);");
                 }
                 i(-1).p("}");
             }

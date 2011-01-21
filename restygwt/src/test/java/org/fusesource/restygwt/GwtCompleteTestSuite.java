@@ -1,14 +1,15 @@
 package org.fusesource.restygwt;
 
 
+import com.google.gwt.junit.tools.GWTTestSuite;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.fusesource.restygwt.client.basic.CachingTestGwt;
+import org.fusesource.restygwt.client.basic.ExtendedRestTestGwt;
 import org.fusesource.restygwt.client.basic.FlakyTestGwt;
 import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
-
-import com.google.gwt.junit.tools.GWTTestSuite;
 
 
 /**
@@ -40,6 +41,7 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(FlakyTestGwt.class);
         suite.addTestSuite(TimeoutTestGwt.class);
         suite.addTestSuite(CachingTestGwt.class);
+        suite.addTestSuite(ExtendedRestTestGwt.class);
 
         return suite;
     }
