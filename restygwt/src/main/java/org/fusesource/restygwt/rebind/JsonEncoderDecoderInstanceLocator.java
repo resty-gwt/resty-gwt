@@ -18,16 +18,6 @@
 
 package org.fusesource.restygwt.rebind;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
-import org.fusesource.restygwt.client.Json;
-import org.fusesource.restygwt.client.Json.Style;
-
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -38,10 +28,26 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.xml.client.Document;
 
-import static org.fusesource.restygwt.rebind.BaseSourceCreator.*;
+import static org.fusesource.restygwt.rebind.BaseSourceCreator.DEBUG;
+import static org.fusesource.restygwt.rebind.BaseSourceCreator.ERROR;
+import static org.fusesource.restygwt.rebind.BaseSourceCreator.INFO;
+import static org.fusesource.restygwt.rebind.BaseSourceCreator.TRACE;
+import static org.fusesource.restygwt.rebind.BaseSourceCreator.WARN;
+
+import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
+import org.fusesource.restygwt.client.Json;
+import org.fusesource.restygwt.client.Json.Style;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class JsonEncoderDecoderInstanceLocator {
@@ -88,6 +94,8 @@ public class JsonEncoderDecoderInstanceLocator {
         builtInEncoderDecoders.put(find(Long.class), JSON_ENCODER_DECODER_CLASS + ".LONG");
         builtInEncoderDecoders.put(find(Float.class), JSON_ENCODER_DECODER_CLASS + ".FLOAT");
         builtInEncoderDecoders.put(find(Double.class), JSON_ENCODER_DECODER_CLASS + ".DOUBLE");
+        builtInEncoderDecoders.put(find(BigDecimal.class), JSON_ENCODER_DECODER_CLASS + ".BIG_DECIMAL");
+        builtInEncoderDecoders.put(find(BigInteger.class), JSON_ENCODER_DECODER_CLASS + ".BIG_INTEGER");
 
         builtInEncoderDecoders.put(STRING_TYPE, JSON_ENCODER_DECODER_CLASS + ".STRING");
         builtInEncoderDecoders.put(DOCUMENT_TYPE, JSON_ENCODER_DECODER_CLASS + ".DOCUMENT");

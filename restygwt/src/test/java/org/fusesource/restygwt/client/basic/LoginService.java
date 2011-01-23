@@ -36,9 +36,10 @@ public interface LoginService extends PostAction<LoginContext, LoginResult> {
             this.loggedIn = loggedIn;
         }
 
-        public boolean isLoggedIn() {
+        public boolean getLoggedIn() {
             return loggedIn;
         }
+
     }
 
     public static class LoginContext {
