@@ -42,6 +42,7 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.xml.client.Document;
 
 import org.fusesource.restygwt.client.AbstractRequestCallback;
+import org.fusesource.restygwt.client.Attribute;
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Dispatcher;
 import org.fusesource.restygwt.client.JSONP;
