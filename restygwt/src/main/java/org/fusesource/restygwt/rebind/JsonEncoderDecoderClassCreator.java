@@ -18,12 +18,6 @@
 
 package org.fusesource.restygwt.rebind;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.fusesource.restygwt.client.Json;
-import org.fusesource.restygwt.client.Json.Style;
-
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -35,10 +29,16 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
+import org.fusesource.restygwt.client.Json;
+import org.fusesource.restygwt.client.Json.Style;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
- * 
+ *
  *         Updates: added getter & setter support, enhanced generics support
  * @author <a href="http://www.acuedo.com">Dave Finch</a>
  */
@@ -55,12 +55,14 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         super(logger, context, source, JSON_ENCODER_SUFFIX);
     }
 
+    @Override
     protected ClassSourceFileComposerFactory createComposerFactory() {
         ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
         composerFactory.setSuperclass(JSON_ENCODER_DECODER_CLASS + "<" + source.getParameterizedQualifiedSourceName() + ">");
         return composerFactory;
     }
 
+    @Override
     public void generate() throws UnableToCompleteException {
 
         locator = new JsonEncoderDecoderInstanceLocator(context, logger);
@@ -112,10 +114,10 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         	            p();
         	            return;
         	        }
-        	
-        	
-        
-        
+
+
+
+
         p("public " + JSON_VALUE_CLASS + " encode(" + source.getParameterizedQualifiedSourceName() + " value) {").i(1);
         {
             p("if( value==null ) {").i(1);
@@ -153,7 +155,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                 fieldExpr = "value." + getterName + "()";
                             }
 
-                            Style style = jsonAnnotation!=null ? jsonAnnotation.style() : classStyle;                            
+                            Style style = jsonAnnotation!=null ? jsonAnnotation.style() : classStyle;
                             String expression = locator.encodeExpression(field.getType(), fieldExpr, style);
 
                             p("{").i(1);
@@ -163,18 +165,18 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                             		p("rc.put(" + wrap(name) + ", null);");
                             		i(-1).p("} else {").i(1);
                             	}
-                            	
+
                                 p(JSON_VALUE_CLASS + " v=" + expression + ";");
                                 p("if( v!=null ) {").i(1);
                                 {
                                     p("rc.put(" + wrap(jsonName) + ", v);");
                                 }
                                 i(-1).p("}");
-                                
+
                                 if(null != field.getType().isEnum()) {
                                 	i(-1).p("}");
                                 }
-                                
+
                             }
                             i(-1).p("}");
 
@@ -263,7 +265,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     }
 
     /**
-     * 
+     *
      * @param field
      * @return the name for the setter for the specified field or null if a
      *         setter can't be found.
@@ -280,7 +282,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     }
 
     /**
-     * 
+     *
      * @param field
      * @return the name for the getter for the specified field or null if a
      *         getter can't be found.
@@ -293,18 +295,25 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         } catch (UnableToCompleteException e) {
             // do nothing
         }
-        if (field.getType().equals(JPrimitiveType.BOOLEAN) || field.getType().equals(booleanType)) {
-            fieldName = "is" + upperCaseFirstChar(fieldName);
-        } else {
-            fieldName = "get" + upperCaseFirstChar(fieldName);
-        }
         JClassType type = field.getEnclosingType();
+        if (field.getType().equals(JPrimitiveType.BOOLEAN) || field.getType().equals(booleanType)) {
+            fieldName = "is" + upperCaseFirstChar(field.getName());
+            if (exists(type, field, fieldName, false)) {
+                return fieldName;
+            }
+            fieldName = "has" + upperCaseFirstChar(field.getName());
+            if (exists(type, field, fieldName, false)) {
+                return fieldName;
+            }
+        }
+        fieldName = "get" + upperCaseFirstChar(field.getName());
         if (exists(type, field, fieldName, false)) {
             return fieldName;
         } else {
             return null;
         }
     }
+
 
     private String upperCaseFirstChar(String in) {
         if (in.length() == 1) {
@@ -317,7 +326,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     /**
      * checks whether a getter or setter exists on the specified type or any of
      * its super classes excluding Object.
-     * 
+     *
      * @param type
      * @param field
      * @param fieldName
@@ -351,7 +360,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     /**
      * Inspects the supplied type and all super classes up to but excluding
      * Object and returns a list of all fields found in these classes.
-     * 
+     *
      * @param type
      * @return
      */

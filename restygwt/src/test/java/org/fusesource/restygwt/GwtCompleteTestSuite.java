@@ -10,6 +10,7 @@ import org.fusesource.restygwt.client.basic.CachingTestGwt;
 import org.fusesource.restygwt.client.basic.ExtendedRestTestGwt;
 import org.fusesource.restygwt.client.basic.FlakyTestGwt;
 import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
+import org.fusesource.restygwt.client.complex.BigNumberTestGwt;
 
 
 /**
@@ -42,6 +43,7 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(TimeoutTestGwt.class);
         suite.addTestSuite(CachingTestGwt.class);
         suite.addTestSuite(ExtendedRestTestGwt.class);
+        suite.addTestSuite(BigNumberTestGwt.class);
 
         return suite;
     }
