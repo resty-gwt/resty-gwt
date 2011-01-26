@@ -278,7 +278,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                     if (pathExpression == null) {
                         error("Invalid rest method.  Invalid @PathParam annotation. Method is missing the @Path annotation: " + method.getReadableDeclaration());
                     }
-                    pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+" + toStringExpression(arg.getType(), arg.getName()) + "+\"");
+                    pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+" + toStringExpression(arg) + "+\"");
                     continue;
                 }
 
@@ -451,7 +451,15 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         i(-1).p("}");
     }
 
-    private String toStringExpression(JType type, String expr) {
+    protected String toStringExpression(JParameter arg) {
+        Attribute attribute = arg.getAnnotation(Attribute.class);
+        if(attribute != null){
+            return arg.getName() + "." + attribute.value();
+        }
+        return toStringExpression(arg.getType(), arg.getName());
+    }
+
+    protected String toStringExpression(JType type, String expr) {
         if (type.isPrimitive() != null) {
             return "\"\"+" + expr;
         }
