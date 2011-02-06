@@ -18,6 +18,8 @@
 
 package org.fusesource.restygwt.rebind;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -28,12 +30,8 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
-
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -67,11 +65,11 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
         locator = new JsonEncoderDecoderInstanceLocator(context, logger);
 
-        JClassType soruceClazz = source.isClass();
-        if (soruceClazz == null) {
+        JClassType sourceClazz = source.isClass();
+        if (sourceClazz == null) {
             error("Type is not a class");
         }
-        if (!soruceClazz.isDefaultInstantiable()) {
+        if (!sourceClazz.isDefaultInstantiable()) {
             error("No default constuctor");
         }
 
@@ -82,7 +80,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         p("public static final " + shortName + " INSTANCE = new " + shortName + "();");
         p();
 
-        if(null != soruceClazz.isEnum()) {
+        if(null != sourceClazz.isEnum()) {
         	            p();
         	            p("public " + JSON_VALUE_CLASS + " encode(" + source.getParameterizedQualifiedSourceName() + " value) {").i(1);
         	            {
@@ -91,7 +89,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         	                    p("return com.google.gwt.json.client.JSONNull.getInstance();").i(-1);
         	                }
         	                p("}");
-        	                p("return new com.google.gwt.json.client.JSONString(value.toString());");
+        	                p("return new com.google.gwt.json.client.JSONString(value.name());");
         	            }
         	            i(-1).p("}");
         	            p();
