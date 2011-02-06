@@ -26,6 +26,7 @@ import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -213,7 +214,6 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             p("this.dispatcher = dispatcher;");
         }
         i(-1).p("}");
-
 
         for (JMethod method : source.getInheritableMethods()) {
             writeMethodImpl(method);

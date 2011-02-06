@@ -26,6 +26,11 @@
   <inherits name='com.google.gwt.jsonp.Jsonp' />
   <inherits name="com.google.gwt.xml.XML" />
 
+
+  <replace-with class="org.fusesource.restygwt.emulated.JsonTypeInfo">
+    <when-type-is class="org.codehaus.jackson.annotate.JsonTypeInfo"/>
+  </replace-with>
+
   <generate-with class="org.fusesource.restygwt.rebind.RestServiceGenerator">
     <when-type-assignable class="org.fusesource.restygwt.client.RestService" />
   </generate-with>
@@ -33,6 +38,10 @@
     <when-type-assignable class="org.fusesource.restygwt.client.JsonEncoderDecoder" />
   </generate-with>
 
+
+
   <source path="client"/>
+  
+ 
 
 </module>
