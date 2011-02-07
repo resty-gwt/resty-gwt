@@ -19,21 +19,7 @@
 package org.fusesource.restygwt.rebind;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import org.apache.cassandra.cli.CliParser.value_return;
-import org.codehaus.jackson.annotate.JsonSubTypes;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.codehaus.jackson.annotate.JsonTypeInfo.As;
-import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
-import org.codehaus.jackson.annotate.JsonTypeName;
-import org.datanucleus.enhancer.asm.ASMClassEnhancer;
-import org.datanucleus.enhancer.asm.ASMUtils;
-import org.fusesource.restygwt.client.Json;
-import org.fusesource.restygwt.client.Json.Style;
-
-import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -46,13 +32,26 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
+import org.codehaus.jackson.annotate.JsonSubTypes;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.codehaus.jackson.annotate.JsonTypeInfo.As;
+import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
+import org.codehaus.jackson.annotate.JsonTypeName;
+import org.fusesource.restygwt.client.Json;
+import org.fusesource.restygwt.client.Json.Style;
+
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
- * 
+ *
  *         Updates: added getter & setter support, enhanced generics support
  * @author <a href="http://www.acuedo.com">Dave Finch</a>
+ * 
+ *        			added polymorphic support
+ * @author <a href="http://charliemason.info">Charlie Mason</a>
+ * 
  */
+
 public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	private static final String JSON_ENCODER_SUFFIX = "_Generated_JsonEncoderDecoder_";
 
@@ -66,65 +65,57 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 		super(logger, context, source, JSON_ENCODER_SUFFIX);
 	}
 
+	@Override
 	protected ClassSourceFileComposerFactory createComposerFactory() {
 		ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
 		composerFactory.setSuperclass(JSON_ENCODER_DECODER_CLASS + "<" + source.getParameterizedQualifiedSourceName() + ">");
 		return composerFactory;
 	}
 
+	@Override
 	public void generate() throws UnableToCompleteException {
 
 		JsonTypeInfo typeInfo = source.getAnnotation(JsonTypeInfo.class);
 		JsonSubTypes jacksonSubTypes = null;
+		ArrayList<JClassType> possibleTypes = new ArrayList<JClassType>();
 
 		locator = new JsonEncoderDecoderInstanceLocator(context, logger);
 
-		ArrayList<JClassType> possibleTypes = new ArrayList<JClassType>();
-
-		JClassType soruceClazz = source.isClass();
-		if (soruceClazz == null) {
+		JClassType sourceClazz = source.isClass();
+		if (sourceClazz == null) {
 			error("Type is not a class");
 		}
 
-		if(soruceClazz.isAbstract())
-		{
-			if(typeInfo == null)
-			{
+		if(sourceClazz.isAbstract()){
+			if(typeInfo == null){
 				error("Abstract classes must be annotated with JsonTypeInfo");
-
 			} 
 		}
-		else if (!soruceClazz.isDefaultInstantiable()) {
+		else if (!sourceClazz.isDefaultInstantiable()) {
 			error("No default constuctor");
 		}
 
-		if(typeInfo == null)
-		{
+		if(typeInfo == null){
 			//Just add this type
 			possibleTypes.add(source); 
 		}
-		else
-		{
+		else{
 			//Get all the possible types from the annotation
 			jacksonSubTypes = source.getAnnotation(JsonSubTypes.class);
 
-			if(jacksonSubTypes != null)
-			{
+			if(jacksonSubTypes != null){
 				for(JsonSubTypes.Type type : jacksonSubTypes.value())
 				{
-					try
-					{
+					try{
 						//Look up and add each declared type
 						possibleTypes.add(context.getTypeOracle().getType(type.value().getName()));
 					}
-					catch (NotFoundException e)
-					{
+					catch (NotFoundException e){
 						error("Unable to find decalred JsonSubType " + type.name());
 					}
 				}
 			}
-			else
-			{
+			else{
 				error("Unable to find required JsonSubTypes annotion on " + source.getQualifiedSourceName());
 			}
 		}
@@ -136,7 +127,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 		p("public static final " + shortName + " INSTANCE = new " + shortName + "();");
 		p();
 
-		if(null != soruceClazz.isEnum()) {
+		if(null != sourceClazz.isEnum()) {
 			p();
 			p("public " + JSON_VALUE_CLASS + " encode(" + source.getParameterizedQualifiedSourceName() + " value) {").i(1);
 			{
@@ -145,7 +136,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 					p("return com.google.gwt.json.client.JSONNull.getInstance();").i(-1);
 				}
 				p("}");
-				p("return new com.google.gwt.json.client.JSONString(value.toString());");
+				p("return new com.google.gwt.json.client.JSONString(value.name());");
 			}
 			i(-1).p("}");
 			p();
@@ -180,23 +171,19 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 			}
 			i(-1).p("}");
 
+			p(JSON_OBJECT_CLASS + " rc = new " + JSON_OBJECT_CLASS + "();");
 
 			JsonTypeInfo sourceTypeInfo = source.getAnnotation(JsonTypeInfo.class);
 
-			p(JSON_OBJECT_CLASS + " rc = new " + JSON_OBJECT_CLASS + "();");
+			for(JClassType possibleType : possibleTypes){
 
-
-			for(JClassType possibleType : possibleTypes)
-			{
-				if(possibleTypes.size() > 1)
-				{
+				if(possibleTypes.size() > 1){
 					//Generate a decoder for each possible type
 					p("if(value.getClass().getName().equals(\"" + possibleType.getParameterizedQualifiedSourceName() + "\"))");
 					p("{");
 				}
 
-				if(sourceTypeInfo != null && sourceTypeInfo.include()==As.PROPERTY)
-				{
+				if(sourceTypeInfo != null && sourceTypeInfo.include()==As.PROPERTY){
 					//Write out the type info so it can be decoded correctly
 					p("com.google.gwt.json.client.JSONValue className=org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.encode(\"" + getTypeIdentifier(sourceTypeInfo, jacksonSubTypes, possibleType) + "\");");
 					p("if( className!=null ) { ");
@@ -209,6 +196,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
 				for (final JField field : getFields(possibleType))
 				{
+
 					final String getterName = getGetterName(field);
 
 					// If can ignore some fields right off the back..
@@ -235,7 +223,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 									fieldExpr = "parseValue." + getterName + "()";
 								}
 
-								Style style = jsonAnnotation!=null ? jsonAnnotation.style() : classStyle;                            
+								Style style = jsonAnnotation!=null ? jsonAnnotation.style() : classStyle;
 								String expression = locator.encodeExpression(field.getType(), fieldExpr, style);
 
 								p("{").i(1);
@@ -289,26 +277,24 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 		{
 			p(JSON_OBJECT_CLASS + " object = toObject(value);");
 
+
 			JsonTypeInfo sourceTypeInfo = source.getAnnotation(JsonTypeInfo.class);
 
-			if(sourceTypeInfo != null && sourceTypeInfo.include()==As.PROPERTY)
-			{
+			if(sourceTypeInfo != null && sourceTypeInfo.include()==As.PROPERTY){
 				p("String sourceName = org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.decode(object.get(" + wrap(sourceTypeInfo.property()) + "));");
 			}
 
-			for(JClassType possibleType : possibleTypes)
-			{
-				if(possibleTypes.size() > 1)
-				{
+			for(JClassType possibleType : possibleTypes){
+				if(possibleTypes.size() > 1){
 					//Generate a decoder for each possible type
 					p("if(sourceName.equals(\"" + getTypeIdentifier(sourceTypeInfo, jacksonSubTypes, possibleType) + "\"))");
 					p("{");
 				}
 
-
 				p("" + possibleType.getParameterizedQualifiedSourceName() + " rc = new " + possibleType.getParameterizedQualifiedSourceName() + "();");
 
 				for (final JField field : getFields(possibleType)) {
+
 
 					final String setterName = getSetterName(field);
 
@@ -388,9 +374,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 		}
 	}
 
-
 	/**
-	 * 
+	 *
 	 * @param field
 	 * @return the name for the setter for the specified field or null if a
 	 *         setter can't be found.
@@ -407,7 +392,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param field
 	 * @return the name for the getter for the specified field or null if a
 	 *         getter can't be found.
@@ -420,18 +405,25 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 		} catch (UnableToCompleteException e) {
 			// do nothing
 		}
-		if (field.getType().equals(JPrimitiveType.BOOLEAN) || field.getType().equals(booleanType)) {
-			fieldName = "is" + upperCaseFirstChar(fieldName);
-		} else {
-			fieldName = "get" + upperCaseFirstChar(fieldName);
-		}
 		JClassType type = field.getEnclosingType();
+		if (field.getType().equals(JPrimitiveType.BOOLEAN) || field.getType().equals(booleanType)) {
+			fieldName = "is" + upperCaseFirstChar(field.getName());
+			if (exists(type, field, fieldName, false)) {
+				return fieldName;
+			}
+			fieldName = "has" + upperCaseFirstChar(field.getName());
+			if (exists(type, field, fieldName, false)) {
+				return fieldName;
+			}
+		}
+		fieldName = "get" + upperCaseFirstChar(field.getName());
 		if (exists(type, field, fieldName, false)) {
 			return fieldName;
 		} else {
 			return null;
 		}
 	}
+
 
 	private String upperCaseFirstChar(String in) {
 		if (in.length() == 1) {
@@ -444,7 +436,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	/**
 	 * checks whether a getter or setter exists on the specified type or any of
 	 * its super classes excluding Object.
-	 * 
+	 *
 	 * @param type
 	 * @param field
 	 * @param fieldName
@@ -478,7 +470,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	/**
 	 * Inspects the supplied type and all super classes up to but excluding
 	 * Object and returns a list of all fields found in these classes.
-	 * 
+	 *
 	 * @param type
 	 * @return
 	 */
@@ -502,51 +494,47 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 		}
 		return allFields;
 	}
-	
+
 	private String getTypeIdentifier(JsonTypeInfo typeInfo, JsonSubTypes subTypes, JClassType classType) throws UnableToCompleteException
 	{
-		if(typeInfo.use() == Id.CLASS)
-		{
+		if(typeInfo.use() == Id.CLASS){
+
 			//Just return the full class name
 			return classType.getQualifiedSourceName();
 		}
-		else if(typeInfo.use() == Id.NAME)
-		{			
+		else if(typeInfo.use() == Id.NAME){		
+
 			//Find the subtype entry
-			for(JsonSubTypes.Type type : subTypes.value())
-			{
+			for(JsonSubTypes.Type type : subTypes.value()){
+
 				//Check if this is correct type and return its name
-				if(type.value().getName().equals(classType.getParameterizedQualifiedSourceName()))
-				{
+				if(type.value().getName().equals(classType.getParameterizedQualifiedSourceName())){
+
 					if(type.name() != null && !type.name().isEmpty())
 						return type.name();
 				}
 			}
-			
+
 			//We obviously couldn't find it so check if its got
 			//it declared as an annotation on the class its self
 			JsonTypeName typeName = classType.getAnnotation(JsonTypeName.class);
-			
-			if(typeName != null)
-			{
+
+			if(typeName != null){
 				return typeName.value();
 			}
-			else
-			{
+			else{
 				error("Unable to find custom type name for " + classType.getParameterizedQualifiedSourceName());
 			}
 		}
-		
-		else if(typeInfo.use() == Id.MINIMAL_CLASS)
-		{
+
+		else if(typeInfo.use() == Id.MINIMAL_CLASS){
 			error("JsonTypeInfo.use MINIMAL_CLASS is currently unsupported");
 		}
-		
-		else if(typeInfo.use() == Id.CUSTOM)
-		{
+
+		else if(typeInfo.use() == Id.CUSTOM){
 			error("JsonTypeInfo.use CUSTOM is currently unsupported");
 		}
-		
+
 		return "";
 	}
 }

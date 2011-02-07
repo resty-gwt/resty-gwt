@@ -43,6 +43,7 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.xml.client.Document;
 
 import org.fusesource.restygwt.client.AbstractRequestCallback;
+import org.fusesource.restygwt.client.Attribute;
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Dispatcher;
 import org.fusesource.restygwt.client.JSONP;
@@ -60,6 +61,7 @@ import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.TextCallback;
 import org.fusesource.restygwt.client.XmlCallback;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -278,7 +280,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                     if (pathExpression == null) {
                         error("Invalid rest method.  Invalid @PathParam annotation. Method is missing the @Path annotation: " + method.getReadableDeclaration());
                     }
-                    pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+" + toStringExpression(arg.getType(), arg.getName()) + "+\"");
+                    pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+" + toStringExpression(arg) + "+\"");
                     continue;
                 }
 
@@ -362,7 +364,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 p("__method.timeout("+classOptions.timeout()+");");
             }
 
-            Produces producesAnnotation = method.getAnnotation(Produces.class);
+            Produces producesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Produces.class);
             if (producesAnnotation != null) {
                 p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, "+wrap(producesAnnotation.value()[0])+");");
             } else {
@@ -374,7 +376,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 }
             }
 
-            Consumes consumesAnnotation = method.getAnnotation(Consumes.class);
+            Consumes consumesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Consumes.class);
             if (consumesAnnotation != null) {
                 p("__method.header(" + RESOURCE_CLASS + ".HEADER_CONTENT_TYPE, "+wrap(consumesAnnotation.value()[0])+");");
             }
@@ -451,7 +453,23 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         i(-1).p("}");
     }
 
-    private String toStringExpression(JType type, String expr) {
+    private <T extends Annotation> T findAnnotationOnMethodOrEnclosingType(final JMethod method, final Class<T> annotationType) {
+        T annotation = method.getAnnotation(annotationType);
+        if (annotation == null) {
+            annotation = method.getEnclosingType().getAnnotation(annotationType);
+        }
+        return annotation;
+    }
+
+    protected String toStringExpression(JParameter arg) {
+        Attribute attribute = arg.getAnnotation(Attribute.class);
+        if(attribute != null){
+            return arg.getName() + "." + attribute.value();
+        }
+        return toStringExpression(arg.getType(), arg.getName());
+    }
+
+    protected String toStringExpression(JType type, String expr) {
         if (type.isPrimitive() != null) {
             return "\"\"+" + expr;
         }

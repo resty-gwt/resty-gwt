@@ -18,9 +18,6 @@
 
 package org.fusesource.restygwt.rebind;
 
-import java.io.PrintWriter;
-import java.util.HashSet;
-
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -28,6 +25,9 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.user.rebind.AbstractSourceCreator;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+
+import java.io.PrintWriter;
+import java.util.HashSet;
 
 /**
  * provides additional helper methods for generating source..
@@ -151,8 +151,8 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
 
     protected BaseSourceCreator p(String value) {
         this.sourceWriter.println(value);
-        
-        //System.out.println(value);
+
+        // System.out.println(value);
         return this;
     }
 

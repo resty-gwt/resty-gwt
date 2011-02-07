@@ -18,18 +18,6 @@
 
 package org.fusesource.restygwt.client;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-
-import org.fusesource.restygwt.client.Json.Style;
-
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
@@ -41,8 +29,22 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
 
+import org.fusesource.restygwt.client.Json.Style;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  * @author <a href="http://www.acuedo.com">Dave Finch</a>
  */
@@ -195,6 +197,55 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         }
     };
 
+    public static final AbstractJsonEncoderDecoder<BigDecimal> BIG_DECIMAL = new AbstractJsonEncoderDecoder<BigDecimal>() {
+
+        @Override
+        public JSONValue encode(BigDecimal value)
+                throws org.fusesource.restygwt.client.JsonEncoderDecoder.EncodingException {
+            if (value == null) {
+                return JSONNull.getInstance();
+            }
+            return new JSONString(value.toString());
+        }
+
+        @Override
+        public BigDecimal decode(JSONValue value)
+                throws org.fusesource.restygwt.client.JsonEncoderDecoder.DecodingException {
+            if (value == null || value.isNull() != null) {
+                return null;
+            }
+            return toBigDecimal(value);
+        }
+    };
+
+    public static final AbstractJsonEncoderDecoder<BigInteger> BIG_INTEGER = new AbstractJsonEncoderDecoder<BigInteger>() {
+
+        @Override
+        public JSONValue encode(BigInteger value)
+                throws org.fusesource.restygwt.client.JsonEncoderDecoder.EncodingException {
+            if (value == null) {
+                return null;
+            }
+            return new JSONString(value.toString());
+        }
+
+        @Override
+        public BigInteger decode(JSONValue value)
+                throws org.fusesource.restygwt.client.JsonEncoderDecoder.DecodingException {
+            if (value == null || value.isNull() != null) {
+                return null;
+            }
+            JSONNumber number = value.isNumber();
+            if (number == null) {
+                throw new DecodingException("Expected a json number, but was given: " + value);
+            }
+
+            // Doing a straight conversion from string to BigInteger will not work for large values
+            // So we convert to BigDecimal first and then convert it to BigInteger.
+            return new BigDecimal(value.toString()).toBigInteger();
+        }
+    };
+
     public static final AbstractJsonEncoderDecoder<Document> DOCUMENT = new AbstractJsonEncoderDecoder<Document>() {
 
         public Document decode(JSONValue value) throws DecodingException {
@@ -264,6 +315,15 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
     // /////////////////////////////////////////////////////////////////
     // Helper Methods.
     // /////////////////////////////////////////////////////////////////
+
+    static public BigDecimal toBigDecimal(JSONValue value) {
+        JSONNumber number = value.isNumber();
+        if (number == null) {
+            throw new DecodingException("Expected a json number, but was given: " + value);
+        }
+        return new BigDecimal(value.toString());
+    }
+
     static public double toDouble(JSONValue value) {
         JSONNumber number = value.isNumber();
         if (number == null) {
@@ -271,6 +331,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         }
         return number.doubleValue();
     }
+
 
     static public JSONObject toObject(JSONValue value) {
         JSONObject object = value.isObject();

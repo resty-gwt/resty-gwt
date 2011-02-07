@@ -55,4 +55,16 @@
 
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>      
+        <configuration>
+          <mode>htmlunit</mode>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

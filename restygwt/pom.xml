@@ -66,6 +66,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+        	<groupId>org.codehaus.jackson</groupId>
+        	<artifactId>jackson-mapper-asl</artifactId>
+        	<version>1.7.1</version>
+        	<type>jar</type>
+        	<scope>test</scope>
+        </dependency>
   </dependencies>
 
   <build>
