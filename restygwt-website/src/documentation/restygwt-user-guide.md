@@ -161,6 +161,19 @@ data expected by the callback, you you can override these default values
 by adding JAXRS `@Produces` and `@Consumes` annotations to the method 
 declaration.
 
+### Keep the Java Interface clean
+
+If you need an attribute of your DTO to be part of the url you can do it by adding @Attribute annotation along side the @PathParam. the @PathParam references the placeholder in the @Path as usual and the @Attribute identifies the attribute/field of the DTO which shall be used for the replacement in the path.
+
+Example:
+
+{pygmentize::java}
+    @PUT
+    @Path("/{id}")
+    public void updateOrder(@PathParam("id") @Attribute("order_id") OrderConfirmation order, 
+                            MethodCallback<OrderConfirmation> callback);
+{pygmentize}
+
 ### Mapping to a JSONP request
 
 If you need to access JSONP URl, then use the @JSONP annotation on the method
