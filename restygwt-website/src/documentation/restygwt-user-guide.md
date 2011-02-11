@@ -161,19 +161,6 @@ data expected by the callback, you you can override these default values
 by adding JAXRS `@Produces` and `@Consumes` annotations to the method 
 declaration.
 
-### Keep the Java Interface clean
-
-If you need an attribute of your DTO to be part of the url you can do it by adding @Attribute annotation along side the @PathParam. the @PathParam references the placeholder in the @Path as usual and the @Attribute identifies the attribute/field of the DTO which shall be used for the replacement in the path.
-
-Example:
-
-{pygmentize::java}
-    @PUT
-    @Path("/{id}")
-    public void updateOrder(@PathParam("id") @Attribute("order_id") OrderConfirmation order, 
-                            MethodCallback<OrderConfirmation> callback);
-{pygmentize}
-
 ### Mapping to a JSONP request
 
 If you need to access JSONP URl, then use the @JSONP annotation on the method
@@ -296,78 +283,3 @@ the following methods will set the `Accept` header for you:
 The response to the HTTP request is supplied to the callback passed in the `send` method.
 Once the callback is invoked, the `method.getRespose()` method to get the GWT `Response`
 if your interested in things like the headers set on the response.
-
-### Polymorphic Sub Types
-
-A common feature used in Object Orientated languages is to use Polymorphism to represent
-several specialist version of a parent object. This is structure is simple to serialise 
-using GWT''s built-in RPC system as it represents the Java types via a specialist protocol.
-
-Unfortunately the JSON spec doesn't directly support this behaviour. However it can be
-added by including the type information in an extra JSON property. JSON parsers that are
-not aware of this special behaviour will see it as a regular JSON property.
-
-#### Example
-
-The Jackson (a JSON parser) supports this behaviour by adding a series of annotations to the
-POJO classes will be serialised to JSON. Resty-GWT supports can also use these annotations 
-to provide the same behaviour Jackson compatible behaviour. 
-
-
-In the below example have a zoo that contains various different types of animals, each
-with their own specific properties. The super class that the other classes inherit must 
-be an abstract class and annotated like the example below:
-
-{pygmentize::java}
-@JsonSubTypes({@Type(value=Dog.class, name="Dog"), @Type(Cat.class)})
-@JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="@class")
-  public abstract class Animal { 
-     protected Animal() { }
-  }
-{pygmentize}
-
-The sub class uses the JsonTypeInfo annotation to declare how the type information will
-be included in the JSON. Only the Name and Class "use" methods are supported at present.
-Class will use the full Java class name where as Name will use a name provided by the user
-to represent each type.
-
-The JsonSubTypes annotation provides a list of possible types which the JSON can be mapped
-to. These must all be sub classes of this type or one of its subclasses. If the name method
-is used the name can be optionally specified for each type. In this example only the Dog 
-classes name is specified.
-
-
-{pygmentize::java}
-
-  public class Dog extends Animal {
-    public double barkVolume; // in decibels
-    public Dog() { }
-  }
-
-  @JsonTypeName("Cat")
-  public class Cat extends Animal {
-    public boolean likesCream;
-    public int lives;
-    public Cat() { }
-  }
-
-{pygmentize}
-
-The JsonTypeName can be used to specify the name the type will be mapped to. It must be
-specified via this method or the JsonSubTypes annotation on the super class. If both are
-specified the one on the JsonSubTypes is used.
-
-Notice no additional information is needed to serialise the Dog class as all its information
-is specified on the Animal supper class.
-
-{pygmentize::java}
-public class Zoo {
-    public List<Animal> animals;
-  }
-{pygmentize}
-
-Finally we can use the animal class as we would if it was a single concrete class. When the
-POJO is used in the GWT code you can use the animals list the same as you would with any
-polymorphic list. Usually by using  the instanceof keyword and casting the to the specific type.
-
-
