@@ -39,7 +39,7 @@ public class TimeoutTestGwt extends GWTTestCase {
 
     public void testTimeout() {
 
-    	org.fusesource.restygwt.client.Defaults.setRequestTimeout(1000);
+        org.fusesource.restygwt.client.Defaults.setRequestTimeout(1000);
 
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
 

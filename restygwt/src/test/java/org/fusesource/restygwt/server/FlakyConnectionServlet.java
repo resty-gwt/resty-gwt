@@ -37,28 +37,28 @@ import org.mortbay.jetty.HttpStatus;
  */
 public class FlakyConnectionServlet extends HttpServlet {
 
-	private int NUMBER_OF_SERVER_FAILURES_TO_SIMULATE = 2;
+    private int NUMBER_OF_SERVER_FAILURES_TO_SIMULATE = 2;
 
-	private static int currentNumberOfServerFailures = 0;
+    private static int currentNumberOfServerFailures = 0;
 
 
-	String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
+    String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
 
-	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+    @Override
+    protected void doGet(HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
 
-	    System.out.println("flakyMODE");
+        System.out.println("flakyMODE");
 
-		if (currentNumberOfServerFailures < NUMBER_OF_SERVER_FAILURES_TO_SIMULATE) {
+        if (currentNumberOfServerFailures < NUMBER_OF_SERVER_FAILURES_TO_SIMULATE) {
 
-			response.setStatus(HttpStatus.ORDINAL_500_Internal_Server_Error);
-			currentNumberOfServerFailures++;
+            response.setStatus(HttpStatus.ORDINAL_500_Internal_Server_Error);
+            currentNumberOfServerFailures++;
 
-		} else {
-			response.getWriter().print(DUMMY_RESPONSE);
-		}
+        } else {
+            response.getWriter().print(DUMMY_RESPONSE);
+        }
 
-	}
+    }
 
 }

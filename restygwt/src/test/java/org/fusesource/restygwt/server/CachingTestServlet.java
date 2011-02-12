@@ -40,28 +40,28 @@ public class CachingTestServlet extends HttpServlet {
     public static int contactCounter = 0;
 
 
-	//5 seconds timeout:
-	long TIMEOUT = 100000;
+    //5 seconds timeout:
+    long TIMEOUT = 100000;
 
-	String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
-
-
-	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+    String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
 
 
-	    if (request.getPathInfo().equals("/getnumberofcontacts")) {
-	        response.getWriter().print(contactCounter);
-
-	    } else {
-
-	        contactCounter++;
-	        response.getWriter().print(DUMMY_RESPONSE);
-
-	    }
+    @Override
+    protected void doGet(HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
 
 
-	}
+        if (request.getPathInfo().equals("/getnumberofcontacts")) {
+            response.getWriter().print(contactCounter);
+
+        } else {
+
+            contactCounter++;
+            response.getWriter().print(DUMMY_RESPONSE);
+
+        }
+
+
+    }
 
 }

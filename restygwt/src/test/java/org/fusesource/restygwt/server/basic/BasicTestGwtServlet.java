@@ -32,17 +32,17 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class BasicTestGwtServlet extends HttpServlet {
 
-	String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
+    String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
 
 
-	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+    @Override
+    protected void doGet(HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
 
 
-			response.getWriter().print(DUMMY_RESPONSE);
+            response.getWriter().print(DUMMY_RESPONSE);
 
 
-	}
+    }
 
 }

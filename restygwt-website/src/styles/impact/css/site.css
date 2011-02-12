@@ -26,20 +26,20 @@ h2 {
 p { margin-bottom:0px; }
 
 a {
-	color: #990000;
-	font-weight:bold;
-	text-decoration: none;
+  color: #990000;
+  font-weight:bold;
+  text-decoration: none;
 }
 
 a:hover { 
-	color: #ff3333; 
-	text-decoration: underline;
-	}
+  color: #ff3333; 
+  text-decoration: underline;
+  }
 
 img {
-	border: none;
+  border: none;
 /*
-	padding-right:2em
+  padding-right:2em
 */
 }
 
@@ -48,11 +48,11 @@ img {
 #navigation { width: 100%; float: left;
     font-family: Helvetica,Verdana,Arial,sans-serif; 
     background: black; 
-	text-align:center; 
-	padding: 8px 0 8px 0;
+  text-align:center; 
+  padding: 8px 0 8px 0;
     color: #b55; 
-	font-size: 10pt; 
-	font-weight: bold;
+  font-size: 10pt; 
+  font-weight: bold;
   position: absolute;  
     top: 0px;
 }
@@ -162,7 +162,7 @@ img {
   margin-top:0px;
 }
 
-code {	
+code {  
   font-size: .9em;
   font-family: 'Droid Sans Mono', 'Courier New', monospace !important;
 }
@@ -181,10 +181,10 @@ pre {
   border-style: solid;  border-width: 1px; border-color: #dedede !important; 
   padding: 1em;
 }
-pre code {	
-	font-family:Monaco,"Courier New","DejaVu Sans Mono","Bitstream Vera Sans Mono",monospace;
-	font-weight:normal;
-	font-style:normal;
+pre code {  
+  font-family:Monaco,"Courier New","DejaVu Sans Mono","Bitstream Vera Sans Mono",monospace;
+  font-weight:normal;
+  font-style:normal;
 }
 div.compare { width: 700px; }
 div.compare div.compare-left { float:left; width:340px; padding:5px; margin-top: 15px; }

@@ -33,9 +33,9 @@ import org.fusesource.restygwt.client.complex.BigNumberTestGwt;
 public class GwtCompleteTestSuite extends TestCase {
 
 
-	/**
-	 * @return the suite of that module
-	 */
+    /**
+     * @return the suite of that module
+     */
     public static Test suite() {
         GWTTestSuite suite = new GWTTestSuite("all GwtTestCases" );
 

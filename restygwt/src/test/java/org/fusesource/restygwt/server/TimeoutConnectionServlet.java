@@ -32,36 +32,36 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class TimeoutConnectionServlet extends HttpServlet {
 
-	//5 seconds timeout:
-	long TIMEOUT = 100000;
+    //5 seconds timeout:
+    long TIMEOUT = 100000;
 
-	String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
-
-
-	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+    String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
 
 
-			//here comes the timeout:
-			System.out.println("before true" + System.currentTimeMillis());
-
-			//NON BLOCKING WAIT:
-			long beforeLoop = System.currentTimeMillis();
-
-			while (true) {
-			    long now = System.currentTimeMillis();
-
-			    if ((now - beforeLoop) > 10000) {
-			        break;
-			    }
-			}
+    @Override
+    protected void doGet(HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
 
 
-			System.out.println("afer true" + System.currentTimeMillis());
+            //here comes the timeout:
+            System.out.println("before true" + System.currentTimeMillis());
 
-			response.getWriter().print(DUMMY_RESPONSE);
+            //NON BLOCKING WAIT:
+            long beforeLoop = System.currentTimeMillis();
 
-	}
+            while (true) {
+                long now = System.currentTimeMillis();
+
+                if ((now - beforeLoop) > 10000) {
+                    break;
+                }
+            }
+
+
+            System.out.println("afer true" + System.currentTimeMillis());
+
+            response.getWriter().print(DUMMY_RESPONSE);
+
+    }
 
 }
