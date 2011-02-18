@@ -96,4 +96,26 @@ public class PizzaServiceUITestGWT extends UITestGWT {
 
         delayTestFinish(2000);
     }
+
+    public void testPing() {
+
+        // Initialize the pizza service..
+        PizzaService service = GWT.create(PizzaService.class);
+
+        service.ping(new MethodCallback<java.lang.Void>() {
+            public void onSuccess(Method method, java.lang.Void response) {
+                System.out.println(response);
+                assertNull(response);
+
+                finishTest();
+            }
+
+            public void onFailure(Method method, Throwable exception) {
+                exception.printStackTrace();
+                fail(exception.getMessage());
+            }
+        });
+
+        delayTestFinish(2000);
+    }
 }

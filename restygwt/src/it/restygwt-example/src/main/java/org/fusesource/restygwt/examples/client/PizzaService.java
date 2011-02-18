@@ -18,6 +18,7 @@
 
 package org.fusesource.restygwt.examples.client;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -44,4 +45,7 @@ public interface PizzaService extends RestService {
     @Produces( MediaType.APPLICATION_JSON )
     public void listToppings(MethodCallback<List<Topping>> callback);
 
+    @DELETE
+    @Path("/ping")
+    public void ping(MethodCallback<java.lang.Void> callback);
 }

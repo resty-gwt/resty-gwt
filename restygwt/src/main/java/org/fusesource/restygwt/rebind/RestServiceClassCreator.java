@@ -427,17 +427,22 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                     {
                         p("protected " + resultType.getParameterizedQualifiedSourceName() + " parseResult() throws Exception {").i(1);
                         {
-                            p("try {").i(1);
-                            {
-                                jsonAnnotation = method.getAnnotation(Json.class);
-                                Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
-                                p("return " + locator.decodeExpression(resultType, JSON_PARSER_CLASS + ".parse(__method.getResponse().getText())", style) + ";");
+                            if(resultType.getParameterizedQualifiedSourceName().equals("java.lang.Void")) {
+                                p("return (java.lang.Void) new java.lang.Object();");
                             }
-                            i(-1).p("} catch (Throwable __e) {").i(1);
-                            {
-                                p("throw new " + RESPONSE_FORMAT_EXCEPTION_CLASS + "(\"Response was NOT a valid JSON document\", __e);");
+                            else {
+                                p("try {").i(1);
+                                {
+                                    jsonAnnotation = method.getAnnotation(Json.class);
+                                    Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
+                                    p("return " + locator.decodeExpression(resultType, JSON_PARSER_CLASS + ".parse(__method.getResponse().getText())", style) + ";");
+                                }
+                                i(-1).p("} catch (Throwable __e) {").i(1);
+                                {
+                                    p("throw new " + RESPONSE_FORMAT_EXCEPTION_CLASS + "(\"Response was NOT a valid JSON document\", __e);");
+                                }
+                                i(-1).p("}");
                             }
-                            i(-1).p("}");
                         }
                         i(-1).p("}");
                     }

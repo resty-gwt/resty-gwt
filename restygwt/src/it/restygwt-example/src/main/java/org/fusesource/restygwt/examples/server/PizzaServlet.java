@@ -107,4 +107,12 @@ public class PizzaServlet extends HttpServlet {
             System.err.flush();
         }
     }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        System.out.println("Processing Ping");
+        System.out.flush();
+        System.err.flush();
+    }
 }

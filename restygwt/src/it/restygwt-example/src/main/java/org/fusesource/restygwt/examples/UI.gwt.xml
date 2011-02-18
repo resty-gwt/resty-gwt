@@ -26,6 +26,7 @@
   <inherits name="org.fusesource.restygwt.RestyGWT" />
 
   <servlet path='/pizza-service/toppings' class='org.fusesource.restygwt.examples.server.PizzaServlet'/>
+  <servlet path='/pizza-service/ping' class='org.fusesource.restygwt.examples.server.PizzaServlet'/>
   <servlet path='/pizza-service' class='org.fusesource.restygwt.examples.server.PizzaServlet'/>
   <servlet path='/jsonp-service' class='org.fusesource.restygwt.examples.server.JsonpServlet'/>
   <servlet path='/test/method' class='org.fusesource.restygwt.examples.server.TestServlet'/>
