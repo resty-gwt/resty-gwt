@@ -18,14 +18,16 @@
 package org.fusesource.restygwt.client.dispatcher;
 
 import org.fusesource.restygwt.client.Dispatcher;
+import org.fusesource.restygwt.client.Method;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
-import org.fusesource.restygwt.client.Method;
 
 /**
  * Some valuable ideas came from:
@@ -48,7 +50,7 @@ public class CachingRetryingDispatcher implements Dispatcher {
 
     public Request send(Method method, RequestBuilder builder) throws RequestException {
 
-        RequestCallback outerRequestCallback = builder.getCallback();
+        final RequestCallback outerRequestCallback = builder.getCallback();
         final CacheKey cacheKey = new CacheKey(builder);
 
 
@@ -56,7 +58,14 @@ public class CachingRetryingDispatcher implements Dispatcher {
 
         if (cachedResponse != null) {
 
-            outerRequestCallback.onResponseReceived(null, cachedResponse);
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+                @Override
+                public void execute() {
+                    outerRequestCallback.onResponseReceived(null,
+                            cachedResponse);
+                }
+            });
             return null;
 
         } else {
