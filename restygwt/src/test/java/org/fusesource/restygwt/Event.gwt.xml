@@ -1,0 +1,40 @@
+<!--
+    Copyright (C) 2010 the original author or authors.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<module>
+    <inherits name='com.google.gwt.core.Core' />
+    <inherits name='com.google.gwt.user.User' />
+    <inherits name='com.google.gwt.json.JSON' />
+    <inherits name='com.google.gwt.jsonp.Jsonp' />
+    <inherits name='com.google.gwt.xml.XML' />
+    <inherits name="org.fusesource.restygwt.RestyGWT" />
+
+    <!-- seen at http://code.google.com/p/google-web-toolkit/source/browse/trunk/user/src/com/google/gwt/junit/JUnit.gwt.xml?r=5779 -->
+    <inherits name="com.google.gwt.benchmarks.Benchmarks"/>
+    <replace-with class="com.google.gwt.core.client.impl.StackTraceCreator.CollectorEmulated">
+        <when-type-is class="com.google.gwt.core.client.impl.StackTraceCreator.Collector" />
+        <none>
+            <when-property-is name="user.agent" value="gecko" />
+            <when-property-is name="user.agent" value="gecko1_8" />
+            <when-property-is name="user.agent" value="opera" />
+        </none>
+    </replace-with>
+
+    <servlet path='/foo/*' class='org.fusesource.restygwt.server.event.EchoServlet' />
+
+    <source path='client'/>
+    <source path='shared'/>
+</module>
