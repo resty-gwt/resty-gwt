@@ -11,6 +11,9 @@ import org.fusesource.restygwt.client.basic.ExtendedRestTestGwt;
 import org.fusesource.restygwt.client.basic.FlakyTestGwt;
 import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
 import org.fusesource.restygwt.client.complex.BigNumberTestGwt;
+import org.fusesource.restygwt.client.event.ModelChangeAnnotationTestGwt;
+import org.fusesource.restygwt.rebind.BindingDefaults;
+import org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver;
 
 
 /**
@@ -37,7 +40,7 @@ public class GwtCompleteTestSuite extends TestCase {
      * @return the suite of that module
      */
     public static Test suite() {
-        GWTTestSuite suite = new GWTTestSuite("all GwtTestCases" );
+        GWTTestSuite suite = new GWTTestSuite("all GwtTestCases but AnnotationResolver" );
 
         suite.addTestSuite(FlakyTestGwt.class);
         suite.addTestSuite(TimeoutTestGwt.class);

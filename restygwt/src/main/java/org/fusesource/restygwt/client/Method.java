@@ -18,11 +18,14 @@
 
 package org.fusesource.restygwt.client;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import org.fusesource.restygwt.rebind.AnnotationResolver;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -41,9 +44,6 @@ import com.google.gwt.xml.client.XMLParser;
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class Method {
-
-
-    private static Logger logger = Logger.getLogger(Method.class.getName());
 
     /**
      * GWT hides the full spectrum of methods because safari has a bug:
@@ -80,6 +80,11 @@ public class Method {
     Request request;
     Response response;
     Dispatcher dispatcher = Defaults.getDispatcher();
+
+    /**
+     * additional data which can be set per instance, e.g. from a {@link AnnotationResolver}
+     */
+    private final Map<String, String> data = new HashMap<String, String>();
 
     protected Method() {
     }
@@ -282,5 +287,25 @@ public class Method {
 
     public void setDispatcher(Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
+    }
+
+    /**
+     * add some information onto the method which could be interesting when this method
+     * comes back to the dispatcher.
+     *
+     * @param key
+     * @param value
+     */
+    public void addData(String key, String value) {
+        data.put(key, value);
+    }
+
+    /**
+     * get all data fields which was previously added
+     *
+     * @return
+     */
+    public Map<String, String> getData() {
+        return data;
     }
 }

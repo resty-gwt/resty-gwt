@@ -23,6 +23,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.client.RestService;
 
 import com.google.gwt.json.client.JSONValue;
@@ -30,6 +31,7 @@ import com.google.gwt.json.client.JSONValue;
 /**
  * @author <a href="mailto:andi.balke@gmail.com">Andi</a>
  */
+@ModelChange(domain="Foo", on={"PUT"})
 public interface ModelChangeAnnotatedService extends RestService {
     @GET
     @Path("/foo/")

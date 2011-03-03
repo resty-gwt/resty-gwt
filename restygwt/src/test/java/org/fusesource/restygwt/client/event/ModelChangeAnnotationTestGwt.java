@@ -16,16 +16,20 @@
 
 package org.fusesource.restygwt.client.event;
 
+import java.util.Map;
+
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.ModelChange;
+import org.fusesource.restygwt.client.Resource;
+import org.fusesource.restygwt.client.RestServiceProxy;
+import org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
-
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.Resource;
-import org.fusesource.restygwt.client.RestServiceProxy;
 
 /**
  * @author <a href="mailto:andi.balke@gmail.com">andi</a>
@@ -44,6 +48,10 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
     }
 
     public void testDefaultFunction() {
+
+        /*
+         *  setup the service, usually done in gin
+         */
         Resource resource = new Resource(GWT.getModuleBaseURL());
         final ModelChangeAnnotatedService service = GWT.create(ModelChangeAnnotatedService.class);
         ((RestServiceProxy) service).setResource(resource);
@@ -72,6 +80,20 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                     public void onSuccess(Method method, Void response) {
                         assertEquals(Response.SC_CREATED, method.getResponse().getStatusCode());
 
+                        // fetch all data which was put on the method by ModelChangeAnnotationResolver
+                        Map<String, String> data = method.getData();
+
+                        /*
+                         * as there is the following annotation on the service
+                         * @ModelChange(domain="Foo", on={"PUT"})
+                         *
+                         * we expect some information about ``domain`` in Methods.getData.
+                         * "_mc" is a copied value of ModelChangeAnnotationResolver.MODEL_CHANGED_DOMAIN_KEY
+                         * but this is not a client class
+                         *
+                         * this is where a ModelChange event will be published later
+                         */
+                        assertEquals("Foo", data.get("_mc"));
                         finishTest();
                     }
 
