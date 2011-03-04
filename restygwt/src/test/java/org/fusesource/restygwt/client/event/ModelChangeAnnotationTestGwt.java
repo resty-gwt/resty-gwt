@@ -23,12 +23,12 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.example.client.event.FooModelChangedEvent;
-import org.fusesource.restygwt.example.client.event.FooModelChangedEventHandler;
 import org.fusesource.restygwt.example.client.event.FooModelChangedEventHandlerImpl;
 import org.fusesource.restygwt.example.client.event.ModelChangeEvent;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -117,7 +117,10 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                         /*
                          * fire the event and check it arrived our handler
                          */
-                        eventBus.fireEvent(new FooModelChangedEvent());
+                        GwtEvent e = GWT.create(ModelChangeEvent.STRING_TO_EVENT_MAPPING
+                                .get(data.get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY)));
+                        assertNotNull(e);
+                        eventBus.fireEvent(e);
                         assertEquals(1, handler.getAllCatchedEvents().size());
 
                         finishTest();
