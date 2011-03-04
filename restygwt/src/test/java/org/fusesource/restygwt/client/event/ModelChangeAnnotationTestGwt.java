@@ -22,9 +22,14 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
+import org.fusesource.restygwt.example.client.event.FooModelChangedEvent;
+import org.fusesource.restygwt.example.client.event.FooModelChangedEventHandler;
+import org.fusesource.restygwt.example.client.event.FooModelChangedEventHandlerImpl;
 import org.fusesource.restygwt.example.client.event.ModelChangeEvent;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONValue;
@@ -54,6 +59,15 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
         Resource resource = new Resource(GWT.getModuleBaseURL());
         final ModelChangeAnnotatedService service = GWT.create(ModelChangeAnnotatedService.class);
         ((RestServiceProxy) service).setResource(resource);
+
+        /*
+         * setup the eventbus, usually done by gin
+         */
+        final EventBus eventBus = new SimpleEventBus();
+        final FooModelChangedEventHandlerImpl handler = new FooModelChangedEventHandlerImpl();
+
+        eventBus.addHandler(FooModelChangedEvent.TYPE, handler);
+
 
         /*
          * first we create a client GET request to prepare all things as it
@@ -95,6 +109,17 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                          * this is where a ModelChange event will be published later
                          */
                         assertEquals("Foo", data.get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY));
+
+
+                        // we dont have an event before
+                        assertEquals(0, handler.getAllCatchedEvents().size());
+
+                        /*
+                         * fire the event and check it arrived our handler
+                         */
+                        eventBus.fireEvent(new FooModelChangedEvent());
+                        assertEquals(1, handler.getAllCatchedEvents().size());
+
                         finishTest();
                     }
 
