@@ -20,10 +20,8 @@ import java.util.Map;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
-import org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Response;

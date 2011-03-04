@@ -1,5 +1,3 @@
-package org.fusesource.restygwt.server.event;
-
 /**
  * Copyright (C) 2010 the original author or authors.
  *
@@ -15,6 +13,8 @@ package org.fusesource.restygwt.server.event;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.fusesource.restygwt.server.event;
 
 import java.io.IOException;
 import java.util.Enumeration;
