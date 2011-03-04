@@ -99,28 +99,34 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                     public void onSuccess(Method method, Void response) {
                         assertEquals(Response.SC_CREATED, method.getResponse().getStatusCode());
 
-                        // fetch all data which was put on the method by ModelChangeAnnotationResolver
-                        Map<String, String> data = method.getData();
-
                         /*
                          * as there is the following annotation on the service
-                         * @ModelChange(domain="Foo", on={"PUT"})
-                         *
-                         * this is where a ModelChange event will be published later
+                         * @ModelChange(on={"PUT"}, domain="Foo")
+                         * we expect the indicator "Foo" for ``ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY``
                          */
-                        assertEquals("Foo", data.get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY));
+                        assertEquals("Foo", method.getData()
+                                .get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY));
 
 
-                        // we dont have an event before
+                        /*
+                         * check the eventhandling itself
+                         */
+                        // prove that we dont have an event before
                         assertEquals(0, handler.getAllCatchedEvents().size());
 
                         /*
-                         * fire the event and check it arrived our handler
+                         * this part is interesting as it performs the lookup from the
+                         * String "Foo", coming from the annotation, to the real *Event.class
+                         *
+                         * If we would not have this mapping, I guess we could not use GWT.create
+                         * here. Moreover it would not be clear from a users perspective.
                          */
-                        GwtEvent e = GWT.create(ModelChangeEvent.STRING_TO_EVENT_MAPPING
-                                .get(data.get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY)));
+                        GwtEvent e = ModelChangeEvent.factory(method.getData()
+                                .get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY));
                         assertNotNull(e);
+                        // fire the event ...
                         eventBus.fireEvent(e);
+                        // ... and check it arrived our handler
                         assertEquals(1, handler.getAllCatchedEvents().size());
 
                         finishTest();

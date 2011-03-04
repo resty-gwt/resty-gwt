@@ -46,8 +46,8 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
 
         if (methodAnnot != null) {
             if (methodAnnot.domain().equals("")) {
-                logger.log(TreeLogger.ERROR, "found class annotation with empty domain definition in " +
-                        source.getName());
+                logger.log(TreeLogger.ERROR, "found method annotation with empty domain definition in " +
+                        source.getName() + " on method " + method.getName());
                 throw new UnableToCompleteException();
             }
             // method annotation match

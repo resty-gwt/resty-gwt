@@ -21,6 +21,9 @@ import java.util.Map;
 
 import org.fusesource.restygwt.client.Method;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.GwtEvent;
+
 /**
  * Static Config class for all things that are relevant
  * for ``ModelChangeEvent``s during runtime.
@@ -34,16 +37,54 @@ import org.fusesource.restygwt.client.Method;
 public class ModelChangeEvent {
 
     /**
-     * When creating the ``RestService`` classes, there is put some information
+     * static class, deny instanciation
+     */
+    private ModelChangeEvent() {}
+
+    /**
+     * When creating the ``RestService`` classes, there will be put some information
      * in {@link Method#addData(String, String)}. To have a centralized place
-     * what is the fieldname, we have this constant here.
+     * what is the key on that ``put`` (and later ``get``) operation, we have this
+     * constant here.
      */
     public static final String MODEL_CHANGED_DOMAIN_KEY = "mc";
 
-    public static final Map<String, Class> STRING_TO_EVENT_MAPPING =
+    /**
+     * lookup table from the ``domain`` String in @ModelChange(on={"PUT"}, domain="Foo")
+     * to the real *Event class. When using this table, we can easily instanciate
+     * events like:
+     *
+     * <code>
+     *  GwtEvent e = ModelChangeEvent.factory(data.get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY));
+     * </code>
+     *
+     * and then do a:
+     *
+     * <code>
+     *  eventBus.fireEvent(e);
+     * </code>
+     */
+    private static final Map<String, Class> STRING_TO_EVENT_MAPPING =
             new HashMap<String, Class>();
 
     static {
         STRING_TO_EVENT_MAPPING.put("Foo", FooModelChangedEvent.class);
+    }
+
+    /**
+     * factory method from the annotated domain name to a real event object
+     * according to definitions in {@link #STRING_TO_EVENT_MAPPING}
+     *
+     * @param domainName
+     * @return
+     */
+    public static GwtEvent factory(final String domainName) {
+        final GwtEvent e = GWT.create(ModelChangeEvent.STRING_TO_EVENT_MAPPING
+                .get(domainName));
+        if (e == null) {
+            // do some runtim error-logging
+        }
+
+        return e;
     }
 }
