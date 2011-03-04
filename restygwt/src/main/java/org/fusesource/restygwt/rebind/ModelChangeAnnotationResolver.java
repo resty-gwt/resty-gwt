@@ -45,7 +45,8 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
         ModelChange methodAnnot = method.getAnnotation(ModelChange.class);
 
         if (methodAnnot != null) {
-            if (methodAnnot.domain().equals("")) {
+            if (methodAnnot.domain() == null
+                    || methodAnnot.domain().equals("")) {
                 logger.log(TreeLogger.ERROR, "found method annotation with empty domain definition in " +
                         source.getName() + " on method " + method.getName());
                 throw new UnableToCompleteException();
@@ -54,18 +55,21 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
             return new String[]{ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY, methodAnnot.domain()};
         }
 
-        for (String s : classAnnot.on()) {
-            if (s.toUpperCase().equals(restMethod.toUpperCase())) {
-                if (classAnnot.domain().equals("")) {
-                    logger.log(TreeLogger.ERROR, "found class annotation with empty domain definition in " +
-                            source.getName());
-                    throw new UnableToCompleteException();
+        if (classAnnot != null
+                && classAnnot.on() != null) {
+            for (String s : classAnnot.on()) {
+                if (s.toUpperCase().equals(restMethod.toUpperCase())) {
+                    if (classAnnot.domain() == null
+                            || classAnnot.domain().equals("")) {
+                        logger.log(TreeLogger.ERROR, "found class annotation with empty domain definition in " +
+                                source.getName());
+                        throw new UnableToCompleteException();
+                    }
+                    // class annotation match for current method
+                    return new String[]{ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY, classAnnot.domain()};
                 }
-                // class annotation match for current method
-                return new String[]{ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY, classAnnot.domain()};
             }
         }
-
         // no match at all
         return null;
     }
