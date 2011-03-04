@@ -58,7 +58,6 @@ import org.fusesource.restygwt.client.Options;
 import org.fusesource.restygwt.client.OverlayCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.ResponseFormatException;
-import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.TextCallback;
 import org.fusesource.restygwt.client.XmlCallback;
@@ -428,10 +427,10 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
             // call additional AnnotationResolvers if there are some configured
             List<AnnotationResolver> annotationResolvers = getAnnotationResolvers();
-            logger.log(TreeLogger.WARN, "found " + annotationResolvers.size() + " additional AnnotationResolvers");
+            logger.log(TreeLogger.DEBUG, "found " + annotationResolvers.size() + " additional AnnotationResolvers");
 
             for (AnnotationResolver a : annotationResolvers) {
-                logger.log(TreeLogger.WARN, "(" + a.getClass().getName() + ") resolve `" + source.getName() + "´ ...");
+                logger.log(TreeLogger.INFO, "(" + a.getClass().getName() + ") resolve `" + source.getName() + "´ ...");
                 final String[] addDataParams = a.resolveAnnotation(logger, source, method, restMethod);
 
                 if (addDataParams != null) {
@@ -440,7 +439,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                                 "must return a String[2], got a length of " + addDataParams.length + " when processing " +
                                         source.getName() + " with " + a.getClass().getName());
                     }
-                    logger.log(TreeLogger.WARN, "add call with (\"" + addDataParams[0] + "\", \"" +
+                    logger.log(TreeLogger.DEBUG, "add call with (\"" + addDataParams[0] + "\", \"" +
                             addDataParams[1] + "\")");
                     p("__method.addData(\"" + addDataParams[0] + "\", \"" + addDataParams[1] + "\");");
                 }

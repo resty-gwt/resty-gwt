@@ -18,24 +18,41 @@
 
 package org.fusesource.restygwt.rebind;
 
+import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.ModelChange;
+import org.fusesource.restygwt.example.client.event.ModelChangeEvent;
 
 import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
-import com.google.gwt.core.ext.UnableToCompleteException;
 
 /**
+ * Implementation for an annotationparser which is responsible to put
+ * annotation-data from ModelChange annotations to {@link Method} instances.
+ *
+ * This class transports information about ModelChangeEvents to be triggered,
+ * when some servicemethods have been called.
+ *
  * @author <a href="mailto:andi.balke@gmail.com">andi</<a>
  */
 public class ModelChangeAnnotationResolver implements AnnotationResolver {
-
-    public static final String MODEL_CHANGED_DOMAIN_KEY = "_mc";
 
     @Override
     public String[] resolveAnnotation(TreeLogger logger, JClassType source, JMethod method,
             final String restMethod) throws UnableToCompleteException {
         ModelChange classAnnot = source.getAnnotation(ModelChange.class);
+        ModelChange methodAnnot = method.getAnnotation(ModelChange.class);
+
+        if (methodAnnot != null) {
+            if (methodAnnot.domain().equals("")) {
+                logger.log(TreeLogger.ERROR, "found class annotation with empty domain definition in " +
+                        source.getName());
+                throw new UnableToCompleteException();
+            }
+            // method annotation match
+            return new String[]{ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY, methodAnnot.domain()};
+        }
 
         for (String s : classAnnot.on()) {
             if (s.toUpperCase().equals(restMethod.toUpperCase())) {
@@ -44,9 +61,12 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
                             source.getName());
                     throw new UnableToCompleteException();
                 }
-                return new String[]{MODEL_CHANGED_DOMAIN_KEY, classAnnot.domain()};
+                // class annotation match for current method
+                return new String[]{ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY, classAnnot.domain()};
             }
         }
+
+        // no match at all
         return null;
     }
 }

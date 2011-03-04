@@ -22,6 +22,7 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
+import org.fusesource.restygwt.example.client.event.ModelChangeEvent;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Response;
@@ -68,6 +69,12 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                 assertNotNull(fooArray);
 
                 /*
+                 * there is no annotation for a get method on that service,
+                 * therefore we wont find any values in the method about it.
+                 */
+                assertEquals(null, method.getData().get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY));
+
+                /*
                  * now, as we have our list data, we want to modify it to trigger
                  * an update event.
                  *
@@ -85,13 +92,9 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                          * as there is the following annotation on the service
                          * @ModelChange(domain="Foo", on={"PUT"})
                          *
-                         * we expect some information about ``domain`` in Methods.getData.
-                         * "_mc" is a copied value of ModelChangeAnnotationResolver.MODEL_CHANGED_DOMAIN_KEY
-                         * but this is not a client class
-                         *
                          * this is where a ModelChange event will be published later
                          */
-                        assertEquals("Foo", data.get("_mc"));
+                        assertEquals("Foo", data.get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY));
                         finishTest();
                     }
 

@@ -18,6 +18,9 @@
 
 package org.fusesource.restygwt.rebind;
 
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
+
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -32,9 +35,9 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
  * Only Key/Value of String are allowed to use since this logic happens finally
  * on the client.
  *
- * **important**
- * remember the fact that this information, attached by some implementors of this
- * interface is visible in the client.
+ * Usecase is to transport those informations, which are only on the interface
+ * of a {@link RestService} until we reach the final {@link MethodCallback}. There
+ * we can act those informations, e.g. configure caching, send update events, ...
  *
  * @author <a href="mailto:andi.balke@gmail.com">andi</<a>
  */

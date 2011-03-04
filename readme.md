@@ -80,3 +80,12 @@ Getting started
 ---------------
 
 For more details, checkout the [user guide](http://restygwt.fusesource.org/documentation/index.html)
+
+Event Handling
+--------------
+
+References
+..........
+
+* http://stackoverflow.com/questions/2951621/gwt-custom-events/2967359#2967359
+

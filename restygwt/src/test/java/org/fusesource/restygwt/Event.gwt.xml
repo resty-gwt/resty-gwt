@@ -36,5 +36,5 @@
     <servlet path='/foo/*' class='org.fusesource.restygwt.server.event.EchoServlet' />
 
     <source path='client'/>
-    <source path='shared'/>
+    <source path='example/client'/>
 </module>
