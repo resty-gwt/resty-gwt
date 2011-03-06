@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.fusesource</groupId>
     <artifactId>fusesource-pom</artifactId>
-    <version>1.0</version>
+    <version>1.5</version>
   </parent>
 
   <groupId>org.fusesource.restygwt</groupId>
@@ -241,6 +241,36 @@
       </build>
     </profile>
     
+    <profile>
+      <id>download</id>
+      <repositories>
+        <repository>
+          <id>apache.snapshots</id>
+          <name>Apache Development Snapshot Repository</name>
+          <url>https://repository.apache.org/content/repositories/snapshots</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+
+      </repositories>
+
+      <pluginRepositories>
+        <pluginRepository>
+          <id>codehaus</id>
+          <url>http://scala-tools.org/repo-releases</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
 
   </profiles>
 
