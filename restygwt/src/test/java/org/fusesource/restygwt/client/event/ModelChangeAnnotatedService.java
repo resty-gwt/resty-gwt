@@ -31,7 +31,6 @@ import com.google.gwt.json.client.JSONValue;
 /**
  * @author <a href="mailto:andi.balke@gmail.com">Andi</a>
  */
-@ModelChange(on={"PUT"}, domain="Foo")
 public interface ModelChangeAnnotatedService extends RestService {
     @GET
     @Path("/foo/")
@@ -40,6 +39,7 @@ public interface ModelChangeAnnotatedService extends RestService {
 
     @PUT
     @Path("/foo/{fooId}")
+    @ModelChange(domain="Foo")
     public void setItem(@HeaderParam("X-Echo-Code") int responseCode,
             @PathParam("fooId") int fooId, MethodCallback<Void> callback);
 }

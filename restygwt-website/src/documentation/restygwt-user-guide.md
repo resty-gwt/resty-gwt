@@ -234,6 +234,109 @@ public class Message {
 }
 {pygmentize}
 
+
+## Custom Annotation Handler
+
+Due to the functionality of GWTs generators, a generator needs to be responsible
+for the whole generation processing of a particular type. To give RestyGWT users
+the felxibility to extend this generation process, you can register custom
+implementations of ``org.fusesource.restygwt.rebind.AnnotationResolver``.
+
+
+### Runtime Annotation Information
+
+Whilst annotation-parsing and processing happens only in generation/compilation 
+process so far,``AnnotationResolver`` are able to compile extra information into the 
+``org.fusesource.restygwt.client.RestService`` implementation, which will be 
+available inside a ``org.fusesource.restygwt.client.Dispatcher`` and inside a
+``com.google.gwt.http.client.RequestCallback``.
+
+Transport of the Annotation information happens via 
+``org.fusesource.restygwt.client.Method#addData(String key, String value)``
+
+The ability to use annotation information during runtime makes it really easy
+to implement own annotations which can be applied to RestService definitions
+and cause a customized runtime behaviour later on.
+
+One usecase of such an extension of the annotation parsing is the following:
+
+
+### Model Change Events
+
+Goal: the Presenter wants to be informed about changes in the model, so a
+``reload`` of some data can be automatically triggered, whenever a particular
+``org.fusesource.restygwt.example.client.event.ModelChangeEvent`` is catched.
+
+A to have a central location wher such ``ModelChangeEvents`` are thrown, a 
+``RequestCallback`` seems perfect. Usually - without custom ``AnnotationResolver``s
+there would be no information about "what event for which domain type should be thrown".
+
+Solution is to have a ``org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver``.
+This class must be registered on RestyGWTs generation process via 
+
+{pygmentize::java}
+BindingDefaults.addAnnotationResolver(new ModelChangeAnnotationResolver());
+{pygmentize}
+
+Additionally assume the following RestService interface definition
+
+{pygmentize::java}
+    package org.fusesource.restygwt.client.event;
+
+    import javax.ws.rs.GET;
+    import javax.ws.rs.HeaderParam;
+    import javax.ws.rs.PUT;
+    import javax.ws.rs.Path;
+    import javax.ws.rs.PathParam;
+
+    import org.fusesource.restygwt.client.MethodCallback;
+    import org.fusesource.restygwt.client.ModelChange;
+    import org.fusesource.restygwt.client.RestService;
+
+    import com.google.gwt.json.client.JSONValue;
+
+    /**
+     * @author <a href="mailto:andi.balke@gmail.com">Andi</a>
+     */
+    public interface ModelChangeAnnotatedService extends RestService {
+        @GET
+        @Path("/foo/")
+        public void getItems(@HeaderParam("X-Echo-Body") String responseBody,
+                MethodCallback<JSONValue> callback);
+
+        @PUT
+        @Path("/foo/{fooId}")
+        @ModelChange(domain="Foo")
+        public void setItem(@HeaderParam("X-Echo-Code") int responseCode,
+                @PathParam("fooId") int fooId, MethodCallback<Void> callback);
+    }
+{pygmentize}
+
+Now we will have information about our custom annotation inside the
+``Dispatcher`` ...
+
+{pygmentize::java}
+public class CachingRetryingDispatcher implements Dispatcher {
+
+    public Request send(Method method, RequestBuilder builder) throws RequestException {
+        String DomainNameForUpdate = method.getData()
+                .get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY);
+        // ...
+{pygmentize}
+
+... and inside the ``RequestCallback``
+
+{pygmentize::java}
+    modelChangeAnnotatedService.setItem(Response.SC_CREATED, 1, new MethodCallback<Void>() {
+        @Override
+        public void onSuccess(Method method, Void response) {
+            GwtEvent e = ModelChangeEvent.factory(method.getData()
+                    .get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY));
+            eventBus.fireEvent(e);
+            // ...
+
+{pygmentize}
+
 ## REST API
 
 The RestyGWT REST API is handy when you don't want to go through the trouble of creating 

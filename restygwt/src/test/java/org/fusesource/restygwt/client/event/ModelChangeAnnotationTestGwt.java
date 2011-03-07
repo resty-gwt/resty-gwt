@@ -16,8 +16,6 @@
 
 package org.fusesource.restygwt.client.event;
 
-import java.util.Map;
-
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
