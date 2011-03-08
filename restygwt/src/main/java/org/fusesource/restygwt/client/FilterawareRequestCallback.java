@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-package com.google.gwt.http.client;
+package org.fusesource.restygwt.client;
 
-import com.google.gwt.http.client.callback.CallbackFilter;
+import org.fusesource.restygwt.client.callback.CallbackFilter;
 
 public interface FilterawareRequestCallback extends com.google.gwt.http.client.RequestCallback {
 

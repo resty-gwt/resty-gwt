@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.google.gwt.http.client.callback;
+package org.fusesource.restygwt.client.callback;
 
 import org.fusesource.restygwt.client.Method;
 

@@ -16,17 +16,14 @@
  * limitations under the License.
  */
 
-package com.google.gwt.http.client.callback;
-
-import java.util.logging.Logger;
+package org.fusesource.restygwt.client.callback;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.dispatcher.CacheKey;
-import org.fusesource.restygwt.client.dispatcher.CachingRetryingDispatcher;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.logging.client.LogConfiguration;
 
 public class CachingCallbackFilter implements CallbackFilter {
 
@@ -39,9 +36,7 @@ public class CachingCallbackFilter implements CallbackFilter {
     @Override
     public void filter(Method method, RequestCallback requestCallback) {
         CacheKey cacheKey = new CacheKey(method.builder);
-        if (LogConfiguration.loggingIsEnabled()) {
-            Logger.getLogger(CachingCallbackFilter.class.getName()).info("cache to " + cacheKey);
-        }
+        GWT.log("cache to " + cacheKey);
         cache.putResult(cacheKey, method.getResponse());
     }
 }

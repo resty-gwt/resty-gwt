@@ -26,9 +26,9 @@ import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.dispatcher.CacheKey;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
 
 public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
@@ -57,11 +57,8 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
         Timer t = new Timer() {
             public void run() {
                 try {
-                    if (LogConfiguration.loggingIsEnabled()) {
-                        Logger.getLogger(QueuableRuntimeCacheStorage.class.getName())
-                                .fine("removing cache-key " + key.getEverythingAsConcatenatedString()
-                                + " from internal storage");
-                    }
+                    GWT.log("removing cache-key " + key.getEverythingAsConcatenatedString()
+                            + " from internal storage");
                     cache.remove(key);
                 } catch (Exception ex) {
                     Logger.getLogger(QueuableRuntimeCacheStorage.class.getName())

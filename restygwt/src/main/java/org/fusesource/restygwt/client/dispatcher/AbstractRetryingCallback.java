@@ -21,15 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.fusesource.restygwt.client.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.callback.CallbackFilter;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.FilterawareRequestCallback;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.callback.CallbackFilter;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
