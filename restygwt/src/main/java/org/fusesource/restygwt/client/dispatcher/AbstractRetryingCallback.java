@@ -17,18 +17,23 @@
  */
 package org.fusesource.restygwt.client.dispatcher;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
+import org.fusesource.restygwt.client.Method;
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.FilterawareRequestCallback;
 import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.callback.CallbackFilter;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
-public abstract class AbstractRetryingCallback implements RequestCallback {
+public abstract class AbstractRetryingCallback implements FilterawareRequestCallback {
 
     /**
      * Used by RetryingCallback
@@ -45,20 +50,35 @@ public abstract class AbstractRetryingCallback implements RequestCallback {
 
     protected int currentRetryCounter = 0;
 
-    protected final RequestBuilder requestBuilder;
+    protected final Method method;
     protected final RequestCallback requestCallback;
 
-    public AbstractRetryingCallback(
-            RequestBuilder requestBuilder,
-            RequestCallback requestCallback) {
+    protected List<CallbackFilter> callbackFilters;
 
-        this.requestBuilder = requestBuilder;
+    public AbstractRetryingCallback(Method method, RequestCallback requestCallback) {
+
+        this.method = method;
         this.requestCallback = requestCallback;
     }
 
     @Override
-    public abstract void onResponseReceived(Request request, Response response);
+    public final void onResponseReceived(Request request, Response response) {
+        for (CallbackFilter f : callbackFilters) {
+            f.filter(method, requestCallback);
+        }
 
+    }
+
+    /**
+     * replacement for the override of {@link #onResponseReceived(Request, Response)}
+     *
+     * but this is set to final because of the filter handling, this method has to be
+     * implemented instead.
+     *
+     * @param request
+     * @param response
+     */
+    protected abstract void _onResponseReceived(Request request, Response response);
 
     @Override
     public void onError(Request request, Throwable exception) {
@@ -74,11 +94,9 @@ public abstract class AbstractRetryingCallback implements RequestCallback {
             currentRetryCounter++;
 
             Timer t = new Timer() {
-
                 public void run() {
-
                     try {
-                        requestBuilder.send();
+                        method.builder.send();
                     } catch (RequestException ex) {
                         logger.severe(ex.getMessage());
                     }
@@ -86,20 +104,27 @@ public abstract class AbstractRetryingCallback implements RequestCallback {
             };
 
             t.schedule(gracePeriod);
-
             gracePeriod = gracePeriod * 2;
-
         } else {
             // Super severe error.
             // reload app or redirect.
             // ===> this breaks the app but that's by intention.
             if (Window.confirm("error")) {
-
                 Window.Location.reload();
-
             }
         }
+    }
 
+    /**
+     * put a filter in the "chain of responsibility" of all callbackfilters that will be
+     * performed on callback passing.
+     */
+    public void addFilter(CallbackFilter filter) {
+        if (null == callbackFilters) {
+            callbackFilters = new ArrayList<CallbackFilter>();
+        }
+
+        callbackFilters.add(filter);
     }
 
 }

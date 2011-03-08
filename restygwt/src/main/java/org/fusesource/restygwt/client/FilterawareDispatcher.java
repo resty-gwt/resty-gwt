@@ -15,11 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fusesource.restygwt.client.dispatcher;
 
-import com.google.gwt.http.client.Response;
+package org.fusesource.restygwt.client;
 
-public interface CacheStorage {
-    public Response getResultOrReturnNull(CacheKey key);
-    public void putResult(CacheKey key, Response response);
+import org.fusesource.restygwt.client.dispatcher.DispatcherFilter;
+
+public interface FilterawareDispatcher extends Dispatcher {
+
+    public void addFilter(DispatcherFilter filter);
+
 }

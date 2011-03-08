@@ -67,7 +67,8 @@ public class Method {
         }
     }
 
-    RequestBuilder builder;
+    public RequestBuilder builder;
+
     final Set<Integer> expectedStatuses;
     {
       expectedStatuses = new HashSet<Integer>();

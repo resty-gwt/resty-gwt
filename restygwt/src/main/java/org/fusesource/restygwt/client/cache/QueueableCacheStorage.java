@@ -15,11 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fusesource.restygwt.client.dispatcher;
 
-import com.google.gwt.http.client.Response;
+package org.fusesource.restygwt.client.cache;
 
-public interface CacheStorage {
-    public Response getResultOrReturnNull(CacheKey key);
-    public void putResult(CacheKey key, Response response);
+import java.util.List;
+
+import org.fusesource.restygwt.client.dispatcher.CacheKey;
+import org.fusesource.restygwt.client.dispatcher.CacheStorage;
+
+import com.google.gwt.http.client.RequestCallback;
+
+/**
+ * more enhanced cacheinterface, TODO write something
+ *
+ * @author abalke
+ */
+public interface QueueableCacheStorage extends CacheStorage {
+    public boolean hasCallback(CacheKey k);
+
+    public void addCallback(CacheKey k, RequestCallback rc);
+
+    public List<RequestCallback> removeCallbacks(CacheKey k);
 }

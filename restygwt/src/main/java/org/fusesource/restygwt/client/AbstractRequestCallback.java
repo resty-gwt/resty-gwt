@@ -24,12 +24,13 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public abstract class AbstractRequestCallback<T> implements RequestCallback {
 
     protected final Method method;
+
     protected MethodCallback<T> callback;
 
     public AbstractRequestCallback(Method method, MethodCallback<T> callback) {
@@ -48,11 +49,13 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
         if (response == null) {
             callback.onFailure(this.method, new FailedStatusCodeException("TIMEOUT", 999));
         } else if (isFailedStatus(response)) {
-            callback.onFailure(this.method, new FailedStatusCodeException(response.getStatusText(), response.getStatusCode()));
+            callback.onFailure(this.method, new FailedStatusCodeException(response.getStatusText(),
+                    response.getStatusCode()));
         } else {
             T value;
             try {
-                GWT.log("Received http response for request: " + method.builder.getHTTPMethod() + " " + method.builder.getUrl(), null);
+                GWT.log("Received http response for request: " + this.method.builder.getHTTPMethod()
+                        + " " + this.method.builder.getUrl(), null);
                 String content = response.getText();
                 if (content != null && content.length() > 0) {
                     GWT.log(content, null);
@@ -65,6 +68,7 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
                 callback.onFailure(this.method, e);
                 return;
             }
+
             callback.onSuccess(this.method, value);
         }
     }

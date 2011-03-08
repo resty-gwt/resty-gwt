@@ -19,15 +19,19 @@ package org.fusesource.restygwt.client.dispatcher;
 
 import org.fusesource.restygwt.client.Dispatcher;
 import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
+import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.http.client.FilterawareRequestCallback;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.callback.CachingCallbackFilter;
 
 /**
  * Some valuable ideas came from:
@@ -46,20 +50,22 @@ public class CachingRetryingDispatcher implements Dispatcher {
 
     public static final CachingRetryingDispatcher INSTANCE = new CachingRetryingDispatcher();
 
-    private static CacheStorage cacheStorage = new CacheStorage();
+    /**
+     * one instance of {@link QueueableCacheStorage}
+     *
+     * could be static as well, but since we are a singleton, non-static is more nice
+     */
+    private QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
 
     public Request send(Method method, RequestBuilder builder) throws RequestException {
 
         final RequestCallback outerRequestCallback = builder.getCallback();
         final CacheKey cacheKey = new CacheKey(builder);
 
-
         final Response cachedResponse = cacheStorage.getResultOrReturnNull(cacheKey);
 
         if (cachedResponse != null) {
-
             Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
                 @Override
                 public void execute() {
                     outerRequestCallback.onResponseReceived(null,
@@ -70,7 +76,12 @@ public class CachingRetryingDispatcher implements Dispatcher {
 
         } else {
 
-            RequestCallback retryingCallback = new CachingRetryingCallback(builder, outerRequestCallback);
+            FilterawareRequestCallback retryingCallback = new AbstractRetryingCallback(method, outerRequestCallback) {
+                @Override
+                protected void _onResponseReceived(Request request, Response response) {
+                }
+            };
+            retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
             builder.setCallback(retryingCallback);
 
             GWT.log("Sending http request: " + builder.getHTTPMethod() + " "
@@ -85,11 +96,5 @@ public class CachingRetryingDispatcher implements Dispatcher {
 
             return builder.send();
         }
-
     }
-
-    public static CacheStorage getCacheStorage() {
-        return cacheStorage;
-    }
-
 }

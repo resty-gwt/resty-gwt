@@ -15,10 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.fusesource.restygwt.client.dispatcher;
 
+import org.fusesource.restygwt.client.Method;
+
 import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
@@ -41,14 +43,12 @@ public class RetryingCallback extends AbstractRetryingCallback {
     private String forceRedirectUrlWhen505 = "index.html";
 
 
-    public RetryingCallback(
-            RequestBuilder requestBuilder,
-            RequestCallback requestCallback) {
-        super(requestBuilder, requestCallback);
+    public RetryingCallback(Method method, RequestCallback requestCallback) {
+        super(method, requestCallback);
     }
 
     @Override
-    public void onResponseReceived(Request request, Response response) {
+    protected void _onResponseReceived(Request request, Response response) {
 
         if (response.getStatusCode() == Response.SC_UNAUTHORIZED) {
             //FIXME: to be removed...
@@ -62,5 +62,4 @@ public class RetryingCallback extends AbstractRetryingCallback {
             this.requestCallback.onResponseReceived(request, response);
         }
     }
-
 }
