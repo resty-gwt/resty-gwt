@@ -58,7 +58,6 @@ RestyGWT
 * typo (rbauer)
 * formatting issue (rbauer)
 * added igores for usage with eclipse (rbauer)
-* some messages for the people visiting => this is a fork... (rbauer)
 * added - versioning for gwt and gwt-maven-plugin - 1.6 jdk (rbauer)
 * basic setup for tests (rbauer)
 * Correctly Serialize JsArrays (Kyle Butt)

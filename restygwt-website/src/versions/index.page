@@ -35,5 +35,5 @@ sort_info: 5
     # Development Website
 .right
   :&markdown
-    * [Snapshot Website](http://scalate.fusesource.org/versions/#{project_snapshot_version}/index.html) based on #{project_snapshot_version}
+    * [Snapshot Website](http://scalate.fusesource.org/versions/#{project_snapshot_version}/website/index.html) based on #{project_snapshot_version}
 
