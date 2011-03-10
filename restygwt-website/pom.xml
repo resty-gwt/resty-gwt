@@ -106,64 +106,56 @@
         <version>${scalate-version}</version>
         
         <configuration>
-          <warSourceDirectory>${basedir}/src</warSourceDirectory>
-          <webappDirectory>${project.build.directory}</webappDirectory>
+          <webappDirectory>${basedir}/src</webappDirectory>
           <remoteServerId>website.fusesource.org</remoteServerId>
           <remoteServerUrl>dav:http://fusesource.com/forge/dav/${forge-project-id}/versions/${project.version}/website</remoteServerUrl>
           <!-- <remoteServerUrl>dav:https://fusesource.com/forge/dav/${forge-project-id}</remoteServerUrl> -->
         </configuration>
-        
         <executions>
           <execution>
             <id>sitegen</id>
             <goals>
               <goal>sitegen</goal>
             </goals>
-            <phase>package</phase>
           </execution>
           <execution>
             <id>deploy</id>
             <goals>
               <goal>deploy</goal>
             </goals>
-            <phase>deploy</phase>
           </execution> 
         </executions>
-        
-        <dependencies>
-          <dependency>
-            <groupId>org.fusesource.scalamd</groupId>
-            <artifactId>scalamd</artifactId>
-            <version>${scalamd-version}</version>
-          </dependency>
-        </dependencies>
-        
       </plugin>
 
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
-        <version>${jetty-plugin-version}</version>
-          <configuration>
-            <webAppSourceDirectory>${basedir}/src</webAppSourceDirectory>
-            <systemProperties>
-              <systemProperty>
-                <name>scalate.editor</name>
-                <value>${env.SCALATE_EDITOR}</value>
-              </systemProperty>
-              <systemProperty>
-                <name>scalate.workdir</name>
-                <value>${basedir}/target/_scalate</value>
-              </systemProperty>
-              <systemProperty>
-                <name>scalate.mode</name>
-                <value>development</value>
-              </systemProperty>
-            </systemProperties>
-            <scanIntervalSeconds>0</scanIntervalSeconds>
-          </configuration>
-        
+        <version>7.2.1.v20101111</version>
+        <configuration>
+          <webAppConfig>
+            <contextPath>/</contextPath>
+            <resourceBase>${basedir}/src</resourceBase>
+            <unpackOverlays>false</unpackOverlays>
+          </webAppConfig>
+          <webAppSourceDirectory>${basedir}/src</webAppSourceDirectory>
+          <systemProperties>
+            <systemProperty>
+              <name>scalate.editor</name>
+              <value>${env.SCALATE_EDITOR}</value>
+            </systemProperty>
+            <systemProperty>
+              <name>scalate.workdir</name>
+              <value>${basedir}/target/_scalate</value>
+            </systemProperty>
+            <systemProperty>
+              <name>scalate.mode</name>
+              <value>development</value>
+            </systemProperty>
+          </systemProperties>
+          <scanIntervalSeconds>0</scanIntervalSeconds>
+        </configuration>
       </plugin>
+
     </plugins>
   </build>
 

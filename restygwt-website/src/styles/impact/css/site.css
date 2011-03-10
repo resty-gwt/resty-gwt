@@ -1,5 +1,5 @@
 body, html {
-    font-family:Georgia, Arial, sans-serif; 
+    font-family:Arial,Verdana,Helvetica,sans-serif;
     color: #666666;
 }
 body, html, table, tr, td, tbody {
@@ -12,7 +12,6 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Graublau Web', Helvetica, sans-serif;
     overflow: visible;
     color: #993333;
 }
@@ -26,20 +25,20 @@ h2 {
 p { margin-bottom:0px; }
 
 a {
-  color: #990000;
-  font-weight:bold;
-  text-decoration: none;
+	color: #990000;
+	font-weight:bold;
+	text-decoration: none;
 }
 
 a:hover { 
-  color: #ff3333; 
-  text-decoration: underline;
-  }
+	color: #ff3333; 
+	text-decoration: underline;
+	}
 
 img {
-  border: none;
+	border: none;
 /*
-  padding-right:2em
+	padding-right:2em
 */
 }
 
@@ -48,11 +47,11 @@ img {
 #navigation { width: 100%; float: left;
     font-family: Helvetica,Verdana,Arial,sans-serif; 
     background: black; 
-  text-align:center; 
-  padding: 8px 0 8px 0;
+	text-align:center; 
+	padding: 8px 0 8px 0;
     color: #b55; 
-  font-size: 10pt; 
-  font-weight: bold;
+	font-size: 10pt; 
+	font-weight: bold;
   position: absolute;  
     top: 0px;
 }
@@ -67,7 +66,7 @@ img {
     padding-left: 120px;
     width: 350px;
 }
-#overview div.message h1{ margin-bottom: 10px; display:none; }
+#overview div.message h1{ margin-bottom: 5px; display:none; }
 #overview div.message p{ margin-top: 0px; padding-bottom:14px; }
 
 #spot { width: 100%; float: left; 
@@ -162,30 +161,6 @@ img {
   margin-top:0px;
 }
 
-code {  
-  font-size: .9em;
-  font-family: 'Droid Sans Mono', 'Courier New', monospace !important;
-}
-pre {
-  background-color: #F8F8FF; 
-  
-  overflow:auto;
-  -moz-background-clip:border;
-  -moz-background-inline-policy:continuous;
-  -moz-background-origin:padding;
-  margin: 1em 0 1em 0;
-  border:1px solid #DDDDDD;
-  
-  border-top-left-radius: 8px; -webkit-border-top-left-radius: 8px; -moz-border-radius-topleft: 8px;  
-  border-top-right-radius: 8px; -webkit-border-top-right-radius: 8px; -moz-border-radius-topright: 8px;
-  border-style: solid;  border-width: 1px; border-color: #dedede !important; 
-  padding: 1em;
-}
-pre code {  
-  font-family:Monaco,"Courier New","DejaVu Sans Mono","Bitstream Vera Sans Mono",monospace;
-  font-weight:normal;
-  font-style:normal;
-}
 div.compare { width: 700px; }
 div.compare div.compare-left { float:left; width:340px; padding:5px; margin-top: 15px; }
 div.compare div.compare-right { float:right; width:340px; padding:5px; margin-top: 15px; }
@@ -212,5 +187,3 @@ div.compare div div {
 
 .wide div.compare div.compare-left { float:none; width:700px; }
 .wide div.compare div.compare-right { float:none; width:700px; }
-
-

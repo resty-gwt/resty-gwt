@@ -34,8 +34,14 @@ object Website {
   val project_forums_url= "http://groups.google.com/group/restygwt"
   val project_wiki_url= "http://github.com/chirino/resty-gwt/"
   val project_logo= "/images/restygwt-logo.png"
-  val project_version= "1.0"
-  val project_snapshot_version= "1.1-SNAPSHOT"
+  val project_version= "1.1"
+  val project_snapshot_version= "1.2-SNAPSHOT"
+
+  val project_versions = List(
+        project_version,
+        "1.0")  
+
+
 
   val project_keywords= "rest,gwt,restygwt,java,javascript,json,xml,dto"
 
@@ -47,5 +53,5 @@ object Website {
   val project_maven_groupId= "org.fusesource.restygwt"
   val project_maven_artifactId= "restygwt"
 
-  val website_base_url= "http://restygwt.fusesource.org/"
+  val website_base_url= "http://restygwt.fusesource.org"
 }
