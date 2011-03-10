@@ -66,8 +66,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.regex.Pattern;
 
 import javax.ws.rs.Consumes;
@@ -138,6 +140,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private JClassType JSON_VALUE_TYPE;
     private JClassType OVERLAY_VALUE_TYPE;
     private Set<JClassType> OVERLAY_ARRAY_TYPES;
+    private Set<JClassType> QUERY_PARAM_LIST_TYPES;
     private JsonEncoderDecoderInstanceLocator locator;
 
     public RestServiceClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) throws UnableToCompleteException {
@@ -177,6 +180,9 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         this.OVERLAY_ARRAY_TYPES.add(find(JsArrayInteger.class));
         this.OVERLAY_ARRAY_TYPES.add(find(JsArrayNumber.class));
         this.OVERLAY_ARRAY_TYPES.add(find(JsArrayString.class));
+        this.QUERY_PARAM_LIST_TYPES = new HashSet<JClassType>();
+        this.QUERY_PARAM_LIST_TYPES.add(find(List.class));
+        this.QUERY_PARAM_LIST_TYPES.add(find(Set.class));
 
         String path = null;
         Path pathAnnotation = source.getAnnotation(Path.class);
@@ -230,6 +236,18 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private boolean isOverlayArrayType(JClassType type) {
         for (JClassType arrayType : OVERLAY_ARRAY_TYPES) {
             if (type.isAssignableTo(arrayType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isQueryParamListType(JClassType type) {
+        if (type.isParameterized() == null) {
+            return false;
+        }
+        for (JClassType listType : QUERY_PARAM_LIST_TYPES) {
+            if (type.isAssignableTo(listType)) {
                 return true;
             }
         }
@@ -321,7 +339,14 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             }
             for (Map.Entry<String, JParameter> entry : queryParams.entrySet()) {
                 String expr = entry.getValue().getName();
-                p(".addQueryParam(" + wrap(entry.getKey()) + ", " + toStringExpression(entry.getValue().getType(), expr) + ")");
+                JClassType type = entry.getValue().getType().isClassOrInterface();
+                if (type != null && isQueryParamListType(type)) {
+                    p(".addQueryParams(" + wrap(entry.getKey()) + ", " +
+                      toIteratedStringExpression(entry.getValue()) + ")");
+                } else {
+                    p(".addQueryParam(" + wrap(entry.getKey()) + ", " +
+                      toStringExpression(entry.getValue().getType(), expr) + ")");
+                }
             }
             // example: .get()
             p("." + restMethod + "();");
@@ -491,6 +516,14 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         }
 
         return expr + ".toString()";
+    }
+
+    protected String toIteratedStringExpression(JParameter arg) {
+        StringBuilder result = new StringBuilder();
+        result.append("new org.fusesource.restygwt.client.StringIterable (")
+            .append(arg.getName()).append(")");
+
+        return result.toString();
     }
 
     private JClassType getCallbackTypeGenericClass(final JClassType callbackType) throws UnableToCompleteException {
