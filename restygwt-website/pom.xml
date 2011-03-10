@@ -123,6 +123,7 @@
             <goals>
               <goal>deploy</goal>
             </goals>
+            <phase>deploy</phase>
           </execution> 
         </executions>
       </plugin>
