@@ -60,8 +60,8 @@ Download it today!
 
     {pygmentize::xml}
     <dependency>
-      <groupId>org.fusesource.#{project_name}</groupId>
-      <artifactId>#{project_name}</artifactId>
+      <groupId>org.fusesource.#{project_id}</groupId>
+      <artifactId>#{project_id}</artifactId>
       <version>#{project_version}</version>
     </dependency>
     {pygmentize}    
