@@ -16,13 +16,7 @@
 
 package org.fusesource.restygwt.client.basic;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.user.client.Timer;
+import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
@@ -30,6 +24,15 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.dispatcher.CachingRetryingDispatcher;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.user.client.Timer;
 
 /**
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
@@ -65,6 +68,9 @@ public class CachingTestGwt extends GWTTestCase {
         Timer timer = new Timer() {
             @Override
             public void run() {
+                if (LogConfiguration.loggingIsEnabled()) {
+                    Logger.getLogger(CachingTestGwt.class.getName()).severe("run timer method");
+                }
                 service.getExampleDto(new MethodCallback<ExampleDto>() {
                     @Override
                     public void onSuccess(Method method, ExampleDto response) {
@@ -73,7 +79,7 @@ public class CachingTestGwt extends GWTTestCase {
 
                     @Override
                     public void onFailure(Method method, Throwable exception) {
-                        fail();
+                        fail("got to failure method - unexpected");
                     }
                 });
             }

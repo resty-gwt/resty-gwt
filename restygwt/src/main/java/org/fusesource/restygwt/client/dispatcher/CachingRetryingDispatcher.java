@@ -37,8 +37,7 @@ import com.google.gwt.logging.client.LogConfiguration;
 
 /**
  * Some valuable ideas came from:
- * http://turbomanage.wordpress.com/2010/07/12/caching
- * -batching-dispatcher-for-gwt-dispatch/
+ * http://turbomanage.wordpress.com/2010/07/12/caching-batching-dispatcher-for-gwt-dispatch/
  * <p/>
  * Thanks David!
  * <p/>
@@ -54,8 +53,6 @@ public class CachingRetryingDispatcher implements Dispatcher {
 
     /**
      * one instance of {@link QueueableCacheStorage}
-     *
-     * could be static as well, but since we are a singleton, non-static is more nice
      */
     private static QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
 
@@ -63,11 +60,12 @@ public class CachingRetryingDispatcher implements Dispatcher {
         final CacheKey cacheKey = new CacheKey(builder);
         final Response cachedResponse = cacheStorage.getResultOrReturnNull(cacheKey);
 
-        if (LogConfiguration.loggingIsEnabled()) {
-            Logger.getLogger(CachingRetryingDispatcher.class.getName()).severe(
-                    "got a cache result for " + cacheKey + ": " + cachedResponse);
-        }
         if (cachedResponse != null) {
+            if (LogConfiguration.loggingIsEnabled()) {
+                Logger.getLogger(CachingRetryingDispatcher.class.getName()).severe(
+                        "Got a cache result for " + cacheKey + ": " + cachedResponse);
+            }
+
             Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                 @Override
                 public void execute() {
@@ -76,26 +74,18 @@ public class CachingRetryingDispatcher implements Dispatcher {
             });
             return null;
         } else {
+            if (LogConfiguration.loggingIsEnabled()) {
+                Logger.getLogger(CachingRetryingDispatcher.class.getName()).severe(
+                        "No cache for " + cacheKey +  ", sending http request: "
+                        + builder.getHTTPMethod() + " " + builder.getUrl() + " ,timeout:"
+                        + builder.getTimeoutMillis() + " content: \"" + builder.getRequestData()
+                        + "\"");
+            }
+
             FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
                     method, builder.getCallback());
             retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
             builder.setCallback(retryingCallback);
-
-            if (LogConfiguration.loggingIsEnabled()) {
-                Logger.getLogger(CachingRetryingDispatcher.class.getName()).severe(
-                        "Sending http request: " + builder.getHTTPMethod() + " "
-                        + builder.getUrl() + " ,timeout:"
-                        + builder.getTimeoutMillis());
-            }
-
-            String content = builder.getRequestData();
-
-            if (content != null && content.length() > 0) {
-                if (LogConfiguration.loggingIsEnabled()) {
-                    Logger.getLogger(CachingRetryingDispatcher.class.getName()).severe(
-                            "content: " + content);
-                }
-            }
 
             return builder.send();
         }

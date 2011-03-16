@@ -22,6 +22,10 @@
     <inherits name='org.fusesource.restygwt.RestyGWT'/>
     <servlet path='/api/*' class='org.fusesource.restygwt.server.CachingTestServlet' />
 
+    <set-property name="gwt.logging.logLevel" value="INFO"/>
+    <set-property name="gwt.logging.enabled" value="TRUE"/>
+    <set-property name="gwt.logging.consoleHandler" value="ENABLED"/>
+
     <source path='client'/>
     <source path='example/client'/>
 </module>

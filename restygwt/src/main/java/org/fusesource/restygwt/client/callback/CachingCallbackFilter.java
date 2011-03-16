@@ -18,8 +18,6 @@
 
 package org.fusesource.restygwt.client.callback;
 
-import java.util.logging.Logger;
-
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.dispatcher.CacheKey;
@@ -27,7 +25,6 @@ import org.fusesource.restygwt.client.dispatcher.CacheKey;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.logging.client.LogConfiguration;
 
 public class CachingCallbackFilter implements CallbackFilter {
 
@@ -37,23 +34,24 @@ public class CachingCallbackFilter implements CallbackFilter {
         this.cache = cache;
     }
 
+    /**
+     * the real filter method, called independent of the response code
+     *
+     * TODO method.getResponse() is not equal to response. unfortunately
+     */
     @Override
-    public void filter(Method method, RequestCallback requestCallback) {
-        final int code = method.getResponse() != null
-                ? method.getResponse().getStatusCode()
-                : 0;
+    public void filter(final Method method, final Response response,
+            final RequestCallback requestCallback) {
+        final int code = response.getStatusCode();
 
         if (code < Response.SC_MULTIPLE_CHOICES
                 && code >= Response.SC_OK) {
             CacheKey cacheKey = new CacheKey(method.builder);
-            GWT.log("cache to " + cacheKey);
-            cache.putResult(cacheKey, method.getResponse());
+            GWT.log("cache to " + cacheKey + ": " + response);
+            cache.putResult(cacheKey, response);
             return;
         }
 
-        if (LogConfiguration.loggingIsEnabled()) {
-            Logger.getLogger(CachingCallbackFilter.class.getName()).severe("cannot cache due to" +
-                    " invalid response code: " + code);
-        }
+        GWT.log("cannot cache due to invalid response code: " + code);
     }
 }
