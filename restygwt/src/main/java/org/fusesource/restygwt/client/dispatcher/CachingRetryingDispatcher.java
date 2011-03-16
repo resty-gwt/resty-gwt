@@ -17,6 +17,8 @@
  */
 package org.fusesource.restygwt.client.dispatcher;
 
+import java.util.logging.Logger;
+
 import org.fusesource.restygwt.client.Dispatcher;
 import org.fusesource.restygwt.client.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.Method;
@@ -29,9 +31,9 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.logging.client.LogConfiguration;
 
 /**
  * Some valuable ideas came from:
@@ -55,43 +57,44 @@ public class CachingRetryingDispatcher implements Dispatcher {
      *
      * could be static as well, but since we are a singleton, non-static is more nice
      */
-    private QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
+    private static QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
 
-    public Request send(Method method, RequestBuilder builder) throws RequestException {
-
-        final RequestCallback outerRequestCallback = builder.getCallback();
+    public Request send(Method method, final RequestBuilder builder) throws RequestException {
         final CacheKey cacheKey = new CacheKey(builder);
-
         final Response cachedResponse = cacheStorage.getResultOrReturnNull(cacheKey);
 
+        if (LogConfiguration.loggingIsEnabled()) {
+            Logger.getLogger(CachingRetryingDispatcher.class.getName()).severe(
+                    "got a cache result for " + cacheKey + ": " + cachedResponse);
+        }
         if (cachedResponse != null) {
             Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    outerRequestCallback.onResponseReceived(null,
-                            cachedResponse);
+                    builder.getCallback().onResponseReceived(null, cachedResponse);
                 }
             });
             return null;
-
         } else {
-
-            FilterawareRequestCallback retryingCallback = new AbstractRetryingCallback(method, outerRequestCallback) {
-                @Override
-                protected void _onResponseReceived(Request request, Response response) {
-                }
-            };
+            FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
+                    method, builder.getCallback());
             retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
             builder.setCallback(retryingCallback);
 
-            GWT.log("Sending http request: " + builder.getHTTPMethod() + " "
-                    + builder.getUrl() + " ,timeout:"
-                    + builder.getTimeoutMillis(), null);
+            if (LogConfiguration.loggingIsEnabled()) {
+                Logger.getLogger(CachingRetryingDispatcher.class.getName()).severe(
+                        "Sending http request: " + builder.getHTTPMethod() + " "
+                        + builder.getUrl() + " ,timeout:"
+                        + builder.getTimeoutMillis());
+            }
 
             String content = builder.getRequestData();
 
             if (content != null && content.length() > 0) {
-                GWT.log(content, null);
+                if (LogConfiguration.loggingIsEnabled()) {
+                    Logger.getLogger(CachingRetryingDispatcher.class.getName()).severe(
+                            "content: " + content);
+                }
             }
 
             return builder.send();

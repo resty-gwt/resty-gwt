@@ -30,18 +30,17 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
-public abstract class AbstractRetryingCallback implements FilterawareRequestCallback {
+public class FilterawareRetryingCallback implements FilterawareRequestCallback {
 
     /**
      * Used by RetryingCallback
      * default value is 5
      */
     protected static int numberOfRetries = 5;
-
-    protected static Logger logger = Logger.getLogger(AbstractRetryingCallback.class.getName());
 
     /**
      * time to wait for reconnect upon failure
@@ -51,12 +50,12 @@ public abstract class AbstractRetryingCallback implements FilterawareRequestCall
     protected int currentRetryCounter = 0;
 
     protected final Method method;
+
     protected final RequestCallback requestCallback;
 
     protected List<CallbackFilter> callbackFilters;
 
-    public AbstractRetryingCallback(Method method, RequestCallback requestCallback) {
-
+    public FilterawareRetryingCallback(Method method, RequestCallback requestCallback) {
         this.method = method;
         this.requestCallback = requestCallback;
     }
@@ -67,6 +66,14 @@ public abstract class AbstractRetryingCallback implements FilterawareRequestCall
             f.filter(method, requestCallback);
         }
 
+        if (response.getStatusCode() == Response.SC_UNAUTHORIZED) {
+            GWT.log("you are not authorized!");
+        } else if (!(response.getStatusCode() < 300
+                && response.getStatusCode() >= 200)) {
+            handleErrorGracefully();
+        } else {
+            requestCallback.onResponseReceived(request, response);
+        }
     }
 
     /**
@@ -78,7 +85,9 @@ public abstract class AbstractRetryingCallback implements FilterawareRequestCall
      * @param request
      * @param response
      */
-    protected abstract void _onResponseReceived(Request request, Response response);
+    protected void _onResponseReceived(Request request, Response response) {
+
+    }
 
     @Override
     public void onError(Request request, Throwable exception) {
@@ -86,7 +95,6 @@ public abstract class AbstractRetryingCallback implements FilterawareRequestCall
     }
 
     public void handleErrorGracefully() {
-
         // error handling...:
         if (currentRetryCounter < numberOfRetries) {
             GWT.log("error handling in progress...");
@@ -98,7 +106,10 @@ public abstract class AbstractRetryingCallback implements FilterawareRequestCall
                     try {
                         method.builder.send();
                     } catch (RequestException ex) {
-                        logger.severe(ex.getMessage());
+                        if (LogConfiguration.loggingIsEnabled()) {
+                            Logger.getLogger(FilterawareRetryingCallback.class.getName())
+                                    .severe(ex.getMessage());
+                        }
                     }
                 }
             };

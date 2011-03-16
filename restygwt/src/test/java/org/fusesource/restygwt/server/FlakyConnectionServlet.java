@@ -17,6 +17,7 @@
 package org.fusesource.restygwt.server;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.mortbay.jetty.HttpStatus;
 
 /**
- *
  * Servlet component of the FlakyConnectionTestGwt.
  * <p>
  * Simulates 2 times a 500 server error. And answers the third time with a 200
@@ -33,32 +33,32 @@ import org.mortbay.jetty.HttpStatus;
  * </p>
  *
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
- *
  */
 public class FlakyConnectionServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
+
+    private static final Logger log = Logger.getLogger(FlakyConnectionServlet.class.getName());
 
     private int NUMBER_OF_SERVER_FAILURES_TO_SIMULATE = 2;
 
     private static int currentNumberOfServerFailures = 0;
 
-
-    String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
+    private final String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
 
     @Override
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
 
-        System.out.println("flakyMODE");
+        log.info("GET: flakyMODE");
 
         if (currentNumberOfServerFailures < NUMBER_OF_SERVER_FAILURES_TO_SIMULATE) {
-
+            log.info("respond code: " + HttpStatus.ORDINAL_500_Internal_Server_Error + " with purpose");
+            ++currentNumberOfServerFailures;
             response.setStatus(HttpStatus.ORDINAL_500_Internal_Server_Error);
-            currentNumberOfServerFailures++;
-
         } else {
+            log.info("response: " + DUMMY_RESPONSE);
             response.getWriter().print(DUMMY_RESPONSE);
         }
-
     }
-
 }

@@ -25,7 +25,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 
-public class RetryingCallback extends AbstractRetryingCallback {
+public class RetryingCallback extends FilterawareRetryingCallback {
 
 
     /**

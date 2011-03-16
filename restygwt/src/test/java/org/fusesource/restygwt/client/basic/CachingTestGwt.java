@@ -32,14 +32,9 @@ import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.dispatcher.CachingRetryingDispatcher;
 
 /**
- *
- *
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
- *
  */
 public class CachingTestGwt extends GWTTestCase {
-
-
 
     public int timesAskedServer = 0;
 
@@ -61,24 +56,16 @@ public class CachingTestGwt extends GWTTestCase {
      *
      */
     public void testIfCachingWorks() {
-
         //configure RESTY to use cache:
         Defaults.setDispatcher(CachingRetryingDispatcher.INSTANCE);
-
-
-        Resource resource = new Resource(GWT.getModuleBaseURL()
-                + "api/getendpoint");
-
+        Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
         final ExampleService service = GWT.create(ExampleService.class);
         ((RestServiceProxy) service).setResource(resource);
 
         Timer timer = new Timer() {
-
             @Override
             public void run() {
-
                 service.getExampleDto(new MethodCallback<ExampleDto>() {
-
                     @Override
                     public void onSuccess(Method method, ExampleDto response) {
                         assertEquals(response.name, "myName");
@@ -89,75 +76,55 @@ public class CachingTestGwt extends GWTTestCase {
                         fail();
                     }
                 });
-
             }
         };
-
-
 
         timer.scheduleRepeating(2000);
 
         //the checking task => for convenience in separate method...
         checkIfServerIsRequestsAreCached();
 
-
         //wait 10 secs for the test to call doFinish() => otherwise it fails..
         delayTestFinish(10000);
-
     }
 
 
 
     public void checkIfServerIsRequestsAreCached() {
-
         Timer timerCheck = new Timer() {
-
             @Override
             public void run() {
-
                 final RequestBuilder ajax = new RequestBuilder(
-                        RequestBuilder.GET,
-                        GWT.getModuleBaseURL()
-                        + "api/getnumberofcontacts");
+                        RequestBuilder.GET, GWT.getModuleBaseURL() + "api/getnumberofcontacts");
 
                 try {
                     ajax.sendRequest("", new RequestCallback() {
-
                         public void onError(Request request, Throwable exception) {
 
                         }
 
                         public void onResponseReceived(Request request,
                                 Response response) {
-
                             String text = response.getText();
 
-
                             if (!text.equals("1")) {
-                                fail();
+                                fail("response counter must be \"1\", got \"" + text + "\" instead");
                             }
-
 
                             if (timesAskedServer == 3) {
                                 finishTest();
                             }
 
-
-                            timesAskedServer++;
-
-
+                            ++timesAskedServer;
                         }
 
                     });
                 } catch (Exception e) {
                     GWT.log("Exception on AJAX request: " + e.getMessage());
                 }
-
             }
         };
 
         timerCheck.scheduleRepeating(2000);
-
-
     }
 }

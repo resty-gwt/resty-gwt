@@ -18,12 +18,16 @@
 
 package org.fusesource.restygwt.client.callback;
 
+import java.util.logging.Logger;
+
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.dispatcher.CacheKey;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.logging.client.LogConfiguration;
 
 public class CachingCallbackFilter implements CallbackFilter {
 
@@ -35,8 +39,21 @@ public class CachingCallbackFilter implements CallbackFilter {
 
     @Override
     public void filter(Method method, RequestCallback requestCallback) {
-        CacheKey cacheKey = new CacheKey(method.builder);
-        GWT.log("cache to " + cacheKey);
-        cache.putResult(cacheKey, method.getResponse());
+        final int code = method.getResponse() != null
+                ? method.getResponse().getStatusCode()
+                : 0;
+
+        if (code < Response.SC_MULTIPLE_CHOICES
+                && code >= Response.SC_OK) {
+            CacheKey cacheKey = new CacheKey(method.builder);
+            GWT.log("cache to " + cacheKey);
+            cache.putResult(cacheKey, method.getResponse());
+            return;
+        }
+
+        if (LogConfiguration.loggingIsEnabled()) {
+            Logger.getLogger(CachingCallbackFilter.class.getName()).severe("cannot cache due to" +
+                    " invalid response code: " + code);
+        }
     }
 }

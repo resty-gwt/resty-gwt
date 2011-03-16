@@ -20,6 +20,7 @@
     <inherits name='com.google.gwt.user.User' />
     <inherits name='com.google.gwt.logging.Logging'/>
     <inherits name='org.fusesource.restygwt.RestyGWT'/>
+
     <servlet path='/api/*' class='org.fusesource.restygwt.server.FlakyConnectionServlet' />
 
     <source path='client'/>

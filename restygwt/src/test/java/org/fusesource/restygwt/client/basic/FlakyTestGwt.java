@@ -27,10 +27,10 @@ import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.dispatcher.CachingRetryingDispatcher;
 
 /**
- *
+ * check a server sided failure response will not cause the failure call immediately.
+ * instead the test proves there will be 2 retries, where the second one succeeds.
  *
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
- *
  */
 public class FlakyTestGwt extends GWTTestCase {
 
@@ -40,35 +40,24 @@ public class FlakyTestGwt extends GWTTestCase {
     }
 
     public void testFlakyConnection() {
-
         Defaults.setDispatcher(CachingRetryingDispatcher.INSTANCE);
-
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
-
-        //System.out.println("resouce is: " + GWT.getModuleBaseURL() + "api/getendpoint");
-
         ExampleService service = GWT.create(ExampleService.class);
         ((RestServiceProxy) service).setResource(resource);
 
         service.getExampleDto(new MethodCallback<ExampleDto>() {
-
             @Override
             public void onSuccess(Method method, ExampleDto response) {
-
                 assertEquals(response.name, "myName");
                 finishTest();
-
             }
 
             @Override
             public void onFailure(Method method, Throwable exception) {
-                fail();
-
+                fail("got to failure method even though there should be an automatic retrying");
             }
         });
 
-        delayTestFinish(5000);
-
+        delayTestFinish(10000);
     }
-
 }
