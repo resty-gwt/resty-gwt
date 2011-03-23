@@ -91,6 +91,24 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         }
     };
 
+    public static final AbstractJsonEncoderDecoder<Byte> BYTE = new AbstractJsonEncoderDecoder<Byte>() {
+
+        public Byte decode(JSONValue value) throws DecodingException {
+            if (value == null || value.isNull() != null) {
+                return null;
+            }
+            return (byte) toDouble(value);
+      
+        }
+
+        public JSONValue encode(Byte value) throws EncodingException {
+            if (value == null) {
+                return null;
+            }
+            return new JSONNumber(value);
+        }
+    };
+    
     public static final AbstractJsonEncoderDecoder<Short> SHORT = new AbstractJsonEncoderDecoder<Short>() {
 
         public Short decode(JSONValue value) throws DecodingException {
