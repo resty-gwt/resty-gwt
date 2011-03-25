@@ -51,9 +51,9 @@ public class EchoServlet extends HttpServlet {
             sb.append("Method : ").append(request.getMethod()).append("\n");
             sb.append("Headers:\n");
             sb.append("========\n");
-            for (String s = null; headerNames.hasMoreElements(); s = headerNames.nextElement()) {
-                if (s != null)
-                    sb.append("  ").append(s).append(": ").append(request.getHeader(s)).append("\n");
+            while(headerNames.hasMoreElements()) {
+                final String s = headerNames.nextElement();
+                sb.append("  ").append(s).append(": ").append(request.getHeader(s)).append("\n");
             }
             sb.append("========\n");
 
