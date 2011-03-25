@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fusesource.restygwt.client.dispatcher;
+package org.fusesource.restygwt.client.callback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.callback.CallbackFilter;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;

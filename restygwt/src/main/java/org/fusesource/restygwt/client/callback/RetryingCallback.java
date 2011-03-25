@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client.dispatcher;
+package org.fusesource.restygwt.client.callback;
 
 import org.fusesource.restygwt.client.Method;
 

@@ -25,12 +25,13 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
+import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -82,12 +83,23 @@ public class CachingRetryingDispatcher implements Dispatcher {
                         + "\"");
             }
 
-            FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
-                    method, builder.getCallback());
-            retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
-            builder.setCallback(retryingCallback);
-
+            builder.setCallback(createCallback(method, builder.getCallback()));
             return builder.send();
         }
+    }
+
+    /**
+     * helper method to create the callback with all configurations wanted
+     *
+     * @param method
+     * @param requestCallback
+     * @return
+     */
+    protected FilterawareRequestCallback createCallback(Method method, RequestCallback requestCallback) {
+        final FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
+                method, requestCallback);
+
+        retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
+        return retryingCallback;
     }
 }
