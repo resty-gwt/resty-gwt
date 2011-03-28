@@ -27,6 +27,6 @@ import com.google.gwt.event.shared.EventHandler;
  *
  * @author <a href="mailto:andi.balke@gmail.com">andi</<a>
  */
-public interface FooModelChangedEventHandler extends EventHandler {
-    void onEvent(FooModelChangedEvent event);
+public interface ModelChangedEventHandler extends EventHandler {
+    void onEvent(ModelChangeEvent event);
 }

@@ -1,5 +1,7 @@
 /**
- * Copyright (C) 2010 the original author or authors.
+ * Copyright (C) 2009-2010 the original author or authors.
+ * See the notice.md file distributed with this work for additional
+ * information regarding copyright ownership.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,75 +18,46 @@
 
 package org.fusesource.restygwt.example.client.event;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.fusesource.restygwt.client.Method;
-
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Static Config class for all things that are relevant
- * for ``ModelChangeEvent``s during runtime.
+ * generic ModelChangeEvent with identifier for the matching domain class. unfortinately
+ * its not possible to have different eventclasses for different domain-updates due to
+ * the lack of reflection. could do this with a generator class, maybe later..
  *
- * Since all the other things (Annotation parsers and stuff)
- * are located outside the ``client`` package, we need
- * such an additional client-config.
+ * taken from http://stackoverflow.com/questions/2951621/gwt-custom-events/2967359#2967359
  *
  * @author <a href="mailto:andi.balke@gmail.com">andi</<a>
+ *
  */
-public class ModelChangeEvent {
+public class ModelChangeEvent extends GwtEvent<ModelChangedEventHandler> {
+
+    public static Type<ModelChangedEventHandler> TYPE = new Type<ModelChangedEventHandler>();
 
     /**
-     * static class, deny instanciation
+     * for which domain class things have changed
      */
-    private ModelChangeEvent() {}
+    private String domainIdentifier;
 
-    /**
-     * When creating the ``RestService`` classes, there will be put some information
-     * in {@link Method#addData(String, String)}. To have a centralized place
-     * what is the key on that ``put`` (and later ``get``) operation, we have this
-     * constant here.
-     */
-    public static final String MODEL_CHANGED_DOMAIN_KEY = "mc";
-
-    /**
-     * lookup table from the ``domain`` String in @ModelChange(on={"PUT"}, domain="Foo")
-     * to the real *Event class. When using this table, we can easily instanciate
-     * events like:
-     *
-     * <code>
-     *  GwtEvent e = ModelChangeEvent.factory(data.get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY));
-     * </code>
-     *
-     * and then do a:
-     *
-     * <code>
-     *  eventBus.fireEvent(e);
-     * </code>
-     */
-    private static final Map<String, Class> STRING_TO_EVENT_MAPPING =
-            new HashMap<String, Class>();
-
-    static {
-        STRING_TO_EVENT_MAPPING.put("Foo", FooModelChangedEvent.class);
+    public ModelChangeEvent(final String domainIdentifier) {
+        this.domainIdentifier = domainIdentifier;
     }
 
-    /**
-     * factory method from the annotated domain name to a real event object
-     * according to definitions in {@link #STRING_TO_EVENT_MAPPING}
-     *
-     * @param domainName
-     * @return
-     */
-    public static GwtEvent factory(final String domainName) {
-        final GwtEvent e = GWT.create(ModelChangeEvent.STRING_TO_EVENT_MAPPING
-                .get(domainName));
-        if (e == null) {
-            // do some runtim error-logging
-        }
+    public String getDomain() {
+        return domainIdentifier;
+    }
 
-        return e;
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ModelChangedEventHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    @Override
+    protected void dispatch(ModelChangedEventHandler handler) {
+        handler.onEvent(this);
+    }
+
+    public String toString() {
+        return "ModelChangeEvent#" + domainIdentifier;
     }
 }

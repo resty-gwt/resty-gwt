@@ -21,9 +21,9 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
-import org.fusesource.restygwt.example.client.event.FooModelChangedEvent;
-import org.fusesource.restygwt.example.client.event.FooModelChangedEventHandlerImpl;
 import org.fusesource.restygwt.example.client.event.ModelChangeEvent;
+import org.fusesource.restygwt.example.client.event.FooModelChangedEventHandlerImpl;
+import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
@@ -70,7 +70,7 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
         final EventBus eventBus = new SimpleEventBus();
         final FooModelChangedEventHandlerImpl handler = new FooModelChangedEventHandlerImpl();
 
-        eventBus.addHandler(FooModelChangedEvent.TYPE, handler);
+        eventBus.addHandler(ModelChangeEvent.TYPE, handler);
 
 
         /*
@@ -90,7 +90,7 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                  * there is no annotation for a get method on that service,
                  * therefore we wont find any values in the method about it.
                  */
-                assertEquals(null, method.getData().get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY));
+                assertEquals(null, method.getData().get(ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY));
 
                 /*
                  * now, as we have our list data, we want to modify it to trigger
@@ -109,7 +109,7 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                          * we expect the indicator "Foo" for ``ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY``
                          */
                         assertEquals("Foo", method.getData()
-                                .get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY));
+                                .get(ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY));
 
 
                         /*
@@ -125,8 +125,8 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                          * If we would not have this mapping, I guess we could not use GWT.create
                          * here. Moreover it would not be clear from a users perspective.
                          */
-                        GwtEvent e = ModelChangeEvent.factory(method.getData()
-                                .get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY));
+                        GwtEvent e = ModelChangeEventFactory.factory(method.getData()
+                                .get(ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY));
                         assertNotNull(e);
                         // fire the event ...
                         eventBus.fireEvent(e);

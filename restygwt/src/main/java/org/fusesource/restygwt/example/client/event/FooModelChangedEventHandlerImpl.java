@@ -3,15 +3,15 @@ package org.fusesource.restygwt.example.client.event;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FooModelChangedEventHandlerImpl implements FooModelChangedEventHandler {
+public class FooModelChangedEventHandlerImpl implements ModelChangedEventHandler {
 
     /**
      * for testing purposes, we keep all events catched
      */
-    private List<FooModelChangedEvent> catched = new ArrayList<FooModelChangedEvent>();
+    private List<ModelChangeEvent> catched = new ArrayList<ModelChangeEvent>();
 
     @Override
-    public void onEvent(FooModelChangedEvent event) {
+    public void onEvent(ModelChangeEvent event) {
         catched.add(event);
     }
 
@@ -20,7 +20,7 @@ public class FooModelChangedEventHandlerImpl implements FooModelChangedEventHand
      *
      * @return
      */
-    public List<FooModelChangedEvent> getAllCatchedEvents() {
+    public List<ModelChangeEvent> getAllCatchedEvents() {
         return catched;
     }
 }

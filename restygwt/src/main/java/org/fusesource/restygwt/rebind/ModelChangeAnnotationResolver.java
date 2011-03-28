@@ -20,7 +20,7 @@ package org.fusesource.restygwt.rebind;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.ModelChange;
-import org.fusesource.restygwt.example.client.event.ModelChangeEvent;
+import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -52,7 +52,7 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
                 throw new UnableToCompleteException();
             }
             // method annotation match
-            return new String[]{ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY, methodAnnot.domain()};
+            return new String[]{ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY, methodAnnot.domain()};
         }
 
         if (classAnnot != null
@@ -66,7 +66,7 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
                         throw new UnableToCompleteException();
                     }
                     // class annotation match for current method
-                    return new String[]{ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY, classAnnot.domain()};
+                    return new String[]{ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY, classAnnot.domain()};
                 }
             }
         }
