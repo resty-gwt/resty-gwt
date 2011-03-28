@@ -40,7 +40,7 @@ public interface ModelChangeAnnotatedService extends RestService {
 
     @PUT
     @Path("/foo/{fooId}")
-    @ModelChange(domain=ModelChangeEventFactory.FOO)
+    @ModelChange(domain=ModelChangeEventIdentifiers.FOO)
     public void setItem(@HeaderParam("X-Echo-Code") int responseCode,
             @PathParam("fooId") int fooId, MethodCallback<Void> callback);
 }

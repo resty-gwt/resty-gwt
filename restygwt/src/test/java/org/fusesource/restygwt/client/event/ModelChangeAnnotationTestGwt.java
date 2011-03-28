@@ -107,7 +107,7 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                          * @ModelChange(on={"PUT"}, domain="Foo")
                          * we expect the indicator "Foo" for ``ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY``
                          */
-                        assertEquals(ModelChangeEventFactory.FOO, method.getData()
+                        assertEquals(ModelChangeEventIdentifiers.FOO, method.getData()
                                 .get(ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY));
 
 

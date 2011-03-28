@@ -47,11 +47,6 @@ public class ModelChangeEventFactory {
     public static final String MODEL_CHANGED_DOMAIN_KEY = "mc";
 
     /**
-     * domain ident for foo class
-     */
-    public static final String FOO = "net.vz.domain.Foo";
-
-    /**
      * factory method from the annotated domain name to a real event object
      * according to definitions in {@link #STRING_TO_EVENT_MAPPING}
      *
