@@ -54,7 +54,7 @@ public class ModelChangeEvent extends GwtEvent<ModelChangedEventHandler> {
 
     @Override
     protected void dispatch(ModelChangedEventHandler handler) {
-        handler.onEvent(this);
+        handler.onModelChange(this);
     }
 
     public String toString() {

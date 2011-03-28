@@ -1,7 +1,10 @@
-package org.fusesource.restygwt.example.client.event;
+package org.fusesource.restygwt.client.event;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.fusesource.restygwt.example.client.event.ModelChangeEvent;
+import org.fusesource.restygwt.example.client.event.ModelChangedEventHandler;
 
 public class FooModelChangedEventHandlerImpl implements ModelChangedEventHandler {
 
@@ -11,7 +14,7 @@ public class FooModelChangedEventHandlerImpl implements ModelChangedEventHandler
     private List<ModelChangeEvent> catched = new ArrayList<ModelChangeEvent>();
 
     @Override
-    public void onEvent(ModelChangeEvent event) {
+    public void onModelChange(ModelChangeEvent event) {
         catched.add(event);
     }
 

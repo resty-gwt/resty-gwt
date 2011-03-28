@@ -22,7 +22,6 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.example.client.event.ModelChangeEvent;
-import org.fusesource.restygwt.example.client.event.FooModelChangedEventHandlerImpl;
 import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
 
 import com.google.gwt.core.client.GWT;
@@ -108,7 +107,7 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                          * @ModelChange(on={"PUT"}, domain="Foo")
                          * we expect the indicator "Foo" for ``ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY``
                          */
-                        assertEquals("Foo", method.getData()
+                        assertEquals(ModelChangeEventFactory.FOO, method.getData()
                                 .get(ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY));
 
 
