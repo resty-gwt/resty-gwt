@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 import org.fusesource.restygwt.client.Dispatcher;
 import org.fusesource.restygwt.client.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
 
@@ -67,7 +66,7 @@ public class CachingRetryingDispatcher implements Dispatcher {
      * @param cf
      * @return
      */
-    public static CachingRetryingDispatcher instance(QueueableCacheStorage cacheStorage,
+    public static CachingRetryingDispatcher singleton(QueueableCacheStorage cacheStorage,
             CallbackFactory cf) {
         if (null != INSTANCE) return INSTANCE;
 

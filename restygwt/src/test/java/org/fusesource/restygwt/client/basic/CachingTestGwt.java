@@ -65,7 +65,7 @@ public class CachingTestGwt extends GWTTestCase {
         //configure RESTY to use cache:
         QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
         Defaults.setDispatcher(
-                CachingRetryingDispatcher.instance(cacheStorage,
+                CachingRetryingDispatcher.singleton(cacheStorage,
                 new CachingCallbackFactory(cacheStorage)));
 
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
