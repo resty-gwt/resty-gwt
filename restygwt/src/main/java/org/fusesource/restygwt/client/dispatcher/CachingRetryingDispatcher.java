@@ -83,7 +83,7 @@ public class CachingRetryingDispatcher implements Dispatcher {
                         + "\"");
             }
 
-            builder.setCallback(createCallback(method, builder.getCallback()));
+            builder.setCallback(createCallback(method));
             return builder.send();
         }
     }
@@ -95,9 +95,9 @@ public class CachingRetryingDispatcher implements Dispatcher {
      * @param requestCallback
      * @return
      */
-    protected FilterawareRequestCallback createCallback(Method method, RequestCallback requestCallback) {
+    protected FilterawareRequestCallback createCallback(Method method) {
         final FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
-                method, requestCallback);
+                method, method.builder.getCallback());
 
         retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
         return retryingCallback;
