@@ -35,7 +35,7 @@ object Website {
   val project_wiki_url= "http://github.com/chirino/resty-gwt/"
   val project_logo= "/images/restygwt-logo.png"
   val project_version= "1.0"
-  val project_snapshot_version= "1.1.0-Events-1-SNAPSHOT"
+  val project_snapshot_version= "1.1.0-Events-2-SNAPSHOT"
 
   val project_keywords= "rest,gwt,restygwt,java,javascript,json,xml,dto"
 

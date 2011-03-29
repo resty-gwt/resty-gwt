@@ -41,7 +41,8 @@
 
 
   <source path="client"/>
-  
- 
+  <source path="example/client"/>
+
+
 
 </module>
