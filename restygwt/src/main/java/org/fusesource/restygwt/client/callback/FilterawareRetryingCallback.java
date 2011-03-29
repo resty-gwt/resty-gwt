@@ -62,7 +62,7 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
     @Override
     public final void onResponseReceived(Request request, Response response) {
         for (CallbackFilter f : callbackFilters) {
-            f.filter(method, response, requestCallback);
+            f.filter(method, response);
         }
 
         if (response.getStatusCode() == Response.SC_UNAUTHORIZED) {
