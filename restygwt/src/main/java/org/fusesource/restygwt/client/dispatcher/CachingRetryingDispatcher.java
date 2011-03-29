@@ -24,8 +24,7 @@ import org.fusesource.restygwt.client.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
-import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
-import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
+import org.fusesource.restygwt.client.callback.CallbackFactory;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -49,12 +48,34 @@ import com.google.gwt.logging.client.LogConfiguration;
  */
 public class CachingRetryingDispatcher implements Dispatcher {
 
-    public static final CachingRetryingDispatcher INSTANCE = new CachingRetryingDispatcher();
+    private static CachingRetryingDispatcher INSTANCE = null;
+
+    /**
+     * where to get a callback from. gives us the ability to use
+     * customized {@link FilterawareRequestCallback}
+     */
+    private CallbackFactory callbackFactory;
 
     /**
      * one instance of {@link QueueableCacheStorage}
      */
-    private static QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
+    private QueueableCacheStorage cacheStorage;
+
+    /**
+     * get an instance of this class, in this case this is a singleton
+     *
+     * @param cf
+     * @return
+     */
+    public static CachingRetryingDispatcher instance(QueueableCacheStorage cacheStorage,
+            CallbackFactory cf) {
+        if (null != INSTANCE) return INSTANCE;
+
+        INSTANCE = new CachingRetryingDispatcher();
+        INSTANCE.cacheStorage = cacheStorage;
+        INSTANCE.setCallbackFactory(cf);
+        return INSTANCE;
+    }
 
     public Request send(Method method, final RequestBuilder builder) throws RequestException {
         final CacheKey cacheKey = new CacheKey(builder);
@@ -82,22 +103,18 @@ public class CachingRetryingDispatcher implements Dispatcher {
                         + "\"");
             }
 
-            builder.setCallback(createCallback(method));
+            builder.setCallback(callbackFactory.createCallback(method));
             return builder.send();
         }
     }
 
     /**
-     * helper method to create the callback with all configurations wanted
+     * set the callbackFactory once on creation. non-public with purpose as this is
+     * an immutable field.
      *
-     * @param method
-     * @return
+     * @param callbackFactory
      */
-    protected FilterawareRequestCallback createCallback(Method method) {
-        final FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
-                method);
-
-        retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
-        return retryingCallback;
+    private void setCallbackFactory(CallbackFactory callbackFactory) {
+        this.callbackFactory = callbackFactory;
     }
 }

@@ -23,6 +23,9 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
+import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
+import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.callback.CachingCallbackFactory;
 import org.fusesource.restygwt.client.dispatcher.CachingRetryingDispatcher;
 
 import com.google.gwt.core.client.GWT;
@@ -60,7 +63,11 @@ public class CachingTestGwt extends GWTTestCase {
      */
     public void testIfCachingWorks() {
         //configure RESTY to use cache:
-        Defaults.setDispatcher(CachingRetryingDispatcher.INSTANCE);
+        QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
+        Defaults.setDispatcher(
+                CachingRetryingDispatcher.instance(cacheStorage,
+                new CachingCallbackFactory(cacheStorage)));
+
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
         final ExampleService service = GWT.create(ExampleService.class);
         ((RestServiceProxy) service).setResource(resource);

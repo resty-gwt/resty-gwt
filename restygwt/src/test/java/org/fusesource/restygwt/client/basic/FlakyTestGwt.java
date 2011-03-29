@@ -24,6 +24,9 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
+import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
+import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.callback.CachingCallbackFactory;
 import org.fusesource.restygwt.client.dispatcher.CachingRetryingDispatcher;
 
 /**
@@ -40,7 +43,12 @@ public class FlakyTestGwt extends GWTTestCase {
     }
 
     public void testFlakyConnection() {
-        Defaults.setDispatcher(CachingRetryingDispatcher.INSTANCE);
+        //configure RESTY to use cache:
+        QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
+        Defaults.setDispatcher(
+                CachingRetryingDispatcher.instance(cacheStorage,
+                new CachingCallbackFactory(cacheStorage)));
+
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
         ExampleService service = GWT.create(ExampleService.class);
         ((RestServiceProxy) service).setResource(resource);
