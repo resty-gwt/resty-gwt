@@ -21,7 +21,6 @@ package org.fusesource.restygwt.client.callback;
 import org.fusesource.restygwt.client.Method;
 
 import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 
@@ -43,8 +42,8 @@ public class RetryingCallback extends FilterawareRetryingCallback {
     private String forceRedirectUrlWhen505 = "index.html";
 
 
-    public RetryingCallback(Method method, RequestCallback requestCallback) {
-        super(method, requestCallback);
+    public RetryingCallback(Method method) {
+        super(method);
     }
 
     @Override

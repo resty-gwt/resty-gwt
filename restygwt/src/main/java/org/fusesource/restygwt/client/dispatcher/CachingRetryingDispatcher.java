@@ -31,7 +31,6 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -92,12 +91,11 @@ public class CachingRetryingDispatcher implements Dispatcher {
      * helper method to create the callback with all configurations wanted
      *
      * @param method
-     * @param requestCallback
      * @return
      */
     protected FilterawareRequestCallback createCallback(Method method) {
         final FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
-                method, method.builder.getCallback());
+                method);
 
         retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
         return retryingCallback;

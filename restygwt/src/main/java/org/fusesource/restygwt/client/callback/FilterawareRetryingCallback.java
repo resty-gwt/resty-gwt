@@ -54,9 +54,9 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
 
     protected List<CallbackFilter> callbackFilters;
 
-    public FilterawareRetryingCallback(Method method, RequestCallback requestCallback) {
+    public FilterawareRetryingCallback(Method method) {
         this.method = method;
-        this.requestCallback = requestCallback;
+        this.requestCallback = method.builder.getCallback();
     }
 
     @Override
