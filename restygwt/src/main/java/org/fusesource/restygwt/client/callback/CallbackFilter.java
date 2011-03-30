@@ -20,7 +20,6 @@ package org.fusesource.restygwt.client.callback;
 
 import org.fusesource.restygwt.client.Method;
 
-import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 
 public interface CallbackFilter {

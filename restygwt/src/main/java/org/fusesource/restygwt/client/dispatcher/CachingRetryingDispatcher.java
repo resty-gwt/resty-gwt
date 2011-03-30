@@ -24,6 +24,7 @@ import org.fusesource.restygwt.client.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
+import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -61,9 +62,10 @@ public class CachingRetryingDispatcher implements Dispatcher {
     private QueueableCacheStorage cacheStorage;
 
     /**
-     * get an instance of this class, in this case this is a singleton
+     * get one instance of this class
      *
-     * @param cf
+     * @param cacheStorage the one and only {@link QueueableCacheStorage} for this instance
+     * @param cf CallbackFactory to be able to use {@link FilterawareRetryingCallback}
      * @return
      */
     public static CachingRetryingDispatcher singleton(QueueableCacheStorage cacheStorage,

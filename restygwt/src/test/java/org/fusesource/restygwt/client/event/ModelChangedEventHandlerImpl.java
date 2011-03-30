@@ -6,7 +6,7 @@ import java.util.List;
 import org.fusesource.restygwt.example.client.event.ModelChangeEvent;
 import org.fusesource.restygwt.example.client.event.ModelChangedEventHandler;
 
-public class FooModelChangedEventHandlerImpl implements ModelChangedEventHandler {
+public class ModelChangedEventHandlerImpl implements ModelChangedEventHandler {
 
     /**
      * for testing purposes, we keep all events catched

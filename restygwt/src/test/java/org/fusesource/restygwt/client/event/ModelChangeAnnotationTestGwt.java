@@ -17,10 +17,19 @@
 package org.fusesource.restygwt.client.event;
 
 import org.fusesource.restygwt.GwtAnnotationResolverTestSuite;
+import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
+import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
+import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.callback.AbstractCallbackFactory;
+import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
+import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
+import org.fusesource.restygwt.client.callback.ModelChangeCallbackFilter;
+import org.fusesource.restygwt.client.dispatcher.CachingRetryingDispatcher;
 import org.fusesource.restygwt.example.client.event.ModelChangeEvent;
 import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
 
@@ -55,6 +64,26 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
     }
 
     public void testDefaultFunction() {
+        /*
+         * configure RESTY to use cache, usually done in gin
+         */
+        final EventBus eventBus = new SimpleEventBus();
+        final QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
+
+        Defaults.setDispatcher(
+                CachingRetryingDispatcher.singleton(cacheStorage,
+                new AbstractCallbackFactory() {
+                    @Override
+                    public FilterawareRequestCallback createCallback(Method method) {
+                        final FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
+                                method);
+
+                        retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
+                        retryingCallback.addFilter(new ModelChangeCallbackFilter(eventBus));
+                        return retryingCallback;
+                    }
+                }));
+
 
         /*
          *  setup the service, usually done in gin
@@ -63,12 +92,7 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
         final ModelChangeAnnotatedService service = GWT.create(ModelChangeAnnotatedService.class);
         ((RestServiceProxy) service).setResource(resource);
 
-        /*
-         * setup the eventbus, usually done by gin
-         */
-        final EventBus eventBus = new SimpleEventBus();
-        final FooModelChangedEventHandlerImpl handler = new FooModelChangedEventHandlerImpl();
-
+        final ModelChangedEventHandlerImpl handler = new ModelChangedEventHandlerImpl();
         eventBus.addHandler(ModelChangeEvent.TYPE, handler);
 
 
@@ -91,6 +115,9 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                  */
                 assertEquals(null, method.getData().get(ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY));
 
+                final int EVENTS_CATCHED_BEFORE_REQUEST = 1;
+                assertEquals(EVENTS_CATCHED_BEFORE_REQUEST, handler.getAllCatchedEvents().size());
+
                 /*
                  * now, as we have our list data, we want to modify it to trigger
                  * an update event.
@@ -103,34 +130,11 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                         assertEquals(Response.SC_CREATED, method.getResponse().getStatusCode());
 
                         /*
-                         * as there is the following annotation on the service
-                         * @ModelChange(on={"PUT"}, domain="Foo")
-                         * we expect the indicator "Foo" for ``ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY``
-                         */
-                        assertEquals(ModelChangeEventIdentifiers.FOO, method.getData()
-                                .get(ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY));
-
-
-                        /*
                          * check the eventhandling itself
+                         * ... check it arrived our handler
                          */
-                        // prove that we dont have an event before
-                        assertEquals(0, handler.getAllCatchedEvents().size());
-
-                        /*
-                         * this part is interesting as it performs the lookup from the
-                         * String "Foo", coming from the annotation, to the real *Event.class
-                         *
-                         * If we would not have this mapping, I guess we could not use GWT.create
-                         * here. Moreover it would not be clear from a users perspective.
-                         */
-                        GwtEvent e = ModelChangeEventFactory.factory(method.getData()
-                                .get(ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY));
-                        assertNotNull(e);
-                        // fire the event ...
-                        eventBus.fireEvent(e);
-                        // ... and check it arrived our handler
-                        assertEquals(1, handler.getAllCatchedEvents().size());
+                        assertEquals(EVENTS_CATCHED_BEFORE_REQUEST + 1,
+                                handler.getAllCatchedEvents().size());
 
                         finishTest();
                     }

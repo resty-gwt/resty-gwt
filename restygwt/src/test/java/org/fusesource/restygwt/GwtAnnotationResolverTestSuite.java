@@ -21,6 +21,11 @@ package org.fusesource.restygwt;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
+import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.callback.CachingCallbackFactory;
+import org.fusesource.restygwt.client.dispatcher.CachingRetryingDispatcher;
 import org.fusesource.restygwt.client.event.ModelChangeAnnotationTestGwt;
 import org.fusesource.restygwt.rebind.AnnotationResolver;
 import org.fusesource.restygwt.rebind.BindingDefaults;
@@ -51,6 +56,7 @@ public class GwtAnnotationResolverTestSuite extends TestCase {
          * this when placing the call in your app.
          */
         BindingDefaults.addAnnotationResolver(new ModelChangeAnnotationResolver());
+
         suite.addTestSuite(ModelChangeAnnotationTestGwt.class);
 
         return suite;
