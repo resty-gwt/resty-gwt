@@ -35,7 +35,6 @@ import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -115,7 +114,8 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                  */
                 assertEquals(null, method.getData().get(ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY));
 
-                final int EVENTS_CATCHED_BEFORE_REQUEST = 1;
+                final int EVENTS_CATCHED_BEFORE_REQUEST = 0;
+
                 assertEquals(EVENTS_CATCHED_BEFORE_REQUEST, handler.getAllCatchedEvents().size());
 
                 /*

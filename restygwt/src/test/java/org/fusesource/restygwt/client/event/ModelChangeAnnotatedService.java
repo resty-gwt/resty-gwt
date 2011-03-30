@@ -25,7 +25,6 @@ import javax.ws.rs.PathParam;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.client.RestService;
-import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
 
 import com.google.gwt.json.client.JSONValue;
 

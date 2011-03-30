@@ -18,15 +18,16 @@
 
 package org.fusesource.restygwt.client.callback;
 
+import java.util.logging.Logger;
+
 import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
-import org.fusesource.restygwt.client.dispatcher.CacheKey;
 import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.logging.client.LogConfiguration;
 
 public class ModelChangeCallbackFilter implements CallbackFilter {
 
@@ -48,12 +49,24 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
         if (code < Response.SC_MULTIPLE_CHOICES
                 && code >= Response.SC_OK) {
             String modelChangeIdentifier = method.getData().get(ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY);
-            GWT.log("found modelChangeIdentifier \"" + modelChangeIdentifier + "\" in " + response);
 
-            GwtEvent e = ModelChangeEventFactory.factory(modelChangeIdentifier);
-            GWT.log("fire event \"" + e + "\" ...");
+            if (modelChangeIdentifier != null) {
+                GWT.log("found modelChangeIdentifier \"" + modelChangeIdentifier + "\" in " + response);
+                if (LogConfiguration.loggingIsEnabled()) {
+                    Logger.getLogger(ModelChangeCallbackFilter.class.getName()).severe(
+                            "found modelChangeIdentifier \"" + modelChangeIdentifier + "\" in " + response);
+                }
 
-            eventBus.fireEvent(e);
+                GwtEvent e = ModelChangeEventFactory.factory(modelChangeIdentifier);
+                if (LogConfiguration.loggingIsEnabled()) {
+                    Logger.getLogger(ModelChangeCallbackFilter.class.getName()).severe(
+                            "fire event \"" + e + "\" ...");
+                }
+                System.out.println("fire event \"" + e + "\" ...");
+                GWT.log("fire event \"" + e + "\" ...");
+
+                eventBus.fireEvent(e);
+            }
             return;
         }
 

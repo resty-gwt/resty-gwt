@@ -23,6 +23,17 @@
     <inherits name="org.fusesource.restygwt.RestyGWT" />
     <inherits name='com.google.gwt.logging.Logging'/>
 
+    <!-- Logging Configuration -->
+    <set-property name="gwt.logging.enabled" value="TRUE"/>
+    <set-property name="gwt.logging.logLevel" value="INFO"/>
+    <set-property name="gwt.logging.consoleHandler" value="ENABLED" />
+    <set-property name="gwt.logging.developmentModeHandler" value="ENABLED" />
+    <set-property name="gwt.logging.firebugHandler" value="DISABLED" />
+    <set-property name="gwt.logging.hasWidgetsHandler" value="DISABLED" />
+    <set-property name="gwt.logging.popupHandler" value="DISABLED" />
+    <set-property name="gwt.logging.systemHandler" value="ENABLED" />
+    <set-property name="gwt.logging.simpleRemoteHandler" value="ENABLED" />
+
     <!-- seen at http://code.google.com/p/google-web-toolkit/source/browse/trunk/user/src/com/google/gwt/junit/JUnit.gwt.xml?r=5779 -->
     <inherits name="com.google.gwt.benchmarks.Benchmarks"/>
     <replace-with class="com.google.gwt.core.client.impl.StackTraceCreator.CollectorEmulated">
