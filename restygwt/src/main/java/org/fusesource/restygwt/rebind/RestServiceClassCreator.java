@@ -68,6 +68,7 @@ import com.google.gwt.core.client.JsArrayBoolean;
 import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -425,8 +426,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 }
             }
 
-            // call additional AnnotationResolvers if there are some configured
-            List<AnnotationResolver> annotationResolvers = getAnnotationResolvers();
+
+            List<AnnotationResolver> annotationResolvers = getAnnotationResolvers(context);
             logger.log(TreeLogger.DEBUG, "found " + annotationResolvers.size() + " additional AnnotationResolvers");
 
             for (AnnotationResolver a : annotationResolvers) {
@@ -586,11 +587,19 @@ public class RestServiceClassCreator extends BaseSourceCreator {
      * @return
      */
     @SuppressWarnings("unchecked")
-    private List<AnnotationResolver> getAnnotationResolvers() {
+    private List<AnnotationResolver> getAnnotationResolvers(GeneratorContext context) {
         java.lang.reflect.Method m = null;
+        ArrayList args = new ArrayList();
+        ArrayList types = new ArrayList();
+
+        args.add(context);
+        types.add(GeneratorContext.class);
+
+        Object[] argValues = args.toArray();
+        Class[] argtypes = (Class[]) types.toArray(new Class[argValues.length]);
 
         try {
-             m = BINDING_DEFAULTS.getMethod("getAnnotationResolvers", new Class[]{});
+             m = BINDING_DEFAULTS.getMethod("getAnnotationResolvers", argtypes);
         } catch (SecurityException e) {
             throw new RuntimeException("could not call method `getAnnotationResolvers´ on "
                     + BINDING_DEFAULTS, e);
@@ -601,7 +610,9 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
         List<AnnotationResolver> l = new ArrayList<AnnotationResolver>();
         try {
-             l = (List<AnnotationResolver>) m.invoke(null, new Object[]{});
+             Object[] params = new Object[]{context};
+
+            l = (List<AnnotationResolver>) m.invoke(null, context);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("could not call method `getAnnotationResolvers´ on "
                     + BINDING_DEFAULTS, e);

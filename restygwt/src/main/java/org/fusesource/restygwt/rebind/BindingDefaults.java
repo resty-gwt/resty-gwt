@@ -21,6 +21,11 @@ package org.fusesource.restygwt.rebind;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
+import com.google.gwt.core.ext.BadPropertyValueException;
+import com.google.gwt.core.ext.GeneratorContext;
+
 /**
  * compile-time defaults
  *
@@ -51,7 +56,47 @@ public class BindingDefaults {
      *
      * @return a copy of all AnnotationResolvers
      */
-    public static List<AnnotationResolver> getAnnotationResolvers() {
+    public static List<AnnotationResolver> getAnnotationResolvers(GeneratorContext context) {
+        // do this only the first time call
+        if(null == _annotationResolversRequested) {
+            // call additional AnnotationResolvers if there are some configured
+            try {
+                for (String className : context.getPropertyOracle()
+                        .getConfigurationProperty("gwt.resty.annotationresolver").getValues()) {
+                    System.out.println("classname to resolve: " + className);
+                    Class<?> clazz = null;
+
+                    try {
+                        clazz = Class.forName(className);
+                    } catch (ClassNotFoundException e) {
+                        new RuntimeException("could not resolve class " + className + " "
+                                + e.getMessage());
+                    }
+
+                    if (null != clazz) {
+                        try {
+                            addAnnotationResolver((AnnotationResolver) clazz.newInstance());
+                        } catch (InstantiationException e) {
+                            new RuntimeException("could not instanciate class " + className + " "
+                                    + e.getMessage());
+                        } catch (IllegalAccessException e) {
+                            new RuntimeException("could not access class " + className + " "
+                                    + e.getMessage());
+                        }
+                    } else {
+                        throw new RuntimeException("could not create instance for classname " + className);
+                    }
+                }
+            } catch (BadPropertyValueException ignored) {
+                /*
+                 *  ignored since there is no
+                 *
+                 *  <set-configuration-property name="gwt.resty.annotationresolver"
+                 *          value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
+                 */
+            }
+        }
+
         // return a copy
         List<AnnotationResolver> ret = new ArrayList<AnnotationResolver>();
 
