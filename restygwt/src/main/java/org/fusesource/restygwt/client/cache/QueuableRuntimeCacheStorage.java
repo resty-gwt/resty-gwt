@@ -42,24 +42,38 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
      *
      * invalidated values will be dropped by timer
      */
-    private final HashMap<CacheKey, Response> cache = new HashMap<CacheKey, Response>();
+    private final Map<String, HashMap<CacheKey, Response>> cache =
+            new HashMap<String, HashMap<CacheKey, Response>>();
 
     private final Map<CacheKey, List<RequestCallback>> pendingCallbacks
             = new HashMap<CacheKey, List<RequestCallback>>();
 
     public Response getResultOrReturnNull(CacheKey key) {
-        Response val = cache.get(key);
-
-        return val;
+        return getResultOrReturnNull(key, "");
     }
 
-    public void putResult(final CacheKey key, Response response) {
+    public Response getResultOrReturnNull(final CacheKey key, final String scope) {
+        final HashMap<CacheKey, Response> scoped = cache.get(scope);
+
+        if (null != scoped) {
+            return scoped.get(key);
+        }
+
+        return null;
+    }
+
+    @Override
+    public void putResult(final CacheKey key, final Response response) {
+        putResult(key, response, "");
+    }
+
+    public void putResult(final CacheKey key, final Response response, final String scope) {
         Timer t = new Timer() {
             public void run() {
                 try {
                     GWT.log("removing cache-key " + key.getEverythingAsConcatenatedString()
-                            + " from internal storage");
-                    cache.remove(key);
+                            + " from scope \"" + scope + "\"");
+                    cache.get(scope).remove(key);
                 } catch (Exception ex) {
                     Logger.getLogger(QueuableRuntimeCacheStorage.class.getName())
                             .severe(ex.getMessage());
@@ -67,16 +81,24 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
             }
         };
         t.schedule((int) DEFAULT_LIFETIME_MS);
-        cache.put(key, response);
+
+        HashMap<CacheKey, Response> scoped = cache.get(scope);
+
+        if (null != scoped) {
+            cache.put(scope, new HashMap<CacheKey, Response>());
+            scoped = cache.get(scope);
+        }
+
+        scoped.put(key, response);
     }
 
     @Override
-    public boolean hasCallback(CacheKey k) {
+    public boolean hasCallback(final CacheKey k) {
         return pendingCallbacks.containsKey(k);
     }
 
     @Override
-    public void addCallback(CacheKey k, RequestCallback rc) {
+    public void addCallback(final CacheKey k, final RequestCallback rc) {
         //init value of key if not there...
         if (!pendingCallbacks.containsKey(k)) {
             pendingCallbacks.put(k, new ArrayList<RequestCallback>());
@@ -86,7 +108,19 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
     }
 
     @Override
-    public List<RequestCallback> removeCallbacks(CacheKey k) {
+    public List<RequestCallback> removeCallbacks(final CacheKey k) {
         return pendingCallbacks.remove(k);
+    }
+
+    @Override
+    public void purge() {
+        cache.clear();
+    }
+
+    @Override
+    public void purge(final String scope) {
+        HashMap<CacheKey, Response> scoped = cache.get(scope);
+
+        if(null != scoped) scoped.clear();
     }
 }

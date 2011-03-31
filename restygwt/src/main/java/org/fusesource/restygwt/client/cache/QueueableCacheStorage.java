@@ -24,6 +24,7 @@ import org.fusesource.restygwt.client.dispatcher.CacheKey;
 import org.fusesource.restygwt.client.dispatcher.CacheStorage;
 
 import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
 
 /**
  * more enhanced cacheinterface, TODO write something
@@ -31,9 +32,38 @@ import com.google.gwt.http.client.RequestCallback;
  * @author abalke
  */
 public interface QueueableCacheStorage extends CacheStorage {
-    public boolean hasCallback(CacheKey k);
 
-    public void addCallback(CacheKey k, RequestCallback rc);
+    public Response getResultOrReturnNull(final CacheKey key);
 
-    public List<RequestCallback> removeCallbacks(CacheKey k);
+    public Response getResultOrReturnNull(final CacheKey key, final String scope);
+
+    public boolean hasCallback(final CacheKey k);
+
+    public void addCallback(final CacheKey k, final RequestCallback rc);
+
+    public List<RequestCallback> removeCallbacks(final CacheKey k);
+
+    /**
+     * default put method
+     */
+    public void putResult(final CacheKey key, final Response response);
+
+    /**
+     * put by ident/scope. e.g. to invalidate later on by domain class
+     *
+     * @param key
+     * @param scope
+     * @param response
+     */
+    public void putResult(final CacheKey key, final Response response, final String scope);
+
+    /**
+     * purge the complete cache
+     */
+    public void purge();
+
+    /**
+     * purge a particular ident, e.g. domain scope
+     */
+    public void purge(final String scope);
 }

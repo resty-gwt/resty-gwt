@@ -37,7 +37,6 @@ public class CacheKey {
 
     }
 
-
     /**
      * Needed for saving in HashMap:
      */
@@ -51,24 +50,17 @@ public class CacheKey {
      */
     @Override
     public boolean equals(Object anObject) {
-
         if (anObject instanceof CacheKey) {
-
-
             CacheKey aCacheKey = (CacheKey) anObject;
-
             if (aCacheKey.getEverythingAsConcatenatedString().equals(
                     getEverythingAsConcatenatedString())) {
                 return true;
             }
-
-
         }
 
         return false;
 
     }
-
 
     /**
      * Little helper to get contents...
@@ -76,9 +68,6 @@ public class CacheKey {
      * @return
      */
     public String getEverythingAsConcatenatedString() {
-
         return url + requestData + httpMethod;
-
     }
-
 }

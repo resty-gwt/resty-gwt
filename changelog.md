@@ -3,6 +3,8 @@ RestyGWT
 
 [resty-gwt 1.1]
 ---------------
+* add scoped QueueableRuntimeCache to be able to invalidate a particular ident, e.g.
+  a domain scope.
 * add definition for org.fusesource.restygwt.annotationresolver
   @see http://code.google.com/p/google-web-toolkit/wiki/MultiValuedConfigProperties
 * add ability to take part of the compilation process by registering 
