@@ -3,7 +3,8 @@ RestyGWT
 
 [resty-gwt 1.1]
 ---------------
-
+* add definition for org.fusesource.restygwt.annotationresolver
+  @see http://code.google.com/p/google-web-toolkit/wiki/MultiValuedConfigProperties
 * add ability to take part of the compilation process by registering 
   ``org.fusesource.restygwt.rebind.AnnotationResolver`` in 
   ``org.fusesource.restygwt.rebind.BindingDefaults``

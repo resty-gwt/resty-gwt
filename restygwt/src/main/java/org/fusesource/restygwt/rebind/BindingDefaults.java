@@ -21,8 +21,6 @@ package org.fusesource.restygwt.rebind;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
-
 import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.GeneratorContext;
 
@@ -32,6 +30,7 @@ import com.google.gwt.core.ext.GeneratorContext;
  * with this class it will be possible to take part of the generation process of restserviceimpl
  * classes. by default there are no additional resolvers registered, you can add some if wanted.
  *
+ * @see http://code.google.com/p/google-web-toolkit/wiki/MultiValuedConfigProperties
  * @author abalke
  *
  */
