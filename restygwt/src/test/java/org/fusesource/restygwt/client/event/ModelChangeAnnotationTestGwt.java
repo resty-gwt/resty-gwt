@@ -16,7 +16,6 @@
 
 package org.fusesource.restygwt.client.event;
 
-import org.fusesource.restygwt.GwtAnnotationResolverTestSuite;
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.Method;
@@ -42,11 +41,6 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
 
 /**
- * CANNOT BE RUN FROM ECLIPSE
- *
- * due to missing ``BindingDefaults.addAnnotationResolver(new ModelChangeAnnotationResolver());``
- * in {@link GwtAnnotationResolverTestSuite}
- *
  * @author <a href="mailto:andi.balke@gmail.com">andi</a>
  */
 public class ModelChangeAnnotationTestGwt extends GWTTestCase {

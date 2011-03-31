@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.TreeLogger;
 
 /**
  * compile-time defaults
@@ -55,14 +56,16 @@ public class BindingDefaults {
      *
      * @return a copy of all AnnotationResolvers
      */
-    public static List<AnnotationResolver> getAnnotationResolvers(GeneratorContext context) {
+    public static List<AnnotationResolver> getAnnotationResolvers(final GeneratorContext context,
+            final TreeLogger logger) {
+
         // do this only the first time call
         if(null == _annotationResolversRequested) {
             // call additional AnnotationResolvers if there are some configured
             try {
                 for (String className : context.getPropertyOracle()
                         .getConfigurationProperty("org.fusesource.restygwt.annotationresolver").getValues()) {
-                    System.out.println("classname to resolve: " + className);
+                    logger.log(TreeLogger.INFO, "classname to resolve: " + className);
                     Class<?> clazz = null;
 
                     try {
@@ -74,6 +77,7 @@ public class BindingDefaults {
 
                     if (null != clazz) {
                         try {
+                            logger.log(TreeLogger.INFO, "add annotationresolver: " + clazz.getName());
                             addAnnotationResolver((AnnotationResolver) clazz.newInstance());
                         } catch (InstantiationException e) {
                             new RuntimeException("could not instanciate class " + className + " "
@@ -93,6 +97,7 @@ public class BindingDefaults {
                  *  <set-configuration-property name="org.fusesource.restygwt.annotationresolver"
                  *          value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
                  */
+                logger.log(TreeLogger.DEBUG, "no additional annotationresolvers found");
             }
         }
 

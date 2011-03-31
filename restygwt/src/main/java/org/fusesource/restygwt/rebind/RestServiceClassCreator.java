@@ -427,11 +427,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             }
 
 
-            List<AnnotationResolver> annotationResolvers = getAnnotationResolvers(context);
+            List<AnnotationResolver> annotationResolvers = getAnnotationResolvers(context, logger);
             logger.log(TreeLogger.DEBUG, "found " + annotationResolvers.size() + " additional AnnotationResolvers");
 
             for (AnnotationResolver a : annotationResolvers) {
-                logger.log(TreeLogger.INFO, "(" + a.getClass().getName() + ") resolve `" + source.getName() + "´ ...");
+                logger.log(TreeLogger.DEBUG, "(" + a.getClass().getName() + ") resolve `" + source.getName()
+                        + "#" + method.getName() + "´ ...");
                 final String[] addDataParams = a.resolveAnnotation(logger, source, method, restMethod);
 
                 if (addDataParams != null) {
@@ -587,13 +588,15 @@ public class RestServiceClassCreator extends BaseSourceCreator {
      * @return
      */
     @SuppressWarnings("unchecked")
-    private List<AnnotationResolver> getAnnotationResolvers(GeneratorContext context) {
+    private List<AnnotationResolver> getAnnotationResolvers(final GeneratorContext context, final TreeLogger logger) {
         java.lang.reflect.Method m = null;
         ArrayList args = new ArrayList();
         ArrayList types = new ArrayList();
 
-        args.add(context);
         types.add(GeneratorContext.class);
+        args.add(context);
+        types.add(TreeLogger.class);
+        args.add(logger);
 
         Object[] argValues = args.toArray();
         Class[] argtypes = (Class[]) types.toArray(new Class[argValues.length]);
@@ -612,7 +615,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         try {
              Object[] params = new Object[]{context};
 
-            l = (List<AnnotationResolver>) m.invoke(null, context);
+            l = (List<AnnotationResolver>) m.invoke(null, context, logger);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("could not call method `getAnnotationResolvers´ on "
                     + BINDING_DEFAULTS, e);
