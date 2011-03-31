@@ -84,7 +84,7 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
 
         HashMap<CacheKey, Response> scoped = cache.get(scope);
 
-        if (null != scoped) {
+        if (null == scoped) {
             cache.put(scope, new HashMap<CacheKey, Response>());
             scoped = cache.get(scope);
         }
