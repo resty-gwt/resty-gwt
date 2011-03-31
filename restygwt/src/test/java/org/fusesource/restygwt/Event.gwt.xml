@@ -45,7 +45,7 @@
         </none>
     </replace-with>
 
-    <set-configuration-property name="gwt.resty.annotationresolver"
+    <set-configuration-property name="org.fusesource.restygwt.annotationresolver"
             value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
 
     <servlet path='/foo/*' class='org.fusesource.restygwt.server.event.EchoServlet' />

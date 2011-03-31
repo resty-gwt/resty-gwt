@@ -62,7 +62,7 @@ public class BindingDefaults {
             // call additional AnnotationResolvers if there are some configured
             try {
                 for (String className : context.getPropertyOracle()
-                        .getConfigurationProperty("gwt.resty.annotationresolver").getValues()) {
+                        .getConfigurationProperty("org.fusesource.restygwt.annotationresolver").getValues()) {
                     System.out.println("classname to resolve: " + className);
                     Class<?> clazz = null;
 
@@ -91,7 +91,7 @@ public class BindingDefaults {
                 /*
                  *  ignored since there is no
                  *
-                 *  <set-configuration-property name="gwt.resty.annotationresolver"
+                 *  <set-configuration-property name="org.fusesource.restygwt.annotationresolver"
                  *          value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
                  */
             }
