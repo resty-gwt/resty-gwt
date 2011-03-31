@@ -20,6 +20,32 @@ package org.fusesource.restygwt.client.dispatcher;
 import com.google.gwt.http.client.Response;
 
 public interface CacheStorage {
-    public Response getResultOrReturnNull(CacheKey key);
-    public void putResult(CacheKey key, Response response);
+    public Response getResultOrReturnNull(final CacheKey key);
+
+    public Response getResultOrReturnNull(final CacheKey key, final String scope);
+
+    /**
+     * default put method
+     */
+    public void putResult(final CacheKey key, final Response response);
+
+    /**
+     * put by ident/scope. e.g. to invalidate later on by domain class
+     *
+     * @param key
+     * @param scope
+     * @param response
+     */
+    public void putResult(final CacheKey key, final Response response, final String scope);
+
+    /**
+     * purge the complete cache
+     */
+    public void purge();
+
+    /**
+     * purge a particular ident, e.g. domain scope
+     */
+    public void purge(final String scope);
+
 }
