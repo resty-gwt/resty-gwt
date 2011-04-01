@@ -29,6 +29,7 @@ import org.fusesource.restygwt.client.dispatcher.CacheKey;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
 
 public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
@@ -47,6 +48,8 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
 
     private final Map<CacheKey, List<RequestCallback>> pendingCallbacks
             = new HashMap<CacheKey, List<RequestCallback>>();
+
+    private final List<Timer> timers = new ArrayList<Timer>();
 
     public Response getResultOrReturnNull(CacheKey key) {
         return getResultOrReturnNull(key, "");
@@ -68,12 +71,13 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
     }
 
     public void putResult(final CacheKey key, final Response response, final String scope) {
-        Timer t = new Timer() {
+        final Timer t = new Timer() {
             public void run() {
                 try {
                     GWT.log("removing cache-key " + key.getEverythingAsConcatenatedString()
                             + " from scope \"" + scope + "\"");
                     cache.get(scope).remove(key);
+                    timers.remove(this);
                 } catch (Exception ex) {
                     Logger.getLogger(QueuableRuntimeCacheStorage.class.getName())
                             .severe(ex.getMessage());
@@ -81,6 +85,7 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
             }
         };
         t.schedule((int) DEFAULT_LIFETIME_MS);
+        timers.add(t);
 
         HashMap<CacheKey, Response> scoped = cache.get(scope);
 
@@ -115,12 +120,21 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
     @Override
     public void purge() {
         cache.clear();
+        if (LogConfiguration.loggingIsEnabled()) {
+            Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).fine("remove "
+                    + timers.size() + " timers from list.");
+        }
+        for (Timer t: timers) {
+            t.cancel();
+        }
+        timers.clear();
     }
 
     @Override
     public void purge(final String scope) {
         HashMap<CacheKey, Response> scoped = cache.get(scope);
 
+        // TODO handle timers in scoping too
         if(null != scoped) scoped.clear();
     }
 }
