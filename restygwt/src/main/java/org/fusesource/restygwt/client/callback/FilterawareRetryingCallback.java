@@ -52,7 +52,7 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
 
     protected final RequestCallback requestCallback;
 
-    protected List<CallbackFilter> callbackFilters;
+    final protected List<CallbackFilter> callbackFilters = new ArrayList<CallbackFilter>();
 
     public FilterawareRetryingCallback(Method method) {
         this.method = method;
@@ -130,11 +130,6 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
      * performed on callback passing.
      */
     public void addFilter(CallbackFilter filter) {
-        if (null == callbackFilters) {
-            callbackFilters = new ArrayList<CallbackFilter>();
-        }
-
         callbackFilters.add(filter);
     }
-
 }
