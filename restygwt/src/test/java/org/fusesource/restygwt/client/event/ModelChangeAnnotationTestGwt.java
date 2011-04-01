@@ -24,8 +24,8 @@ import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
-import org.fusesource.restygwt.client.callback.AbstractCallbackFactory;
 import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
+import org.fusesource.restygwt.client.callback.CallbackFactory;
 import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
 import org.fusesource.restygwt.client.callback.ModelChangeCallbackFilter;
 import org.fusesource.restygwt.client.dispatcher.CachingRetryingDispatcher;
@@ -65,8 +65,7 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
 
         Defaults.setDispatcher(
                 CachingRetryingDispatcher.singleton(cacheStorage,
-                new AbstractCallbackFactory() {
-                    @Override
+                new CallbackFactory() {
                     public FilterawareRequestCallback createCallback(Method method) {
                         final FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
                                 method);
