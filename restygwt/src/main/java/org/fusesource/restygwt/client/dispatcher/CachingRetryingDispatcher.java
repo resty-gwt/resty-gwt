@@ -26,10 +26,9 @@ import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
 import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -78,30 +77,47 @@ public class CachingRetryingDispatcher implements Dispatcher {
         return INSTANCE;
     }
 
-    public Request send(Method method, final RequestBuilder builder) throws RequestException {
+    public Request send(Method method, RequestBuilder builder) throws RequestException {
+        final RequestCallback outerRequestCallback = builder.getCallback();
         final CacheKey cacheKey = new CacheKey(builder);
         final Response cachedResponse = cacheStorage.getResultOrReturnNull(cacheKey);
+        final boolean cachable = builder.getHTTPMethod().equals(RequestBuilder.GET.toString());
 
-        if (cachedResponse != null) {
-            if (LogConfiguration.loggingIsEnabled()) {
-                Logger.getLogger(CachingRetryingDispatcher.class.getName()).severe(
-                        "Got a cache result for " + cacheKey + ": " + cachedResponse);
-            }
+        if (cachable == true) {
+            if (cachedResponse != null) {
+                //case 1: we got a result in cache => return it...
+                outerRequestCallback.onResponseReceived(null, cachedResponse);
+                return null;
+            }  else {
+                final RequestCallback retryingCallback = callbackFactory.createCallback(method);
 
-            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    builder.getCallback().onResponseReceived(null, cachedResponse);
+                //case 2: => no cache in result => queue it....
+                if (!cacheStorage.hasCallback(cacheKey)) {
+                    //case 2.1 => first callback => make a new one and execute...
+                    cacheStorage.addCallback(cacheKey, outerRequestCallback);
+
+                    if (LogConfiguration.loggingIsEnabled()) {
+                        Logger.getLogger(Dispatcher.class.getName())
+                                .info("Sending *caching* http request: " + builder.getHTTPMethod() + " "
+                                + builder.getUrl());
+                    }
+
+                    // important part:
+                    builder.setCallback(retryingCallback);
+                    return builder.send();
+                } else {
+                    //case 2.2 => a callback already in progress => queue to get response when back
+                    cacheStorage.addCallback(cacheKey, retryingCallback);
+                    return null;
                 }
-            });
-            return null;
+            }
         } else {
+            // non cachable case
             if (LogConfiguration.loggingIsEnabled()) {
-                Logger.getLogger(CachingRetryingDispatcher.class.getName()).severe(
-                        "No cache for " + cacheKey +  ", sending http request: "
-                        + builder.getHTTPMethod() + " " + builder.getUrl() + " ,timeout:"
-                        + builder.getTimeoutMillis() + " content: \"" + builder.getRequestData()
-                        + "\"");
+                String content = builder.getRequestData();
+                Logger.getLogger(Dispatcher.class.getName())
+                        .info("Sending *non-caching* http request: " + builder.getHTTPMethod() + " "
+                        + builder.getUrl() + " (Content: `" + content + "´)");
             }
 
             builder.setCallback(callbackFactory.createCallback(method));
