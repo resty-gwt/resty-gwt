@@ -86,6 +86,11 @@ public class CachingRetryingDispatcher implements Dispatcher {
         if (cachable == true) {
             if (cachedResponse != null) {
                 //case 1: we got a result in cache => return it...
+                if (LogConfiguration.loggingIsEnabled()) {
+                    Logger.getLogger(Dispatcher.class.getName())
+                            .info("already got a cached response for: " + builder.getHTTPMethod() + " "
+                            + builder.getUrl());
+                }
                 outerRequestCallback.onResponseReceived(null, cachedResponse);
                 return null;
             }  else {
@@ -107,6 +112,11 @@ public class CachingRetryingDispatcher implements Dispatcher {
                     return builder.send();
                 } else {
                     //case 2.2 => a callback already in progress => queue to get response when back
+                    if (LogConfiguration.loggingIsEnabled()) {
+                        Logger.getLogger(Dispatcher.class.getName())
+                                .info("request in progress, queue callback: " + builder.getHTTPMethod() + " "
+                                + builder.getUrl());
+                    }
                     cacheStorage.addCallback(cacheKey, retryingCallback);
                     return null;
                 }

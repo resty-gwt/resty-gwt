@@ -18,12 +18,17 @@
 
 package org.fusesource.restygwt.client.callback;
 
+import java.util.List;
+import java.util.logging.Logger;
+
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.dispatcher.CacheKey;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.logging.client.LogConfiguration;
 
 public class CachingCallbackFilter implements CallbackFilter {
 
@@ -42,11 +47,29 @@ public class CachingCallbackFilter implements CallbackFilter {
     public void filter(final Method method, final Response response) {
         final int code = response.getStatusCode();
 
+        CacheKey ck = new CacheKey(method.builder);
+        List<RequestCallback> removedCallbacks = cache.removeCallbacks(ck);
+
+        if (removedCallbacks != null
+                && 1 < removedCallbacks.size()) {
+            if (LogConfiguration.loggingIsEnabled()) {
+                Logger.getLogger(CachingCallbackFilter.class.getName()).severe("Found more than " +
+                        "one callback in cachekey, must handle that, but ignore it now. ");
+            }
+        } else {
+            if (LogConfiguration.loggingIsEnabled()) {
+                Logger.getLogger(CachingCallbackFilter.class.getName()).fine("removed one or no " +
+                        "callback for cachekey " + ck);
+            }
+        }
+
         if (code < Response.SC_MULTIPLE_CHOICES
                 && code >= Response.SC_OK) {
-            CacheKey cacheKey = new CacheKey(method.builder);
-            GWT.log("cache to " + cacheKey + ": " + response);
-            cache.putResult(cacheKey, response);
+            if (LogConfiguration.loggingIsEnabled()) {
+                Logger.getLogger(CachingCallbackFilter.class.getName()).fine("cache to " + ck
+                        + ": " + response);
+            }
+            cache.putResult(ck, response);
             return;
         }
 

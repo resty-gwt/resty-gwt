@@ -46,8 +46,8 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
     private final Map<String, HashMap<CacheKey, Response>> cache =
             new HashMap<String, HashMap<CacheKey, Response>>();
 
-    private final Map<CacheKey, List<RequestCallback>> pendingCallbacks
-            = new HashMap<CacheKey, List<RequestCallback>>();
+    private final Map<CacheKey, List<RequestCallback>> pendingCallbacks =
+            new HashMap<CacheKey, List<RequestCallback>>();
 
     private final List<Timer> timers = new ArrayList<Timer>();
 
@@ -119,6 +119,10 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
 
     @Override
     public void purge() {
+        if (LogConfiguration.loggingIsEnabled()) {
+            Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).fine("remove "
+                    + cache.size() + " elements from cache.");
+        }
         cache.clear();
         if (LogConfiguration.loggingIsEnabled()) {
             Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).fine("remove "

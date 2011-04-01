@@ -26,6 +26,7 @@ import org.fusesource.restygwt.client.Method;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
@@ -95,8 +96,18 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
 
     public void handleErrorGracefully() {
         // error handling...:
+
+        // TODO
+        /*
+         * method.builder.getHTTPMethod().equals(RequestBuilder.GET)
+                &&
+         */
         if (currentRetryCounter < numberOfRetries) {
-            GWT.log("error handling in progress...");
+            if (LogConfiguration.loggingIsEnabled()) {
+                Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe(
+                        "error handling in progress for: " + method.builder.getHTTPMethod()
+                        + " " + method.builder.getUrl());
+            }
 
             currentRetryCounter++;
 
