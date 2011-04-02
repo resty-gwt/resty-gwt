@@ -35,8 +35,9 @@ public class EchoServlet extends HttpServlet {
     private static final Logger log = Logger.getLogger(EchoServlet.class.getName());
     private final String CONTENT_TYPE = "application/json";
 
-    private final String RESPONSE_CODE_HEADER_NAME = "X-Echo-Code";
     private final String RESPONSE_BODY_HEADER_NAME = "X-Echo-Body";
+    private final String RESPONSE_CODE_HEADER_NAME = "X-Echo-Code";
+    private final String RESPONSETIME_IN_SEC_HEADER_NAME = "X-Response-Time";
 
     @Override
     protected void doPost(HttpServletRequest request,
@@ -82,6 +83,18 @@ public class EchoServlet extends HttpServlet {
             out = request.getHeader(RESPONSE_BODY_HEADER_NAME);
 
             response.getWriter().print(out);
+        }
+
+        // wait if necessary
+        if (null != request.getHeader(RESPONSETIME_IN_SEC_HEADER_NAME)) {
+            try {
+                final int waitingTime =
+                    Integer.parseInt(request.getHeader(RESPONSETIME_IN_SEC_HEADER_NAME)) * 1000;
+                log.info("need to wait for: " + waitingTime + " milliseconds");
+                Thread.sleep(waitingTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         log.info("respond: (" + statusCode + ") `" + out + "´");
     }

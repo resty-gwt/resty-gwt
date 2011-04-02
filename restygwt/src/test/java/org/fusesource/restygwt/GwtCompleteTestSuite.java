@@ -47,6 +47,7 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(CachingTestGwt.class);
         suite.addTestSuite(ExtendedRestTestGwt.class);
         suite.addTestSuite(BigNumberTestGwt.class);
+        suite.addTestSuite(CachingTestGwt.class);
 
         return suite;
     }
