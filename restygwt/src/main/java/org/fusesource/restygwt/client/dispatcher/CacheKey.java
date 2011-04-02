@@ -21,14 +21,26 @@ import com.google.gwt.http.client.RequestBuilder;
 
 public class CacheKey {
 
-    //FIXME:
-    private String url;
+    /**
+     * the url for the cache we'll represent
+     */
+    private final String url;
 
-    //FIXME:
-    private String requestData;
+    /**
+     * the requestdata for the cache we'll represent
+     */
+    private final String requestData;
 
-    //FIXME:
-    private String httpMethod;
+    /**
+     * the http method for the cache we'll represent
+     */
+    private final String httpMethod;
+
+    /**
+     * as this instances are immutable, we can cache the string representaion
+     * for our own instance.
+     */
+    private String stringRepresentation = null;
 
     public CacheKey(RequestBuilder requestBuilder) {
         this.url = requestBuilder.getUrl();
@@ -42,7 +54,7 @@ public class CacheKey {
      */
     @Override
     public int hashCode() {
-        return new String(getEverythingAsConcatenatedString()).hashCode();
+        return new String(toString()).hashCode();
     }
 
     /**
@@ -52,8 +64,8 @@ public class CacheKey {
     public boolean equals(Object anObject) {
         if (anObject instanceof CacheKey) {
             CacheKey aCacheKey = (CacheKey) anObject;
-            if (aCacheKey.getEverythingAsConcatenatedString().equals(
-                    getEverythingAsConcatenatedString())) {
+
+            if (aCacheKey.toString().equals(toString())) {
                 return true;
             }
         }
@@ -63,11 +75,13 @@ public class CacheKey {
     }
 
     /**
-     * Little helper to get contents...
+     * string representation and effectively the cache identifier
      *
      * @return
      */
-    public String getEverythingAsConcatenatedString() {
-        return url + requestData + httpMethod;
+    public String toString() {
+        if (null != stringRepresentation) return stringRepresentation;
+
+        return stringRepresentation = httpMethod + " " + url + " [" + requestData + "]";
     }
 }
