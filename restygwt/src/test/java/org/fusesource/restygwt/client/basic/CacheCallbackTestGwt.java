@@ -46,12 +46,66 @@ import com.google.gwt.logging.client.LogConfiguration;
  */
 public class CacheCallbackTestGwt extends GWTTestCase {
 
+    private BlockingTimeoutService service;
+
     @Override
     public String getModuleName() {
         return "org.fusesource.restygwt.CachingTestGwt";
     }
 
-    public void testSimpleCachingCallbackFunction() {
+    /**
+     * prove all callbacks are registered and unregistered without using the cache.
+     *
+     * this is done by just calling the same method multiple times
+     */
+    public void testNonCachingCallback() {
+        service.noncachingCall(0, new MethodCallback<Void>() {
+            @Override
+            public void onSuccess(Method method, Void response) {
+                GWT.log("passing first call");
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail("failure on read: " + exception.getMessage());
+            }
+        });
+
+        service.noncachingCall(1, new MethodCallback<Void>() {
+            @Override
+            public void onSuccess(Method method, Void response) {
+                GWT.log("passing second call");
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail("failure on read: " + exception.getMessage());
+            }
+        });
+
+        service.noncachingCall(2, new MethodCallback<Void>() {
+            @Override
+            public void onSuccess(Method method, Void response) {
+                GWT.log("passing third call");
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail("failure on read: " + exception.getMessage());
+            }
+        });
+
+        // wait... we are in async testing...
+        delayTestFinish(10000);
+    }
+
+    /**
+     * usually this stuff is all done by gin in a real application. or at least there
+     * would be a central place which is not the activity in the end.
+     */
+    @Override
+    public void gwtSetUp() {
         /*
          * configure RESTY to use cache, usually done in gin
          */
@@ -76,29 +130,7 @@ public class CacheCallbackTestGwt extends GWTTestCase {
          *  setup the service, usually done in gin
          */
         Resource resource = new Resource(GWT.getModuleBaseURL());
-        final BlockingTimeoutService service = GWT.create(BlockingTimeoutService.class);
+        service = GWT.create(BlockingTimeoutService.class);
         ((RestServiceProxy) service).setResource(resource);
-
-
-        service.block(1, new MethodCallback<Void>() {
-            @Override
-            public void onSuccess(Method method, Void response) {
-                if (LogConfiguration.loggingIsEnabled()) {
-                    Logger.getLogger(CacheCallbackTestGwt.class.getName())
-                            .severe("i did it dude");
-                }
-                finishTest();
-            }
-
-            @Override
-            public void onFailure(Method method, Throwable exception) {
-                fail("failure on read: " + exception.getMessage());
-            }
-        });
-
-
-
-        // wait... we are in async testing...
-        delayTestFinish(10000);
     }
 }

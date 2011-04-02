@@ -18,6 +18,7 @@ package org.fusesource.restygwt.client.basic;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 import org.fusesource.restygwt.client.MethodCallback;
@@ -29,7 +30,13 @@ import org.fusesource.restygwt.client.RestService;
 public interface BlockingTimeoutService extends RestService {
     @GET
     @Path("/testing/caching_and_block")
-    public void block(
+    public void cachingCall(
+            @HeaderParam("X-Response-Time") int secondsToWait,
+            MethodCallback<Void> callback);
+
+    @POST
+    @Path("/testing/caching_and_block")
+    public void noncachingCall(
             @HeaderParam("X-Response-Time") int secondsToWait,
             MethodCallback<Void> callback);
 }
