@@ -30,6 +30,7 @@
 
     <servlet path='/api/*' class='org.fusesource.restygwt.server.CachingTestServlet' />
     <servlet path='/testing/caching_and_block' class='org.fusesource.restygwt.server.event.EchoServlet' />
+    <servlet path='/testing/caching_and_queuing' class='org.fusesource.restygwt.server.event.EchoServlet' />
 
     <!-- seen at http://code.google.com/p/google-web-toolkit/source/browse/trunk/user/src/com/google/gwt/junit/JUnit.gwt.xml?r=5779 -->
     <inherits name="com.google.gwt.benchmarks.Benchmarks"/>

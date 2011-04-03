@@ -26,6 +26,7 @@ import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.dispatcher.CacheKey;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -44,11 +45,12 @@ public class CachingCallbackFilter implements CallbackFilter {
      * TODO method.getResponse() is not equal to response. unfortunately
      */
     @Override
-    public void filter(final Method method, final Response response) {
+    public RequestCallback filter(final Method method, final Response response,
+            RequestCallback callback) {
         final int code = response.getStatusCode();
 
-        CacheKey ck = new CacheKey(method.builder);
-        List<RequestCallback> removedCallbacks = cache.removeCallbacks(ck);
+        final CacheKey ck = new CacheKey(method.builder);
+        final List<RequestCallback> removedCallbacks = cache.removeCallbacks(ck);
 
         if (removedCallbacks != null
                 && 1 < removedCallbacks.size()) {
@@ -56,6 +58,63 @@ public class CachingCallbackFilter implements CallbackFilter {
                 Logger.getLogger(CachingCallbackFilter.class.getName()).severe("Found more than " +
                         "one callback in cachekey, must handle that, but ignore it now. ");
             }
+
+            // remove the first callback from list, as this is called explicitly
+            removedCallbacks.remove(0);
+            // fetch the builders callback and wrap it with a new one, calling all others too
+            final RequestCallback originalCallback = callback;
+
+            callback = new RequestCallback() {
+                @Override
+                public void onResponseReceived(Request request, Response response) {
+                    // call the original callback
+                    if (LogConfiguration.loggingIsEnabled()) {
+                        Logger.getLogger(CachingCallbackFilter.class.getName())
+                                .fine("call original callback for " + ck);
+                    }
+                    originalCallback.onResponseReceived(request, response);
+
+                    if (LogConfiguration.loggingIsEnabled()) {
+                        Logger.getLogger(CachingCallbackFilter.class.getName())
+                                .fine("call "+ removedCallbacks.size()
+                                        + " more queued callbacks for " + ck);
+                    }
+
+                    // and all the others, found in cache
+                    for (RequestCallback cb : removedCallbacks) {
+                        cb.onResponseReceived(request, response);
+                    }
+                }
+
+                @Override
+                public void onError(Request request, Throwable exception) {
+                    if (LogConfiguration.loggingIsEnabled()) {
+                        Logger.getLogger(CachingCallbackFilter.class.getName())
+                                .severe("cannot call " + (removedCallbacks.size()+1)
+                                        + " callbacks for " + ck + " due to error: "
+                                        + exception.getMessage());
+                    }
+                    // call the original callback
+                    if (LogConfiguration.loggingIsEnabled()) {
+                        Logger.getLogger(CachingCallbackFilter.class.getName())
+                                .fine("call original callback for " + ck);
+                    }
+
+                    originalCallback.onError(request, exception);
+
+                    if (LogConfiguration.loggingIsEnabled()) {
+                        Logger.getLogger(CachingCallbackFilter.class.getName())
+                                .fine("call "+ removedCallbacks.size()
+                                        + " more queued callbacks for " + ck);
+                    }
+
+                    // and all the others, found in cache
+                    for (RequestCallback cb : removedCallbacks) {
+                        cb.onError(request, exception);
+                    }
+                }
+            };
+            return callback;
         } else {
             if (LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(CachingCallbackFilter.class.getName()).fine("removed one or no " +
@@ -70,9 +129,10 @@ public class CachingCallbackFilter implements CallbackFilter {
                         + ": " + response);
             }
             cache.putResult(ck, response);
-            return;
+            return callback;
         }
 
         GWT.log("cannot cache due to invalid response code: " + code);
+        return callback;
     }
 }

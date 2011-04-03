@@ -58,7 +58,7 @@ public class RetryingCallback extends FilterawareRetryingCallback {
             handleErrorGracefully();
 
         } else {
-            this.requestCallback.onResponseReceived(request, response);
+            requestCallback.onResponseReceived(request, response);
         }
     }
 }

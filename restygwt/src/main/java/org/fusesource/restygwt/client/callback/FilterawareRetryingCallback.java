@@ -24,7 +24,6 @@ import java.util.logging.Logger;
 import org.fusesource.restygwt.client.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.Method;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -51,26 +50,37 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
 
     protected final Method method;
 
-    protected final RequestCallback requestCallback;
+    protected RequestCallback requestCallback;
 
     final protected List<CallbackFilter> callbackFilters = new ArrayList<CallbackFilter>();
 
     public FilterawareRetryingCallback(Method method) {
         this.method = method;
+        // need to keep requestcallback here, as ``method.builder.getCallback()`` does not
+        // give the same callback later on
         this.requestCallback = method.builder.getCallback();
     }
 
     @Override
     public final void onResponseReceived(Request request, Response response) {
         for (CallbackFilter f : callbackFilters) {
-            f.filter(method, response);
+            requestCallback = f.filter(method, response, requestCallback);
         }
 
         if (response.getStatusCode() == Response.SC_UNAUTHORIZED) {
-            GWT.log("you are not authorized!");
-        } else if (!(response.getStatusCode() < 300
-                && response.getStatusCode() >= 200)) {
-            handleErrorGracefully();
+            if (LogConfiguration.loggingIsEnabled()) {
+                Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe("Unauthorized: "
+                        + method.builder.getUrl());
+            }
+        } else if (!(response.getStatusCode() < 300 && response.getStatusCode() >= 200)) {
+            if (method.builder.getHTTPMethod().equals(RequestBuilder.GET)) {
+                handleErrorGracefully();
+            } else {
+                if (LogConfiguration.loggingIsEnabled()) {
+                    Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe("ERROR with non-GET method. ");
+                }
+            }
+            return;
         } else {
             requestCallback.onResponseReceived(request, response);
         }
@@ -96,12 +106,6 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
 
     public void handleErrorGracefully() {
         // error handling...:
-
-        // TODO
-        /*
-         * method.builder.getHTTPMethod().equals(RequestBuilder.GET)
-                &&
-         */
         if (currentRetryCounter < numberOfRetries) {
             if (LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe(
@@ -127,6 +131,11 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
             t.schedule(gracePeriod);
             gracePeriod = gracePeriod * 2;
         } else {
+            if (LogConfiguration.loggingIsEnabled()) {
+                Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe("Request failed: "
+                        + method.builder.getHTTPMethod() + " " + method.builder.getUrl()
+                        + " after " + currentRetryCounter + " tries.");
+            }
             // Super severe error.
             // reload app or redirect.
             // ===> this breaks the app but that's by intention.

@@ -24,6 +24,7 @@ import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 
 public class ModelChangeCallbackFilter implements CallbackFilter {
@@ -40,7 +41,8 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
      * TODO method.getResponse() is not equal to response. unfortunately
      */
     @Override
-    public void filter(final Method method, final Response response) {
+    public RequestCallback filter(final Method method, final Response response,
+            RequestCallback callback) {
         final int code = response.getStatusCode();
 
         if (code < Response.SC_MULTIPLE_CHOICES
@@ -54,9 +56,10 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
                 GWT.log("fire event \"" + e + "\" ...");
                 eventBus.fireEvent(e);
             }
-            return;
+            return callback;
         }
 
         GWT.log("no event processing due to invalid response code: " + code);
+        return callback;
     }
 }

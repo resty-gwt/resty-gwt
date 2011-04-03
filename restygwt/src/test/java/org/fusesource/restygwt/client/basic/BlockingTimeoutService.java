@@ -34,6 +34,12 @@ public interface BlockingTimeoutService extends RestService {
             @HeaderParam("X-Response-Time") int secondsToWait,
             MethodCallback<Void> callback);
 
+    @GET
+    @Path("/testing/caching_and_queuing")
+    public void cachingQueuingCall(
+            @HeaderParam("X-Response-Time") int secondsToWait,
+            MethodCallback<Void> callback);
+
     @POST
     @Path("/testing/caching_and_block")
     public void noncachingCall(

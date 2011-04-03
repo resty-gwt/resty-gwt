@@ -16,8 +16,6 @@
 
 package org.fusesource.restygwt.client.basic;
 
-import java.util.logging.Logger;
-
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.Method;
@@ -36,7 +34,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
 
 /**
@@ -48,6 +45,8 @@ import com.google.gwt.user.client.Timer;
 public class CacheCallbackTestGwt extends GWTTestCase {
 
     private BlockingTimeoutService service;
+
+    private final int TESTCLASS_DELAY_TIMEOUT = 15000;
 
     @Override
     public String getModuleName() {
@@ -99,7 +98,7 @@ public class CacheCallbackTestGwt extends GWTTestCase {
         });
 
         // wait... we are in async testing...
-        delayTestFinish(10000);
+        delayTestFinish(TESTCLASS_DELAY_TIMEOUT);
     }
 
     /**
@@ -116,15 +115,11 @@ public class CacheCallbackTestGwt extends GWTTestCase {
      * any callback queuing yet.
      */
     public void testSequential_NonQueuing_CachingCallback() {
-        Logger.getLogger(CacheCallbackTestGwt.class.getName()).severe("FIRST");
-        if (LogConfiguration.loggingIsEnabled()) {
-            Logger.getLogger(CacheCallbackTestGwt.class.getName()).severe("FIRST");
-        }
         // backend reaching call
         service.cachingCall(0, new MethodCallback<Void>() {
             @Override
             public void onSuccess(Method method, Void response) {
-                GWT.log("passing first call");
+                GWT.log("passing first non-queuing call");
             }
 
             @Override
@@ -144,7 +139,7 @@ public class CacheCallbackTestGwt extends GWTTestCase {
                 service.cachingCall(0, new MethodCallback<Void>() {
                     @Override
                     public void onSuccess(Method method, Void response) {
-                        GWT.log("passing second call");
+                        GWT.log("passing second non-queuing call");
                     }
 
                     @Override
@@ -161,7 +156,7 @@ public class CacheCallbackTestGwt extends GWTTestCase {
                 service.cachingCall(0, new MethodCallback<Void>() {
                     @Override
                     public void onSuccess(Method method, Void response) {
-                        GWT.log("passing third call");
+                        GWT.log("passing third non-queuing call");
                         finishTest();
                     }
 
@@ -174,7 +169,42 @@ public class CacheCallbackTestGwt extends GWTTestCase {
         }.schedule(3000);
 
         // wait... we are in async testing...
-        delayTestFinish(10000);
+        delayTestFinish(TESTCLASS_DELAY_TIMEOUT);
+    }
+
+    public void testSequential_Queuing_CachingCallback() {
+        // backend reaching call
+        service.cachingQueuingCall(2, new MethodCallback<Void>() {
+            @Override
+            public void onSuccess(Method method, Void response) {
+                GWT.log("passing first queuing call");
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail("failure on read: " + exception.getMessage());
+            }
+        });
+
+        /*
+         * same call again to get this callback queued
+         * and called when the first is back from backend
+         */
+        service.cachingQueuingCall(2, new MethodCallback<Void>() {
+            @Override
+            public void onSuccess(Method method, Void response) {
+                GWT.log("passing second queuing call");
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail("failure on read: " + exception.getMessage());
+            }
+        });
+
+        // wait... we are in async testing...
+        delayTestFinish(TESTCLASS_DELAY_TIMEOUT);
     }
 
     /**
