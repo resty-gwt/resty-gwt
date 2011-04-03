@@ -37,6 +37,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.user.client.Timer;
 
 /**
  * test to check if {@link CachingCallbackFilter} {@link QueueableCacheStorage}
@@ -54,7 +55,8 @@ public class CacheCallbackTestGwt extends GWTTestCase {
     }
 
     /**
-     * prove all callbacks are registered and unregistered without using the cache.
+     * prove all callbacks are registered, called and unregistered without
+     * using the cache. in this test all calls will reach the server.
      *
      * this is done by just calling the same method multiple times
      */
@@ -95,6 +97,81 @@ public class CacheCallbackTestGwt extends GWTTestCase {
                 fail("failure on read: " + exception.getMessage());
             }
         });
+
+        // wait... we are in async testing...
+        delayTestFinish(10000);
+    }
+
+    /**
+     * prove all callbacks are registered, performed and unregistered with
+     * using the cache.
+     *
+     * not all calls will reach the server, {@link QueuableRuntimeCacheStorage} will
+     * need to handle some of the callbacks by its own.
+     *
+     * this is done by just calling the same method multiple times
+     *
+     * first the simple case:
+     * use the cache when the first method call is back from backend. there wont be
+     * any callback queuing yet.
+     */
+    public void testSequential_NonQueuing_CachingCallback() {
+        Logger.getLogger(CacheCallbackTestGwt.class.getName()).severe("FIRST");
+        if (LogConfiguration.loggingIsEnabled()) {
+            Logger.getLogger(CacheCallbackTestGwt.class.getName()).severe("FIRST");
+        }
+        // backend reaching call
+        service.cachingCall(0, new MethodCallback<Void>() {
+            @Override
+            public void onSuccess(Method method, Void response) {
+                GWT.log("passing first call");
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail("failure on read: " + exception.getMessage());
+            }
+        });
+
+        // wait a second for callback to be back for sure
+        // usually there should be something like Thread.sleep, but thats not possible here
+        new Timer() {
+            public void run() {
+                /*
+                 * two calls that are handled directly by the cache
+                 * (no backend interaction at all)
+                 */
+                service.cachingCall(0, new MethodCallback<Void>() {
+                    @Override
+                    public void onSuccess(Method method, Void response) {
+                        GWT.log("passing second call");
+                    }
+
+                    @Override
+                    public void onFailure(Method method, Throwable exception) {
+                        fail("failure on read: " + exception.getMessage());
+                    }
+                });
+            }
+        }.schedule(1000);
+
+        // this is the third one, started in 3 seconds
+        new Timer() {
+            public void run() {
+                service.cachingCall(0, new MethodCallback<Void>() {
+                    @Override
+                    public void onSuccess(Method method, Void response) {
+                        GWT.log("passing third call");
+                        finishTest();
+                    }
+
+                    @Override
+                    public void onFailure(Method method, Throwable exception) {
+                        fail("failure on read: " + exception.getMessage());
+                    }
+                });
+            }
+        }.schedule(3000);
 
         // wait... we are in async testing...
         delayTestFinish(10000);
