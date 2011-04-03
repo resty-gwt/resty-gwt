@@ -114,7 +114,6 @@ public class CachingCallbackFilter implements CallbackFilter {
                     }
                 }
             };
-            return callback;
         } else {
             if (LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(CachingCallbackFilter.class.getName()).fine("removed one or no " +

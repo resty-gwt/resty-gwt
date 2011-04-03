@@ -16,18 +16,24 @@
 
 package org.fusesource.restygwt.client.basic;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.junit.client.GWTTestCase;
-
 import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
-import org.fusesource.restygwt.client.callback.CachingCallbackFactory;
+import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
+import org.fusesource.restygwt.client.callback.CallbackFactory;
+import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
+import org.fusesource.restygwt.client.callback.ModelChangeCallbackFilter;
 import org.fusesource.restygwt.client.dispatcher.CachingRetryingDispatcher;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  * check a server sided failure response will not cause the failure call immediately.
@@ -37,20 +43,19 @@ import org.fusesource.restygwt.client.dispatcher.CachingRetryingDispatcher;
  */
 public class FlakyTestGwt extends GWTTestCase {
 
+    private ExampleService service;
+
     @Override
     public String getModuleName() {
         return "org.fusesource.restygwt.FlakyTestGwt";
     }
 
     public void testFlakyConnection() {
-        //configure RESTY to use cache:
-        QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
-        Defaults.setDispatcher(
-                CachingRetryingDispatcher.singleton(cacheStorage,
-                new CachingCallbackFactory(cacheStorage)));
-
+        /*
+         *  setup the service, usually done in gin
+         */
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
-        ExampleService service = GWT.create(ExampleService.class);
+        service = GWT.create(ExampleService.class);
         ((RestServiceProxy) service).setResource(resource);
 
         service.getExampleDto(new MethodCallback<ExampleDto>() {
@@ -67,5 +72,31 @@ public class FlakyTestGwt extends GWTTestCase {
         });
 
         delayTestFinish(10000);
+    }
+
+    /**
+     * usually this stuff is all done by gin in a real application. or at least there
+     * would be a central place which is not the activity in the end.
+     */
+    @Override
+    public void gwtSetUp() {
+        /*
+         * configure RESTY to use cache, usually done in gin
+         */
+        final EventBus eventBus = new SimpleEventBus();
+        final QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
+
+        Defaults.setDispatcher(
+                CachingRetryingDispatcher.singleton(cacheStorage,
+                new CallbackFactory() {
+                    public FilterawareRequestCallback createCallback(Method method) {
+                        final FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
+                                method);
+
+                        retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
+                        retryingCallback.addFilter(new ModelChangeCallbackFilter(eventBus));
+                        return retryingCallback;
+                    }
+                }));
     }
 }

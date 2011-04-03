@@ -73,7 +73,7 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
                         + method.builder.getUrl());
             }
         } else if (!(response.getStatusCode() < 300 && response.getStatusCode() >= 200)) {
-            if (method.builder.getHTTPMethod().equals(RequestBuilder.GET)) {
+            if (method.builder.getHTTPMethod().equals(RequestBuilder.GET.toString())) {
                 handleErrorGracefully();
             } else {
                 if (LogConfiguration.loggingIsEnabled()) {
