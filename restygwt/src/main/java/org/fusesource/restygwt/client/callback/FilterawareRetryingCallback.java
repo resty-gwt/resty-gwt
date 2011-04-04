@@ -63,10 +63,6 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
 
     @Override
     public final void onResponseReceived(Request request, Response response) {
-        for (CallbackFilter f : callbackFilters) {
-            requestCallback = f.filter(method, response, requestCallback);
-        }
-
         if (response.getStatusCode() == Response.SC_UNAUTHORIZED) {
             if (LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe("Unauthorized: "
@@ -82,6 +78,10 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
             }
             return;
         } else {
+            // filter only in success case for now
+            for (CallbackFilter f : callbackFilters) {
+                requestCallback = f.filter(method, response, requestCallback);
+            }
             requestCallback.onResponseReceived(request, response);
         }
     }
