@@ -67,6 +67,8 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
             if (LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe("Unauthorized: "
                         + method.builder.getUrl());
+                // HACK TODO handle this via a callbackfilter
+                Window.Location.assign("login.html" + Window.Location.getQueryString());
             }
         } else if (!(response.getStatusCode() < 300 && response.getStatusCode() >= 200)) {
             if (method.builder.getHTTPMethod().equals(RequestBuilder.GET.toString())) {
