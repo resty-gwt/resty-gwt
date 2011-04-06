@@ -54,11 +54,6 @@ public class CachingCallbackFilter implements CallbackFilter {
 
         if (removedCallbacks != null
                 && 1 < removedCallbacks.size()) {
-            if (LogConfiguration.loggingIsEnabled()) {
-                Logger.getLogger(CachingCallbackFilter.class.getName()).severe("Found more than " +
-                        "one callback in cachekey, must handle that, but ignore it now. ");
-            }
-
             // remove the first callback from list, as this is called explicitly
             removedCallbacks.remove(0);
             // fetch the builders callback and wrap it with a new one, calling all others too
@@ -70,13 +65,13 @@ public class CachingCallbackFilter implements CallbackFilter {
                     // call the original callback
                     if (LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
-                                .fine("call original callback for " + ck);
+                                .finer("call original callback for " + ck);
                     }
                     originalCallback.onResponseReceived(request, response);
 
                     if (LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
-                                .fine("call "+ removedCallbacks.size()
+                                .finer("call "+ removedCallbacks.size()
                                         + " more queued callbacks for " + ck);
                     }
 
@@ -97,14 +92,14 @@ public class CachingCallbackFilter implements CallbackFilter {
                     // call the original callback
                     if (LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
-                                .fine("call original callback for " + ck);
+                                .finer("call original callback for " + ck);
                     }
 
                     originalCallback.onError(request, exception);
 
                     if (LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
-                                .fine("call "+ removedCallbacks.size()
+                                .finer("call "+ removedCallbacks.size()
                                         + " more queued callbacks for " + ck);
                     }
 
@@ -116,7 +111,7 @@ public class CachingCallbackFilter implements CallbackFilter {
             };
         } else {
             if (LogConfiguration.loggingIsEnabled()) {
-                Logger.getLogger(CachingCallbackFilter.class.getName()).fine("removed one or no " +
+                Logger.getLogger(CachingCallbackFilter.class.getName()).finer("removed one or no " +
                         "callback for cachekey " + ck);
             }
         }
@@ -124,14 +119,17 @@ public class CachingCallbackFilter implements CallbackFilter {
         if (code < Response.SC_MULTIPLE_CHOICES
                 && code >= Response.SC_OK) {
             if (LogConfiguration.loggingIsEnabled()) {
-                Logger.getLogger(CachingCallbackFilter.class.getName()).fine("cache to " + ck
+                Logger.getLogger(CachingCallbackFilter.class.getName()).finer("cache to " + ck
                         + ": " + response);
             }
             cache.putResult(ck, response);
             return callback;
         }
 
-        GWT.log("cannot cache due to invalid response code: " + code);
+        if (LogConfiguration.loggingIsEnabled()) {
+            Logger.getLogger(CachingCallbackFilter.class.getName())
+                    .info("cannot cache due to invalid response code: " + code);
+        }
         return callback;
     }
 }
