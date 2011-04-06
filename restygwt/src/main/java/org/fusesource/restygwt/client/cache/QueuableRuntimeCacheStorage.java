@@ -75,7 +75,7 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
                 try {
                     if (LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(QueuableRuntimeCacheStorage.class.getName())
-                                .fine("removing cache-key " + key + " from scope \"" + scope + "\"");
+                                .finer("removing cache-key " + key + " from scope \"" + scope + "\"");
                     }
                     cache.get(scope).remove(key);
                     timers.remove(this);
@@ -121,12 +121,12 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
     @Override
     public void purge() {
         if (LogConfiguration.loggingIsEnabled()) {
-            Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).fine("remove "
+            Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).finer("remove "
                     + cache.size() + " elements from cache.");
         }
         cache.clear();
         if (LogConfiguration.loggingIsEnabled()) {
-            Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).fine("remove "
+            Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).finer("remove "
                     + timers.size() + " timers from list.");
         }
         for (Timer t: timers) {
