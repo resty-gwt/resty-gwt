@@ -20,15 +20,15 @@ package org.fusesource.restygwt.client.cache;
 
 import java.util.List;
 
-
 import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
 
 /**
  * more enhanced cacheinterface, TODO write something
  *
  * @author abalke
  */
-public interface QueueableCacheStorage extends CacheStorage {
+public interface QueueableCacheStorage extends CacheStorage<Response> {
 
     public boolean hasCallback(final CacheKey k);
 

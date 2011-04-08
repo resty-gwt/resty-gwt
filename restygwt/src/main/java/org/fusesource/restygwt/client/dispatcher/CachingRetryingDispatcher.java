@@ -24,6 +24,7 @@ import org.fusesource.restygwt.client.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.UrlCacheKey;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
 import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
 
@@ -80,7 +81,7 @@ public class CachingRetryingDispatcher implements Dispatcher {
 
     public Request send(Method method, RequestBuilder builder) throws RequestException {
         final RequestCallback outerRequestCallback = builder.getCallback();
-        final CacheKey cacheKey = new CacheKey(builder);
+        final CacheKey cacheKey = new UrlCacheKey(builder);
         final Response cachedResponse = cacheStorage.getResultOrReturnNull(cacheKey);
         final boolean cachable = builder.getHTTPMethod().equals(RequestBuilder.GET.toString());
 

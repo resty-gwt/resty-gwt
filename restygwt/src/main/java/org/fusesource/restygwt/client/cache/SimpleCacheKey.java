@@ -15,27 +15,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.fusesource.restygwt.client.cache;
 
+/**
+ * just a string implementation of a cachekey
+ *
+ * @author abalke
+ */
+public final class SimpleCacheKey implements CacheKey {
 
-public interface CacheKey {
+    private final String identifier;
 
-    /**
-     * Needed for saving in HashMap:
-     */
+    public SimpleCacheKey(final String identifier) {
+        this.identifier = identifier;
+    }
+
     @Override
-    public int hashCode();
+    public int hashCode() {
+        return identifier.hashCode();
+    }
 
-    /**
-     * Needed for saving in HashMap:
-     */
     @Override
-    public boolean equals(Object anObject);
+    public boolean equals(Object anObject) {
+        if (anObject instanceof CacheKey) {
+            CacheKey aCacheKey = (CacheKey) anObject;
 
-    /**
-     * string representation and effectively the cache identifier
-     *
-     * @return
-     */
-    public String toString();
+            if (aCacheKey.toString().equals(toString())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return identifier;
+    }
 }

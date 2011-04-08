@@ -17,17 +17,15 @@
  */
 package org.fusesource.restygwt.client.cache;
 
-import com.google.gwt.http.client.Response;
+public interface CacheStorage<T> {
+    public T getResultOrReturnNull(final CacheKey key);
 
-public interface CacheStorage {
-    public Response getResultOrReturnNull(final CacheKey key);
-
-    public Response getResultOrReturnNull(final CacheKey key, final String scope);
+    public T getResultOrReturnNull(final CacheKey key, final String scope);
 
     /**
      * default put method
      */
-    public void putResult(final CacheKey key, final Response response);
+    public void putResult(final CacheKey key, final T response);
 
     /**
      * put by ident/scope. e.g. to invalidate later on by domain class
@@ -36,7 +34,7 @@ public interface CacheStorage {
      * @param scope
      * @param response
      */
-    public void putResult(final CacheKey key, final Response response, final String scope);
+    public void putResult(final CacheKey key, final T response, final String scope);
 
     /**
      * purge the complete cache

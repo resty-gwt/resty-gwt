@@ -24,8 +24,8 @@ import java.util.logging.Logger;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.UrlCacheKey;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
@@ -49,7 +49,7 @@ public class CachingCallbackFilter implements CallbackFilter {
             RequestCallback callback) {
         final int code = response.getStatusCode();
 
-        final CacheKey ck = new CacheKey(method.builder);
+        final CacheKey ck = new UrlCacheKey(method.builder);
         final List<RequestCallback> removedCallbacks = cache.removeCallbacks(ck);
 
         if (removedCallbacks != null
