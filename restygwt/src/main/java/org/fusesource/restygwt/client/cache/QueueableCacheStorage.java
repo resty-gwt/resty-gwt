@@ -20,8 +20,6 @@ package org.fusesource.restygwt.client.cache;
 
 import java.util.List;
 
-import org.fusesource.restygwt.client.dispatcher.CacheKey;
-import org.fusesource.restygwt.client.dispatcher.CacheStorage;
 
 import com.google.gwt.http.client.RequestCallback;
 

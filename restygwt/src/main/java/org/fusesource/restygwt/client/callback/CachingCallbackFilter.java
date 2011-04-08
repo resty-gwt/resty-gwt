@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
-import org.fusesource.restygwt.client.dispatcher.CacheKey;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;

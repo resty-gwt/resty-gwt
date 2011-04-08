@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fusesource.restygwt.client.dispatcher;
+package org.fusesource.restygwt.client.cache;
 
 import com.google.gwt.http.client.Response;
 
