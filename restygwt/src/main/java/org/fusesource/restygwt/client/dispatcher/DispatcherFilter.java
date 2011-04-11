@@ -18,7 +18,9 @@
 
 package org.fusesource.restygwt.client.dispatcher;
 
-import com.google.gwt.http.client.RequestCallback;
+import org.fusesource.restygwt.client.Method;
+
+import com.google.gwt.http.client.RequestBuilder;
 
 public interface DispatcherFilter {
 
@@ -40,6 +42,6 @@ public interface DispatcherFilter {
      *
      * @return continue chain or not
      */
-    public boolean filter(RequestCallback callback);
+    public boolean filter(Method method, RequestBuilder builder);
 
 }

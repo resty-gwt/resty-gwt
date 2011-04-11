@@ -1,6 +1,5 @@
 package org.fusesource.restygwt.client.callback;
 
-import org.fusesource.restygwt.client.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 

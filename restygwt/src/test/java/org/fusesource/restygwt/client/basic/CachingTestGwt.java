@@ -25,10 +25,18 @@ import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
-import org.fusesource.restygwt.client.callback.CachingCallbackFactory;
-import org.fusesource.restygwt.client.dispatcher.CachingRetryingDispatcher;
+import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
+import org.fusesource.restygwt.client.callback.CallbackFactory;
+import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
+import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
+import org.fusesource.restygwt.client.callback.ModelChangeCallbackFilter;
+import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
+import org.fusesource.restygwt.client.dispatcher.FilterawareDispatcher;
+import org.fusesource.restygwt.client.dispatcher.FilterawareRetryingDispatcher;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -63,10 +71,24 @@ public class CachingTestGwt extends GWTTestCase {
      */
     public void testIfCachingWorks() {
         //configure RESTY to use cache:
-        QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
-        Defaults.setDispatcher(
-                CachingRetryingDispatcher.singleton(cacheStorage,
-                new CachingCallbackFactory(cacheStorage)));
+        final EventBus eventBus = new SimpleEventBus();
+        final QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
+        final FilterawareDispatcher dispatcher = new FilterawareRetryingDispatcher();
+
+        dispatcher.addFilter(new CachingDispatcherFilter(
+                cacheStorage,
+                new CallbackFactory() {
+                    public FilterawareRequestCallback createCallback(Method method) {
+                        final FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
+                                method);
+
+                        retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
+                        retryingCallback.addFilter(new ModelChangeCallbackFilter(eventBus));
+                        return retryingCallback;
+                    }
+                }));
+
+        Defaults.setDispatcher(dispatcher);
 
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
         final ExampleService service = GWT.create(ExampleService.class);

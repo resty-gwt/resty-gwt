@@ -16,12 +16,11 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client;
+package org.fusesource.restygwt.client.callback;
 
-import org.fusesource.restygwt.client.dispatcher.DispatcherFilter;
 
-public interface FilterawareDispatcher extends Dispatcher {
+public interface FilterawareRequestCallback extends com.google.gwt.http.client.RequestCallback {
 
-    public void addFilter(DispatcherFilter filter);
+    public void addFilter(CallbackFilter filter);
 
 }

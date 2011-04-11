@@ -17,7 +17,6 @@
 package org.fusesource.restygwt.client.basic;
 
 import org.fusesource.restygwt.client.Defaults;
-import org.fusesource.restygwt.client.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
@@ -26,9 +25,12 @@ import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
+import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
 import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
 import org.fusesource.restygwt.client.callback.ModelChangeCallbackFilter;
-import org.fusesource.restygwt.client.dispatcher.CachingRetryingDispatcher;
+import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
+import org.fusesource.restygwt.client.dispatcher.FilterawareDispatcher;
+import org.fusesource.restygwt.client.dispatcher.FilterawareRetryingDispatcher;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
@@ -218,9 +220,10 @@ public class CacheCallbackTestGwt extends GWTTestCase {
          */
         final EventBus eventBus = new SimpleEventBus();
         final QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
+        final FilterawareDispatcher dispatcher = new FilterawareRetryingDispatcher();
 
-        Defaults.setDispatcher(
-                CachingRetryingDispatcher.singleton(cacheStorage,
+        dispatcher.addFilter(new CachingDispatcherFilter(
+                cacheStorage,
                 new CallbackFactory() {
                     public FilterawareRequestCallback createCallback(Method method) {
                         final FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
@@ -231,6 +234,8 @@ public class CacheCallbackTestGwt extends GWTTestCase {
                         return retryingCallback;
                     }
                 }));
+
+        Defaults.setDispatcher(dispatcher);
 
 
         /*
