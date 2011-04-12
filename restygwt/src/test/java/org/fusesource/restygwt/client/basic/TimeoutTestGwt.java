@@ -25,10 +25,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 
 /**
- *
- *
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
- *
  */
 public class TimeoutTestGwt extends GWTTestCase {
 
@@ -43,7 +40,6 @@ public class TimeoutTestGwt extends GWTTestCase {
 
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
 
-
         ExampleService service = GWT.create(ExampleService.class);
         ((RestServiceProxy) service).setResource(resource);
 
@@ -51,24 +47,19 @@ public class TimeoutTestGwt extends GWTTestCase {
 
             @Override
             public void onSuccess(Method method, ExampleDto response) {
-
                 System.out.println("finish");
                 assertEquals(response.name, "myName");
                 finishTest();
-
             }
 
             @Override
             public void onFailure(Method method, Throwable exception) {
                 fail();
-
             }
         });
 
         // wait... we are in async testing...
         System.out.println("waiting");
         delayTestFinish(10000);
-
     }
-
 }
