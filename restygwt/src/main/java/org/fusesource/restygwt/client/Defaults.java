@@ -37,6 +37,7 @@ public class Defaults {
 
     private static String serviceRoot = GWT.getModuleBaseURL();
     private static String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    private static boolean ignoreJsonNulls = false;
     // patch TNY: timeout ms,
     // if >-1, used in Method class to set timeout
     private static int requestTimeout = -1;
@@ -58,7 +59,7 @@ public class Defaults {
         }
         Defaults.serviceRoot = serviceRoot;
     }
-
+    
     public static String getDateFormat() {
         return dateFormat;
     }
@@ -70,6 +71,21 @@ public class Defaults {
      */
     public static void setDateFormat(String dateFormat) {
         Defaults.dateFormat = dateFormat;
+    }
+
+    /**
+     * Indicates whether or not nulls will be ignored during JSON marshalling.
+     */
+    public static boolean doesIgnoreJsonNulls() {
+        return ignoreJsonNulls;
+    }
+
+    public static void ignoreJsonNulls() {
+        ignoreJsonNulls = true;
+    }
+
+    public static void dontIgnoreJsonNulls() {
+        ignoreJsonNulls = false;
     }
 
     public static final int getRequestTimeout() {
