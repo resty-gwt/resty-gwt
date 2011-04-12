@@ -3,6 +3,8 @@ RestyGWT
 
 [resty-gwt 1.1]
 ---------------
+* call onError in org.fusesource.restygwt.client.callback.FilterawareRetryingCallback
+  when there is a !GET error request
 * add scoped QueueableRuntimeCache to be able to invalidate a particular ident, e.g.
   a domain scope.
 * add definition for org.fusesource.restygwt.annotationresolver

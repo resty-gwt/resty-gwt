@@ -74,8 +74,18 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
                 handleErrorGracefully();
             } else {
                 if (LogConfiguration.loggingIsEnabled()) {
-                    Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe("ERROR with non-GET method. ");
+                    Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe(
+                            "ERROR with non-GET method: " + method.builder.getHTTPMethod() + " "
+                            + method.builder.getUrl() + ", " + response.getStatusText());
                 }
+
+                /*
+                 *  RuntimeException token from
+                 *  com.google.gwt.http.client.Request#fireOnResponseReceived()
+                 */
+                requestCallback.onError(request, new RuntimeException("Response "
+                        + response.getStatusCode() + " for " + method.builder.getHTTPMethod() + " "
+                        + method.builder.getUrl()));
             }
             return;
         } else {
