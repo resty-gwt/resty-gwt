@@ -70,8 +70,13 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
                 Window.Location.assign("login.html" + Window.Location.getQueryString());
             }
         } else if (!(response.getStatusCode() < 300 && response.getStatusCode() >= 200)) {
-            if (method.builder.getHTTPMethod().equals(RequestBuilder.GET.toString())) {
-                handleErrorGracefully();
+            /*
+             * retry only on GET requests that are no redirects (301, 302)
+             */
+            if (response.getStatusCode() != 301
+                    && response.getStatusCode() != 302
+                    && method.builder.getHTTPMethod().equals(RequestBuilder.GET.toString())) {
+                handleErrorGracefully(request, response, requestCallback);
             } else {
                 if (LogConfiguration.loggingIsEnabled()) {
                     Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe(
@@ -110,12 +115,20 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
 
     }
 
+    /**
+     * TODO when is this used ?
+     */
     @Override
     public void onError(Request request, Throwable exception) {
-        handleErrorGracefully();
+        if (LogConfiguration.loggingIsEnabled()) {
+            Logger.getLogger(FilterawareRetryingCallback.class.getName())
+                    .severe("call onError in " + this.getClass() + ". this should not happen...");
+        }
+        handleErrorGracefully(null, null, null);
     }
 
-    public void handleErrorGracefully() {
+    public void handleErrorGracefully(Request request, Response response,
+            RequestCallback requestCallback) {
         // error handling...:
         if (currentRetryCounter < numberOfRetries) {
             if (LogConfiguration.loggingIsEnabled()) {
@@ -147,11 +160,22 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
                         + method.builder.getHTTPMethod() + " " + method.builder.getUrl()
                         + " after " + currentRetryCounter + " tries.");
             }
-            // Super severe error.
-            // reload app or redirect.
-            // ===> this breaks the app but that's by intention.
-            if (Window.confirm("error")) {
-                Window.Location.reload();
+
+            if (null != request
+                    && null != response
+                    && null != requestCallback) {
+                // got the original callback, call error here
+                requestCallback.onError(request, new RuntimeException("Response "
+                        + response.getStatusCode() + " for " + method.builder.getHTTPMethod() + " "
+                        + method.builder.getUrl() + " after " + numberOfRetries + " retries."));
+            } else {
+                // got no callback - well, goodbye
+                if (Window.confirm("error")) {
+                    // Super severe error.
+                    // reload app or redirect.
+                    // ===> this breaks the app but that's by intention.
+                    Window.Location.reload();
+                }
             }
         }
     }

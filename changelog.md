@@ -3,6 +3,9 @@ RestyGWT
 
 [resty-gwt 1.1]
 ---------------
+* after unsuccessful retrying we will not call ``window.alert`` if there is a callback
+  available. instead use onError in this case. 
+* no retrying behaviour on 301 or 302, fallback to error handler in this case directly
 * call onError in org.fusesource.restygwt.client.callback.FilterawareRetryingCallback
   when there is a !GET error request
 * add scoped QueueableRuntimeCache to be able to invalidate a particular ident, e.g.
