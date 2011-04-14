@@ -75,6 +75,7 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
              */
             if (response.getStatusCode() != 301
                     && response.getStatusCode() != 302
+                    && response.getStatusCode() != 404
                     && method.builder.getHTTPMethod().equals(RequestBuilder.GET.toString())) {
                 handleErrorGracefully(request, response, requestCallback);
             } else {
