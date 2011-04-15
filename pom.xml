@@ -30,7 +30,7 @@
 
   <groupId>org.fusesource.restygwt</groupId>
   <artifactId>restygwt-project</artifactId>
-  <version>1.1-Events-11-SNAPSHOT</version>
+  <version>1.1-Events-12-SNAPSHOT</version>
   <packaging>pom</packaging>
   
   <name>${project.artifactId}</name>
@@ -41,7 +41,7 @@
     <forge-project-id-uc>RESTYGWT</forge-project-id-uc>
 
     <release-altGitURL>scm:git:ssh://git@github.com:chirino/resty-gwt.git</release-altGitURL>
-    <gwt-version>2.1.0</gwt-version>
+    <gwt-version>2.2.0</gwt-version>
   </properties>
 
   <url>http://${forge-project-id}.fusesource.org</url>
@@ -128,6 +128,7 @@
         <version>2.4.3</version>
         <configuration>
           <failIfNoTests>false</failIfNoTests>
+          <useFile>false</useFile>
         </configuration>
       </plugin>
 
