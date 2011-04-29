@@ -40,10 +40,9 @@ public @interface ModelChange {
 
     /**
      * Defines which Domain class is indicated to be updated.
-     *
-     * E.g. "User" for "UserModelChangedEvent"
+     * In the Handler will arrive the full qualified classname.
      *
      * @return
      */
-    String domain() default "";
+    Class[] domain() default {};
 }

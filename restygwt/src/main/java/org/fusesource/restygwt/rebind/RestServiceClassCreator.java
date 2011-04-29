@@ -433,17 +433,27 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             for (AnnotationResolver a : annotationResolvers) {
                 logger.log(TreeLogger.DEBUG, "(" + a.getClass().getName() + ") resolve `" + source.getName()
                         + "#" + method.getName() + "´ ...");
-                final String[] addDataParams = a.resolveAnnotation(logger, source, method, restMethod);
+                final Map<String, String[]> addDataParams = a.resolveAnnotation(logger, source, method, restMethod);
 
                 if (addDataParams != null) {
-                    if (addDataParams.length != 2) {
-                        throw new RuntimeException("AnnotationResolver#resolveClassAnnotation(TreeLogger, JClassType) " +
-                                "must return a String[2], got a length of " + addDataParams.length + " when processing " +
-                                        source.getName() + " with " + a.getClass().getName());
+                    for (String s : addDataParams.keySet()) {
+                        final StringBuilder sb = new StringBuilder();
+                        final List<String> classList = Arrays.asList(addDataParams.get(s));
+
+                        sb.append("[");
+                        for (int i = 0; i < classList.size(); ++i) {
+                            sb.append("\\\"").append(classList.get(i)).append("\\\"");
+
+                            if ((i+1) <  classList.size()) {
+                                sb.append(",");
+                            }
+                        }
+                        sb.append("]");
+
+                        logger.log(TreeLogger.DEBUG, "add call with (\"" + s + "\", \"" +
+                                sb.toString() + "\")");
+                        p("__method.addData(\"" + s + "\", \"" + sb.toString() + "\");");
                     }
-                    logger.log(TreeLogger.DEBUG, "add call with (\"" + addDataParams[0] + "\", \"" +
-                            addDataParams[1] + "\")");
-                    p("__method.addData(\"" + addDataParams[0] + "\", \"" + addDataParams[1] + "\");");
                 }
             }
 

@@ -28,6 +28,9 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.logging.client.LogConfiguration;
 
 public class ModelChangeCallbackFilter implements CallbackFilter {
@@ -50,17 +53,32 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
 
         if (code < Response.SC_MULTIPLE_CHOICES
                 && code >= Response.SC_OK) {
-            String modelChangeIdentifier = method.getData().get(ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY);
+            String modelChangeIdentifier = method.getData().get(
+                    ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY);
 
             if (modelChangeIdentifier != null) {
-                GWT.log("found modelChangeIdentifier \"" + modelChangeIdentifier + "\" in " + response);
-                GwtEvent e = ModelChangeEventFactory.factory(modelChangeIdentifier);
+                GWT.log("found modelChangeIdentifier \"" + modelChangeIdentifier + "\" in "
+                        + response);
+                JSONValue jsonValue = JSONParser.parseStrict(modelChangeIdentifier);
+                JSONArray jsonArray = jsonValue.isArray();
 
-                if (LogConfiguration.loggingIsEnabled()) {
-                    Logger.getLogger(ModelChangeCallbackFilter.class.getName())
-                            .info("fire event \"" + e + "\" ...");
+                if (jsonArray != null) {
+                    for (int i = 0; i < jsonArray.size(); ++i) {
+                        GwtEvent e = ModelChangeEventFactory.factory(
+                                jsonArray.get(i).isString().stringValue());
+
+                        if (LogConfiguration.loggingIsEnabled()) {
+                            Logger.getLogger(ModelChangeCallbackFilter.class.getName())
+                                    .info("fire event \"" + e + "\" ...");
+                        }
+                        eventBus.fireEvent(e);
+                    }
+                } else {
+                    if (LogConfiguration.loggingIsEnabled()) {
+                        Logger.getLogger(ModelChangeCallbackFilter.class.getName())
+                        .info("found null array for events");
+                    }
                 }
-                eventBus.fireEvent(e);
             }
             return callback;
         }

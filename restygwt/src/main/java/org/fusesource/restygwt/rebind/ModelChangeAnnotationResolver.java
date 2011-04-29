@@ -18,6 +18,10 @@
 
 package org.fusesource.restygwt.rebind;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
@@ -26,6 +30,7 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.dev.util.collect.HashMap;
 
 /**
  * Implementation for an annotationparser which is responsible to put
@@ -39,10 +44,11 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
 public class ModelChangeAnnotationResolver implements AnnotationResolver {
 
     @Override
-    public String[] resolveAnnotation(TreeLogger logger, JClassType source, JMethod method,
+    public Map<String, String[]> resolveAnnotation(TreeLogger logger, JClassType source, JMethod method,
             final String restMethod) throws UnableToCompleteException {
         ModelChange classAnnot = source.getAnnotation(ModelChange.class);
         ModelChange methodAnnot = method.getAnnotation(ModelChange.class);
+        final Map<String, String[]> ret = new java.util.HashMap<String, String[]>();
 
         if (methodAnnot != null) {
             if (methodAnnot.domain() == null
@@ -52,7 +58,9 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
                 throw new UnableToCompleteException();
             }
             // method annotation match
-            return new String[]{ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY, methodAnnot.domain()};
+            ret.put(ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY,
+                    getAnnotationsAsStringArray(methodAnnot.domain()));
+            return ret;
         }
 
         if (classAnnot != null
@@ -66,11 +74,31 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
                         throw new UnableToCompleteException();
                     }
                     // class annotation match for current method
-                    return new String[]{ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY, classAnnot.domain()};
+                    ret.put(ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY,
+                            getAnnotationsAsStringArray(classAnnot.domain()));
+                    return ret;
                 }
             }
         }
         // no match at all
         return null;
+    }
+
+    /**
+     * convert an array of classes to an array of strings to be usable in js context.
+     *
+     * @param classes
+     * @return
+     */
+    private String[] getAnnotationsAsStringArray(final Class[] classes) {
+        if (null == classes) return null;
+
+        List<String> ret = new ArrayList<String>();
+
+        for(Class c: classes) {
+            ret.add(c.getName());
+        }
+
+        return ret.toArray(new String[ret.size()]);
     }
 }

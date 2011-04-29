@@ -18,6 +18,8 @@
 
 package org.fusesource.restygwt.rebind;
 
+import java.util.Map;
+
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
@@ -53,6 +55,6 @@ public interface AnnotationResolver {
      * e.g. returning ``new String[]{"key", "value"}``
      *      will result in ``__method.addData("key", "value")``
      */
-    public String[] resolveAnnotation(TreeLogger logger, JClassType source, JMethod method,
+    public Map<String, String[]> resolveAnnotation(TreeLogger logger, JClassType source, JMethod method,
             final String restMethod) throws UnableToCompleteException;
 }
