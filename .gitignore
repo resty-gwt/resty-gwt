@@ -13,4 +13,5 @@ src/it/*/war/WEB-INF/lib/
 src/it/*/war/META-INF/
 src/it/*/www-test/
 classes
+.idea
 
