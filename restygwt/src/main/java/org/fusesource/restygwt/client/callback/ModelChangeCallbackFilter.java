@@ -77,7 +77,7 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
                 } else {
                     if (LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(ModelChangeCallbackFilter.class.getName())
-                        .info("found null array for events");
+                        .info("found null array for model-change events");
                     }
                 }
             }

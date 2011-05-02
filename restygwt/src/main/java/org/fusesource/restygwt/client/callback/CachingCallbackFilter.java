@@ -18,6 +18,7 @@
 
 package org.fusesource.restygwt.client.callback;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -31,6 +32,9 @@ import org.fusesource.restygwt.client.cache.UrlCacheKey;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.logging.client.LogConfiguration;
 
 public class CachingCallbackFilter implements CallbackFilter {
@@ -124,7 +128,7 @@ public class CachingCallbackFilter implements CallbackFilter {
                 Logger.getLogger(CachingCallbackFilter.class.getName()).finer("cache to " + ck
                         + ": " + response);
             }
-            cache.putResult(ck, response, getCacheDomain(method));
+            cache.putResult(ck, response, getCacheDomains(method));
             return callback;
         }
 
@@ -142,10 +146,18 @@ public class CachingCallbackFilter implements CallbackFilter {
      *
      * @return
      */
-    private String getCacheDomain(final Method method) {
-        final String dd = method.getData().get(Domain.CACHE_DOMAIN_KEY);
+    private List<String> getCacheDomains(final Method method) {
+        final JSONValue jsonValue = JSONParser.parseStrict(method.getData().get(Domain.CACHE_DOMAIN_KEY));
+        JSONArray jsonArray = jsonValue.isArray();
+        final List<String> dd = new ArrayList<String>();
 
-        if (null != dd) return dd;
-        return "";
+        if (null != jsonArray) {
+            for (int i = 0; i < jsonArray.size(); ++i) {
+                dd.add(jsonArray.get(i).isString().stringValue());
+            }
+
+            return dd;
+        }
+        return null;
     }
 }

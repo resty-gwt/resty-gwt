@@ -25,12 +25,12 @@
   <parent>
     <groupId>org.fusesource.restygwt</groupId>
     <artifactId>restygwt-project</artifactId>
-    <version>1.1-Events-14-SNAPSHOT</version>
+    <version>1.1-Events-15-SNAPSHOT</version>
   </parent>
 
   <groupId>org.fusesource.restygwt</groupId>
   <artifactId>restygwt</artifactId>
-  <version>1.1-Events-14-SNAPSHOT</version>
+  <version>1.1-Events-15-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>${project.artifactId}</name>

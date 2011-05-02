@@ -98,6 +98,15 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
     }
 
     @Override
+    public void putResult(CacheKey key, Response response, List<String> scopes) {
+        // TODO mark multi-scoped values as one invalidation group
+        // TODO remove redundant storage
+        for (String scope : scopes) {
+            putResult(key, response, scope);
+        }
+    }
+
+    @Override
     public boolean hasCallback(final CacheKey k) {
         return pendingCallbacks.containsKey(k);
     }
