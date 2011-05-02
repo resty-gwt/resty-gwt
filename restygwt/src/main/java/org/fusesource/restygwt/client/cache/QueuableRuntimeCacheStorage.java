@@ -99,6 +99,11 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
 
     @Override
     public void putResult(CacheKey key, Response response, List<String> scopes) {
+        if (null == scopes) {
+            putResult(key, response);
+            return;
+        }
+
         // TODO mark multi-scoped values as one invalidation group
         // TODO remove redundant storage
         for (String scope : scopes) {

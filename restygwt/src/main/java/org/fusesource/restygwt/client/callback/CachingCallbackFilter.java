@@ -29,6 +29,7 @@ import org.fusesource.restygwt.client.cache.Domain;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.UrlCacheKey;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
@@ -147,6 +148,8 @@ public class CachingCallbackFilter implements CallbackFilter {
      * @return
      */
     private List<String> getCacheDomains(final Method method) {
+        if (null == method.getData().get(Domain.CACHE_DOMAIN_KEY)) return null;
+
         final JSONValue jsonValue = JSONParser.parseStrict(method.getData()
                 .get(Domain.CACHE_DOMAIN_KEY));
         if (null == jsonValue) return null;
