@@ -272,9 +272,9 @@ To have a central location where such ``ModelChangeEvents`` are thrown, a
 there would be no information about "what event for which domain type should be thrown".
 
 Solution is to have a ``org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver``.
-This class must be registered on RestyGWTs generation process in your '*.gwt.xml' via 
+This class must be registered on RestyGWTs generation process in your ``*.gwt.xml`` via 
 
-{pygmentize::xml}
+{pygmentize::java}
     <set-configuration-property name="org.fusesource.restygwt.annotationresolver"
             value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
 {pygmentize}
