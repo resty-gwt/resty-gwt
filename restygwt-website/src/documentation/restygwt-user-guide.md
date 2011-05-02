@@ -121,7 +121,7 @@ public class SimpleDispatcher implements Dispatcher {
 }
 {pygmentize}
 
-When the dispatcher's `send` method is called, the provided builder will already
+When the dispatcher´s ``send´´ method is called, the provided builder will already
 be configured with all the options needed to do the request.
 
 ### Configuring the Request Timeout
@@ -267,15 +267,16 @@ Goal: the Presenter wants to be informed about changes in the model, so a
 ``reload`` of some data can be automatically triggered, whenever a particular
 ``org.fusesource.restygwt.example.client.event.ModelChangeEvent`` is catched.
 
-A to have a central location wher such ``ModelChangeEvents`` are thrown, a 
+To have a central location where such ``ModelChangeEvents`` are thrown, a 
 ``RequestCallback`` seems perfect. Usually - without custom ``AnnotationResolver``s
 there would be no information about "what event for which domain type should be thrown".
 
 Solution is to have a ``org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver``.
-This class must be registered on RestyGWTs generation process via 
+This class must be registered on RestyGWTs generation process in your '*.gwt.xml' via 
 
-{pygmentize::java}
-BindingDefaults.addAnnotationResolver(new ModelChangeAnnotationResolver());
+{pygmentize::xml}
+    <set-configuration-property name="org.fusesource.restygwt.annotationresolver"
+            value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
 {pygmentize}
 
 Additionally assume the following RestService interface definition
@@ -296,17 +297,14 @@ Additionally assume the following RestService interface definition
     import com.google.gwt.json.client.JSONValue;
 
     /**
-     * @author <a href="mailto:andi.balke@gmail.com">Andi</a>
+     * @author andi
      */
     public interface ModelChangeAnnotatedService extends RestService {
-        @GET
-        @Path("/foo/")
-        public void getItems(@HeaderParam("X-Echo-Body") String responseBody,
-                MethodCallback<JSONValue> callback);
+        //...
 
         @PUT
         @Path("/foo/{fooId}")
-        @ModelChange(domain="Foo")
+        @ModelChange(domain=Foo.class)
         public void setItem(@HeaderParam("X-Echo-Code") int responseCode,
                 @PathParam("fooId") int fooId, MethodCallback<Void> callback);
     }
@@ -319,8 +317,8 @@ Now we will have information about our custom annotation inside the
 public class CachingRetryingDispatcher implements Dispatcher {
 
     public Request send(Method method, RequestBuilder builder) throws RequestException {
-        String DomainNameForUpdate = method.getData()
-                .get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY);
+        String[] DomainNameForUpdate = method.getData()
+                .get(ModelChange.MODEL_CHANGED_DOMAIN_KEY);
         // ...
 {pygmentize}
 
@@ -331,11 +329,15 @@ public class CachingRetryingDispatcher implements Dispatcher {
         @Override
         public void onSuccess(Method method, Void response) {
             GwtEvent e = ModelChangeEvent.factory(method.getData()
-                    .get(ModelChangeEvent.MODEL_CHANGED_DOMAIN_KEY));
+                    .get(ModelChange.MODEL_CHANGED_DOMAIN_KEY));
             eventBus.fireEvent(e);
             // ...
 
 {pygmentize}
+
+A fully working example can be found in the integration-test: 
+``org.fusesource.restygwt.client.event.ModelChangeAnnotationTestGwt``.
+
 
 ## REST API
 
