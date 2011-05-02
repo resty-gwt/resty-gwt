@@ -2,6 +2,7 @@ RestyGWT
 ========
 
 ## [resty-gwt 1.2](http://restygwt.fusesource.org/blog/release-1-2.html), un-released
+* Add support for Sending Lists and Sets as repeated parameters.
 * Add support for byte data type
 * Added JSON support for Unix timestamps and null values.
 * create ``Domain`` annotation to be able to identify the information about what domain
