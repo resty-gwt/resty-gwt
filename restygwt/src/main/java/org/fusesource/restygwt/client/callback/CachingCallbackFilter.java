@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.client.cache.CacheKey;
+import org.fusesource.restygwt.client.cache.Domain;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.UrlCacheKey;
 
@@ -122,7 +124,7 @@ public class CachingCallbackFilter implements CallbackFilter {
                 Logger.getLogger(CachingCallbackFilter.class.getName()).finer("cache to " + ck
                         + ": " + response);
             }
-            cache.putResult(ck, response);
+            cache.putResult(ck, response, getCacheDomain(method));
             return callback;
         }
 
@@ -131,5 +133,19 @@ public class CachingCallbackFilter implements CallbackFilter {
                     .info("cannot cache due to invalid response code: " + code);
         }
         return callback;
+    }
+
+    /**
+     * when using the {@link Domain} annotation on services, we are able to group responses
+     * of a service to invalitate them later on more fine grained. this method resolves a
+     * possible ``domain`` to allow grouping.
+     *
+     * @return
+     */
+    private String getCacheDomain(final Method method) {
+        final String dd = method.getData().get(Domain.CACHE_DOMAIN_KEY);
+
+        if (null != dd) return dd;
+        return "";
     }
 }

@@ -25,7 +25,6 @@ import java.util.Map;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.client.cache.Domain;
-import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
