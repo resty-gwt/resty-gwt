@@ -2,6 +2,7 @@ RestyGWT
 ========
 
 ## [resty-gwt 1.2](http://restygwt.fusesource.org/blog/release-1-2.html), un-released
+* Added JSON support for Unix timestamps and null values.
 * create ``Domain`` annotation to be able to identify the information about what domain
   this service affects later on. this can be used to invalidate caching entries by domain. 
 * after unsuccessful retrying we will not call ``window.alert`` if there is a callback
