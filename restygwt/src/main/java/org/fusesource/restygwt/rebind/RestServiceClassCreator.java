@@ -18,29 +18,30 @@
 
 package org.fusesource.restygwt.rebind;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
-import com.google.gwt.core.client.JsArrayBoolean;
-import com.google.gwt.core.client.JsArrayInteger;
-import com.google.gwt.core.client.JsArrayNumber;
-import com.google.gwt.core.client.JsArrayString;
-import com.google.gwt.core.ext.GeneratorContext;
-import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.TreeLogger.Type;
-import com.google.gwt.core.ext.UnableToCompleteException;
-import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JMethod;
-import com.google.gwt.core.ext.typeinfo.JParameter;
-import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
-import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
-import com.google.gwt.xml.client.Document;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.OPTIONS;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import org.fusesource.restygwt.client.AbstractRequestCallback;
 import org.fusesource.restygwt.client.Attribute;
@@ -61,27 +62,28 @@ import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.TextCallback;
 import org.fusesource.restygwt.client.XmlCallback;
 
-import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.OPTIONS;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayBoolean;
+import com.google.gwt.core.client.JsArrayInteger;
+import com.google.gwt.core.client.JsArrayNumber;
+import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JParameter;
+import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
+import com.google.gwt.core.ext.typeinfo.JType;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
+import com.google.gwt.xml.client.Document;
 
 /**
  *
@@ -107,6 +109,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private static final String RESPONSE_FORMAT_EXCEPTION_CLASS = ResponseFormatException.class.getName();
     private static final String JSONP_METHOD_CLASS = JsonpMethod.class.getName();
 
+    /*
+     * static class in which are some compile-time relevant infos.
+     *
+     * TODO (andi): too much flexibility and overhead with reflection here?
+     */
+    private static final Class<BindingDefaults> BINDING_DEFAULTS = BindingDefaults.class;
 
     private static final String METHOD_JSONP = "jsonp";
     private static final String METHOD_PUT = "put";
@@ -328,6 +336,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
             // Handle JSONP specific configuration...
             JSONP jsonpAnnotation = method.getAnnotation(JSONP.class);
+
             if( restMethod.equals(METHOD_JSONP) && jsonpAnnotation!=null ) {
                 if( jsonpAnnotation.callbackParam().length() > 0 ) {
                     p("(("+JSONP_METHOD_CLASS+")__method).callbackParam("+wrap(jsonpAnnotation.callbackParam())+");");
@@ -415,6 +424,38 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                     p("__method.json(" + locator.encodeExpression(contentClass, contentArg.getName(), style) + ");");
                 }
             }
+
+
+            List<AnnotationResolver> annotationResolvers = getAnnotationResolvers(context, logger);
+            logger.log(TreeLogger.DEBUG, "found " + annotationResolvers.size() + " additional AnnotationResolvers");
+
+            for (AnnotationResolver a : annotationResolvers) {
+                logger.log(TreeLogger.DEBUG, "(" + a.getClass().getName() + ") resolve `" + source.getName()
+                        + "#" + method.getName() + "´ ...");
+                final Map<String, String[]> addDataParams = a.resolveAnnotation(logger, source, method, restMethod);
+
+                if (addDataParams != null) {
+                    for (String s : addDataParams.keySet()) {
+                        final StringBuilder sb = new StringBuilder();
+                        final List<String> classList = Arrays.asList(addDataParams.get(s));
+
+                        sb.append("[");
+                        for (int i = 0; i < classList.size(); ++i) {
+                            sb.append("\\\"").append(classList.get(i)).append("\\\"");
+
+                            if ((i+1) <  classList.size()) {
+                                sb.append(",");
+                            }
+                        }
+                        sb.append("]");
+
+                        logger.log(TreeLogger.DEBUG, "add call with (\"" + s + "\", \"" +
+                                sb.toString() + "\")");
+                        p("__method.addData(\"" + s + "\", \"" + sb.toString() + "\");");
+                    }
+                }
+            }
+
 
             if (acceptTypeBuiltIn != null) {
                 p("__method.send(" + callbackArg.getName() + ");");
@@ -549,4 +590,52 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         return restMethod;
     }
 
+    /**
+     * access additional AnnotationResolvers possibly added by
+     *
+     * {@link BindingDefaults#addAnnotationResolver(AnnotationResolver)}
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    private List<AnnotationResolver> getAnnotationResolvers(final GeneratorContext context, final TreeLogger logger) {
+        java.lang.reflect.Method m = null;
+        ArrayList args = new ArrayList();
+        ArrayList types = new ArrayList();
+
+        types.add(GeneratorContext.class);
+        args.add(context);
+        types.add(TreeLogger.class);
+        args.add(logger);
+
+        Object[] argValues = args.toArray();
+        Class[] argtypes = (Class[]) types.toArray(new Class[argValues.length]);
+
+        try {
+             m = BINDING_DEFAULTS.getMethod("getAnnotationResolvers", argtypes);
+        } catch (SecurityException e) {
+            throw new RuntimeException("could not call method `getAnnotationResolvers´ on "
+                    + BINDING_DEFAULTS, e);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException("could not resolve method `getAnnotationResolvers´ on "
+                    + BINDING_DEFAULTS, e);
+        }
+
+        List<AnnotationResolver> l = new ArrayList<AnnotationResolver>();
+        try {
+             Object[] params = new Object[]{context};
+
+            l = (List<AnnotationResolver>) m.invoke(null, context, logger);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("could not call method `getAnnotationResolvers´ on "
+                    + BINDING_DEFAULTS, e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("could not call method `getAnnotationResolvers´ on "
+                    + BINDING_DEFAULTS, e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException("could not call method `getAnnotationResolvers´ on "
+                    + BINDING_DEFAULTS, e);
+        }
+
+        return l;
+    }
 }

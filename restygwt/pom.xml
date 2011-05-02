@@ -32,53 +32,52 @@
   <artifactId>restygwt</artifactId>
   <version>1.2-SNAPSHOT</version>
   <packaging>jar</packaging>
-  
+
   <name>${project.artifactId}</name>
   <description>RestyGWT is a GWT generator for REST services and JSON encoded data transfer objects</description>
 
   <dependencies>
-    
+
     <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>jsr311-api</artifactId>
       <version>1.1</version>
-      <scope>provided</scope>      
+      <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
       <version>${gwt-version}</version>
-      <scope>provided</scope>      
-    </dependency>     
+      <scope>provided</scope>
+    </dependency>
 
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-dev</artifactId>
       <version>${gwt-version}</version>
-      <scope>provided</scope>      
-    </dependency>     
-    
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.1</version>
-            <scope>test</scope>
-        </dependency>
+      <scope>provided</scope>
+    </dependency>
 
-        <dependency>
-          <groupId>org.codehaus.jackson</groupId>
-          <artifactId>jackson-mapper-asl</artifactId>
-          <version>1.7.1</version>
-          <type>jar</type>
-          <scope>test</scope>
-        </dependency>
-  </dependencies>
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.8.1</version>
+        <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.codehaus.jackson</groupId>
+        <artifactId>jackson-mapper-asl</artifactId>
+        <version>1.7.1</version>
+        <type>jar</type>
+        <scope>test</scope>
+    </dependency>
+    </dependencies>
 
   <build>
     <defaultGoal>install</defaultGoal>
     <plugins>
-
 
       <!-- IDE -->
       <plugin>
@@ -101,13 +100,13 @@
         </configuration>
       </plugin>
 
-
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
+        <version>${gwt-version}</version>
 
         <configuration>
-          <gen>${project.build.directory}</gen>
+          <gen>${project.build.directory}/.generated</gen>
           <logLevel>INFO</logLevel>
           <noServer>false</noServer>
           <extraJvmArgs>-Xmx1024m</extraJvmArgs>
@@ -127,7 +126,7 @@
 
     </plugins>
   </build>
-  
+
 
   <profiles>
 

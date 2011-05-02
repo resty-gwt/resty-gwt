@@ -42,7 +42,6 @@ object Website {
         "1.0")  
 
 
-
   val project_keywords= "rest,gwt,restygwt,java,javascript,json,xml,dto"
 
   // -------------------------------------------------------------------

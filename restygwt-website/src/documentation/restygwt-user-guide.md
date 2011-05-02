@@ -16,15 +16,13 @@ RestyGWT is a GWT generator for REST services and JSON encoded data transfer obj
 RestyGWT Rest Services allow you to define an asynchronous Service API which is then implemented via
 GWT deferred binding by a RestyGWT generator.  See the following listing for an example:
 
-{pygmentize::java}
-import javax.ws.rs.POST;
-...
-public interface PizzaService extends RestService {
-    @POST
-    public void order(PizzaOrder request, 
-                      MethodCallback<OrderConfirmation> callback);
-}
-{pygmentize}
+    import javax.ws.rs.POST;
+    ...
+    public interface PizzaService extends RestService {
+        @POST
+        public void order(PizzaOrder request, 
+                          MethodCallback<OrderConfirmation> callback);
+    }
 
 JAX-RS annotations are used to control how the methods interface map to HTTP requests.  The 
 interface methods MUST return void.  Each method must declare at least one callback argument.  
@@ -34,51 +32,45 @@ body.
 Java beans can be sent and received via JSON encoding/decoding.  Here what the classes declarations
 look like for the `PizzaOrder` and `OrderConfirmation` in the previous example:
 
-{pygmentize::java}
-public class PizzaOrder {
-    public String phone_number;
-    public boolean delivery;
-    public List<String> delivery_address = new ArrayList<String>(4);
-    public List<Pizza> pizzas = new ArrayList<Pizza>(10);
-}
+    public class PizzaOrder {
+        public String phone_number;
+        public boolean delivery;
+        public List<String> delivery_address = new ArrayList<String>(4);
+        public List<Pizza> pizzas = new ArrayList<Pizza>(10);
+    }
 
-public class OrderConfirmation {
-    public long order_id;
-    public PizzaOrder order;
-    public double price;
-    public Long ready_time;
-}
-{pygmentize}
+    public class OrderConfirmation {
+        public long order_id;
+        public PizzaOrder order;
+        public double price;
+        public Long ready_time;
+    }
 
 The JSON encoding style is compatible with the default [Jackson](http://wiki.fasterxml.com/JacksonHome) Data Binding.  En example,
 `PizzaOrder` JSON representation would look like:
 
-{pygmentize::js}
-{
-  "phone_number":null,
-  "delivery":true,
-  "delivery_address":[
-    "3434 Pinerun Ave.",
-    "Wesley Chapel, FL 33734"
-  ],
-  "pizzas":[
-    {"quantity":1,"size":16,"crust":"thin","toppings":["ham","pineapple"]},
-    {"quantity":1,"size":16,"crust":"thin","toppings":["extra cheese"]}
-  ]
-}
-{pygmentize}
+    {
+      "phone_number":null,
+      "delivery":true,
+      "delivery_address":[
+        "3434 Pinerun Ave.",
+        "Wesley Chapel, FL 33734"
+      ],
+      "pizzas":[
+        {"quantity":1,"size":16,"crust":"thin","toppings":["ham","pineapple"]},
+        {"quantity":1,"size":16,"crust":"thin","toppings":["extra cheese"]}
+      ]
+    }
 
 A GWT client creates an instance of the REST service and associate it with a HTTP
 resource URL as follows:
 
-{pygmentize::java}
-Resource resource = new Resource( GWT.getModuleBaseURL() + "pizza-service");
+    Resource resource = new Resource( GWT.getModuleBaseURL() + "pizza-service");
 
-PizzaService service = GWT.create(PizzaService.class);
-((RestServiceProxy)service).setResource(resource);
+    PizzaService service = GWT.create(PizzaService.class);
+    ((RestServiceProxy)service).setResource(resource);
 
-service.order(order, callback);
-{pygmentize}
+    service.order(order, callback);
 
 ### Request Dispatchers
 
@@ -90,38 +82,32 @@ they fail.
 To configure the `CachingRetryingDispatcher`, you can configure it on
 your service interface at either the class or method level.  Example:
 
-{pygmentize::java}
-    @POST
-    @Options(dispatcher=CachingRetryingDispatcher.class)
-    public void order(PizzaOrder request, 
-                      MethodCallback<OrderConfirmation> callback);
-{pygmentize}
+        @POST
+        @Options(dispatcher=CachingRetryingDispatcher.class)
+        public void order(PizzaOrder request, 
+                          MethodCallback<OrderConfirmation> callback);
 
 ### Creating Custom Request Dispatchers
 
 You can create a custom request dispatcher by implementing the following `Dispatcher`
 interface:
 
-{pygmentize::java}
-public interface Dispatcher {
-    public Request send(Method method, RequestBuilder builder) throws RequestException;
-}
-{pygmentize}
+    public interface Dispatcher {
+        public Request send(Method method, RequestBuilder builder) throws RequestException;
+    }
 
 Your dispatcher implementation must also define a static singleton instance in a public
 `INSTANCE` field.  Example:
 
-{pygmentize::java}
-public class SimpleDispatcher implements Dispatcher {
-    public static final SimpleDispatcher INSTANCE = new SimpleDispatcher();
+    public class SimpleDispatcher implements Dispatcher {
+        public static final SimpleDispatcher INSTANCE = new SimpleDispatcher();
 
-    public Request send(Method method, RequestBuilder builder) throws RequestException {
-        return builder.send();
+        public Request send(Method method, RequestBuilder builder) throws RequestException {
+            return builder.send();
+        }
     }
-}
-{pygmentize}
 
-When the dispatcher's `send` method is called, the provided builder will already
+When the dispatcher´s ``send´´ method is called, the provided builder will already
 be configured with all the options needed to do the request.
 
 ### Configuring the Request Timeout
@@ -130,12 +116,10 @@ You can use the @Options annotation to configure the timeout for requests
 at either the class or method level.  The timeout is specified in milliseconds,
 For example, to set a 5 second timeout:
 
-{pygmentize::java}
-    @POST
-    @Options(timeout=5000)
-    public void order(PizzaOrder request, 
-                      MethodCallback<OrderConfirmation> callback);
-{pygmentize}
+        @POST
+        @Options(timeout=5000)
+        public void order(PizzaOrder request, 
+                          MethodCallback<OrderConfirmation> callback);
 
 
 ### Configuring the Expected HTTP Status Code
@@ -146,12 +130,10 @@ to have succeeded. You can customize these defaults by setting the
 
 Example:
 
-{pygmentize::java}
-    @POST
-    @Options(expect={200,201})
-    public void order(PizzaOrder request, 
-                      MethodCallback<OrderConfirmation> callback);
-{pygmentize}
+        @POST
+        @Options(expect={200,201})
+        public void order(PizzaOrder request, 
+                          MethodCallback<OrderConfirmation> callback);
 
 ### Configuring the `Accept` and `Content-Type` and HTTP Headers
 
@@ -167,27 +149,23 @@ If you need an attribute of your DTO to be part of the url you can do it by addi
 
 Example:
 
-{pygmentize::java}
-    @PUT
-    @Path("/{id}")
-    public void updateOrder(@PathParam("id") @Attribute("order_id") OrderConfirmation order, 
-                            MethodCallback<OrderConfirmation> callback);
-{pygmentize}
+        @PUT
+        @Path("/{id}")
+        public void updateOrder(@PathParam("id") @Attribute("order_id") OrderConfirmation order, 
+                                MethodCallback<OrderConfirmation> callback);
 
 ### Mapping to a JSONP request
 
 If you need to access JSONP URl, then use the @JSONP annotation on the method
 for example:
 
-{pygmentize::java}
-import org.fusesource.restygwt.client.JSONP;
-...
-public interface FlickrService extends RestService {  
-    @Path("http://www.flickr.com/services/feeds/photos_public.gne?format=json")
-    @JSONP(callbackParam="jsonFlickrFeed")
-    public void photoFeed(JsonCallback callback);    
-}
-{pygmentize}
+    import org.fusesource.restygwt.client.JSONP;
+    ...
+    public interface FlickrService extends RestService {  
+        @Path("http://www.flickr.com/services/feeds/photos_public.gne?format=json")
+        @JSONP(callbackParam="jsonFlickrFeed")
+        public void photoFeed(JsonCallback callback);    
+    }
 
 
 
@@ -201,38 +179,129 @@ Example:
 
 First you define the interface:
  
-{pygmentize::java}
-import javax.ws.rs.POST;
-...
-public interface PizzaOrderCodec extends JsonEncoderDecoder<PizzaOrder> {
-}
-{pygmentize}
+    import javax.ws.rs.POST;
+    ...
+    public interface PizzaOrderCodec extends JsonEncoderDecoder<PizzaOrder> {
+    }
 
 Then you use it as follows
  
-{pygmentize::java}
-// GWT will implement the interface for you
-PizzaOrderCodec codec = GWT.create(PizzaOrderCodec.class);
+    // GWT will implement the interface for you
+    PizzaOrderCodec codec = GWT.create(PizzaOrderCodec.class);
 
-// Encoding an object to json
-PizzaOrder order = ... 
-JSONValue json = codec.encode(order);
+    // Encoding an object to json
+    PizzaOrder order = ... 
+    JSONValue json = codec.encode(order);
 
-// decoding an object to from json
-PizzaOrder other = codec.decode(json);
-{pygmentize}
+    // decoding an object to from json
+    PizzaOrder other = codec.decode(json);
 
 ### Customizing the JSON Property Names 
 
 If you want to map a field name to a different json property name, you
 can use the `@Json` annotation to configure the desired name.  Example:
 
-{pygmentize::java}
-public class Message {
-    @Json(name="message-id")
-    public String messageId;
-}
-{pygmentize}
+    public class Message {
+        @Json(name="message-id")
+        public String messageId;
+    }
+
+
+## Custom Annotation Handler
+
+Due to the functionality of GWTs generators, a generator needs to be responsible
+for the whole generation processing of a particular type. To give RestyGWT users
+the felxibility to extend this generation process, you can register custom
+implementations of ``org.fusesource.restygwt.rebind.AnnotationResolver``.
+
+
+### Runtime Annotation Information
+
+Whilst annotation-parsing and processing happens only in generation/compilation 
+process so far,``AnnotationResolver`` are able to compile extra information into the 
+``org.fusesource.restygwt.client.RestService`` implementation, which will be 
+available inside a ``org.fusesource.restygwt.client.Dispatcher`` and inside a
+``com.google.gwt.http.client.RequestCallback``.
+
+Transport of the Annotation information happens via 
+``org.fusesource.restygwt.client.Method#addData(String key, String value)``
+
+The ability to use annotation information during runtime makes it really easy
+to implement own annotations which can be applied to RestService definitions
+and cause a customized runtime behaviour later on.
+
+One usecase of such an extension of the annotation parsing is the following:
+
+
+### Model Change Events
+
+Goal: the Presenter wants to be informed about changes in the model, so a
+``reload`` of some data can be automatically triggered, whenever a particular
+``org.fusesource.restygwt.example.client.event.ModelChangeEvent`` is catched.
+
+To have a central location where such ``ModelChangeEvents`` are thrown, a 
+``RequestCallback`` seems perfect. Usually - without custom ``AnnotationResolver``s
+there would be no information about "what event for which domain type should be thrown".
+
+Solution is to have a ``org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver``.
+This class must be registered on RestyGWTs generation process in your ``*.gwt.xml`` via 
+
+        <set-configuration-property name="org.fusesource.restygwt.annotationresolver"
+                value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
+
+Additionally assume the following RestService interface definition
+
+    package org.fusesource.restygwt.client.event;
+
+    import javax.ws.rs.GET;
+    import javax.ws.rs.HeaderParam;
+    import javax.ws.rs.PUT;
+    import javax.ws.rs.Path;
+    import javax.ws.rs.PathParam;
+
+    import org.fusesource.restygwt.client.MethodCallback;
+    import org.fusesource.restygwt.client.ModelChange;
+    import org.fusesource.restygwt.client.RestService;
+
+    import com.google.gwt.json.client.JSONValue;
+
+    /**
+     * @author andi
+     */
+    public interface ModelChangeAnnotatedService extends RestService {
+        //...
+
+        @PUT
+        @Path("/foo/{fooId}")
+        @ModelChange(domain=Foo.class)
+        public void setItem(@HeaderParam("X-Echo-Code") int responseCode,
+                @PathParam("fooId") int fooId, MethodCallback<Void> callback);
+    }
+
+
+Now we will have information about our custom annotation inside the
+``Dispatcher`` ...
+
+    public class CachingRetryingDispatcher implements Dispatcher {
+
+        public Request send(Method method, RequestBuilder builder) throws RequestException {
+            String[] DomainNameForUpdate = method.getData()
+                    .get(ModelChange.MODEL_CHANGED_DOMAIN_KEY);
+            // ...
+
+... and inside the ``RequestCallback``
+
+        modelChangeAnnotatedService.setItem(Response.SC_CREATED, 1, new MethodCallback<Void>() {
+            @Override
+            public void onSuccess(Method method, Void response) {
+                GwtEvent e = ModelChangeEvent.factory(method.getData()
+                        .get(ModelChange.MODEL_CHANGED_DOMAIN_KEY));
+                eventBus.fireEvent(e);
+                // ...
+
+A fully working example can be found in the integration-test: 
+``org.fusesource.restygwt.client.event.ModelChangeAnnotationTestGwt``.
+
 
 ## REST API
 
@@ -244,20 +313,18 @@ It will set the HTTP `Accept` and `Content-Type` and `X-HTTP-Method-Override` he
 o the expected values.  It will also expect a HTTP 200 response code, otherwise it will 
 consider request the request a failure.
 
-{pygmentize::java}
-Resource resource = new Resource( GWT.getModuleBaseURL() + "pizza-service");
+    Resource resource = new Resource( GWT.getModuleBaseURL() + "pizza-service");
 
-JSONValue request = ...
+    JSONValue request = ...
 
-resource.post().json(request).send(new JsonCallback() {
-    public void onSuccess(Method method, JSONValue response) {
-        System.out.println(response);
-    }
-    public void onFailure(Method method, Throwable exception) {
-        Window.alert("Error: "+exception);
-    }
-});
-{pygmentize}
+    resource.post().json(request).send(new JsonCallback() {
+        public void onSuccess(Method method, JSONValue response) {
+            System.out.println(response);
+        }
+        public void onFailure(Method method, Throwable exception) {
+            Window.alert("Error: "+exception);
+        }
+    });
 
 All the standard HTTP methods are supported: 
 
@@ -318,13 +385,11 @@ In the below example have a zoo that contains various different types of animals
 with their own specific properties. The super class that the other classes inherit must 
 be an abstract class and annotated like the example below:
 
-{pygmentize::java}
-@JsonSubTypes({@Type(value=Dog.class, name="Dog"), @Type(Cat.class)})
-@JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="@class")
-  public abstract class Animal { 
-     protected Animal() { }
-  }
-{pygmentize}
+    @JsonSubTypes({@Type(value=Dog.class, name="Dog"), @Type(Cat.class)})
+    @JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="@class")
+    public abstract class Animal { 
+        protected Animal() { }
+    }
 
 The sub class uses the JsonTypeInfo annotation to declare how the type information will
 be included in the JSON. Only the Name and Class "use" methods are supported at present.
@@ -336,22 +401,17 @@ to. These must all be sub classes of this type or one of its subclasses. If the 
 is used the name can be optionally specified for each type. In this example only the Dog 
 classes name is specified.
 
+    public class Dog extends Animal {
+        public double barkVolume; // in decibels
+        public Dog() { }
+    }
 
-{pygmentize::java}
-
-  public class Dog extends Animal {
-    public double barkVolume; // in decibels
-    public Dog() { }
-  }
-
-  @JsonTypeName("Cat")
-  public class Cat extends Animal {
-    public boolean likesCream;
-    public int lives;
-    public Cat() { }
-  }
-
-{pygmentize}
+    @JsonTypeName("Cat")
+    public class Cat extends Animal {
+        public boolean likesCream;
+        public int lives;
+        public Cat() { }
+    }
 
 The JsonTypeName can be used to specify the name the type will be mapped to. It must be
 specified via this method or the JsonSubTypes annotation on the super class. If both are
@@ -360,11 +420,9 @@ specified the one on the JsonSubTypes is used.
 Notice no additional information is needed to serialise the Dog class as all its information
 is specified on the Animal supper class.
 
-{pygmentize::java}
-public class Zoo {
-    public List<Animal> animals;
-  }
-{pygmentize}
+    public class Zoo {
+        public List<Animal> animals;
+    }
 
 Finally we can use the animal class as we would if it was a single concrete class. When the
 POJO is used in the GWT code you can use the animals list the same as you would with any

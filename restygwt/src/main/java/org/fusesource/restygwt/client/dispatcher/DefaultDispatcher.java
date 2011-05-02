@@ -18,13 +18,12 @@
 package org.fusesource.restygwt.client.dispatcher;
 
 import org.fusesource.restygwt.client.Dispatcher;
+import org.fusesource.restygwt.client.Method;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
-import org.fusesource.restygwt.client.Method;
 
 /**
  * Some valuable ideas came from:

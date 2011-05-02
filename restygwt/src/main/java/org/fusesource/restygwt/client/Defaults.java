@@ -81,7 +81,6 @@ public class Defaults {
     }
 
     /**
-     *
      * Sets the default dispatcher used by Method instances.
      *
      * @param value

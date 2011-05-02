@@ -17,6 +17,7 @@
 package org.fusesource.restygwt.server;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class CachingTestServlet extends HttpServlet {
 
+    private static final long serialVersionUID = 1L;
 
     /**
      * How many times this servlet was contacted.
@@ -39,29 +41,25 @@ public class CachingTestServlet extends HttpServlet {
      */
     public static int contactCounter = 0;
 
+    private static final Logger log = Logger.getLogger(CachingTestServlet.class.getName());
 
     //5 seconds timeout:
-    long TIMEOUT = 100000;
+    long TIMEOUT = 5000;
 
-    String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
-
+    private final String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
 
     @Override
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
 
-
+        response.setStatus(200);
         if (request.getPathInfo().equals("/getnumberofcontacts")) {
+            log.info("response: \"" + contactCounter + "\"");
             response.getWriter().print(contactCounter);
-
         } else {
-
-            contactCounter++;
+            ++contactCounter;
+            log.info("response: \"" + DUMMY_RESPONSE + "\", counter is " + contactCounter);
             response.getWriter().print(DUMMY_RESPONSE);
-
         }
-
-
     }
-
 }

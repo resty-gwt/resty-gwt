@@ -15,32 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fusesource.restygwt.client.dispatcher;
+package org.fusesource.restygwt.client.cache;
 
-import java.util.HashMap;
 
-import com.google.gwt.http.client.Response;
+public interface CacheKey {
 
-public class CacheStorage {
+    /**
+     * Needed for saving in HashMap:
+     */
+    @Override
+    public int hashCode();
 
-    private static HashMap<CacheKey, Response> cache = new HashMap<CacheKey, Response>();
+    /**
+     * Needed for saving in HashMap:
+     */
+    @Override
+    public boolean equals(Object anObject);
 
-    // private static HashMap<Integer, ArrayList<AsyncCallback<Integer>>>
-    // pendingCallbacks
-    // = new HashMap<Integer, ArrayList<AsyncCallback<Integer>>>();
-
-    public static Response getResultOrReturnNull(CacheKey key) {
-
-        Response val = cache.get(key);
-
-        return val;
-
-    }
-
-    public static void putResult(CacheKey key, Response response) {
-
-        cache.put(key, response);
-
-    }
-
+    /**
+     * string representation and effectively the cache identifier
+     *
+     * @return
+     */
+    public String toString();
 }

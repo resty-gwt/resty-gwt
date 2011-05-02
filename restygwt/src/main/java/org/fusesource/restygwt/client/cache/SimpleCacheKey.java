@@ -15,70 +15,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fusesource.restygwt.client.dispatcher;
 
-import com.google.gwt.http.client.RequestBuilder;
+package org.fusesource.restygwt.client.cache;
 
-public class CacheKey {
+/**
+ * just a string implementation of a cachekey
+ *
+ * @author abalke
+ */
+public final class SimpleCacheKey implements CacheKey {
 
-    //FIXME:
-    private String url;
+    private final String identifier;
 
-    //FIXME:
-    private String requestData;
-
-    //FIXME:
-    private String httpMethod;
-
-    public CacheKey(RequestBuilder requestBuilder) {
-        this.url = requestBuilder.getUrl();
-        this.requestData = requestBuilder.getRequestData();
-        this.httpMethod = requestBuilder.getHTTPMethod();
-
+    public SimpleCacheKey(final String identifier) {
+        this.identifier = identifier;
     }
 
-
-    /**
-     * Needed for saving in HashMap:
-     */
     @Override
     public int hashCode() {
-        return new String(getEverythingAsConcatenatedString()).hashCode();
+        return identifier.hashCode();
     }
 
-    /**
-     * Needed for saving in HashMap:
-     */
     @Override
     public boolean equals(Object anObject) {
-
         if (anObject instanceof CacheKey) {
-
-
             CacheKey aCacheKey = (CacheKey) anObject;
 
-            if (aCacheKey.getEverythingAsConcatenatedString().equals(
-                    getEverythingAsConcatenatedString())) {
+            if (aCacheKey.toString().equals(toString())) {
                 return true;
             }
-
-
         }
 
         return false;
-
     }
 
-
-    /**
-     * Little helper to get contents...
-     *
-     * @return
-     */
-    public String getEverythingAsConcatenatedString() {
-
-        return url + requestData + httpMethod;
-
+    @Override
+    public String toString() {
+        return identifier;
     }
-
 }
