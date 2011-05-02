@@ -23,13 +23,11 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.Domain;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.UrlCacheKey;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;

@@ -32,6 +32,7 @@ import org.fusesource.restygwt.client.callback.ModelChangeCallbackFilter;
 import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
 import org.fusesource.restygwt.client.dispatcher.FilterawareDispatcher;
 import org.fusesource.restygwt.client.dispatcher.FilterawareRetryingDispatcher;
+import org.fusesource.restygwt.client.event.type.Foo;
 import org.fusesource.restygwt.example.client.event.ModelChangeEvent;
 
 import com.google.gwt.core.client.GWT;
@@ -132,6 +133,14 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                          */
                         assertEquals(EVENTS_CATCHED_BEFORE_REQUEST + 1,
                                 handler.getAllCatchedEvents().size());
+
+                        /*
+                         * prove that the last event catched is for the given domain ``Foo``
+                         */
+                        assertEquals(handler.getAllCatchedEvents()
+                                .get(handler.getAllCatchedEvents().size() - 1)
+                                .getDomain(),
+                                Foo.class.getName());
 
                         finishTest();
                     }
