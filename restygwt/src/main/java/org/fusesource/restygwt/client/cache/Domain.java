@@ -16,9 +16,8 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client;
+package org.fusesource.restygwt.client.cache;
 
-import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -26,31 +25,21 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import org.fusesource.restygwt.client.Method;
+
 @Documented
 @Retention(RUNTIME)
-@Target( { METHOD, TYPE })
-public @interface ModelChange {
-
+@Target( { TYPE })
+public @interface Domain {
     /**
      * When creating the ``RestService`` classes, there will be put some information
      * in {@link Method#addData(String, String)}. To have a centralized place
      * what is the key on that ``put`` (and later ``get``) operation, we have this
      * constant here.
-     */
-    public static final String MODEL_CHANGED_DOMAIN_KEY = "mc";
-
-    /**
-     * on which HTTP methods will events be published.
      *
-     * publishing happens after successful HTTP call
+     * Information about the cache-domain is stored in the key::
      */
-    String[] on() default {};
+    public static final String CACHE_DOMAIN_KEY = "cd";
 
-    /**
-     * Defines which Domain class is indicated to be updated.
-     * In the Handler will arrive the full qualified classname.
-     *
-     * @return
-     */
-    Class[] domain() default {};
+    Class[] value();
 }

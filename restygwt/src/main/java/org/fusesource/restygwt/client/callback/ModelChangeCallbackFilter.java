@@ -21,6 +21,7 @@ package org.fusesource.restygwt.client.callback;
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
 
 import com.google.gwt.core.client.GWT;
@@ -54,7 +55,7 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
         if (code < Response.SC_MULTIPLE_CHOICES
                 && code >= Response.SC_OK) {
             String modelChangeIdentifier = method.getData().get(
-                    ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY);
+                    ModelChange.MODEL_CHANGED_DOMAIN_KEY);
 
             if (modelChangeIdentifier != null) {
                 GWT.log("found modelChangeIdentifier \"" + modelChangeIdentifier + "\" in "

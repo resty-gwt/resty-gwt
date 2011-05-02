@@ -25,6 +25,7 @@ import javax.ws.rs.PathParam;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.client.RestService;
+import org.fusesource.restygwt.client.cache.Domain;
 import org.fusesource.restygwt.client.event.type.Foo;
 
 import com.google.gwt.json.client.JSONValue;
@@ -32,6 +33,7 @@ import com.google.gwt.json.client.JSONValue;
 /**
  * @author <a href="mailto:andi.balke@gmail.com">Andi</a>
  */
+@Domain(Foo.class)
 public interface ModelChangeAnnotatedService extends RestService {
     @GET
     @Path("/foo/")
@@ -40,7 +42,7 @@ public interface ModelChangeAnnotatedService extends RestService {
 
     @PUT
     @Path("/foo/{fooId}")
-    @ModelChange(domain = Foo.class)
+    @ModelChange
     public void setItem(@HeaderParam("X-Echo-Code") int responseCode,
             @PathParam("fooId") int fooId, MethodCallback<Void> callback);
 }

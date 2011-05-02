@@ -16,8 +16,6 @@
 
 package org.fusesource.restygwt.example.client.event;
 
-import org.fusesource.restygwt.client.Method;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -37,14 +35,6 @@ public class ModelChangeEventFactory {
      * static class, deny instanciation
      */
     private ModelChangeEventFactory() {}
-
-    /**
-     * When creating the ``RestService`` classes, there will be put some information
-     * in {@link Method#addData(String, String)}. To have a centralized place
-     * what is the key on that ``put`` (and later ``get``) operation, we have this
-     * constant here.
-     */
-    public static final String MODEL_CHANGED_DOMAIN_KEY = "mc";
 
     /**
      * factory method from the annotated domain name to a real event object

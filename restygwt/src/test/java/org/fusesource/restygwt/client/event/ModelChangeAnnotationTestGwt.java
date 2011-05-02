@@ -19,6 +19,7 @@ package org.fusesource.restygwt.client.event;
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
@@ -32,7 +33,6 @@ import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
 import org.fusesource.restygwt.client.dispatcher.FilterawareDispatcher;
 import org.fusesource.restygwt.client.dispatcher.FilterawareRetryingDispatcher;
 import org.fusesource.restygwt.example.client.event.ModelChangeEvent;
-import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
@@ -109,7 +109,7 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
                  * there is no annotation for a get method on that service,
                  * therefore we wont find any values in the method about it.
                  */
-                assertEquals(null, method.getData().get(ModelChangeEventFactory.MODEL_CHANGED_DOMAIN_KEY));
+                assertEquals(null, method.getData().get(ModelChange.MODEL_CHANGED_DOMAIN_KEY));
 
                 final int EVENTS_CATCHED_BEFORE_REQUEST = 0;
 
