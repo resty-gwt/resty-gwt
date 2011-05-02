@@ -3,6 +3,8 @@ RestyGWT
 
 [resty-gwt 1.1]
 ---------------
+* create ``Domain`` annotation to be able to identify the information about what domain
+  this service affects later on. this can be used to invalidate caching entries by domain. 
 * after unsuccessful retrying we will not call ``window.alert`` if there is a callback
   available. instead use onError in this case. 
 * no retrying behaviour on 301, 302 or 404, fallback to error handler in this case directly
