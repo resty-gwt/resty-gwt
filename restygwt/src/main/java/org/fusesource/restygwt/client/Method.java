@@ -203,7 +203,7 @@ public class Method {
             send(new AbstractRequestCallback<JSONValue>(this, callback) {
                 protected JSONValue parseResult() throws Exception {
                     try {
-                        return JSONParser.parse(response.getText());
+                        return JSONParser.parseStrict(response.getText());
                     } catch (Throwable e) {
                         throw new ResponseFormatException("Response was NOT a valid JSON document", e);
                     }
@@ -241,7 +241,7 @@ public class Method {
             send(new AbstractRequestCallback<T>(this, callback) {
                 protected T parseResult() throws Exception {
                     try {
-                        JSONValue val = JSONParser.parse(response.getText());
+                        JSONValue val = JSONParser.parseStrict(response.getText());
                         if (val.isObject() != null) {
                             return (T) val.isObject().getJavaScriptObject();
                         } else if (val.isArray() != null) {
