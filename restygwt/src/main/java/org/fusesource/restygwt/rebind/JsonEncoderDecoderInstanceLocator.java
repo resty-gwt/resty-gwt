@@ -33,6 +33,7 @@ import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.xml.client.Document;
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
 import org.fusesource.restygwt.client.Json;
@@ -49,6 +50,7 @@ public class JsonEncoderDecoderInstanceLocator {
     public static final String JSON_CLASS = Json.class.getName();
 
     public final JClassType STRING_TYPE;
+    public final JClassType SAFE_HTML_TYPE;
     public final JClassType JSON_VALUE_TYPE;
     public final JClassType DOCUMENT_TYPE;
     public final JClassType MAP_TYPE;
@@ -65,6 +67,7 @@ public class JsonEncoderDecoderInstanceLocator {
         this.logger = logger;
 
         this.STRING_TYPE = find(String.class);
+        this.SAFE_HTML_TYPE = find(SafeHtml.class);
         this.JSON_VALUE_TYPE = find(JSONValue.class);
         this.DOCUMENT_TYPE = find(Document.class);
         this.MAP_TYPE = find(Map.class);
@@ -91,6 +94,7 @@ public class JsonEncoderDecoderInstanceLocator {
         builtInEncoderDecoders.put(find(BigInteger.class), JSON_ENCODER_DECODER_CLASS + ".BIG_INTEGER");
 
         builtInEncoderDecoders.put(STRING_TYPE, JSON_ENCODER_DECODER_CLASS + ".STRING");
+        builtInEncoderDecoders.put(SAFE_HTML_TYPE, JSON_ENCODER_DECODER_CLASS + ".SAFE_HTML");
         builtInEncoderDecoders.put(DOCUMENT_TYPE, JSON_ENCODER_DECODER_CLASS + ".DOCUMENT");
         builtInEncoderDecoders.put(JSON_VALUE_TYPE, JSON_ENCODER_DECODER_CLASS + ".JSON_VALUE");
 
