@@ -105,6 +105,10 @@ public class Resource {
         }
         return path;
     }
+    
+    public Map<String, String> getHeaders() {
+		return headers;
+	}
 
     protected Map<String, String> defaultHeaders() {
         return null;
@@ -148,8 +152,4 @@ public class Resource {
 
         return new Resource(path, q.toString(), headers);
     }
-    
-    public Map<String, String> getHeaders() {
-		return headers;
-	}
 }
