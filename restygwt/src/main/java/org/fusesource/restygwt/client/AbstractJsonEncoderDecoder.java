@@ -18,19 +18,6 @@
 
 package org.fusesource.restygwt.client;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONBoolean;
-import com.google.gwt.json.client.JSONNull;
-import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
-import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.xml.client.Document;
-import com.google.gwt.xml.client.XMLParser;
-
-import org.fusesource.restygwt.client.Json.Style;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -42,6 +29,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import org.fusesource.restygwt.client.Json.Style;
+
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
+import com.google.gwt.json.client.JSONNull;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.XMLParser;
 
 /**
  *
@@ -92,7 +94,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
                 return null;
             }
             return (byte) toDouble(value);
-      
+
         }
 
         public JSONValue encode(Byte value) throws EncodingException {
@@ -102,7 +104,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             return new JSONNumber(value);
         }
     };
-    
+
     public static final AbstractJsonEncoderDecoder<Short> SHORT = new AbstractJsonEncoderDecoder<Short>() {
 
         public Short decode(JSONValue value) throws DecodingException {
@@ -180,10 +182,13 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
                 return null;
             }
             JSONString str = value.isString();
+            SafeHtmlBuilder sh = new SafeHtmlBuilder();
+
             if (str == null) {
                 throw new DecodingException("Expected a json string, but was given: " + value);
             }
-            return str.stringValue();
+            sh.appendEscaped(str.stringValue());
+            return sh.toSafeHtml().asString();
         }
 
         public JSONValue encode(String value) throws EncodingException {
