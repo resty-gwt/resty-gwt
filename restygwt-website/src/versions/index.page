@@ -17,22 +17,23 @@
 title: Website Versions
 in_menu: false
 sort_info: 5
---- name:overview
+--- name:content pipeline:jade
 
-# Documentation Versions
-Website Versions
+.left
+  :markdown
+    # Released Website Versions
+.right
+  :&markdown
+    * [Current Website](../index.html)
 
---- name:content
+  - for( version <- project_versions )
+    :&markdown
+      * [#{version} Website](${website_base_url}/versions/#{version}/website/index.html)
+      
+.left
+  :markdown
+    # Development Website
+.right
+  :&markdown
+    * [Snapshot Website](${website_base_url}/versions/#{project_snapshot_version}/website/index.html) based on #{project_snapshot_version}
 
-# Released Websites
-
-Apollo has not been released yet.
-
-<!--
-* [1.0 Website](${website_base_url}/versions/1.0/website/index.html)
-* [1.0 Maven Report](${website_base_url}/versions/1.0/maven/index.html)
- -->
-# Nightly Development Snapshots
-
-* [${project_snapshot_version} Website](${website_base_url}/versions/${project_snapshot_version}/website/index.html)
-* [${project_snapshot_version} Maven Report](${website_base_url}/versions/${project_snapshot_version}/maven/index.html)

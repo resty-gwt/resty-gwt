@@ -132,4 +132,22 @@ public class Resource {
         return new Resource(path, q + key + "=" + value);
     }
 
+    public Resource addQueryParams(String key, Iterable<String> values) {
+        key = URL.encodeComponent(key);
+        StringBuilder q = new StringBuilder(query == null ? "" : query + "&");
+        boolean ampersand = false;
+        for (String value : values) {
+          if (ampersand) {
+            q.append('&');
+          } else {
+            ampersand = true;
+          }
+          value = URL.encodeComponent(value);
+          q.append(key).append("=").append(value);
+        }
+
+        return new Resource(path, q.toString());
+    }
+
+
 }

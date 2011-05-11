@@ -61,7 +61,7 @@
   </repositories>
 
   <properties>
-    <gwt-version>2.1.0</gwt-version>
+    <gwt-version>@gwt-version@</gwt-version>
   </properties>
 
   <dependencies>

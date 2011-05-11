@@ -26,19 +26,23 @@ Download it today!
 
 .left
   :markdown
-    # Latest Releases
+    # Download
 .right
   - val release_base= "http://repo.fusesource.com/nexus/content/groups/public/org/fusesource/%s/%s".format(project_id,project_id)
   :&markdown
-  
-    *  [#{project_id}-1.0.jar](#{release_base}/1.0/#{project_id}-1.0.jar) 
-
-.left
-  :markdown
-    # Nightly Snapshot
     
-.right
+    You can download **#{project_name}** from the [Maven Repository](http://repo.fusesource.com/nexus/content/repositories/public/) 
+    in the [#{project_name} area](#{release_base}).
+
+    Download:
+
+  - for( version <- project_versions )
+    :&markdown
+      *  [#{project_id}-#{version}.jar](#{release_base}/#{version}/#{project_id}-#{version}.jar)
+
   :&markdown
+  
+    ## Snapshots
 
     Want to help stablize the latest and greatest nightly development
     build?  **Warnning**: This build may be extremely bleeding edge!
@@ -56,8 +60,8 @@ Download it today!
 
     {pygmentize::xml}
     <dependency>
-      <groupId>org.fusesource.restygwt</groupId>
-      <artifactId>restygwt</artifactId>
+      <groupId>org.fusesource.#{project_id}</groupId>
+      <artifactId>#{project_id}</artifactId>
       <version>#{project_version}</version>
     </dependency>
     {pygmentize}    

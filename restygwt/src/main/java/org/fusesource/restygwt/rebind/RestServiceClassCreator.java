@@ -18,64 +18,11 @@
 
 package org.fusesource.restygwt.rebind;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.OPTIONS;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-
-import org.fusesource.restygwt.client.AbstractRequestCallback;
-import org.fusesource.restygwt.client.Attribute;
-import org.fusesource.restygwt.client.Defaults;
-import org.fusesource.restygwt.client.Dispatcher;
-import org.fusesource.restygwt.client.JSONP;
-import org.fusesource.restygwt.client.Json;
-import org.fusesource.restygwt.client.Json.Style;
-import org.fusesource.restygwt.client.JsonCallback;
-import org.fusesource.restygwt.client.JsonpMethod;
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.Options;
-import org.fusesource.restygwt.client.OverlayCallback;
-import org.fusesource.restygwt.client.Resource;
-import org.fusesource.restygwt.client.ResponseFormatException;
-import org.fusesource.restygwt.client.RestServiceProxy;
-import org.fusesource.restygwt.client.TextCallback;
-import org.fusesource.restygwt.client.XmlCallback;
-
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
-import com.google.gwt.core.client.JsArrayBoolean;
-import com.google.gwt.core.client.JsArrayInteger;
-import com.google.gwt.core.client.JsArrayNumber;
-import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.client.*;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
-import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JMethod;
-import com.google.gwt.core.ext.typeinfo.JParameter;
-import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
-import com.google.gwt.core.ext.typeinfo.JType;
+import com.google.gwt.core.ext.typeinfo.*;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -84,6 +31,14 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.xml.client.Document;
+import org.fusesource.restygwt.client.*;
+import org.fusesource.restygwt.client.Json.Style;
+
+import javax.ws.rs.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -146,6 +101,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private JClassType JSON_VALUE_TYPE;
     private JClassType OVERLAY_VALUE_TYPE;
     private Set<JClassType> OVERLAY_ARRAY_TYPES;
+    private Set<JClassType> QUERY_PARAM_LIST_TYPES;
     private JsonEncoderDecoderInstanceLocator locator;
 
     public RestServiceClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) throws UnableToCompleteException {
@@ -185,6 +141,9 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         this.OVERLAY_ARRAY_TYPES.add(find(JsArrayInteger.class));
         this.OVERLAY_ARRAY_TYPES.add(find(JsArrayNumber.class));
         this.OVERLAY_ARRAY_TYPES.add(find(JsArrayString.class));
+        this.QUERY_PARAM_LIST_TYPES = new HashSet<JClassType>();
+        this.QUERY_PARAM_LIST_TYPES.add(find(List.class));
+        this.QUERY_PARAM_LIST_TYPES.add(find(Set.class));
 
         String path = null;
         Path pathAnnotation = source.getAnnotation(Path.class);
@@ -238,6 +197,18 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private boolean isOverlayArrayType(JClassType type) {
         for (JClassType arrayType : OVERLAY_ARRAY_TYPES) {
             if (type.isAssignableTo(arrayType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isQueryParamListType(JClassType type) {
+        if (type.isParameterized() == null) {
+            return false;
+        }
+        for (JClassType listType : QUERY_PARAM_LIST_TYPES) {
+            if (type.isAssignableTo(listType)) {
                 return true;
             }
         }
@@ -329,7 +300,14 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             }
             for (Map.Entry<String, JParameter> entry : queryParams.entrySet()) {
                 String expr = entry.getValue().getName();
-                p(".addQueryParam(" + wrap(entry.getKey()) + ", " + toStringExpression(entry.getValue().getType(), expr) + ")");
+                JClassType type = entry.getValue().getType().isClassOrInterface();
+                if (type != null && isQueryParamListType(type)) {
+                    p(".addQueryParams(" + wrap(entry.getKey()) + ", " +
+                      toIteratedStringExpression(entry.getValue()) + ")");
+                } else {
+                    p(".addQueryParam(" + wrap(entry.getKey()) + ", " +
+                      toStringExpression(entry.getValue().getType(), expr) + ")");
+                }
             }
             // example: .get()
             p("." + restMethod + "();");
@@ -532,6 +510,14 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         }
 
         return expr + ".toString()";
+    }
+
+    protected String toIteratedStringExpression(JParameter arg) {
+        StringBuilder result = new StringBuilder();
+        result.append("new org.fusesource.restygwt.client.StringIterable (")
+            .append(arg.getName()).append(")");
+
+        return result.toString();
     }
 
     private JClassType getCallbackTypeGenericClass(final JClassType callbackType) throws UnableToCompleteException {
