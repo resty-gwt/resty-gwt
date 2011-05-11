@@ -182,17 +182,40 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
                 return null;
             }
             JSONString str = value.isString();
+
+            if (str == null) {
+                throw new DecodingException("Expected a json string, but was given: " + value);
+            }
+
+            return str.stringValue();
+        }
+
+        public JSONValue encode(String value) throws EncodingException {
+            return (value == null) ? getNullType() : new JSONString(value);
+        }
+    };
+
+    public static final AbstractJsonEncoderDecoder<SafeHtml> SAFE_HTML = new AbstractJsonEncoderDecoder<SafeHtml>() {
+
+        public SafeHtml decode(JSONValue value) throws DecodingException {
+            if (value == null || value.isNull() != null) {
+                return null;
+            }
+            JSONString str = value.isString();
             SafeHtmlBuilder sh = new SafeHtmlBuilder();
 
             if (str == null) {
                 throw new DecodingException("Expected a json string, but was given: " + value);
             }
+
             sh.appendEscaped(str.stringValue());
-            return sh.toSafeHtml().asString();
+            return sh.toSafeHtml();
         }
 
-        public JSONValue encode(String value) throws EncodingException {
-            return (value == null) ? getNullType() : new JSONString(value);
+        @Override
+        public JSONValue encode(SafeHtml value)
+                throws org.fusesource.restygwt.client.JsonEncoderDecoder.EncodingException {
+            return (value == null) ? getNullType() : new JSONString(value.toString());
         }
     };
 
