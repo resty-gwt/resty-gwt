@@ -40,8 +40,12 @@ public class Resource {
     final Map<String, String> headers;
     
     public Resource(String uri) {
-    	this (uri, null);
+    	this (uri, (Map<String, String>) null);
     }
+    
+    public Resource(String uri, String query) {
+		this(uri, query, null);
+	}
 
     public Resource(final String uri, final Map<String, String> headers) {
         int pos = uri.indexOf('?');
@@ -61,9 +65,9 @@ public class Resource {
     	this.path = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
         this.query = query;
         this.headers = (headers != null) ? headers : defaultHeaders();
-    }
+    }    
 
-    public Method head() {
+	public Method head() {
         return new Method(this, "HEAD").headers(headers);
     }
 
