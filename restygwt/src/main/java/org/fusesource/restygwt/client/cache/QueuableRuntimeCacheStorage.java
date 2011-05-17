@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -55,8 +55,8 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
 
     public Response getResultOrReturnNull(final CacheKey key, final String scope) {
         final HashMap<CacheKey, Response> scoped = cache.get(scope);
-
         if (null != scoped) {
+            GWT.log(scoped.toString());
             return scoped.get(key);
         }
 
@@ -111,6 +111,7 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
         }
     }
 
+    
     @Override
     public boolean hasCallback(final CacheKey k) {
         return pendingCallbacks.containsKey(k);

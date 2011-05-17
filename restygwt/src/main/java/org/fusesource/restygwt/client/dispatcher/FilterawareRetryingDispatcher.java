@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.callback.CachingCallbackFactory;
 import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
 
 import com.google.gwt.http.client.Request;
@@ -44,8 +46,13 @@ import com.google.gwt.logging.client.LogConfiguration;
  */
 public class FilterawareRetryingDispatcher implements FilterawareDispatcher {
 
-    public static FilterawareRetryingDispatcher INSTANCE = new FilterawareRetryingDispatcher();
-
+    public static FilterawareRetryingDispatcher INSTANCE;
+    static {
+        QueueableCacheStorage storage = new QueuableRuntimeCacheStorage();
+        INSTANCE = new FilterawareRetryingDispatcher(new CachingDispatcherFilter(storage, 
+            new CachingCallbackFactory(storage)));
+    }
+    
     /**
      * list of dispatcherfilters to be performed when an request is done
      */
@@ -65,7 +72,14 @@ public class FilterawareRetryingDispatcher implements FilterawareDispatcher {
         INSTANCE = new FilterawareRetryingDispatcher();
         return INSTANCE;
     }
-
+    
+    public FilterawareRetryingDispatcher(){    
+    }
+    
+    public FilterawareRetryingDispatcher(DispatcherFilter filter){
+        addFilter(filter);
+    }
+    
     public Request send(Method method, RequestBuilder builder) throws RequestException {
         for (DispatcherFilter f : dispatcherFilters) {
             if (!f.filter(method, builder)) {

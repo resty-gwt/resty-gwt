@@ -67,7 +67,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
     public boolean filter(final Method method, final RequestBuilder builder) {
         final CacheKey cacheKey = new UrlCacheKey(builder);
         final Response cachedResponse = cacheStorage.getResultOrReturnNull(cacheKey);
-        final boolean cachable = builder.getHTTPMethod().equals(RequestBuilder.GET.toString());
+        final boolean cachable = builder.getHTTPMethod().equals(RequestBuilder.POST.toString());
 
         if (cachable == true) {
             if (cachedResponse != null) {
