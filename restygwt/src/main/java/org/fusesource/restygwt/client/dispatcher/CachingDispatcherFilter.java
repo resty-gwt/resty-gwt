@@ -24,6 +24,7 @@ import org.fusesource.restygwt.client.Dispatcher;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.ComplexCacheKey;
 import org.fusesource.restygwt.client.cache.UrlCacheKey;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
 import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
@@ -58,6 +59,15 @@ public class CachingDispatcherFilter implements DispatcherFilter {
         this.cacheStorage = cacheStorage;
         this.callbackFactory = cf;
     }
+    
+    protected CacheKey cacheKey(RequestBuilder builder) {
+        if (RequestBuilder.GET.toString().equalsIgnoreCase(
+                builder.getHTTPMethod())) {
+            return new ComplexCacheKey(builder);
+        } else {
+            return null;
+        }
+    }
 
     /**
      * main filter method for a dispatcherfilter.
@@ -65,11 +75,10 @@ public class CachingDispatcherFilter implements DispatcherFilter {
      * @return continue filtering or not
      */
     public boolean filter(final Method method, final RequestBuilder builder) {
-        final CacheKey cacheKey = new UrlCacheKey(builder);
-        final Response cachedResponse = cacheStorage.getResultOrReturnNull(cacheKey);
-        final boolean cachable = builder.getHTTPMethod().equals(RequestBuilder.POST.toString());
+        final CacheKey cacheKey = cacheKey(builder);
 
-        if (cachable == true) {
+        if (cacheKey != null) {
+            final Response cachedResponse = cacheStorage.getResultOrReturnNull(cacheKey);
             if (cachedResponse != null) {
                 //case 1: we got a result in cache => return it...
                 if (LogConfiguration.loggingIsEnabled()) {
@@ -88,7 +97,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
                 });
                 return false;
             }  else {
-                final RequestCallback retryingCallback = callbackFactory.createCallback(method);
+                final RequestCallback callback = callbackFactory.createCallback(method);
 
                 //case 2: => no cache in result => queue it....
                 if (!cacheStorage.hasCallback(cacheKey)) {
@@ -102,7 +111,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
                     }
 
                     // important part:
-                    builder.setCallback(retryingCallback);
+                    builder.setCallback(callback);
                     return true;
                 } else {
                     //case 2.2 => a callback already in progress => queue to get response when back
@@ -111,7 +120,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
                                 .info("request in progress, queue callback: " + builder.getHTTPMethod() + " "
                                 + builder.getUrl());
                     }
-                    cacheStorage.addCallback(cacheKey, retryingCallback);
+                    cacheStorage.addCallback(cacheKey, callback);
                     return false;
                 }
             }
