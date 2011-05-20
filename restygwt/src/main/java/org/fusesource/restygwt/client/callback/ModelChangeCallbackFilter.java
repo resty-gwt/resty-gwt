@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.ModelChange;
+import org.fusesource.restygwt.example.client.event.ModelChangeEvent;
 import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
 
 import com.google.gwt.core.client.GWT;
@@ -65,7 +66,7 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
 
                 if (jsonArray != null) {
                     for (int i = 0; i < jsonArray.size(); ++i) {
-                        GwtEvent e = ModelChangeEventFactory.factory(
+                        ModelChangeEvent e = new ModelChangeEvent(
                                 jsonArray.get(i).isString().stringValue());
 
                         if (LogConfiguration.loggingIsEnabled()) {
