@@ -22,10 +22,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
-import org.fusesource.restygwt.client.callback.CachingCallbackFactory;
-import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
+import org.fusesource.restygwt.client.callback.DefaultFilterawareRequestCallback;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -44,14 +42,9 @@ import com.google.gwt.logging.client.LogConfiguration;
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
-public class FilterawareRetryingDispatcher implements FilterawareDispatcher {
+public class DefaultFilterawareDispatcher implements FilterawareDispatcher {
 
-    public static FilterawareRetryingDispatcher INSTANCE;
-    static {
-        QueueableCacheStorage storage = new QueuableRuntimeCacheStorage();
-        INSTANCE = new FilterawareRetryingDispatcher(new CachingDispatcherFilter(storage, 
-            new CachingCallbackFactory(storage)));
-    }
+    public static DefaultFilterawareDispatcher INSTANCE;
     
     /**
      * list of dispatcherfilters to be performed when an request is done
@@ -63,21 +56,23 @@ public class FilterawareRetryingDispatcher implements FilterawareDispatcher {
      * get one instance of this class
      *
      * @param cacheStorage the one and only {@link QueueableCacheStorage} for this instance
-     * @param cf CallbackFactory to be able to use {@link FilterawareRetryingCallback}
+     * @param cf CallbackFactory to be able to use {@link DefaultFilterawareRequestCallback}
      * @return
      */
-    public static FilterawareRetryingDispatcher singleton() {
+    public static DefaultFilterawareDispatcher singleton() {
         if (null != INSTANCE) return INSTANCE;
 
-        INSTANCE = new FilterawareRetryingDispatcher();
+        INSTANCE = new DefaultFilterawareDispatcher();
         return INSTANCE;
     }
     
-    public FilterawareRetryingDispatcher(){    
+    public DefaultFilterawareDispatcher(){    
     }
     
-    public FilterawareRetryingDispatcher(DispatcherFilter filter){
-        addFilter(filter);
+    public DefaultFilterawareDispatcher(DispatcherFilter... filters){
+        for(DispatcherFilter filter: filters){
+            addFilter(filter);
+        }
     }
     
     public Request send(Method method, RequestBuilder builder) throws RequestException {
@@ -85,7 +80,7 @@ public class FilterawareRetryingDispatcher implements FilterawareDispatcher {
             if (!f.filter(method, builder)) {
                 // filter returned false, no continue
                 if (LogConfiguration.loggingIsEnabled()) {
-                    Logger.getLogger(FilterawareRetryingDispatcher.class.getName())
+                    Logger.getLogger(DefaultFilterawareDispatcher.class.getName())
                             .fine(f.getClass() + " told me not to continue filtering for: "
                                     + builder.getHTTPMethod() + " " + builder.getUrl());
                 }
