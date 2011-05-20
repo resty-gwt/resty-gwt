@@ -22,16 +22,16 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
-import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
+import org.fusesource.restygwt.client.cache.NonPersistentQueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
 import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
-import org.fusesource.restygwt.client.callback.FilterawareRetryingCallback;
+import org.fusesource.restygwt.client.callback.DefaultFilterawareRequestCallback;
 import org.fusesource.restygwt.client.callback.ModelChangeCallbackFilter;
 import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
 import org.fusesource.restygwt.client.dispatcher.FilterawareDispatcher;
-import org.fusesource.restygwt.client.dispatcher.FilterawareRetryingDispatcher;
+import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 import org.fusesource.restygwt.client.event.type.Foo;
 import org.fusesource.restygwt.example.client.event.ModelChangeEvent;
 
@@ -64,14 +64,14 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
          * configure RESTY to use cache, usually done in gin
          */
         final EventBus eventBus = new SimpleEventBus();
-        final QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
-        final FilterawareDispatcher dispatcher = new FilterawareRetryingDispatcher();
+        final QueueableCacheStorage cacheStorage = new NonPersistentQueueableCacheStorage();
+        final FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher();
 
         dispatcher.addFilter(new CachingDispatcherFilter(
                 cacheStorage,
                 new CallbackFactory() {
                     public FilterawareRequestCallback createCallback(Method method) {
-                        final FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
+                        final FilterawareRequestCallback retryingCallback = new DefaultFilterawareRequestCallback(
                                 method);
 
                         retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
