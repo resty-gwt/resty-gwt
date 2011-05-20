@@ -17,8 +17,6 @@
  */
 package org.fusesource.restygwt.client.cache;
 
-import java.util.List;
-
 public interface CacheStorage<T> {
     public T getResultOrReturnNull(final CacheKey key);
 
@@ -36,16 +34,21 @@ public interface CacheStorage<T> {
      * @param scope
      * @param response
      */
-    public void putResult(final CacheKey key, final T response, final String scope);
+    public void putResult(final CacheKey key, final T response, final String... scope);
 
     /**
-     * put by ident/scope. e.g. to invalidate later on by domain class
+     * default delete method
+     */
+    public void remove(final CacheKey key);
+
+    /**
+     * delete by ident/scope. e.g. to invalidate later on by domain class
      *
      * @param key
      * @param scope
      * @param response
      */
-    public void putResult(final CacheKey key, final T response, final List<String> scopes);
+    public void remove(final CacheKey key, final String... scopes);
 
     /**
      * purge the complete cache
