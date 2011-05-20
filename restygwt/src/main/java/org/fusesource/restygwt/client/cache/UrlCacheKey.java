@@ -19,69 +19,14 @@ package org.fusesource.restygwt.client.cache;
 
 import com.google.gwt.http.client.RequestBuilder;
 
-public final class UrlCacheKey implements CacheKey {
-
-    /**
-     * the url for the cache we'll represent
-     */
-    private final String url;
-
-    /**
-     * the requestdata for the cache we'll represent
-     */
-    private final String requestData;
-
-    /**
-     * the http method for the cache we'll represent
-     */
-    private final String httpMethod;
-
-    /**
-     * as this instances are immutable, we can cache the string representaion
-     * for our own instance.
-     */
-    private String stringRepresentation = null;
+public final class UrlCacheKey extends SimpleCacheKey {
 
     public UrlCacheKey(RequestBuilder requestBuilder) {
-        this.url = requestBuilder.getUrl();
-        this.requestData = requestBuilder.getRequestData();
-        this.httpMethod = requestBuilder.getHTTPMethod();
-
+        super(requestBuilder.getUrl());
     }
 
-    /**
-     * Needed for saving in HashMap:
-     */
-    @Override
-    public int hashCode() {
-        return new String(toString()).hashCode();
+    public UrlCacheKey(String url) {
+        super(url);
     }
 
-    /**
-     * Needed for saving in HashMap:
-     */
-    @Override
-    public boolean equals(Object anObject) {
-        if (anObject instanceof CacheKey) {
-            CacheKey aCacheKey = (CacheKey) anObject;
-
-            if (aCacheKey.toString().equals(toString())) {
-                return true;
-            }
-        }
-
-        return false;
-
-    }
-
-    /**
-     * string representation and effectively the cache identifier
-     *
-     * @return
-     */
-    public String toString() {
-        if (null != stringRepresentation) return stringRepresentation;
-
-        return stringRepresentation = httpMethod + " " + url + " [" + requestData + "]";
-    }
 }

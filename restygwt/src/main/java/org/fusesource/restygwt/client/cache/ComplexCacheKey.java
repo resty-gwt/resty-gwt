@@ -15,42 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.fusesource.restygwt.client.cache;
 
-/**
- * just a string implementation of a cachekey
- *
- * @author abalke
- */
-public class SimpleCacheKey implements CacheKey {
+import com.google.gwt.http.client.RequestBuilder;
 
-    private final String identifier;
+public final class ComplexCacheKey extends SimpleCacheKey {
 
-    public SimpleCacheKey(final String identifier) {
-        this.identifier = identifier;
-    }
-
-    @Override
-    public int hashCode() {
-        return identifier.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object anObject) {
-        if (anObject instanceof CacheKey) {
-            CacheKey aCacheKey = (CacheKey) anObject;
-
-            if (aCacheKey.toString().equals(toString())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public String toString() {
-        return identifier;
+    public ComplexCacheKey(RequestBuilder requestBuilder) {
+        super(requestBuilder.getHTTPMethod() + 
+                " " + requestBuilder.getUrl() + 
+                " [" + requestBuilder.getRequestData() + "]");
     }
 }
