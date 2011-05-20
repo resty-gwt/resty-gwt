@@ -18,17 +18,17 @@
 
 package org.fusesource.restygwt.client.callback;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.CacheKey;
+import org.fusesource.restygwt.client.cache.ComplexCacheKey;
 import org.fusesource.restygwt.client.cache.Domain;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
-import org.fusesource.restygwt.client.cache.UrlCacheKey;
 
 import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -38,7 +38,7 @@ import com.google.gwt.logging.client.LogConfiguration;
 
 public class CachingCallbackFilter implements CallbackFilter {
 
-    protected QueueableCacheStorage cache;
+    protected final QueueableCacheStorage cache;
 
     public CachingCallbackFilter(QueueableCacheStorage cache) {
         this.cache = cache;
@@ -54,8 +54,8 @@ public class CachingCallbackFilter implements CallbackFilter {
             RequestCallback callback) {
         final int code = response.getStatusCode();
 
-        final CacheKey ck = new UrlCacheKey(method.builder);
-        final List<RequestCallback> removedCallbacks = cache.removeCallbacks(ck);
+        final CacheKey ck = cacheKey(method.builder);
+        final Set<RequestCallback> removedCallbacks = cache.removeCallbacks(ck);
 
         if (removedCallbacks != null
                 && 1 < removedCallbacks.size()) {
@@ -123,11 +123,7 @@ public class CachingCallbackFilter implements CallbackFilter {
 
         if (code < Response.SC_MULTIPLE_CHOICES
                 && code >= Response.SC_OK) {
-            if (LogConfiguration.loggingIsEnabled()) {
-                Logger.getLogger(CachingCallbackFilter.class.getName()).finer("cache to " + ck
-                        + ": " + response);
-            }
-            cache.putResult(ck, response, getCacheDomains(method));
+            cacheResult(method, response);
             return callback;
         }
 
@@ -138,6 +134,19 @@ public class CachingCallbackFilter implements CallbackFilter {
         return callback;
     }
 
+    protected CacheKey cacheKey(final RequestBuilder builder) {
+        return new ComplexCacheKey(builder);
+    }
+
+    protected void cacheResult(final Method method, final Response response) {
+        CacheKey cacheKey = cacheKey(method.builder);
+        if (LogConfiguration.loggingIsEnabled()) {
+            Logger.getLogger(CachingCallbackFilter.class.getName()).finer("cache to " + cacheKey
+                    + ": " + response);
+        }
+        cache.putResult(cacheKey, response, getCacheDomains(method));
+    }
+
     /**
      * when using the {@link Domain} annotation on services, we are able to group responses
      * of a service to invalitate them later on more fine grained. this method resolves a
@@ -145,7 +154,7 @@ public class CachingCallbackFilter implements CallbackFilter {
      *
      * @return
      */
-    private List<String> getCacheDomains(final Method method) {
+    private String[] getCacheDomains(final Method method) {
         if (null == method.getData().get(Domain.CACHE_DOMAIN_KEY)) return null;
 
         final JSONValue jsonValue = JSONParser.parseStrict(method.getData()
@@ -153,11 +162,11 @@ public class CachingCallbackFilter implements CallbackFilter {
         if (null == jsonValue) return null;
 
         JSONArray jsonArray = jsonValue.isArray();
-        final List<String> dd = new ArrayList<String>();
+        final String[] dd = new String[jsonArray.size()];
 
         if (null != jsonArray) {
             for (int i = 0; i < jsonArray.size(); ++i) {
-                dd.add(jsonArray.get(i).isString().stringValue());
+                dd[i] = jsonArray.get(i).isString().stringValue();
             }
 
             return dd;
