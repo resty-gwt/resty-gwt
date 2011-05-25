@@ -202,12 +202,12 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
                 return null;
             }
             JSONString str = value.isString();
-            SafeHtmlBuilder sh = new SafeHtmlBuilder();
 
             if (str == null) {
                 throw new DecodingException("Expected a json string, but was given: " + value);
             }
 
+            SafeHtmlBuilder sh = new SafeHtmlBuilder();
             sh.appendEscaped(str.stringValue());
             return sh.toSafeHtml();
         }

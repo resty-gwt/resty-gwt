@@ -1,19 +1,18 @@
 package org.fusesource.restygwt;
 
 
-import com.google.gwt.junit.tools.GWTTestSuite;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import org.fusesource.restygwt.client.basic.BasicTestGwt;
 import org.fusesource.restygwt.client.basic.CachingTestGwt;
 import org.fusesource.restygwt.client.basic.ExtendedRestTestGwt;
 import org.fusesource.restygwt.client.basic.FlakyTestGwt;
+import org.fusesource.restygwt.client.basic.SafeHtmlTestGwt;
 import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
 import org.fusesource.restygwt.client.complex.BigNumberTestGwt;
-import org.fusesource.restygwt.client.event.ModelChangeAnnotationTestGwt;
-import org.fusesource.restygwt.rebind.BindingDefaults;
-import org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver;
+
+import com.google.gwt.junit.tools.GWTTestSuite;
 
 
 /**
@@ -48,6 +47,8 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(ExtendedRestTestGwt.class);
         suite.addTestSuite(BigNumberTestGwt.class);
         suite.addTestSuite(CachingTestGwt.class);
+        suite.addTestSuite(SafeHtmlTestGwt.class);
+        suite.addTestSuite(BasicTestGwt.class);
 
         return suite;
     }
