@@ -3,6 +3,7 @@ RestyGWT
 
 [resty-gwt 1.1 Events]
 ---------------
+* added explicit NULL check in JsonEncoderDecoder for SafeHTML type
 * increase GWT dep to 2.2
 ## [resty-gwt 1.2](http://restygwt.fusesource.org/blog/release-1-2.html), un-released
 * Add support for Sending Lists and Sets as repeated parameters.
