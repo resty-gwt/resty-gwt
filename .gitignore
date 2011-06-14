@@ -14,4 +14,5 @@ src/it/*/war/META-INF/
 src/it/*/www-test/
 classes
 .idea
-
+/war
+/www-test
