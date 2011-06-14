@@ -3,6 +3,8 @@ RestyGWT
 
 [resty-gwt 1.1 Events]
 ---------------
+* fix bug with generic types in response where only one (the first occuring) generic
+  jsonencoderdecoder was compiled to javascript. this only happened in production mode
 * increase GWT dep to 2.2
 ## [resty-gwt 1.2](http://restygwt.fusesource.org/blog/release-1-2.html), un-released
 * Add support for Sending Lists and Sets as repeated parameters.
