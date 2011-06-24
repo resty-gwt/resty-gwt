@@ -34,7 +34,7 @@ public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
     /**
      * how long will a cachekey be allowed to exist
      */
-    private static final long DEFAULT_LIFETIME_MS = 30 * 1000;
+    public long DEFAULT_LIFETIME_MS = 90 * 1000;
 
     /**
      * key <> value hashmap for holding cache values. nothing special here.
