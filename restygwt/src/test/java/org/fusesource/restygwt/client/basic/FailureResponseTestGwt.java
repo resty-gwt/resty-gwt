@@ -54,7 +54,7 @@ public class FailureResponseTestGwt extends GWTTestCase {
         return "org.fusesource.restygwt.FailureResponseTestGwt";
     }
 
-    public void testFailureResponseTest() {
+    public void testFailureResponseOnPostTest() {
         /*
          *  setup the service, usually done in gin
          */
@@ -72,6 +72,34 @@ public class FailureResponseTestGwt extends GWTTestCase {
             @Override
             public void onFailure(Method method, Throwable exception) {
                 assertNotNull(method.getResponse());
+                assertEquals(410, method.getResponse().getStatusCode());
+                finishTest();
+
+            }
+        });
+
+        delayTestFinish(10000);
+    }
+
+    public void testFailureResponseOnGetTest() {
+        /*
+         *  setup the service, usually done in gin
+         */
+        Resource resource = new Resource(GWT.getModuleBaseURL() + "api/postendpoint");
+        service = GWT.create(ExampleService.class);
+        ((RestServiceProxy) service).setResource(resource);
+
+        service.getExampleDto(new MethodCallback<ExampleDto>() {
+
+            @Override
+            public void onSuccess(Method method, ExampleDto response) {
+                fail("got onSuccess even if there should be an error response");
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                assertNotNull(method.getResponse());
+                assertEquals(410, method.getResponse().getStatusCode());
                 finishTest();
 
             }
@@ -98,7 +126,7 @@ public class FailureResponseTestGwt extends GWTTestCase {
                 new CallbackFactory() {
                     public FilterawareRequestCallback createCallback(Method method) {
                         final FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
-                                method);
+                                method, 2);
 
                         retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
                         retryingCallback.addFilter(new ModelChangeCallbackFilter(eventBus));

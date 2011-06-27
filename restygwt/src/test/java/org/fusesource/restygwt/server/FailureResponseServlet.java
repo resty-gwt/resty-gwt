@@ -42,6 +42,18 @@ public class FailureResponseServlet extends HttpServlet {
             .getLogger(FailureResponseServlet.class.getName());
 
     @Override
+    protected void doGet(HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+
+        log.info("GET: failure response MODE");
+
+        log.info("response code: " + HttpStatus.ORDINAL_410_Gone
+                + " with purpose");
+        response.setStatus(HttpStatus.ORDINAL_410_Gone);
+    }
+
+
+    @Override
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
 
