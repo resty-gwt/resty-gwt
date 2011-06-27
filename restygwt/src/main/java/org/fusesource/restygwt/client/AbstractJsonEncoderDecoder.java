@@ -199,7 +199,9 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
         public SafeHtml decode(JSONValue value) throws DecodingException {
             if (value == null || value.isNull() != null) {
-                return null;
+                SafeHtmlBuilder sh = new SafeHtmlBuilder();
+                sh.appendEscaped("");
+                return sh.toSafeHtml();
             }
             JSONString str = value.isString();
 

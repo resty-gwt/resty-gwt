@@ -66,4 +66,33 @@ public class SafeHtmlTestGwt extends GWTTestCase {
         // wait... we are in async testing...
         delayTestFinish(10000);
     }
+
+    public void testSafeHtmlNullDtoResponse() {
+
+        //configure RESTY
+        Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getsafehtmlnulldto");
+
+        SafeHtmlDtoService service = GWT.create(SafeHtmlDtoService.class);
+        ((RestServiceProxy) service).setResource(resource);
+
+        service.getSafeHtmlDto(new MethodCallback<SafeHtmlDto>() {
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+            }
+
+            @Override
+            public void onSuccess(Method method, SafeHtmlDto response) {
+                assertTrue(response.getSafeHtml() instanceof SafeHtml);
+                assertEquals(response.getSafeHtml().asString(), "");
+
+                finishTest();
+            }
+        });
+
+        // wait... we are in async testing...
+        delayTestFinish(10000);
+    }
+
 }

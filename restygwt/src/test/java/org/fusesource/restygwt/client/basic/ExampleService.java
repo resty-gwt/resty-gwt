@@ -4,6 +4,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 
 /**
  * Supersimple example service for testing...
@@ -13,4 +14,7 @@ import javax.ws.rs.GET;
 public interface ExampleService extends RestService {
     @GET
     public void getExampleDto(MethodCallback<ExampleDto> callback);
+
+    @POST
+    public void postExample(MethodCallback<ExampleDto> callback);
 }

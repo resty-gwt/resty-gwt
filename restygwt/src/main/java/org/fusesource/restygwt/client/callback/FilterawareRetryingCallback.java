@@ -35,10 +35,14 @@ import com.google.gwt.user.client.Window;
 public class FilterawareRetryingCallback implements FilterawareRequestCallback {
 
     /**
-     * Used by RetryingCallback
-     * default value is 5
+     * sets default number of retries
      */
-    protected static int numberOfRetries = 5;
+    public static int DEFAULT_NUMBER_OF_RETRIES = 5;
+
+    /**
+     * Used by RetryingCallback
+     */
+    protected int numberOfRetries;
 
     /**
      * time to wait for reconnect upon failure
@@ -54,10 +58,16 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
     final protected List<CallbackFilter> callbackFilters = new ArrayList<CallbackFilter>();
 
     public FilterawareRetryingCallback(Method method) {
+        // default number of retries is 5
+        this(method, DEFAULT_NUMBER_OF_RETRIES);
+    }
+
+    public FilterawareRetryingCallback(Method method, int numberOfRetries) {
         this.method = method;
         // need to keep requestcallback here, as ``method.builder.getCallback()`` does not
         // give the same callback later on
         this.requestCallback = method.builder.getCallback();
+        this.numberOfRetries = numberOfRetries;
     }
 
     @Override
@@ -89,9 +99,7 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
                  *  RuntimeException token from
                  *  com.google.gwt.http.client.Request#fireOnResponseReceived()
                  */
-                requestCallback.onError(request, new RuntimeException("Response "
-                        + response.getStatusCode() + " for " + method.builder.getHTTPMethod() + " "
-                        + method.builder.getUrl()));
+                requestCallback.onResponseReceived(request, response);
             }
             return;
         } else {
@@ -165,10 +173,15 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
             if (null != request
                     && null != response
                     && null != requestCallback) {
+
+                if (LogConfiguration.loggingIsEnabled()) {
+                    Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe("Response "
+                          + response.getStatusCode() + " for " + method.builder.getHTTPMethod() + " "
+                          + method.builder.getUrl() + " after " + numberOfRetries + " retries.");
+                }
+
                 // got the original callback, call error here
-                requestCallback.onError(request, new RuntimeException("Response "
-                        + response.getStatusCode() + " for " + method.builder.getHTTPMethod() + " "
-                        + method.builder.getUrl() + " after " + numberOfRetries + " retries."));
+                requestCallback.onResponseReceived(request, response);
             } else {
                 // got no callback - well, goodbye
                 if (Window.confirm("error")) {

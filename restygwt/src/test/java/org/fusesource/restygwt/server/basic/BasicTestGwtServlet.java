@@ -38,6 +38,7 @@ public class BasicTestGwtServlet extends HttpServlet {
     String SAFEHTML_RESPONSE_VALUE = "<script>alert(123)</script>";
     String SAFEHTML_RESPONSE = "{\"safeHtml\":\"" + SAFEHTML_RESPONSE_VALUE + "\","
                                 + "\"unsafeString\" : \"" + SAFEHTML_RESPONSE_VALUE + "\"}";
+    String SAFEHTML_NULL_RESPONSE = "{\"safeHtml\":null, \"unsafeString\":\"test\"}";
 
     @Override
     protected void doGet(HttpServletRequest request,
@@ -49,6 +50,8 @@ public class BasicTestGwtServlet extends HttpServlet {
             responseString = DUMMY_RESPONSE;
         } else if (request.getPathInfo().contains("getsafehtmldto")) {
             responseString = SAFEHTML_RESPONSE;
+        } else if (request.getPathInfo().contains("getsafehtmlnulldto")) {
+            responseString = SAFEHTML_NULL_RESPONSE;
         }
 
         response.getWriter().print(responseString);
