@@ -34,7 +34,11 @@ import com.google.gwt.user.client.Window;
 
 public class FilterawareRetryingCallback implements FilterawareRequestCallback {
 
+    /**
+     * sets default number of retries
+     */
     public static int DEFAULT_NUMBER_OF_RETRIES = 5;
+
     /**
      * Used by RetryingCallback
      */
