@@ -3,6 +3,9 @@ RestyGWT
 
 [resty-gwt 1.1 Events]
 ---------------
+* always use onResponseReceived in FilterawareRetryingCallback, even in 
+  error cases which always prefills the method with the response object 
+  for later callback handling
 * added explicit NULL check in JsonEncoderDecoder for SafeHTML type
 * fix bug with generic types in response where only one (the first occuring) generic
   jsonencoderdecoder was compiled to javascript. this only happened in production mode
