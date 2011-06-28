@@ -390,7 +390,10 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 } else {
                     JClassType contentClass = contentArg.getType().isClass();
                     if (contentClass == null) {
-                        error("Content argument must be a class.");
+                        contentClass = contentArg.getType().isClassOrInterface();
+                        if (!locator.isCollectionType(contentClass)) {
+                            error("Content argument must be a class.");
+                        }
                     }
 
                     jsonAnnotation = contentArg.getAnnotation(Json.class);

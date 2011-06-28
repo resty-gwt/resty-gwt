@@ -145,6 +145,7 @@ public class JsonEncoderDecoderInstanceLocator {
         }
 
         JClassType clazz = type.isClassOrInterface();
+
         if (isCollectionType(clazz)) {
             JParameterizedType parameterizedType = type.isParameterized();
             if (parameterizedType == null || parameterizedType.getTypeArgs() == null) {
@@ -152,7 +153,7 @@ public class JsonEncoderDecoderInstanceLocator {
             }
             JClassType[] types = parameterizedType.getTypeArgs();
 
-            if (parameterizedType.isAssignableTo(MAP_TYPE)) {
+            if (clazz.isAssignableTo(MAP_TYPE)) {
                 if (types.length != 2) {
                     error("Map must define two and only two type parameters");
                 }
@@ -163,7 +164,7 @@ public class JsonEncoderDecoderInstanceLocator {
                 if (encoderDecoder != null) {
                     return mapMethod + "(" + expression + ", " + encoderDecoder + ", " + JSON_CLASS + ".Style." + style.name() + ")";
                 }
-            } else if (parameterizedType.isAssignableTo(SET_TYPE)) {
+            } else if (clazz.isAssignableTo(SET_TYPE)) {
                 if (types.length != 1) {
                     error("Set must define one and only one type parameter");
                 }
@@ -171,12 +172,12 @@ public class JsonEncoderDecoderInstanceLocator {
                 if (encoderDecoder != null) {
                     return setMethod + "(" + expression + ", " + encoderDecoder + ")";
                 }
-            } else if (parameterizedType.isAssignableFrom(LIST_TYPE)) {
+            } else if (clazz.isAssignableTo(LIST_TYPE)) {
                 if (types.length != 1) {
                     error("List must define one and only one type parameter");
                 }
                 encoderDecoder = getEncoderDecoder(types[0], logger);
-                debug("type encoder for: " + types[0] + " is " + encoderDecoder);
+                info("type encoder for: " + types[0] + " is " + encoderDecoder);
                 if (encoderDecoder != null) {
                     return listMethod + "(" + expression + ", " + encoderDecoder + ")";
                 }
@@ -187,7 +188,7 @@ public class JsonEncoderDecoderInstanceLocator {
         return null;
     }
 
-    private boolean isCollectionType(JClassType clazz) {
+    boolean isCollectionType(JClassType clazz) {
         return clazz != null && (clazz.isAssignableTo(SET_TYPE) || clazz.isAssignableTo(LIST_TYPE) || clazz.isAssignableTo(MAP_TYPE));
     }
 
