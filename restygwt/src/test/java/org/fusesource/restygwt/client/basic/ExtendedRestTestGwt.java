@@ -49,8 +49,8 @@ public class ExtendedRestTestGwt extends GWTTestCase {
             CollectionService action = GWT.create(CollectionService.class);
             assertNotNull(action);
         } catch (Exception e) {
-            fail(" generator failed at creating an interface which " +
-                    "has an intermediate interface between it and its RestService");
+            fail(" generator failed at creating an interface with collection interface or collection impl " +
+                    "as argument of method of a RestService");
         }
     }
 
