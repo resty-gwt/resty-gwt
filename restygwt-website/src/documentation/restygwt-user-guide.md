@@ -167,6 +167,15 @@ for example:
         public void photoFeed(JsonCallback callback);    
     }
 
+or if you have a **FlickrFeed** value object
+
+    import org.fusesource.restygwt.client.JSONP;
+    ...
+    public interface FlickrService extends RestService {  
+        @Path("http://www.flickr.com/services/feeds/photos_public.gne?format=json")
+        @JSONP(callbackParam="jsonFlickrFeed")
+        public void photoFeed(MethodCallback<FlickrFeed> callback);    
+    }
 
 
 ## JSON Encoder/Decoders
