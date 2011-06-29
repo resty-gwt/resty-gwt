@@ -57,6 +57,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private static final String DISPATCHER_CLASS = Dispatcher.class.getName();
     private static final String DEFAULTS_CLASS = Defaults.class.getName();
     private static final String ABSTRACT_REQUEST_CALLBACK_CLASS = AbstractRequestCallback.class.getName();
+    private static final String ABSTRACT_ASYNC_CALLBACK_CLASS = AbstractAsyncCallback.class.getName();
     private static final String JSON_PARSER_CLASS = JSONParser.class.getName();
     private static final String JSON_ARRAY_CLASS = JSONArray.class.getName();
     private static final String JSON_OBJECT_CLASS = JSONObject.class.getName();
@@ -315,7 +316,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             // Handle JSONP specific configuration...
             JSONP jsonpAnnotation = method.getAnnotation(JSONP.class);
 
-            if( restMethod.equals(METHOD_JSONP) && jsonpAnnotation!=null ) {
+            final boolean isJsonp = restMethod.equals(METHOD_JSONP) && jsonpAnnotation!=null;
+            if( isJsonp ) {
                 if( jsonpAnnotation.callbackParam().length() > 0 ) {
                     p("(("+JSONP_METHOD_CLASS+")__method).callbackParam("+wrap(jsonpAnnotation.callbackParam())+");");
                 }
@@ -442,11 +444,36 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
             if (acceptTypeBuiltIn != null) {
                 p("__method.send(" + callbackArg.getName() + ");");
+            } else if ( isJsonp ){
+                    p("((" + JSONP_METHOD_CLASS + ")__method).send(new " + ABSTRACT_ASYNC_CALLBACK_CLASS + "<" + resultType.getParameterizedQualifiedSourceName() + ">((" + JSONP_METHOD_CLASS + ")__method, "
+                                    + callbackArg.getName() + ") {").i(1);
+                    {
+                        p("protected " + resultType.getParameterizedQualifiedSourceName() + " parseResult(" + JSON_OBJECT_CLASS + " result) throws Exception {").i(1);
+                        {
+                            if(resultType.getParameterizedQualifiedSourceName().equals("java.lang.Void")) {
+                                p("return (java.lang.Void) new java.lang.Object();");
+                            }
+                            else {
+                                p("try {").i(1);
+                                {
+                                    jsonAnnotation = method.getAnnotation(Json.class);
+                                    Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
+                                    p("return " + locator.decodeExpression(resultType, "result", style) + ";");
+                                }
+                                i(-1).p("} catch (Throwable __e) {").i(1);
+                                {
+                                    p("throw new " + RESPONSE_FORMAT_EXCEPTION_CLASS + "(\"Response was NOT a valid JSON document\", __e);");
+                                }
+                                i(-1).p("}");
+                            }
+                        }
+                        i(-1).p("}");
+                    }
+                    i(-1).p("});");
             } else {
                 p("try {").i(1);
                 {
-                    p(
-                            "__method.send(new " + ABSTRACT_REQUEST_CALLBACK_CLASS + "<" + resultType.getParameterizedQualifiedSourceName() + ">(__method, "
+                    p("__method.send(new " + ABSTRACT_REQUEST_CALLBACK_CLASS + "<" + resultType.getParameterizedQualifiedSourceName() + ">(__method, "
                                     + callbackArg.getName() + ") {").i(1);
                     {
                         p("protected " + resultType.getParameterizedQualifiedSourceName() + " parseResult() throws Exception {").i(1);
