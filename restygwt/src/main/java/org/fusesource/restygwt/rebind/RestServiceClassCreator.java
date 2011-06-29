@@ -351,27 +351,29 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 p("__method.timeout("+classOptions.timeout()+");");
             }
 
-            Produces producesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Produces.class);
-            if (producesAnnotation != null) {
-                p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, "+wrap(producesAnnotation.value()[0])+");");
-            } else {
-                // set the default accept header....
-                if (acceptTypeBuiltIn != null) {
-                    p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + "." + acceptTypeBuiltIn + ");");
+            if(jsonpAnnotation == null) {
+                Produces producesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Produces.class);
+                if (producesAnnotation != null) {
+                    p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, "+wrap(producesAnnotation.value()[0])+");");
                 } else {
-                    p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + ".CONTENT_TYPE_JSON);");
+                    // set the default accept header....
+                    if (acceptTypeBuiltIn != null) {
+                        p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + "." + acceptTypeBuiltIn + ");");
+                    } else {
+                        p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + ".CONTENT_TYPE_JSON);");
+                    }
                 }
-            }
 
-            Consumes consumesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Consumes.class);
-            if (consumesAnnotation != null) {
-                p("__method.header(" + RESOURCE_CLASS + ".HEADER_CONTENT_TYPE, "+wrap(consumesAnnotation.value()[0])+");");
-            }
+                Consumes consumesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Consumes.class);
+                if (consumesAnnotation != null) {
+                    p("__method.header(" + RESOURCE_CLASS + ".HEADER_CONTENT_TYPE, "+wrap(consumesAnnotation.value()[0])+");");
+                }
 
-            // and set the explicit headers now (could override the accept header)
-            for (Map.Entry<String, JParameter> entry : headerParams.entrySet()) {
-                String expr = entry.getValue().getName();
-                p("__method.header(" + wrap(entry.getKey()) + ", " + toStringExpression(entry.getValue().getType(), expr) + ");");
+                // and set the explicit headers now (could override the accept header)
+                for (Map.Entry<String, JParameter> entry : headerParams.entrySet()) {
+                    String expr = entry.getValue().getName();
+                    p("__method.header(" + wrap(entry.getKey()) + ", " + toStringExpression(entry.getValue().getType(), expr) + ");");
+                }
             }
 
             if (contentArg != null) {
