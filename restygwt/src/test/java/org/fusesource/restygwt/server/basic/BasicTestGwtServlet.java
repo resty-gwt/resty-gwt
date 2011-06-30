@@ -22,10 +22,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gwt.core.client.GWT;
+
 /**
  *
- * Super simple servlet that simply does nothing to check if
- * timeout management is okay.
+ * Super simple servlet that simply does nothing to check if timeout management
+ * is okay.
  *
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
  *
@@ -33,16 +35,26 @@ import javax.servlet.http.HttpServletResponse;
 public class BasicTestGwtServlet extends HttpServlet {
 
     String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
-
+    String SAFEHTML_RESPONSE_VALUE = "<script>alert(123)</script>";
+    String SAFEHTML_RESPONSE = "{\"safeHtml\":\"" + SAFEHTML_RESPONSE_VALUE + "\","
+                                + "\"unsafeString\" : \"" + SAFEHTML_RESPONSE_VALUE + "\"}";
+    String SAFEHTML_NULL_RESPONSE = "{\"safeHtml\":null, \"unsafeString\":\"test\"}";
 
     @Override
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
 
+        String responseString = null;
 
-            response.getWriter().print(DUMMY_RESPONSE);
+        if (request.getPathInfo().contains("getendpoint")) {
+            responseString = DUMMY_RESPONSE;
+        } else if (request.getPathInfo().contains("getsafehtmldto")) {
+            responseString = SAFEHTML_RESPONSE;
+        } else if (request.getPathInfo().contains("getsafehtmlnulldto")) {
+            responseString = SAFEHTML_NULL_RESPONSE;
+        }
 
-
+        response.getWriter().print(responseString);
     }
 
 }

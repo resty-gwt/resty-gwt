@@ -1,6 +1,15 @@
 RestyGWT
 ========
 
+[resty-gwt 1.1 Events]
+---------------
+* always use onResponseReceived in FilterawareRetryingCallback, even in 
+  error cases which always prefills the method with the response object 
+  for later callback handling
+* added explicit NULL check in JsonEncoderDecoder for SafeHTML type
+* fix bug with generic types in response where only one (the first occuring) generic
+  jsonencoderdecoder was compiled to javascript. this only happened in production mode
+* increase GWT dep to 2.2
 ## [resty-gwt 1.2](http://restygwt.fusesource.org/blog/release-1-2.html), un-released
 * Add support for Sending Lists and Sets as repeated parameters.
 * Add support for byte data type
@@ -12,6 +21,8 @@ RestyGWT
 * no retrying behaviour on 301, 302 or 404, fallback to error handler in this case directly
 * call onError in org.fusesource.restygwt.client.callback.FilterawareRetryingCallback
   when there is a !GET error request
+* refactor caching, retrying and other configurable stuff to be located in ``DispatcherFilter``
+  or ``CallbackFilter``
 * add scoped QueueableRuntimeCache to be able to invalidate a particular ident, e.g.
   a domain scope.
 * add definition for org.fusesource.restygwt.annotationresolver
