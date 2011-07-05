@@ -22,6 +22,7 @@ package org.fusesource.restygwt.client;
 import org.fusesource.restygwt.client.dispatcher.DefaultDispatcher;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.logging.client.LogConfiguration;
 
 /**
  * Provides ability to set the default date format and service root (defaults to
@@ -59,7 +60,7 @@ public class Defaults {
         }
         Defaults.serviceRoot = serviceRoot;
     }
-    
+
     public static String getDateFormat() {
         return dateFormat;
     }
@@ -112,5 +113,21 @@ public class Defaults {
      */
     public static Dispatcher getDispatcher() {
         return dispatcher;
+    }
+
+    /**
+     * simple wrapper for {@link LogConfiguration#loggingIsEnabled()}
+     * as this is not NPE safe in JUnit mode
+     *
+     * @return
+     */
+    public static boolean canLog() {
+        try{
+            if (LogConfiguration.loggingIsEnabled()) {
+                return true;
+            }
+        } catch(Exception ignored) {
+        }
+        return false;
     }
 }

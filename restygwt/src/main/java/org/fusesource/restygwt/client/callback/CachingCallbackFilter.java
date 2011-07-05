@@ -145,7 +145,7 @@ public class CachingCallbackFilter implements CallbackFilter {
      *
      * @return
      */
-    private List<String> getCacheDomains(final Method method) {
+    private String[] getCacheDomains(final Method method) {
         if (null == method.getData().get(Domain.CACHE_DOMAIN_KEY)) return null;
 
         final JSONValue jsonValue = JSONParser.parseStrict(method.getData()
@@ -160,7 +160,7 @@ public class CachingCallbackFilter implements CallbackFilter {
                 dd.add(jsonArray.get(i).isString().stringValue());
             }
 
-            return dd;
+            return dd.toArray(new String[dd.size()]);
         }
         return null;
     }

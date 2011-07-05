@@ -43,44 +43,35 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
 public class ModelChangeAnnotationResolver implements AnnotationResolver {
 
     @Override
-    public Map<String, String[]> resolveAnnotation(TreeLogger logger, JClassType source, JMethod method,
+    public Map<String, String[]> resolveAnnotation(TreeLogger logger, JClassType jClass, JMethod method,
             final String restMethod) throws UnableToCompleteException {
-        ModelChange classAnnot = source.getAnnotation(ModelChange.class);
+        ModelChange classAnnot = jClass.getAnnotation(ModelChange.class);
         String[] serviceDomains = null;
         ModelChange methodAnnot = method.getAnnotation(ModelChange.class);
         final Map<String, String[]> ret = new java.util.HashMap<String, String[]>();
 
-        if(null != source.getAnnotation(Domain.class)) {
+        if(null != jClass.getAnnotation(Domain.class)) {
             serviceDomains = getAnnotationsAsStringArray(
-                source.getAnnotation(Domain.class).value());
+                jClass.getAnnotation(Domain.class).value());
 
             // cachedomain annotations are resolved in any case
             logger.log(TreeLogger.TRACE, "found ``Domain`` annotation with " + serviceDomains.length
-                    + " domains in " + source.getName());
+                    + " domains in " + jClass.getName());
             ret.put(Domain.CACHE_DOMAIN_KEY, serviceDomains);
         }
 
         if (methodAnnot != null) {
-            String[] domains = null;
-
-            if (methodAnnot.domain() == null
-                    || methodAnnot.domain().length == 0) {
-                if (serviceDomains == null) {
-                    logger.log(TreeLogger.ERROR, "found method annotation with empty domain definition in " +
-                            source.getName() + " on method " + method.getName());
-                    throw new UnableToCompleteException();
-                }
-                logger.log(TreeLogger.TRACE, "found ``Domain`` annotation with " + serviceDomains.length
-                        + " domains '" + serviceDomains + "' "
-                        + source.getName() + " on method " + method.getName());
-                domains = serviceDomains;
-            } else {
-                domains = getAnnotationsAsStringArray(methodAnnot.domain());
-                logger.log(TreeLogger.TRACE, "use domain from ModelChange annotation at: "
-                        + source.getName() + "#" + method.getName() + ": " + domains);
+                String[] domains = null;
+            if (serviceDomains == null) {
+                logger.log(TreeLogger.ERROR, "found method annotation with empty domain definition in " +
+                        jClass.getName() + " on method " + method.getName());
+                throw new UnableToCompleteException();
             }
+            logger.log(TreeLogger.TRACE, "found ``Domain`` annotation with " + serviceDomains.length
+                    + " domains '" + serviceDomains + "' "
+                    + jClass.getName() + " on method " + method.getName());
+            domains = serviceDomains;
 
-            // method annotation match
             ret.put(ModelChange.MODEL_CHANGED_DOMAIN_KEY, domains);
             return ret;
         }
@@ -89,19 +80,7 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
                 && classAnnot.on() != null) {
             for (String s : classAnnot.on()) {
                 if (s.toUpperCase().equals(restMethod.toUpperCase())) {
-                    String[] domains = null;
-
-                    if (classAnnot.domain() == null
-                            || classAnnot.domain().equals("")) {
-                        if (serviceDomains == null) {
-                            logger.log(TreeLogger.ERROR, "found class annotation with empty domain definition in " +
-                                    source.getName());
-                            throw new UnableToCompleteException();
-                        }
-                        domains = serviceDomains;
-                    } else {
-                        domains = getAnnotationsAsStringArray(classAnnot.domain());
-                    }
+                    String[] domains = serviceDomains;
 
                     // class annotation match for current method
                     ret.put(ModelChange.MODEL_CHANGED_DOMAIN_KEY, domains);
