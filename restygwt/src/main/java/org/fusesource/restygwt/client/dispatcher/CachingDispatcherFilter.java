@@ -24,6 +24,7 @@ import org.fusesource.restygwt.client.Dispatcher;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.ScopableQueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.UrlCacheKey;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
 import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
@@ -38,7 +39,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
     /**
      * one instance of {@link QueueableCacheStorage}
      */
-    private QueueableCacheStorage cacheStorage;
+    private ScopableQueueableCacheStorage cacheStorage;
 
     /**
      * where to get a callback from. gives us the ability to use
@@ -51,7 +52,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
      * @param cacheStorage
      * @param cf
      */
-    public CachingDispatcherFilter(final QueueableCacheStorage cacheStorage,
+    public CachingDispatcherFilter(final ScopableQueueableCacheStorage cacheStorage,
             final CallbackFactory cf) {
         this.cacheStorage = cacheStorage;
         this.callbackFactory = cf;

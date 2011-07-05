@@ -17,12 +17,13 @@ package org.fusesource.restygwt.client.callback;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.ScopableQueueableCacheStorage;
 
 public class CachingCallbackFactory implements CallbackFactory {
 
-    private final QueueableCacheStorage cacheStorage;
+    private final ScopableQueueableCacheStorage cacheStorage;
 
-    public CachingCallbackFactory(QueueableCacheStorage cacheStorage) {
+    public CachingCallbackFactory(ScopableQueueableCacheStorage cacheStorage) {
         this.cacheStorage = cacheStorage;
     }
 

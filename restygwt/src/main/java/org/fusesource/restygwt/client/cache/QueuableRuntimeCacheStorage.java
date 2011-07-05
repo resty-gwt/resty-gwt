@@ -27,7 +27,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 
-public class QueuableRuntimeCacheStorage implements QueueableCacheStorage {
+public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorage {
 
     /**
      * how long will a cachekey be allowed to exist

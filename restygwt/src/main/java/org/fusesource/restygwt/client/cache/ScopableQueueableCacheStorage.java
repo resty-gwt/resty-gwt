@@ -15,19 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.fusesource.restygwt.client.cache;
 
+import java.util.List;
 
-public interface CacheStorage<T> {
-    public T getResultOrReturnNull(final CacheKey key);
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
 
-    /**
-     * default put method
-     */
-    public void putResult(final CacheKey key, final T response);
+/**
+ * more enhanced cacheinterface, TODO write something
+ *
+ * @author abalke
+ */
+public interface ScopableQueueableCacheStorage extends ScopableCacheStorage<Response> {
 
-    /**
-     * purge the complete cache
-     */
-    public void purge();
+    public boolean hasCallback(final CacheKey k);
+
+    public void addCallback(final CacheKey k, final RequestCallback rc);
+
+    public List<RequestCallback> removeCallbacks(final CacheKey k);
 }

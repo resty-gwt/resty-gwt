@@ -26,6 +26,7 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.Domain;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.ScopableQueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.UrlCacheKey;
 
 import com.google.gwt.http.client.Request;
@@ -38,9 +39,9 @@ import com.google.gwt.logging.client.LogConfiguration;
 
 public class CachingCallbackFilter implements CallbackFilter {
 
-    protected QueueableCacheStorage cache;
+    protected ScopableQueueableCacheStorage cache;
 
-    public CachingCallbackFilter(QueueableCacheStorage cache) {
+    public CachingCallbackFilter(ScopableQueueableCacheStorage cache) {
         this.cache = cache;
     }
 
