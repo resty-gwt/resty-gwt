@@ -21,7 +21,7 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
-import org.fusesource.restygwt.client.cache.NonPersistentQueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
@@ -107,7 +107,7 @@ public class CacheCallbackTestGwt extends GWTTestCase {
      * prove all callbacks are registered, performed and unregistered with
      * using the cache.
      *
-     * not all calls will reach the server, {@link NonPersistentQueueableCacheStorage} will
+     * not all calls will reach the server, {@link VolatileQueueableCacheStorage} will
      * need to handle some of the callbacks by its own.
      *
      * this is done by just calling the same method multiple times
@@ -219,7 +219,7 @@ public class CacheCallbackTestGwt extends GWTTestCase {
          * configure RESTY to use cache, usually done in gin
          */
         final EventBus eventBus = new SimpleEventBus();
-        final QueueableCacheStorage cacheStorage = new NonPersistentQueueableCacheStorage();
+        final QueueableCacheStorage cacheStorage = new VolatileQueueableCacheStorage();
         final FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher();
 
         dispatcher.addFilter(new CachingDispatcherFilter(

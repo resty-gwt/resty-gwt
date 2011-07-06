@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Method;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
@@ -46,7 +47,7 @@ public class DefaultFilterawareRequestCallback implements FilterawareRequestCall
     @Override
     public void onResponseReceived(Request request, Response response) {
         if (!(response.getStatusCode() < 300 && response.getStatusCode() >= 200)) {
-            if (LogConfiguration.loggingIsEnabled()) {
+            if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(
                         DefaultFilterawareRequestCallback.class.getName())
                         .severe(

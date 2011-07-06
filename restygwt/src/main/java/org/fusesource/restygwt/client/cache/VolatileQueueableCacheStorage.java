@@ -26,13 +26,22 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
 
-public class NonPersistentQueueableCacheStorage extends PersistentQueueableCacheStorage {
+public class VolatileQueueableCacheStorage extends DefaultQueueableCacheStorage {
     
     /**
      * how long will a cachekey be allowed to exist
      */
-    private static final long DEFAULT_LIFETIME_MS = 30 * 1000;
+    private static final int DEFAULT_LIFETIME_MS = 30 * 1000;
 
+    private final int lifetimeMillis;
+    
+    public VolatileQueueableCacheStorage(){
+        this(DEFAULT_LIFETIME_MS);
+    }
+    public VolatileQueueableCacheStorage(int lifetimeMillis){
+        this.lifetimeMillis = lifetimeMillis;
+    }
+    
     private final List<Timer> timers = new ArrayList<Timer>();
 
     protected void putResult(final CacheKey key, final Response response, final String scope) {
@@ -40,18 +49,18 @@ public class NonPersistentQueueableCacheStorage extends PersistentQueueableCache
             public void run() {
                 try {
                     if (LogConfiguration.loggingIsEnabled()) {
-                        Logger.getLogger(NonPersistentQueueableCacheStorage.class.getName())
+                        Logger.getLogger(VolatileQueueableCacheStorage.class.getName())
                                 .finer("removing cache-key " + key + " from scope \"" + scope + "\"");
                     }
                     cache.get(scope).remove(key);
                     timers.remove(this);
                 } catch (Exception ex) {
-                    Logger.getLogger(NonPersistentQueueableCacheStorage.class.getName())
+                    Logger.getLogger(VolatileQueueableCacheStorage.class.getName())
                             .severe(ex.getMessage());
                 }
             }
         };
-        t.schedule((int) DEFAULT_LIFETIME_MS);
+        t.schedule(lifetimeMillis);
         timers.add(t);
         
         super.putResult(key, response, scope);
@@ -61,7 +70,7 @@ public class NonPersistentQueueableCacheStorage extends PersistentQueueableCache
     public void purge() {
         super.purge();
         if (LogConfiguration.loggingIsEnabled()) {
-            Logger.getLogger(PersistentQueueableCacheStorage.class.getName()).finer("remove "
+            Logger.getLogger(DefaultQueueableCacheStorage.class.getName()).finer("remove "
                     + timers.size() + " timers from list.");
         }
         for (Timer t: timers) {

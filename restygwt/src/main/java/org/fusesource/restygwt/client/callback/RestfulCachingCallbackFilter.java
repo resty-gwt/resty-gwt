@@ -8,6 +8,18 @@ import org.fusesource.restygwt.client.cache.UrlCacheKey;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.Response;
 
+/**
+ * using a different caching 'algorithm'. obeying the restful paradigm the cache
+ * respects the lifecycle of a restful resource.
+ * <li>POST /model/{id} : will get the user responds into the cache using the location header for the key</li>
+ * <li>GET /model/{id} : will use the cached responds from cache if present</li>
+ * <li>PUT /model/{id} : will put the responds from the server into the cache. a conflict will delete the cache entry to allow
+ * a get to retrieve the up to date date</li>
+ * <li>DELETE /model/{id} : will also delete the resource in the cache</li>
+ * 
+ * @author <a href="blog.mkristian.tk">Kristian</a>
+ *
+ */
 public class RestfulCachingCallbackFilter extends CachingCallbackFilter {
 
     public RestfulCachingCallbackFilter(QueueableCacheStorage cache) {

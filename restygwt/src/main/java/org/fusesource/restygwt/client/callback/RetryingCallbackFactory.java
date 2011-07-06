@@ -21,8 +21,19 @@ public class RetryingCallbackFactory implements CallbackFactory {
 
     private final CallbackFilter[] callbackFilters;
 
-    public RetryingCallbackFactory(CallbackFilter... callbackFilter) {
-        this.callbackFilters = callbackFilter;
+    private final int gracePeriodMillis;
+    private final int numberOfRetries;
+
+    public RetryingCallbackFactory(int gracePeriodMillis, int numberOfRetries, CallbackFilter... callbackFilters) {
+        this.callbackFilters = callbackFilters;
+        this.gracePeriodMillis = gracePeriodMillis;
+        this.numberOfRetries = numberOfRetries;
+    }
+
+    public RetryingCallbackFactory(CallbackFilter... callbackFilters) {
+        this.callbackFilters = callbackFilters;
+        this.gracePeriodMillis = 1000;
+        this.numberOfRetries = 5;
     }
 
     /**
@@ -33,7 +44,7 @@ public class RetryingCallbackFactory implements CallbackFactory {
      */
     public FilterawareRequestCallback createCallback(Method method) {
         final FilterawareRequestCallback retryingCallback = new RetryingFilterawareRequestCallback(
-                method);
+                method, gracePeriodMillis, numberOfRetries);
 
         for(CallbackFilter filter: callbackFilters){
             retryingCallback.addFilter(filter);

@@ -18,8 +18,10 @@
 
 package org.fusesource.restygwt.client.callback;
 
+import com.google.gwt.http.client.RequestCallback;
 
-public interface FilterawareRequestCallback extends com.google.gwt.http.client.RequestCallback {
+
+public interface FilterawareRequestCallback extends RequestCallback {
 
     public void addFilter(CallbackFilter filter);
 

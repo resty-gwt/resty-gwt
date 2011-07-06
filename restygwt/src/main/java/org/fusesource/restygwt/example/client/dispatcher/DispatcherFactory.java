@@ -1,8 +1,8 @@
 package org.fusesource.restygwt.example.client.dispatcher;
 
 import org.fusesource.restygwt.client.Dispatcher;
-import org.fusesource.restygwt.client.cache.NonPersistentQueueableCacheStorage;
-import org.fusesource.restygwt.client.cache.PersistentQueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.DefaultQueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
@@ -36,7 +36,7 @@ public class DispatcherFactory {
     }
     
     Dispatcher cachingDispatcher(){
-        QueueableCacheStorage cache = new PersistentQueueableCacheStorage();
+        QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
         
         CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
         CallbackFactory callbackFactory = new DefaultCallbackFactory(cachingCallbackFilter);
@@ -48,7 +48,7 @@ public class DispatcherFactory {
     }
     
     Dispatcher retryingDispatcher(){
-        QueueableCacheStorage cache = new NonPersistentQueueableCacheStorage();
+        QueueableCacheStorage cache = new VolatileQueueableCacheStorage();
         
         CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
         CallbackFactory callbackFactory = new RetryingCallbackFactory(cachingCallbackFilter);
@@ -60,7 +60,7 @@ public class DispatcherFactory {
     }
     
     Dispatcher retryingCachingDispatcher(){
-        QueueableCacheStorage cache = new PersistentQueueableCacheStorage();
+        QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
         
         CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
         CallbackFactory callbackFactory = new RetryingCallbackFactory(cachingCallbackFilter);
@@ -78,7 +78,7 @@ public class DispatcherFactory {
         
         CallbackFilter xssCallbackFilter = new XSSTokenCallbackFilter(xss);
 
-        QueueableCacheStorage cache = new PersistentQueueableCacheStorage();
+        QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
         
         CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
         CallbackFactory callbackFactory = new RetryingCallbackFactory(xssCallbackFilter, cachingCallbackFilter);
@@ -90,7 +90,7 @@ public class DispatcherFactory {
     }
     
     Dispatcher restfulCachingDispatcher(){
-        QueueableCacheStorage cache = new PersistentQueueableCacheStorage();
+        QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
         
         CallbackFilter cachingCallbackFilter = new RestfulCachingCallbackFilter(cache);
         CallbackFactory callbackFactory = new DefaultCallbackFactory(cachingCallbackFilter);
@@ -102,7 +102,7 @@ public class DispatcherFactory {
     }
 
     Dispatcher restfulRetryingCachingDispatcher(){
-        QueueableCacheStorage cache = new PersistentQueueableCacheStorage();
+        QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
         
         CallbackFilter cachingCallbackFilter = new RestfulCachingCallbackFilter(cache);
         CallbackFactory callbackFactory = new RetryingCallbackFactory(cachingCallbackFilter);
@@ -120,7 +120,7 @@ public class DispatcherFactory {
         
         CallbackFilter xssCallbackFilter = new XSSTokenCallbackFilter(xss);
 
-        QueueableCacheStorage cache = new PersistentQueueableCacheStorage();
+        QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
         
         CallbackFilter cachingCallbackFilter = new RestfulCachingCallbackFilter(cache);
         CallbackFactory callbackFactory = new RetryingCallbackFactory(xssCallbackFilter, cachingCallbackFilter);

@@ -17,6 +17,13 @@ package org.fusesource.restygwt.client.callback;
 
 import org.fusesource.restygwt.client.Method;
 
+/**
+ * default callback factory with a given set of callback filters which
+ * gets added to a new callback after creating it.
+ * 
+ * @author <a href="blog.mkristian.tk">Kristian</a>
+ *
+ */
 public class DefaultCallbackFactory implements CallbackFactory {
 
     private final CallbackFilter[] callbackFilters;

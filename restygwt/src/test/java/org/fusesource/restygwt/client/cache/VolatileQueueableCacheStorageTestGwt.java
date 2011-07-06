@@ -1,0 +1,83 @@
+package org.fusesource.restygwt.client.cache;
+
+import org.fusesource.restygwt.client.cache.CacheKey;
+import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.SimpleCacheKey;
+
+import com.google.gwt.http.client.Header;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.user.client.Timer;
+
+
+public class VolatileQueueableCacheStorageTestGwt extends GWTTestCase {
+
+    static class ResponseMock extends Response {
+
+        @Override
+        public String getHeader(String header) {
+            return null;
+        }
+
+        @Override
+        public Header[] getHeaders() {
+            return null;
+        }
+
+        @Override
+        public String getHeadersAsString() {
+            return null;
+        }
+
+        @Override
+        public int getStatusCode() {
+            return 0;
+        }
+
+        @Override
+        public String getStatusText() {
+            return null;
+        }
+
+        @Override
+        public String getText() {
+            return null;
+        }
+        
+    }
+    @Override
+    public String getModuleName() {
+        return "org.fusesource.restygwt.VolatileQueueableCacheStorageTestGwt";
+    }
+    
+    public void testTimeout() throws Exception{
+        final VolatileQueueableCacheStorage storage = new VolatileQueueableCacheStorage(100);
+        final CacheKey key = new SimpleCacheKey("first");
+        Response resp = new ResponseMock();
+
+        storage.putResult(key, resp);
+        assertEquals(resp, storage.getResultOrReturnNull(key));
+        Timer timer = new Timer() {
+
+            @Override
+            public void run() {
+                assertNull(storage.getResultOrReturnNull(key));   
+                finishTest();
+            }
+            
+        };
+        timer.schedule(200);
+        delayTestFinish(250);
+    }
+
+    public void testPurge() throws Exception{
+        final VolatileQueueableCacheStorage storage = new VolatileQueueableCacheStorage();
+        final CacheKey key = new SimpleCacheKey("first");
+        Response resp = new ResponseMock();
+          
+        storage.putResult(key, resp);
+        assertEquals(resp, storage.getResultOrReturnNull(key));
+        storage.purge();
+        assertNull(storage.getResultOrReturnNull(key));
+    }
+}

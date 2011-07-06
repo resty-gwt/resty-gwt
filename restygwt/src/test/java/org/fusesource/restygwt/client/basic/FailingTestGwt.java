@@ -22,20 +22,17 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
-import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
 import org.fusesource.restygwt.client.callback.CallbackFilter;
-import org.fusesource.restygwt.client.callback.ModelChangeCallbackFilter;
 import org.fusesource.restygwt.client.callback.RetryingCallbackFactory;
 import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 import org.fusesource.restygwt.client.dispatcher.DispatcherFilter;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.junit.client.GWTTestCase;
 
 /**
@@ -44,16 +41,16 @@ import com.google.gwt.junit.client.GWTTestCase;
  *
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
  */
-public class FlakyTestGwt extends GWTTestCase {
+public class FailingTestGwt extends GWTTestCase {
 
     private ExampleService service;
 
     @Override
     public String getModuleName() {
-        return "org.fusesource.restygwt.FlakyTestGwt";
+        return "org.fusesource.restygwt.FailingTestGwt";
     }
 
-    public void testFlakyConnection() {
+    public void testFailingConnection() {
         /*
          *  setup the service, usually done in gin
          */
@@ -64,17 +61,18 @@ public class FlakyTestGwt extends GWTTestCase {
         service.getExampleDto(new MethodCallback<ExampleDto>() {
             @Override
             public void onSuccess(Method method, ExampleDto response) {
-                assertEquals(response.name, "myName");
-                finishTest();
+                fail("got there so server always fails");
             }
 
             @Override
             public void onFailure(Method method, Throwable exception) {
-                fail("got to failure method even though there should be an automatic retrying");
+                // TODO method.getResponse() should not null here
+                assertTrue(exception.getMessage().startsWith("Response 504"));
+                finishTest();
             }
         });
 
-        delayTestFinish(10000);
+        delayTestFinish(5000);
     }
 
     /**
@@ -86,13 +84,14 @@ public class FlakyTestGwt extends GWTTestCase {
         /*
          * configure RESTY to use cache, usually done in gin
          */
-        final EventBus eventBus = new SimpleEventBus();
-        final QueueableCacheStorage cache = new VolatileQueueableCacheStorage();
+        QueueableCacheStorage cache = new VolatileQueueableCacheStorage();
         
-        final CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
-        final CallbackFactory callbackFactory = new RetryingCallbackFactory(cachingCallbackFilter,
-                new ModelChangeCallbackFilter(eventBus));
-        final DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
+        CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
+        CallbackFactory callbackFactory = new RetryingCallbackFactory(
+                100,// grace period millis
+                4,// number of retries
+                cachingCallbackFilter);
+        DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
         
         Dispatcher dispatcher = new DefaultFilterawareDispatcher(cachingDispatcherFilter);
 

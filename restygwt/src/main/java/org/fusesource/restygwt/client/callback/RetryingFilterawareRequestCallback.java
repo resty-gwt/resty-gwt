@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Method;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -36,7 +37,7 @@ public class RetryingFilterawareRequestCallback extends DefaultFilterawareReques
      * Used by RetryingCallback
      * default value is 5
      */
-    protected static int numberOfRetries = 5;
+    protected int numberOfRetries = 5;
 
     /**
      * time to wait for reconnect upon failure
@@ -49,16 +50,26 @@ public class RetryingFilterawareRequestCallback extends DefaultFilterawareReques
         super(method);
     }
 
+    public RetryingFilterawareRequestCallback(Method method,
+            int gracePeriodMillis, int numberOfRetries) {
+        super(method);
+        this.gracePeriod = gracePeriodMillis;
+        this.numberOfRetries = numberOfRetries;
+    }
+
     @Override
     public final void onResponseReceived(Request request, Response response) {
-        if (!(response.getStatusCode() < 300 && response.getStatusCode() >= 200)) {
+        int code = response.getStatusCode();
+        if (!(code < 300 && code >= 200)) {
             /*
-             * retry only on GET requests that are no redirects (301, 302)
+             * retry only on GET requests that are no redirects (301, 302, 303)
              */
-            if (response.getStatusCode() != 301
-                    && response.getStatusCode() != 302
-                    && response.getStatusCode() != 404
-                    && method.builder.getHTTPMethod().equals(RequestBuilder.GET.toString())) {
+            if (code != 301
+                    && code != 302
+                    && code != 303
+                    && code != 404
+                    && (method.builder == null // jsonp method do not have a builder !! 
+                            || method.builder.getHTTPMethod().equalsIgnoreCase("get"))) {
                 handleErrorGracefully(request, response, requestCallback);
             } else {
                 if (LogConfiguration.loggingIsEnabled()) {
@@ -82,23 +93,25 @@ public class RetryingFilterawareRequestCallback extends DefaultFilterawareReques
         }
     }
 
-    /**
-     * TODO when is this used ? maybe just forward to requestCallback.onError
-     */
-    @Override
-    public void onError(Request request, Throwable exception) {
-        if (LogConfiguration.loggingIsEnabled()) {
-            Logger.getLogger(RetryingFilterawareRequestCallback.class.getName())
-                    .severe("call onError in " + this.getClass() + ". this should not happen...");
-        }
-        handleErrorGracefully(null, null, null);
-    }
+//    /**
+//     * TODO when is this used ? maybe just forward to requestCallback.onError
+//     */
+//    @Override
+//    public void onError(Request request, Throwable exception) {
+//        if (LogConfiguration.loggingIsEnabled()) {
+//            Logger.getLogger(RetryingFilterawareRequestCallback.class.getName())
+//                    .severe("call onError in " + this.getClass() + ". this should not happen...");
+//        }
+//        requestCallback.onError(request, exception);
+////        handleErrorGracefully(null, null, null);
+//    }
 
     public void handleErrorGracefully(Request request, Response response,
             RequestCallback requestCallback) {
         // error handling...:
         if (currentRetryCounter < numberOfRetries) {
-            if (LogConfiguration.loggingIsEnabled()) {
+            System.out.println("counter " + currentRetryCounter);
+            if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(RetryingFilterawareRequestCallback.class.getName()).severe(
                         "error handling in progress for: " + method.builder.getHTTPMethod()
                         + " " + method.builder.getUrl());
@@ -109,9 +122,11 @@ public class RetryingFilterawareRequestCallback extends DefaultFilterawareReques
             Timer t = new Timer() {
                 public void run() {
                     try {
+                        System.out.println("run . . ." + method.builder.getCallback());
+                                    
                         method.builder.send();
                     } catch (RequestException ex) {
-                        if (LogConfiguration.loggingIsEnabled()) {
+                        if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                             Logger.getLogger(RetryingFilterawareRequestCallback.class.getName())
                                     .severe(ex.getMessage());
                         }
@@ -122,7 +137,7 @@ public class RetryingFilterawareRequestCallback extends DefaultFilterawareReques
             t.schedule(gracePeriod);
             gracePeriod = gracePeriod * 2;
         } else {
-            if (LogConfiguration.loggingIsEnabled()) {
+            if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(RetryingFilterawareRequestCallback.class.getName()).severe("Request failed: "
                         + method.builder.getHTTPMethod() + " " + method.builder.getUrl()
                         + " after " + currentRetryCounter + " tries.");
@@ -137,7 +152,7 @@ public class RetryingFilterawareRequestCallback extends DefaultFilterawareReques
                         + method.builder.getUrl() + " after " + numberOfRetries + " retries."));
             } else {
                 // got no callback - well, goodbye
-                if (Window.confirm("error - reload page ?")) {
+                if (Window.confirm("something severly went wrong - error - reload page ?")) {
                     // Super severe error.
                     // reload app or redirect.
                     // ===> this breaks the app but that's by intention.

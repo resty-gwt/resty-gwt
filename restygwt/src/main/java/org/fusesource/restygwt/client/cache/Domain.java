@@ -41,5 +41,5 @@ public @interface Domain {
      */
     public static final String CACHE_DOMAIN_KEY = "cd";
 
-    Class[] value();
+    Class<?>[] value();
 }

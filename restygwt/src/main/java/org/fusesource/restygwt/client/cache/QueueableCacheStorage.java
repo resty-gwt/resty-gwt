@@ -18,7 +18,7 @@
 
 package org.fusesource.restygwt.client.cache;
 
-import java.util.Set;
+import java.util.List;
 
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
@@ -34,5 +34,5 @@ public interface QueueableCacheStorage extends CacheStorage<Response> {
 
     public void addCallback(final CacheKey k, final RequestCallback rc);
 
-    public Set<RequestCallback> removeCallbacks(final CacheKey k);
+    public List<RequestCallback> removeCallbacks(final CacheKey k);
 }

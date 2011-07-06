@@ -18,7 +18,7 @@
 
 package org.fusesource.restygwt.client.callback;
 
-import java.util.Set;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Method;
@@ -27,6 +27,7 @@ import org.fusesource.restygwt.client.cache.ComplexCacheKey;
 import org.fusesource.restygwt.client.cache.Domain;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -55,12 +56,12 @@ public class CachingCallbackFilter implements CallbackFilter {
         final int code = response.getStatusCode();
 
         final CacheKey ck = cacheKey(method.builder);
-        final Set<RequestCallback> removedCallbacks = cache.removeCallbacks(ck);
+        final List<RequestCallback> removedCallbacks = cache.removeCallbacks(ck);
 
-        if (removedCallbacks != null
-                && 1 < removedCallbacks.size()) {
-            // remove the first callback from list, as this is called explicitly
-            removedCallbacks.remove(0);
+        if (removedCallbacks != null){
+            //TODO ????? && 1 < removedCallbacks.size()) {
+            //TODO ????? remove the first callback from list, as this is called explicitly
+            //TODO ??????removedCallbacks.remove(0);
             // fetch the builders callback and wrap it with a new one, calling all others too
             final RequestCallback originalCallback = callback;
 
@@ -68,13 +69,13 @@ public class CachingCallbackFilter implements CallbackFilter {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
                     // call the original callback
-                    if (LogConfiguration.loggingIsEnabled()) {
+                    if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
                                 .finer("call original callback for " + ck);
                     }
                     originalCallback.onResponseReceived(request, response);
 
-                    if (LogConfiguration.loggingIsEnabled()) {
+                    if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
                                 .finer("call "+ removedCallbacks.size()
                                         + " more queued callbacks for " + ck);
@@ -115,19 +116,19 @@ public class CachingCallbackFilter implements CallbackFilter {
                 }
             };
         } else {
-            if (LogConfiguration.loggingIsEnabled()) {
+            if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(CachingCallbackFilter.class.getName()).finer("removed one or no " +
                         "callback for cachekey " + ck);
             }
         }
 
-        if (code < Response.SC_MULTIPLE_CHOICES
-                && code >= Response.SC_OK) {
+        if (code < Response.SC_MULTIPLE_CHOICES // code < 300
+                && code >= Response.SC_OK) { // code >= 200
             cacheResult(method, response);
             return callback;
         }
 
-        if (LogConfiguration.loggingIsEnabled()) {
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
             Logger.getLogger(CachingCallbackFilter.class.getName())
                     .info("cannot cache due to invalid response code: " + code);
         }
@@ -140,7 +141,7 @@ public class CachingCallbackFilter implements CallbackFilter {
 
     protected void cacheResult(final Method method, final Response response) {
         CacheKey cacheKey = cacheKey(method.builder);
-        if (LogConfiguration.loggingIsEnabled()) {
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
             Logger.getLogger(CachingCallbackFilter.class.getName()).finer("cache to " + cacheKey
                     + ": " + response);
         }
@@ -149,12 +150,12 @@ public class CachingCallbackFilter implements CallbackFilter {
 
     /**
      * when using the {@link Domain} annotation on services, we are able to group responses
-     * of a service to invalitate them later on more fine grained. this method resolves a
+     * of a service to invalidate them later on more fine grained. this method resolves a
      * possible ``domain`` to allow grouping.
      *
      * @return
      */
-    private String[] getCacheDomains(final Method method) {
+    protected String[] getCacheDomains(final Method method) {
         if (null == method.getData().get(Domain.CACHE_DOMAIN_KEY)) return null;
 
         final JSONValue jsonValue = JSONParser.parseStrict(method.getData()

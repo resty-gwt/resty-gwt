@@ -19,8 +19,8 @@
 package org.fusesource.restygwt.client.cache;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
@@ -28,7 +28,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.logging.client.LogConfiguration;
 
-public class PersistentQueueableCacheStorage implements QueueableCacheStorage {
+public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
     
     private static final String DEFAULT_SCOPE = "";
 
@@ -40,8 +40,8 @@ public class PersistentQueueableCacheStorage implements QueueableCacheStorage {
     protected final Map<String, HashMap<CacheKey, Response>> cache =
             new HashMap<String, HashMap<CacheKey, Response>>();
 
-    private final Map<CacheKey, Set<RequestCallback>> pendingCallbacks =
-            new HashMap<CacheKey, Set<RequestCallback>>();
+    private final Map<CacheKey, List<RequestCallback>> pendingCallbacks =
+            new HashMap<CacheKey, List<RequestCallback>>();
 
     public Response getResultOrReturnNull(CacheKey key) {
         return getResultOrReturnNull(key, DEFAULT_SCOPE);
@@ -50,7 +50,6 @@ public class PersistentQueueableCacheStorage implements QueueableCacheStorage {
     public Response getResultOrReturnNull(final CacheKey key, final String scope) {
         final HashMap<CacheKey, Response> scoped = cache.get(scope);
         if (null != scoped) {
-            GWT.log("hmm--->" + scoped.toString());
             return scoped.get(key);
         }
 
@@ -97,21 +96,24 @@ public class PersistentQueueableCacheStorage implements QueueableCacheStorage {
     public void addCallback(final CacheKey k, final RequestCallback rc) {
         //init value of key if not there...
         if (!pendingCallbacks.containsKey(k)) {
-            pendingCallbacks.put(k, new java.util.LinkedHashSet<RequestCallback>());
+            pendingCallbacks.put(k, new java.util.LinkedList<RequestCallback>());
         }
 
-        pendingCallbacks.get(k).add(rc);
+        // just add callbacks which are not already there
+        if(!pendingCallbacks.get(k).contains(rc)){
+            pendingCallbacks.get(k).add(rc);
+        }
     }
 
     @Override
-    public Set<RequestCallback> removeCallbacks(final CacheKey k) {
+    public List<RequestCallback> removeCallbacks(final CacheKey k) {
         return pendingCallbacks.remove(k);
     }
 
     @Override
     public void purge() {
-        if (LogConfiguration.loggingIsEnabled()) {
-            Logger.getLogger(PersistentQueueableCacheStorage.class.getName()).finer("remove "
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
+            Logger.getLogger(DefaultQueueableCacheStorage.class.getName()).finer("remove "
                     + cache.size() + " elements from cache.");
         }
         cache.clear();
@@ -127,21 +129,21 @@ public class PersistentQueueableCacheStorage implements QueueableCacheStorage {
 
     @Override
     public void remove(CacheKey key) {
-        remove(key, DEFAULT_SCOPE);
+        doRemove(key, DEFAULT_SCOPE);
     }
 
     @Override
     public void remove(CacheKey key, String... scopes) {
         if(scopes != null){
             for(String scope: scopes){
-                remove(key, scope);
+                doRemove(key, scope);
             }
         }
     }
     
-    private void remove(CacheKey key, String scope){
-        if (LogConfiguration.loggingIsEnabled()) {
-            Logger.getLogger(PersistentQueueableCacheStorage.class.getName())
+    private void doRemove(CacheKey key, String scope){
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
+            Logger.getLogger(DefaultQueueableCacheStorage.class.getName())
                     .finer(
                             "removing cache-key " + key + " from scope \""
                                     + scope + "\"");
