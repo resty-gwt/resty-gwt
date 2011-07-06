@@ -58,8 +58,11 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
                     ModelChange.MODEL_CHANGED_DOMAIN_KEY);
 
             if (modelChangeIdentifier != null) {
-                GWT.log("found modelChangeIdentifier \"" + modelChangeIdentifier + "\" in "
-                        + response);
+                if (Defaults.canLog()) {
+                    Logger.getLogger(ModelChangeCallbackFilter.class.getName())
+                            .fine("found modelChangeIdentifier \"" + modelChangeIdentifier
+                                    + "\" in " + response);
+                }
                 JSONValue jsonValue = JSONParser.parseStrict(modelChangeIdentifier);
                 JSONArray jsonArray = jsonValue.isArray();
 
