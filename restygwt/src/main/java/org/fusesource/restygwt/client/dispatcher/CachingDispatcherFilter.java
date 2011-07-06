@@ -73,7 +73,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
                 //case 1: we got a result in cache => return it...
                 if (LogConfiguration.loggingIsEnabled()) {
                     Logger.getLogger(Dispatcher.class.getName())
-                            .info("already got a cached response for: " + builder.getHTTPMethod() + " "
+                            .finer("already got a cached response for: " + builder.getHTTPMethod() + " "
                             + builder.getUrl());
                 }
                 builder.getCallback().onResponseReceived(null, cachedResponse);
@@ -88,7 +88,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
 
                     if (LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(Dispatcher.class.getName())
-                                .info("Sending *caching* http request: " + builder.getHTTPMethod() + " "
+                                .finer("Sending *caching* http request: " + builder.getHTTPMethod() + " "
                                 + builder.getUrl());
                     }
 
@@ -111,14 +111,9 @@ public class CachingDispatcherFilter implements DispatcherFilter {
             if (LogConfiguration.loggingIsEnabled()) {
                 String content = builder.getRequestData();
                 Logger.getLogger(Dispatcher.class.getName())
-                        .info("Sending *non-caching* http request: " + builder.getHTTPMethod() + " "
+                        .finer("Sending *non-caching* http request: " + builder.getHTTPMethod() + " "
                         + builder.getUrl() + " (Content: `" + content + "´)");
             }
-
-//            /*
-//             * add X-Request-Token to all non-caching calls (!= GET) if we have some
-//             */
-//            builder.setHeader("X-Testing", "Fickbude");
 
             builder.setCallback(callbackFactory.createCallback(method));
             return true;

@@ -133,7 +133,7 @@ public class CachingCallbackFilter implements CallbackFilter {
 
         if (Defaults.canLog()) {
             Logger.getLogger(CachingCallbackFilter.class.getName())
-                    .info("cannot cache due to invalid response code: " + code);
+                    .info("cannot cache due to invalid response code: " + code + ", " + ck);
         }
         return callback;
     }
