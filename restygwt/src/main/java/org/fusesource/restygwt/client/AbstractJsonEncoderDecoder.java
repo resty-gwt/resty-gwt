@@ -285,7 +285,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             if (format == null) {
                 return new JSONNumber(value.getTime());
             } else {
-                return new JSONString(DateTimeFormat.getMediumDateTimeFormat().format(value));
+                return new JSONString(DateTimeFormat.getFormat(format).format(value));
             }
         }
     };
