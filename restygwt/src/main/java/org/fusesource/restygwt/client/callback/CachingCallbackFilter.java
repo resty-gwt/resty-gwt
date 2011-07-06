@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.Domain;
-import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.ScopableQueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.UrlCacheKey;
 
@@ -35,7 +35,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.logging.client.LogConfiguration;
 
 public class CachingCallbackFilter implements CallbackFilter {
 
@@ -69,13 +68,13 @@ public class CachingCallbackFilter implements CallbackFilter {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
                     // call the original callback
-                    if (LogConfiguration.loggingIsEnabled()) {
+                    if (Defaults.canLog()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
                                 .finer("call original callback for " + ck);
                     }
                     originalCallback.onResponseReceived(request, response);
 
-                    if (LogConfiguration.loggingIsEnabled()) {
+                    if (Defaults.canLog()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
                                 .finer("call "+ removedCallbacks.size()
                                         + " more queued callbacks for " + ck);
@@ -89,21 +88,21 @@ public class CachingCallbackFilter implements CallbackFilter {
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    if (LogConfiguration.loggingIsEnabled()) {
+                    if (Defaults.canLog()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
                                 .severe("cannot call " + (removedCallbacks.size()+1)
                                         + " callbacks for " + ck + " due to error: "
                                         + exception.getMessage());
                     }
                     // call the original callback
-                    if (LogConfiguration.loggingIsEnabled()) {
+                    if (Defaults.canLog()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
                                 .finer("call original callback for " + ck);
                     }
 
                     originalCallback.onError(request, exception);
 
-                    if (LogConfiguration.loggingIsEnabled()) {
+                    if (Defaults.canLog()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
                                 .finer("call "+ removedCallbacks.size()
                                         + " more queued callbacks for " + ck);
@@ -116,7 +115,7 @@ public class CachingCallbackFilter implements CallbackFilter {
                 }
             };
         } else {
-            if (LogConfiguration.loggingIsEnabled()) {
+            if (Defaults.canLog()) {
                 Logger.getLogger(CachingCallbackFilter.class.getName()).finer("removed one or no " +
                         "callback for cachekey " + ck);
             }
@@ -124,7 +123,7 @@ public class CachingCallbackFilter implements CallbackFilter {
 
         if (code < Response.SC_MULTIPLE_CHOICES
                 && code >= Response.SC_OK) {
-            if (LogConfiguration.loggingIsEnabled()) {
+            if (Defaults.canLog()) {
                 Logger.getLogger(CachingCallbackFilter.class.getName()).finer("cache to " + ck
                         + ": " + response);
             }
@@ -132,7 +131,7 @@ public class CachingCallbackFilter implements CallbackFilter {
             return callback;
         }
 
-        if (LogConfiguration.loggingIsEnabled()) {
+        if (Defaults.canLog()) {
             Logger.getLogger(CachingCallbackFilter.class.getName())
                     .info("cannot cache due to invalid response code: " + code);
         }

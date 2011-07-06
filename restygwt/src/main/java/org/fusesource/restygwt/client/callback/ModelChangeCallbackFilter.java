@@ -20,6 +20,7 @@ package org.fusesource.restygwt.client.callback;
 
 import java.util.logging.Logger;
 
+import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
@@ -32,7 +33,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.logging.client.LogConfiguration;
 
 public class ModelChangeCallbackFilter implements CallbackFilter {
 
@@ -68,14 +68,14 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
                         GwtEvent e = ModelChangeEventFactory.factory(
                                 jsonArray.get(i).isString().stringValue());
 
-                        if (LogConfiguration.loggingIsEnabled()) {
+                        if (Defaults.canLog()) {
                             Logger.getLogger(ModelChangeCallbackFilter.class.getName())
                                     .info("fire event \"" + e + "\" ...");
                         }
                         eventBus.fireEvent(e);
                     }
                 } else {
-                    if (LogConfiguration.loggingIsEnabled()) {
+                    if (Defaults.canLog()) {
                         Logger.getLogger(ModelChangeCallbackFilter.class.getName())
                         .info("found null array for model-change events");
                     }
