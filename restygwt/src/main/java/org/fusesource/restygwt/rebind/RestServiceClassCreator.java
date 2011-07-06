@@ -261,6 +261,10 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                         error("Invalid rest method.  Invalid @PathParam annotation. Method is missing the @Path annotation: " + method.getReadableDeclaration());
                     }
                     pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+" + toStringExpression(arg) + "+\"");
+                    if (arg.getAnnotation(Attribute.class) != null) {
+                        // allow part of the arg-object participate in as PathParam and the object goes over the wire
+                        contentArg = arg;
+                    }
                     continue;
                 }
 
