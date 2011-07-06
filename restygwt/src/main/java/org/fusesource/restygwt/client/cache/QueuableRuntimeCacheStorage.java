@@ -123,6 +123,13 @@ public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorag
                 if (null == scope) {
                     s = "";
                 }
+
+                if (hasCallback(key)) {
+                    Logger.getLogger(QueuableRuntimeCacheStorage.class.getName())
+                            .warning("cache-key " + key + " still has "
+                                    + pendingCallbacks.get(key).size()
+                                    + " callbacks, but will be removed now.");
+                }
                 Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).finer(
                         "removing cache-key " + key + " from scope \"" + s + "\"");
             }
