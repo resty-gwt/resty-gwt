@@ -455,7 +455,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                         p("protected " + resultType.getParameterizedQualifiedSourceName() + " parseResult(" + JSON_OBJECT_CLASS + " result) throws Exception {").i(1);
                         {
                             if(resultType.getParameterizedQualifiedSourceName().equals("java.lang.Void")) {
-                                p("return (java.lang.Void) new java.lang.Object();");
+                                p("return (java.lang.Void) null;");
                             }
                             else {
                                 p("try {").i(1);
@@ -483,7 +483,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                         p("protected " + resultType.getParameterizedQualifiedSourceName() + " parseResult() throws Exception {").i(1);
                         {
                             if(resultType.getParameterizedQualifiedSourceName().equals("java.lang.Void")) {
-                                p("return (java.lang.Void) new java.lang.Object();");
+                                p("return (java.lang.Void) null;");
                             }
                             else {
                                 p("try {").i(1);
