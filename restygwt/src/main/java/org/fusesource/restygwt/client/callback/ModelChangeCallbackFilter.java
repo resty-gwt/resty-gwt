@@ -24,8 +24,8 @@ import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.example.client.event.ModelChangeEventFactory;
+import org.fusesource.restygwt.example.client.event.ModelChangedEventHandler;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.http.client.RequestCallback;
@@ -42,6 +42,15 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
         this.eventBus = eventBus;
     }
 
+    @Override
+    public boolean canHandle(final String method, final int code) {
+        if (code < Response.SC_MULTIPLE_CHOICES
+                && code >= Response.SC_OK) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * the real filter method, called independent of the response code
      *
@@ -50,44 +59,36 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
     @Override
     public RequestCallback filter(final Method method, final Response response,
             RequestCallback callback) {
-        final int code = response.getStatusCode();
+        String modelChangeIdentifier = method.getData().get(
+                ModelChange.MODEL_CHANGED_DOMAIN_KEY);
 
-        if (code < Response.SC_MULTIPLE_CHOICES
-                && code >= Response.SC_OK) {
-            String modelChangeIdentifier = method.getData().get(
-                    ModelChange.MODEL_CHANGED_DOMAIN_KEY);
+        if (modelChangeIdentifier != null) {
+            if (Defaults.canLog()) {
+                Logger.getLogger(ModelChangeCallbackFilter.class.getName())
+                        .fine("found modelChangeIdentifier \"" + modelChangeIdentifier
+                                + "\" in " + response);
+            }
+            JSONValue jsonValue = JSONParser.parseStrict(modelChangeIdentifier);
+            JSONArray jsonArray = jsonValue.isArray();
 
-            if (modelChangeIdentifier != null) {
-                if (Defaults.canLog()) {
-                    Logger.getLogger(ModelChangeCallbackFilter.class.getName())
-                            .fine("found modelChangeIdentifier \"" + modelChangeIdentifier
-                                    + "\" in " + response);
-                }
-                JSONValue jsonValue = JSONParser.parseStrict(modelChangeIdentifier);
-                JSONArray jsonArray = jsonValue.isArray();
+            if (jsonArray != null) {
+                for (int i = 0; i < jsonArray.size(); ++i) {
+                    GwtEvent<ModelChangedEventHandler> e = ModelChangeEventFactory.factory(
+                            jsonArray.get(i).isString().stringValue());
 
-                if (jsonArray != null) {
-                    for (int i = 0; i < jsonArray.size(); ++i) {
-                        GwtEvent e = ModelChangeEventFactory.factory(
-                                jsonArray.get(i).isString().stringValue());
-
-                        if (Defaults.canLog()) {
-                            Logger.getLogger(ModelChangeCallbackFilter.class.getName())
-                                    .info("fire event \"" + e + "\" ...");
-                        }
-                        eventBus.fireEvent(e);
-                    }
-                } else {
                     if (Defaults.canLog()) {
                         Logger.getLogger(ModelChangeCallbackFilter.class.getName())
-                                .info("found null array for model-change events");
+                                .info("fire event \"" + e + "\" ...");
                     }
+                    eventBus.fireEvent(e);
+                }
+            } else {
+                if (Defaults.canLog()) {
+                    Logger.getLogger(ModelChangeCallbackFilter.class.getName())
+                            .info("found null array for model-change events");
                 }
             }
-            return callback;
         }
-
-        GWT.log("no event processing due to invalid response code: " + code);
         return callback;
     }
 }

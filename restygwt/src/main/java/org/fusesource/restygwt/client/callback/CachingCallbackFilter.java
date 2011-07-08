@@ -44,6 +44,15 @@ public class CachingCallbackFilter implements CallbackFilter {
         this.cache = cache;
     }
 
+    @Override
+    public boolean canHandle(final String method, final int code) {
+        if (code < Response.SC_MULTIPLE_CHOICES
+                && code >= Response.SC_OK) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * the real filter method, called independent of the response code
      *
@@ -121,20 +130,7 @@ public class CachingCallbackFilter implements CallbackFilter {
             }
         }
 
-        if (code < Response.SC_MULTIPLE_CHOICES
-                && code >= Response.SC_OK) {
-            if (Defaults.canLog()) {
-                Logger.getLogger(CachingCallbackFilter.class.getName()).finer("cache to " + ck
-                        + ": " + response);
-            }
-            cache.putResult(ck, response, getCacheDomains(method));
-            return callback;
-        }
-
-        if (Defaults.canLog()) {
-            Logger.getLogger(CachingCallbackFilter.class.getName())
-                    .info("cannot cache due to invalid response code: " + code + ", " + ck);
-        }
+        cache.putResult(ck, response, getCacheDomains(method));
         return callback;
     }
 

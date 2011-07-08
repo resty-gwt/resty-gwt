@@ -18,34 +18,43 @@
 
 package org.fusesource.restygwt.client.callback;
 
+import java.util.logging.Logger;
+
 import org.fusesource.restygwt.client.Method;
 
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.user.client.Window;
 
-public interface CallbackFilter {
+public class UnauthorizedCallbackFilter implements CallbackFilter {
+
+    private final String target;
+
+    public UnauthorizedCallbackFilter(final String target) {
+        this.target = target;
+    }
+
+    @Override
+    public boolean canHandle(final String method, final int code) {
+        return code == Response.SC_UNAUTHORIZED;
+    }
 
     /**
-     * main filter method for a callbackfilter.
+     * redirect unauthorized calls to login
      *
-     * pattern is a chain of responsibility. in contrast to dispatcherfilter,
-     * each callbackfilter will be called for sure. this comes due to the fact
-     * that a dispatcherfilter might want to stop a request (e.g. by caching).
-     * whereas a callbackfilter should not stop the processing of other callback-
-     * filters, there seems to be no good reason for doing this.
-     *
-     * @return continue chain or not
+     * TODO method.getResponse() is not equal to response. unfortunately
      */
+    @Override
     public RequestCallback filter(final Method method, final Response response,
-            RequestCallback callback);
+            RequestCallback callback) {
+        if (LogConfiguration.loggingIsEnabled()) {
+            Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe("Unauthorized: "
+                    + method.builder.getUrl());
+        }
+        Window.Location.assign(target + Window.Location.getQueryString());
 
-    /**
-     * when processing the callbackfilters we have to know if the filter also accepts
-     * !200 responses. e.g. there can be a filter for unauthorized responses. also caching
-     * might not be performed on non-GET methods
-     *
-     * @param code
-     * @return
-     */
-    public boolean canHandle(final String requestMethod, final int code);
+        // useless return, anyway
+        return callback;
+    }
 }
