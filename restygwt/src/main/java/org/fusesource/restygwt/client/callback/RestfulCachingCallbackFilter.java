@@ -34,8 +34,16 @@ public class RestfulCachingCallbackFilter extends CachingCallbackFilter {
     @Override
     protected void cacheResult(Method method, Response response) {
         final CacheKey cacheKey;
-        if (response.getStatusCode() == Response.SC_CREATED && response.getHeader("location") != null){
-            cacheKey = new UrlCacheKey(response.getHeader("location"));
+        if (response.getStatusCode() == Response.SC_CREATED && response.getHeader("Location") != null){
+            // TODO very fragile way of getting the URL
+            final String uri;
+            if(response.getHeader("Location").startsWith("http")){
+                uri = response.getHeader("Location");
+            }
+            else {
+                uri = method.builder.getUrl().replaceFirst("/[^/]*$", "") + response.getHeader("Location");
+            }
+            cacheKey = new UrlCacheKey(uri);
         }
         else {
             cacheKey = cacheKey(method.builder);
