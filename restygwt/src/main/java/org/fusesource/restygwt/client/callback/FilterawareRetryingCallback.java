@@ -86,9 +86,8 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
 
         // TODO retrying, should be moved to filter as well...
         if (method.builder.getHTTPMethod().equals(RequestBuilder.GET.toString())
-                && (response.getStatusCode() < 200
-                        || response.getStatusCode() > 302)
-                && response.getStatusCode() != 404) {
+                && (response.getStatusCode() < 200 || response.getStatusCode() > 302)
+                && response.getStatusCode() < 400 && response.getStatusCode() > 404) {
                 handleErrorGracefully(request, response, requestCallback);
                 return;
         }
