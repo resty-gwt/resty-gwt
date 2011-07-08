@@ -81,7 +81,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
 
         if (null == parameterized) {
             simpleSourceName = source.getSimpleSourceName();
-            logger.log(logger.INFO, "generating non-generic type: " + simpleSourceName + " from "
+            logger.log(logger.DEBUG, "generating non-generic type: " + simpleSourceName + " from "
                     + source.getParameterizedQualifiedSourceName());
         } else {
             // TODO andi: find out how to get the generic implementation without string operations
@@ -100,7 +100,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
             // now create a finally unique class
             simpleSourceName = source.getSimpleSourceName() + "__" + simpleSourceName;
 
-            logger.log(logger.INFO, "generating GENERIC type: " + simpleSourceName + " from "
+            logger.log(logger.DEBUG, "generating GENERIC type: " + simpleSourceName + " from "
                     + source.getParameterizedQualifiedSourceName());
         }
 

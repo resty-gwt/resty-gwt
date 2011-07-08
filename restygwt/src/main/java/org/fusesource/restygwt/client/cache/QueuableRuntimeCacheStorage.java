@@ -181,7 +181,7 @@ public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorag
     public void purge() {
         if (Defaults.canLog()) {
             Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).finer(
-                    "remove " + cache.size() + " elements from cache.");
+                    "will remove " + cache.size() + " elements from cache.");
         }
         cache.clear();
         if (Defaults.canLog()) {
@@ -203,11 +203,26 @@ public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorag
         List<CacheKey> tmpScope = new ArrayList<CacheKey>();
 
         if (null != currentScope) {
+            if (Defaults.canLog()) {
+                Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).finer(
+                        "will remove " + currentScope.size() + " elements from cache, scope: "
+                        + scope);
+            }
+
             for (CacheKey k : currentScope) {
+                if (Defaults.canLog()) {
+                    Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).finer(
+                            "remove " + k + " from cache.");
+                }
                 tmpScope.add(k);
             }
             for (CacheKey k : tmpScope) {
                 removeResult(k, scope);
+            }
+        } else {
+            if (Defaults.canLog()) {
+                Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).info(
+                        "nothing to be removed for scope " + scope);
             }
         }
     }
