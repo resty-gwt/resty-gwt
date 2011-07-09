@@ -44,7 +44,7 @@ import com.google.gwt.logging.client.LogConfiguration;
  */
 public class FilterawareRetryingDispatcher implements FilterawareDispatcher {
 
-    private static FilterawareRetryingDispatcher INSTANCE = null;
+    public static FilterawareRetryingDispatcher INSTANCE = new FilterawareRetryingDispatcher();
 
     /**
      * list of dispatcherfilters to be performed when an request is done

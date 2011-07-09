@@ -28,6 +28,8 @@ import org.fusesource.restygwt.client.cache.UrlCacheKey;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
 import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
@@ -75,7 +77,15 @@ public class CachingDispatcherFilter implements DispatcherFilter {
                             .info("already got a cached response for: " + builder.getHTTPMethod() + " "
                             + builder.getUrl());
                 }
-                builder.getCallback().onResponseReceived(null, cachedResponse);
+                // onResponseReceived can be time consuming and can manipulate the DOM
+                // deferring the command keeps the async behaviour of this method call
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    
+                    @Override
+                    public void execute() {
+                        builder.getCallback().onResponseReceived(null, cachedResponse);
+                    }
+                });
                 return false;
             }  else {
                 final RequestCallback retryingCallback = callbackFactory.createCallback(method);
@@ -117,7 +127,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
 //            /*
 //             * add X-Request-Token to all non-caching calls (!= GET) if we have some
 //             */
-//            builder.setHeader("X-Testing", "Fickbude");
+//            builder.setHeader("X-Testing", "Bude");
 
             builder.setCallback(callbackFactory.createCallback(method));
             return true;
