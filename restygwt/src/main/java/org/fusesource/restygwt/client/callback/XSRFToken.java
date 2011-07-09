@@ -3,16 +3,16 @@
  */
 package org.fusesource.restygwt.client.callback;
 
-public class XSSToken {
+public class XSRFToken {
     private final String headerKey;
     
     public String token;
     
-    public XSSToken(){
+    public XSRFToken(){
         this("X-AUTHENTICATION-TOKEN");
     }
     
-    public XSSToken(String headerKey){
+    public XSRFToken(String headerKey){
         this.headerKey = headerKey;
     }
     

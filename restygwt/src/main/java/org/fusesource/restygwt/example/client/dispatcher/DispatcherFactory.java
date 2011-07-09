@@ -9,15 +9,15 @@ import org.fusesource.restygwt.client.callback.CallbackFilter;
 import org.fusesource.restygwt.client.callback.DefaultCallbackFactory;
 import org.fusesource.restygwt.client.callback.RestfulCachingCallbackFilter;
 import org.fusesource.restygwt.client.callback.RetryingCallbackFactory;
-import org.fusesource.restygwt.client.callback.XSSToken;
-import org.fusesource.restygwt.client.callback.XSSTokenCallbackFilter;
+import org.fusesource.restygwt.client.callback.XSRFToken;
+import org.fusesource.restygwt.client.callback.XSRFTokenCallbackFilter;
 import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
 import org.fusesource.restygwt.client.dispatcher.DefaultDispatcherFilter;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 import org.fusesource.restygwt.client.dispatcher.DispatcherFilter;
 import org.fusesource.restygwt.client.dispatcher.FilterawareDispatcher;
 import org.fusesource.restygwt.client.dispatcher.RestfulCachingDispatcherFilter;
-import org.fusesource.restygwt.client.dispatcher.XSSTokenDispatcherFilter;
+import org.fusesource.restygwt.client.dispatcher.XSRFTokenDispatcherFilter;
 
 /**
  * this factory can be used to create a Dispatcher which can be used as dispatcher Option on
@@ -43,16 +43,16 @@ import org.fusesource.restygwt.client.dispatcher.XSSTokenDispatcherFilter;
  */
 public class DispatcherFactory {
 
-    public FilterawareDispatcher xssProtectionDispatcher(){
-        XSSToken xss = new XSSToken();
+    public FilterawareDispatcher xsrfProtectionDispatcher(){
+        XSRFToken xsrf = new XSRFToken();
 
-        DispatcherFilter xssDispatcherFilter = new XSSTokenDispatcherFilter(xss);
+        DispatcherFilter xsrfDispatcherFilter = new XSRFTokenDispatcherFilter(xsrf);
         
-        CallbackFilter xssCallbackFilter = new XSSTokenCallbackFilter(xss);
-        CallbackFactory callbackFactory = new DefaultCallbackFactory(xssCallbackFilter);
+        CallbackFilter xsrfCallbackFilter = new XSRFTokenCallbackFilter(xsrf);
+        CallbackFactory callbackFactory = new DefaultCallbackFactory(xsrfCallbackFilter);
         DispatcherFilter defaultDispatcherFilter = new DefaultDispatcherFilter(callbackFactory);
         
-        FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(xssDispatcherFilter, defaultDispatcherFilter);
+        FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(xsrfDispatcherFilter, defaultDispatcherFilter);
         
         return dispatcher;
     }
@@ -93,20 +93,20 @@ public class DispatcherFactory {
         return dispatcher;
     }
 
-    public FilterawareDispatcher retryingCachingXSSProtectionDispatcher(){
-        XSSToken xss = new XSSToken();
+    public FilterawareDispatcher retryingCachingXSRFProtectionDispatcher(){
+        XSRFToken xsrf = new XSRFToken();
 
-        DispatcherFilter xssDispatcherFilter = new XSSTokenDispatcherFilter(xss);
+        DispatcherFilter xsrfDispatcherFilter = new XSRFTokenDispatcherFilter(xsrf);
         
-        CallbackFilter xssCallbackFilter = new XSSTokenCallbackFilter(xss);
+        CallbackFilter xsrfCallbackFilter = new XSRFTokenCallbackFilter(xsrf);
 
         QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
         
         CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
-        CallbackFactory callbackFactory = new RetryingCallbackFactory(xssCallbackFilter, cachingCallbackFilter);
+        CallbackFactory callbackFactory = new RetryingCallbackFactory(xsrfCallbackFilter, cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
         
-        FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(xssDispatcherFilter, cachingDispatcherFilter);
+        FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(xsrfDispatcherFilter, cachingDispatcherFilter);
         
         return dispatcher;
     }
@@ -135,20 +135,20 @@ public class DispatcherFactory {
         return dispatcher;
     }
     
-    public FilterawareDispatcher restfulRetryingCachingXSSProtectionDispatcher(){
-        XSSToken xss = new XSSToken();
+    public FilterawareDispatcher restfulRetryingCachingXSRFProtectionDispatcher(){
+        XSRFToken xsrf = new XSRFToken();
 
-        DispatcherFilter xssDispatcherFilter = new XSSTokenDispatcherFilter(xss);
+        DispatcherFilter xsrfDispatcherFilter = new XSRFTokenDispatcherFilter(xsrf);
         
-        CallbackFilter xssCallbackFilter = new XSSTokenCallbackFilter(xss);
+        CallbackFilter xsrfCallbackFilter = new XSRFTokenCallbackFilter(xsrf);
 
         QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
         
         CallbackFilter cachingCallbackFilter = new RestfulCachingCallbackFilter(cache);
-        CallbackFactory callbackFactory = new RetryingCallbackFactory(xssCallbackFilter, cachingCallbackFilter);
+        CallbackFactory callbackFactory = new RetryingCallbackFactory(xsrfCallbackFilter, cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new RestfulCachingDispatcherFilter(cache, callbackFactory);
         
-        FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(xssDispatcherFilter, cachingDispatcherFilter);
+        FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(xsrfDispatcherFilter, cachingDispatcherFilter);
         
         return dispatcher;
     }

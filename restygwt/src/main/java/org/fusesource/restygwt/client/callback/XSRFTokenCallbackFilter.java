@@ -16,23 +16,28 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client.dispatcher;
+package org.fusesource.restygwt.client.callback;
 
 import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.callback.XSSToken;
+import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 
-import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
 
-public class XSSTokenDispatcherFilter implements DispatcherFilter {
+public class XSRFTokenCallbackFilter implements CallbackFilter {
 
-    private XSSToken xss;
+    protected XSRFToken xsrf;
 
-    public XSSTokenDispatcherFilter(final XSSToken xss) {
-        this.xss = xss;
+    public XSRFTokenCallbackFilter(XSRFToken xsrf) {
+        this.xsrf = xsrf;
     }
-    
-    public boolean filter(final Method method, final RequestBuilder builder) {
-        method.header(this.xss.getHeaderKey(), this.xss.token);
-        return false;
+
+    @Override
+    public RequestCallback filter(final Method method, final Response response,
+            RequestCallback callback) {
+        if (response.getHeader(QueueableCacheStorage.RESTY_CACHE_HEADER) == null){
+            this.xsrf.token = response.getHeader(this.xsrf.getHeaderKey());
+        }
+        return callback;
     }
 }
