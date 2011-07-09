@@ -19,6 +19,7 @@
 package org.fusesource.restygwt.client.callback;
 
 import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
@@ -34,7 +35,9 @@ public class XSSTokenCallbackFilter implements CallbackFilter {
     @Override
     public RequestCallback filter(final Method method, final Response response,
             RequestCallback callback) {
-        this.xss.token = response.getHeader(this.xss.getHeaderKey());
+        if (response.getHeader(QueueableCacheStorage.RESTY_CACHE_HEADER) == null){
+            this.xss.token = response.getHeader(this.xss.getHeaderKey());
+        }
         return callback;
     }
 }

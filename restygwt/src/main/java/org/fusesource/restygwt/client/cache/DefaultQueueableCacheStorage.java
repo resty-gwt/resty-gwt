@@ -18,18 +18,90 @@
 
 package org.fusesource.restygwt.client.cache;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Header;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.logging.client.LogConfiguration;
 
+/**
+ * this implementation stores Response objects until they are removed or purged. when retrieved from
+ * the cache the Response will have an extra header field "X-Resty-Cache". this allows CallbackFilter to
+ * determine the action on whether the Response came from the cache or just came over the wire.
+ *
+ * @author kristian
+ *
+ */
 public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
-    
+
+    static class ResponseWrapper extends Response {
+
+        // keep it package private for testing
+        Response response;
+
+        public boolean equals(Object obj) {
+            return response.equals(obj);
+        }
+
+        public String getHeader(String header) {
+            if(RESTY_CACHE_HEADER.equals(header)){
+                return "true";
+            }
+            return response.getHeader(header);
+        }
+
+        public Header[] getHeaders() {
+            List<Header> headers = Arrays.asList(response.getHeaders());
+            headers.add(new Header() {
+
+                @Override
+                public String getValue() {
+                    return "true";
+                }
+
+                @Override
+                public String getName() {
+                    return RESTY_CACHE_HEADER;
+                }
+            });
+            return (Header[]) headers.toArray();
+        }
+
+        public String getHeadersAsString() {
+            return response.getHeadersAsString() + RESTY_CACHE_HEADER + "=true\r\n";
+        }
+
+        public int getStatusCode() {
+            return response.getStatusCode();
+        }
+
+        public String getStatusText() {
+            return response.getStatusText();
+        }
+
+        public String getText() {
+            return response.getText();
+        }
+
+        public int hashCode() {
+            return response.hashCode();
+        }
+
+        public String toString() {
+            return response.toString();
+        }
+
+        ResponseWrapper(Response resp){
+            this.response = resp;
+        }
+    }
+
     private static final String DEFAULT_SCOPE = "";
 
     /**
@@ -50,7 +122,10 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
     public Response getResultOrReturnNull(final CacheKey key, final String scope) {
         final HashMap<CacheKey, Response> scoped = cache.get(scope);
         if (null != scoped) {
-            return scoped.get(key);
+            Response result = scoped.get(key);
+            if(result != null){
+                return new ResponseWrapper(result);
+            }
         }
 
         return null;
@@ -60,6 +135,7 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
     public void putResult(final CacheKey key, final Response response) {
         putResult(key, response, DEFAULT_SCOPE);
     }
+
 
     protected void putResult(final CacheKey key, final Response response, final String scope) {
         HashMap<CacheKey, Response> scoped = cache.get(scope);
@@ -86,7 +162,7 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
         }
     }
 
-    
+
     @Override
     public boolean hasCallback(final CacheKey k) {
         return pendingCallbacks.containsKey(k);
@@ -140,7 +216,7 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
             }
         }
     }
-    
+
     private void doRemove(CacheKey key, String scope){
         if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
             Logger.getLogger(DefaultQueueableCacheStorage.class.getName())

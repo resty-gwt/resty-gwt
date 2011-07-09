@@ -24,11 +24,14 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 
 /**
- * more enhanced cacheinterface, TODO write something
+ * more enhanced cache interface caching Response objects.
+ * TODO write something
  *
  * @author abalke
  */
 public interface QueueableCacheStorage extends CacheStorage<Response> {
+
+    public static final String RESTY_CACHE_HEADER = "X-Resty-Cache";
 
     public boolean hasCallback(final CacheKey k);
 
