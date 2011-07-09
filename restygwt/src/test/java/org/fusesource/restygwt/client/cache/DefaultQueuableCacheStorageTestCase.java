@@ -3,16 +3,14 @@ package org.fusesource.restygwt.client.cache;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
-import org.fusesource.restygwt.client.cache.CacheKey;
-import org.fusesource.restygwt.client.cache.DefaultQueueableCacheStorage;
-import org.fusesource.restygwt.client.cache.SimpleCacheKey;
+import org.fusesource.restygwt.client.cache.DefaultQueueableCacheStorage.ResponseWrapper;
 
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.junit.GWTMockUtilities;
 
 
-public class PersistentQueueableCacheStorageTestCase extends TestCase {
+public class DefaultQueuableCacheStorageTestCase extends TestCase {
 
     private DefaultQueueableCacheStorage storage;
     
@@ -37,12 +35,12 @@ public class PersistentQueueableCacheStorageTestCase extends TestCase {
         storage.putResult(secondKey, resp);
         
         assertNull(storage.getResultOrReturnNull(new SimpleCacheKey("unknown")));
-        assertEquals(resp, storage.getResultOrReturnNull(key));
-        assertEquals(resp, storage.getResultOrReturnNull(secondKey));
+        assertEquals(resp, ((ResponseWrapper)storage.getResultOrReturnNull(key)).response);
+        assertEquals(resp, ((ResponseWrapper)storage.getResultOrReturnNull(secondKey)).response);
         
         storage.remove(key);
         assertNull(storage.getResultOrReturnNull(key));
-        assertEquals(resp, storage.getResultOrReturnNull(secondKey));
+        assertEquals(resp, ((ResponseWrapper)storage.getResultOrReturnNull(secondKey)).response);
         
         // now purge
         storage.purge();
@@ -72,26 +70,26 @@ public class PersistentQueueableCacheStorageTestCase extends TestCase {
         assertNull(storage.getResultOrReturnNull(new SimpleCacheKey("unknown")));
         assertNull(storage.getResultOrReturnNull(new SimpleCacheKey("unknown"), scope));
         assertNull(storage.getResultOrReturnNull(key, scope));
-        assertEquals(resp, storage.getResultOrReturnNull(key));
-        assertEquals(scopedResp, storage.getResultOrReturnNull(scopedKey, scope));
-        assertEquals(scopedResp, storage.getResultOrReturnNull(secondScopedKey, scope));
+        assertEquals(resp, ((ResponseWrapper)storage.getResultOrReturnNull(key)).response);
+        assertEquals(scopedResp, ((ResponseWrapper)storage.getResultOrReturnNull(scopedKey, scope)).response);
+        assertEquals(scopedResp, ((ResponseWrapper)storage.getResultOrReturnNull(secondScopedKey, scope)).response);
 
         // wrong key shall leave things as they are
         storage.remove(key, scope);
-        assertEquals(resp, storage.getResultOrReturnNull(key));
-        assertEquals(scopedResp, storage.getResultOrReturnNull(scopedKey, scope));
+        assertEquals(resp, ((ResponseWrapper)storage.getResultOrReturnNull(key)).response);
+        assertEquals(scopedResp, ((ResponseWrapper)storage.getResultOrReturnNull(scopedKey, scope)).response);
 
         // remove scoped key and leave unscope cache as it is
         storage.remove(scopedKey, scope);
         assertNull(storage.getResultOrReturnNull(scopedKey, scope));
-        assertEquals(scopedResp, storage.getResultOrReturnNull(secondScopedKey, scope));
-        assertEquals(resp, storage.getResultOrReturnNull(key));
+        assertEquals(scopedResp, ((ResponseWrapper)storage.getResultOrReturnNull(secondScopedKey, scope)).response);
+        assertEquals(resp, ((ResponseWrapper)storage.getResultOrReturnNull(key)).response);
         
         // now purge
         storage.purge(scope);
         assertNull(storage.getResultOrReturnNull(scopedKey, scope));
         assertNull(storage.getResultOrReturnNull(secondScopedKey, scope));
-        assertEquals(resp, storage.getResultOrReturnNull(key));
+        assertEquals(resp, ((ResponseWrapper)storage.getResultOrReturnNull(key)).response);
         
         EasyMock.verify(resp);
         EasyMock.verify(scopedResp);
@@ -123,5 +121,17 @@ public class PersistentQueueableCacheStorageTestCase extends TestCase {
 
         EasyMock.verify(rc1);
         EasyMock.verify(rc2);
+    }
+    
+    public void testRestyHeader(){
+        CacheKey key = new SimpleCacheKey("first");
+        Response resp = EasyMock.createMock(Response.class);
+        EasyMock.replay(resp);
+        
+        storage.putResult(key, resp);
+        
+        assertNotNull(storage.getResultOrReturnNull(key).getHeader(QueueableCacheStorage.RESTY_CACHE_HEADER));
+        
+        EasyMock.verify(resp);
     }
 }
