@@ -18,16 +18,28 @@
 package org.fusesource.restygwt.client.cache;
 
 
-public interface CacheStorage<T> {
-    public T getResultOrReturnNull(final CacheKey key);
+public interface ScopableCacheStorage<T> extends CacheStorage<T> {
 
     /**
-     * default put method
+     * put by ident/scope. e.g. to invalidate later on by domain class
+     *
+     * @param key
+     * @param scope
+     * @param response
      */
-    public void putResult(final CacheKey key, final T response);
+    public void putResult(final CacheKey key, final T response, final String scope);
 
     /**
-     * purge the complete cache
+     * put by ident/scope. e.g. to invalidate later on by domain class
+     *
+     * @param key
+     * @param scope
+     * @param response
      */
-    public void purge();
+    public void putResult(final CacheKey key, final T response, final String[] scopes);
+
+    /**
+     * purge a particular ident, e.g. domain scope
+     */
+    public void purge(final String scope);
 }

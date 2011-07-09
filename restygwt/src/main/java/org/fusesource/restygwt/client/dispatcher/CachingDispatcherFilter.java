@@ -24,6 +24,7 @@ import org.fusesource.restygwt.client.Dispatcher;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.ScopableQueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.UrlCacheKey;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
 import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
@@ -38,7 +39,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
     /**
      * one instance of {@link QueueableCacheStorage}
      */
-    private QueueableCacheStorage cacheStorage;
+    private ScopableQueueableCacheStorage cacheStorage;
 
     /**
      * where to get a callback from. gives us the ability to use
@@ -51,7 +52,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
      * @param cacheStorage
      * @param cf
      */
-    public CachingDispatcherFilter(final QueueableCacheStorage cacheStorage,
+    public CachingDispatcherFilter(final ScopableQueueableCacheStorage cacheStorage,
             final CallbackFactory cf) {
         this.cacheStorage = cacheStorage;
         this.callbackFactory = cf;
@@ -72,7 +73,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
                 //case 1: we got a result in cache => return it...
                 if (LogConfiguration.loggingIsEnabled()) {
                     Logger.getLogger(Dispatcher.class.getName())
-                            .info("already got a cached response for: " + builder.getHTTPMethod() + " "
+                            .finer("already got a cached response for: " + builder.getHTTPMethod() + " "
                             + builder.getUrl());
                 }
                 builder.getCallback().onResponseReceived(null, cachedResponse);
@@ -87,7 +88,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
 
                     if (LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(Dispatcher.class.getName())
-                                .info("Sending *caching* http request: " + builder.getHTTPMethod() + " "
+                                .finer("Sending *caching* http request: " + builder.getHTTPMethod() + " "
                                 + builder.getUrl());
                     }
 
@@ -110,14 +111,9 @@ public class CachingDispatcherFilter implements DispatcherFilter {
             if (LogConfiguration.loggingIsEnabled()) {
                 String content = builder.getRequestData();
                 Logger.getLogger(Dispatcher.class.getName())
-                        .info("Sending *non-caching* http request: " + builder.getHTTPMethod() + " "
+                        .finer("Sending *non-caching* http request: " + builder.getHTTPMethod() + " "
                         + builder.getUrl() + " (Content: `" + content + "´)");
             }
-
-//            /*
-//             * add X-Request-Token to all non-caching calls (!= GET) if we have some
-//             */
-//            builder.setHeader("X-Testing", "Fickbude");
 
             builder.setCallback(callbackFactory.createCallback(method));
             return true;

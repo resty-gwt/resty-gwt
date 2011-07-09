@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 
 import com.google.gwt.http.client.Request;
@@ -35,10 +36,14 @@ import com.google.gwt.user.client.Window;
 public class FilterawareRetryingCallback implements FilterawareRequestCallback {
 
     /**
-     * Used by RetryingCallback
-     * default value is 5
+     * sets default number of retries
      */
-    protected static int numberOfRetries = 5;
+    public static int DEFAULT_NUMBER_OF_RETRIES = 5;
+
+    /**
+     * Used by RetryingCallback
+     */
+    protected int numberOfRetries;
 
     /**
      * time to wait for reconnect upon failure
@@ -54,53 +59,40 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
     final protected List<CallbackFilter> callbackFilters = new ArrayList<CallbackFilter>();
 
     public FilterawareRetryingCallback(Method method) {
+        // default number of retries is 5
+        this(method, DEFAULT_NUMBER_OF_RETRIES);
+    }
+
+    public FilterawareRetryingCallback(Method method, int numberOfRetries) {
         this.method = method;
         // need to keep requestcallback here, as ``method.builder.getCallback()`` does not
         // give the same callback later on
         this.requestCallback = method.builder.getCallback();
+        this.numberOfRetries = numberOfRetries;
     }
 
     @Override
     public final void onResponseReceived(Request request, Response response) {
-        if (response.getStatusCode() == Response.SC_UNAUTHORIZED) {
-            if (LogConfiguration.loggingIsEnabled()) {
-                Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe("Unauthorized: "
-                        + method.builder.getUrl());
-                // HACK TODO handle this via a callbackfilter
-                Window.Location.assign("login.html" + Window.Location.getQueryString());
-            }
-        } else if (!(response.getStatusCode() < 300 && response.getStatusCode() >= 200)) {
-            /*
-             * retry only on GET requests that are no redirects (301, 302)
-             */
-            if (response.getStatusCode() != 301
-                    && response.getStatusCode() != 302
-                    && response.getStatusCode() != 404
-                    && method.builder.getHTTPMethod().equals(RequestBuilder.GET.toString())) {
-                handleErrorGracefully(request, response, requestCallback);
-            } else {
-                if (LogConfiguration.loggingIsEnabled()) {
-                    Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe(
-                            "ERROR with non-GET method: " + method.builder.getHTTPMethod() + " "
-                            + method.builder.getUrl() + ", " + response.getStatusText());
+        for (CallbackFilter f : callbackFilters) {
+            if (f.canHandle(method.builder.getHTTPMethod(),
+                    response.getStatusCode())) {
+                if (Defaults.canLog()) {
+                    Logger.getLogger(FilterawareRetryingCallback.class.getName())
+                            .finest("apply filter " + f.getClass() + " to " + method);
                 }
-
-                /*
-                 *  RuntimeException token from
-                 *  com.google.gwt.http.client.Request#fireOnResponseReceived()
-                 */
-                requestCallback.onError(request, new RuntimeException("Response "
-                        + response.getStatusCode() + " for " + method.builder.getHTTPMethod() + " "
-                        + method.builder.getUrl()));
-            }
-            return;
-        } else {
-            // filter only in success case for now
-            for (CallbackFilter f : callbackFilters) {
                 requestCallback = f.filter(method, response, requestCallback);
             }
-            requestCallback.onResponseReceived(request, response);
         }
+
+        // TODO retrying, should be moved to filter as well...
+        if (method.builder.getHTTPMethod().equals(RequestBuilder.GET.toString())
+                && (response.getStatusCode() < 200 || response.getStatusCode() > 302)
+                && (response.getStatusCode() < 400 || response.getStatusCode() > 404)) {
+                handleErrorGracefully(request, response, requestCallback);
+                return;
+        }
+
+        requestCallback.onResponseReceived(request, response);
     }
 
     /**
@@ -165,10 +157,15 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
             if (null != request
                     && null != response
                     && null != requestCallback) {
+
+                if (LogConfiguration.loggingIsEnabled()) {
+                    Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe("Response "
+                          + response.getStatusCode() + " for " + method.builder.getHTTPMethod() + " "
+                          + method.builder.getUrl() + " after " + numberOfRetries + " retries.");
+                }
+
                 // got the original callback, call error here
-                requestCallback.onError(request, new RuntimeException("Response "
-                        + response.getStatusCode() + " for " + method.builder.getHTTPMethod() + " "
-                        + method.builder.getUrl() + " after " + numberOfRetries + " retries."));
+                requestCallback.onResponseReceived(request, response);
             } else {
                 // got no callback - well, goodbye
                 if (Window.confirm("error")) {

@@ -24,7 +24,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
-import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.ScopableQueueableCacheStorage;
 import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
 import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
@@ -72,7 +72,7 @@ public class CachingTestGwt extends GWTTestCase {
     public void testIfCachingWorks() {
         //configure RESTY to use cache:
         final EventBus eventBus = new SimpleEventBus();
-        final QueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
+        final ScopableQueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
         final FilterawareDispatcher dispatcher = new FilterawareRetryingDispatcher();
 
         dispatcher.addFilter(new CachingDispatcherFilter(

@@ -22,10 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.Domain;
-import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.ScopableQueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.UrlCacheKey;
 
 import com.google.gwt.http.client.Request;
@@ -34,14 +35,22 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.logging.client.LogConfiguration;
 
 public class CachingCallbackFilter implements CallbackFilter {
 
-    protected QueueableCacheStorage cache;
+    protected ScopableQueueableCacheStorage cache;
 
-    public CachingCallbackFilter(QueueableCacheStorage cache) {
+    public CachingCallbackFilter(ScopableQueueableCacheStorage cache) {
         this.cache = cache;
+    }
+
+    @Override
+    public boolean canHandle(final String method, final int code) {
+        if (code < Response.SC_MULTIPLE_CHOICES
+                && code >= Response.SC_OK) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -68,13 +77,13 @@ public class CachingCallbackFilter implements CallbackFilter {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
                     // call the original callback
-                    if (LogConfiguration.loggingIsEnabled()) {
+                    if (Defaults.canLog()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
                                 .finer("call original callback for " + ck);
                     }
                     originalCallback.onResponseReceived(request, response);
 
-                    if (LogConfiguration.loggingIsEnabled()) {
+                    if (Defaults.canLog()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
                                 .finer("call "+ removedCallbacks.size()
                                         + " more queued callbacks for " + ck);
@@ -88,21 +97,21 @@ public class CachingCallbackFilter implements CallbackFilter {
 
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    if (LogConfiguration.loggingIsEnabled()) {
+                    if (Defaults.canLog()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
                                 .severe("cannot call " + (removedCallbacks.size()+1)
                                         + " callbacks for " + ck + " due to error: "
                                         + exception.getMessage());
                     }
                     // call the original callback
-                    if (LogConfiguration.loggingIsEnabled()) {
+                    if (Defaults.canLog()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
                                 .finer("call original callback for " + ck);
                     }
 
                     originalCallback.onError(request, exception);
 
-                    if (LogConfiguration.loggingIsEnabled()) {
+                    if (Defaults.canLog()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
                                 .finer("call "+ removedCallbacks.size()
                                         + " more queued callbacks for " + ck);
@@ -115,26 +124,13 @@ public class CachingCallbackFilter implements CallbackFilter {
                 }
             };
         } else {
-            if (LogConfiguration.loggingIsEnabled()) {
+            if (Defaults.canLog()) {
                 Logger.getLogger(CachingCallbackFilter.class.getName()).finer("removed one or no " +
                         "callback for cachekey " + ck);
             }
         }
 
-        if (code < Response.SC_MULTIPLE_CHOICES
-                && code >= Response.SC_OK) {
-            if (LogConfiguration.loggingIsEnabled()) {
-                Logger.getLogger(CachingCallbackFilter.class.getName()).finer("cache to " + ck
-                        + ": " + response);
-            }
-            cache.putResult(ck, response, getCacheDomains(method));
-            return callback;
-        }
-
-        if (LogConfiguration.loggingIsEnabled()) {
-            Logger.getLogger(CachingCallbackFilter.class.getName())
-                    .info("cannot cache due to invalid response code: " + code);
-        }
+        cache.putResult(ck, response, getCacheDomains(method));
         return callback;
     }
 
@@ -145,7 +141,7 @@ public class CachingCallbackFilter implements CallbackFilter {
      *
      * @return
      */
-    private List<String> getCacheDomains(final Method method) {
+    private String[] getCacheDomains(final Method method) {
         if (null == method.getData().get(Domain.CACHE_DOMAIN_KEY)) return null;
 
         final JSONValue jsonValue = JSONParser.parseStrict(method.getData()
@@ -160,7 +156,7 @@ public class CachingCallbackFilter implements CallbackFilter {
                 dd.add(jsonArray.get(i).isString().stringValue());
             }
 
-            return dd;
+            return dd.toArray(new String[dd.size()]);
         }
         return null;
     }

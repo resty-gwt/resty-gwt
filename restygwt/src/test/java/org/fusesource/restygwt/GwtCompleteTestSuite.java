@@ -4,9 +4,11 @@ package org.fusesource.restygwt;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import org.fusesource.restygwt.client.basic.BasicTestGwt;
 import org.fusesource.restygwt.client.basic.CachingTestGwt;
 import org.fusesource.restygwt.client.basic.ExtendedRestTestGwt;
 import org.fusesource.restygwt.client.basic.FlakyTestGwt;
+import org.fusesource.restygwt.client.basic.SafeHtmlTestGwt;
 import org.fusesource.restygwt.client.basic.ResourcePassesHeadersTestGwt;
 import org.fusesource.restygwt.client.basic.ResourceTestGwt;
 import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
@@ -46,9 +48,11 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(CachingTestGwt.class);
         suite.addTestSuite(ExtendedRestTestGwt.class);
         suite.addTestSuite(BigNumberTestGwt.class);
+        suite.addTestSuite(CachingTestGwt.class);
+        suite.addTestSuite(SafeHtmlTestGwt.class);
+        suite.addTestSuite(BasicTestGwt.class);
         suite.addTestSuite(ResourceTestGwt.class); 
         suite.addTestSuite(ResourcePassesHeadersTestGwt.class);       
-
 
         return suite;
     }

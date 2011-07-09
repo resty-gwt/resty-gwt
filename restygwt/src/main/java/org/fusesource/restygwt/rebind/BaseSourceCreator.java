@@ -18,16 +18,18 @@
 
 package org.fusesource.restygwt.rebind;
 
+import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.regex.Pattern;
+
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.user.rebind.AbstractSourceCreator;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-
-import java.io.PrintWriter;
-import java.util.HashSet;
 
 /**
  * provides additional helper methods for generating source..
@@ -73,7 +75,36 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         this.context = context;
         this.source = source;
         this.packageName = source.getPackage().getName();
-        this.shortName = source.getSimpleSourceName() + suffix;
+
+        JParameterizedType parameterized = source.isParameterized();
+        String simpleSourceName = null;
+
+        if (null == parameterized) {
+            simpleSourceName = source.getSimpleSourceName();
+            logger.log(logger.DEBUG, "generating non-generic type: " + simpleSourceName + " from "
+                    + source.getParameterizedQualifiedSourceName());
+        } else {
+            // TODO andi: find out how to get the generic implementation without string operations
+            simpleSourceName = source.getParameterizedQualifiedSourceName();
+
+            // strip off "com.baz.Foo" from "com.baz.Foo<com.baz.Bla>"
+            // result: <com.baz.Bla>
+            simpleSourceName = simpleSourceName.replaceFirst(parameterized.getRawType().getParameterizedQualifiedSourceName(), "");
+
+            // strip "<" and ">"
+            simpleSourceName = Pattern.compile("<|>").matcher(simpleSourceName).replaceAll("");
+
+            // "." becomes "_"
+            simpleSourceName = Pattern.compile("\\.").matcher(simpleSourceName).replaceAll("_");
+
+            // now create a finally unique class
+            simpleSourceName = source.getSimpleSourceName() + "__" + simpleSourceName;
+
+            logger.log(logger.DEBUG, "generating GENERIC type: " + simpleSourceName + " from "
+                    + source.getParameterizedQualifiedSourceName());
+        }
+
+        this.shortName = simpleSourceName + suffix;
         this.name = packageName + "." + shortName;
     }
 

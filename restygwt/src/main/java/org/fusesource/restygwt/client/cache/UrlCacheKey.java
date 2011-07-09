@@ -82,6 +82,7 @@ public final class UrlCacheKey implements CacheKey {
     public String toString() {
         if (null != stringRepresentation) return stringRepresentation;
 
-        return stringRepresentation = httpMethod + " " + url + " [" + requestData + "]";
+        return stringRepresentation = httpMethod + " " + url +
+                (null == requestData ? "" : " [" + requestData + "]");
     }
 }

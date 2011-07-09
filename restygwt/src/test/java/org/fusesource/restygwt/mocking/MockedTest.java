@@ -11,8 +11,8 @@ import org.junit.Before;
 import com.google.gwt.junit.GWTMockUtilities;
 
 /**
- * Just a real world usability example how services can be mocked in a simple manner.
- * WITHOUT using GwtTestCases that tend to be damn slow.
+ * Just a real world usability example how services can be mocked in a simple
+ * manner. WITHOUT using GwtTestCases that tend to be damn slow.
  *
  * In principle - you just have to implement the interface - right?
  *
@@ -34,11 +34,19 @@ public class MockedTest extends TestCase {
             public void getExampleDto(MethodCallback<ExampleDto> callback) {
                 ExampleDto exampleDto = new ExampleDto();
                 exampleDto.name = "name";
-               callback.onSuccess(null, exampleDto);
+                callback.onSuccess(null, exampleDto);
+            }
+
+            @Override
+            public void postExample(MethodCallback<ExampleDto> callback) {
+                ExampleDto exampleDto = new ExampleDto();
+                exampleDto.name = "name";
+                callback.onSuccess(null, exampleDto);
+
             }
         };
 
-        /** test*/
+        /** test */
         exampleService.getExampleDto(new MethodCallback<ExampleDto>() {
             @Override
             public void onSuccess(Method method, ExampleDto response) {
@@ -52,6 +60,5 @@ public class MockedTest extends TestCase {
         });
 
     }
-
 
 }

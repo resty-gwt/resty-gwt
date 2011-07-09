@@ -43,9 +43,8 @@ public class ModelChangeEventFactory {
      * @param domainName
      * @return
      */
-    @SuppressWarnings("rawtypes")
-    public static GwtEvent factory(final String domainName) {
-        final GwtEvent e = new ModelChangeEvent(domainName);
+    public static GwtEvent<ModelChangedEventHandler> factory(final String domainName) {
+        final GwtEvent<ModelChangedEventHandler> e = new ModelChangeEvent(domainName);
         GWT.log(e.toString());
 
         return e;

@@ -45,12 +45,4 @@ public @interface ModelChange {
      * publishing happens after successful HTTP call
      */
     String[] on() default {};
-
-    /**
-     * Defines which Domain class is indicated to be updated.
-     * In the Handler will arrive the full qualified classname.
-     *
-     * @return
-     */
-    Class[] domain() default {};
 }

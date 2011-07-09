@@ -38,21 +38,23 @@ import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.junit.client.GWTTestCase;
 
 /**
- * check a server sided failure response will not cause the failure call immediately.
- * instead the test proves there will be 2 retries, where the second one succeeds.
+ * used to check if with conventional 4xx response errors (non 401)
+ * the right error handling is done.
+ * So that the onFailure contains of the {@link MethodCallback} is filled
+ *  with the right {@link Method} -> should contain method.response
  *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="mailto:tim@elbart.com">elbart</<a>
  */
-public class FlakyTestGwt extends GWTTestCase {
+public class FailureResponseTestGwt extends GWTTestCase {
 
     private ExampleService service;
 
     @Override
     public String getModuleName() {
-        return "org.fusesource.restygwt.FlakyTestGwt";
+        return "org.fusesource.restygwt.FailureResponseTestGwt";
     }
 
-    public void testFlakyConnection() {
+    public void testFailureResponseOnPostTest() {
         /*
          *  setup the service, usually done in gin
          */
@@ -60,16 +62,46 @@ public class FlakyTestGwt extends GWTTestCase {
         service = GWT.create(ExampleService.class);
         ((RestServiceProxy) service).setResource(resource);
 
-        service.getExampleDto(new MethodCallback<ExampleDto>() {
+        service.postExample(new MethodCallback<ExampleDto>() {
+
             @Override
             public void onSuccess(Method method, ExampleDto response) {
-                assertEquals(response.name, "myName");
-                finishTest();
+                fail("got onSuccess even if there should be an error response");
             }
 
             @Override
             public void onFailure(Method method, Throwable exception) {
-                fail("got to failure method even though there should be an automatic retrying");
+                assertNotNull(method.getResponse());
+                assertEquals(410, method.getResponse().getStatusCode());
+                finishTest();
+
+            }
+        });
+
+        delayTestFinish(10000);
+    }
+
+    public void testFailureResponseOnGetTest() {
+        /*
+         *  setup the service, usually done in gin
+         */
+        Resource resource = new Resource(GWT.getModuleBaseURL() + "api/postendpoint");
+        service = GWT.create(ExampleService.class);
+        ((RestServiceProxy) service).setResource(resource);
+
+        service.getExampleDto(new MethodCallback<ExampleDto>() {
+
+            @Override
+            public void onSuccess(Method method, ExampleDto response) {
+                fail("got onSuccess even if there should be an error response");
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                assertNotNull(method.getResponse());
+                assertEquals(410, method.getResponse().getStatusCode());
+                finishTest();
+
             }
         });
 
@@ -94,7 +126,7 @@ public class FlakyTestGwt extends GWTTestCase {
                 new CallbackFactory() {
                     public FilterawareRequestCallback createCallback(Method method) {
                         final FilterawareRequestCallback retryingCallback = new FilterawareRetryingCallback(
-                                method);
+                                method, 2);
 
                         retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
                         retryingCallback.addFilter(new ModelChangeCallbackFilter(eventBus));
