@@ -1,7 +1,15 @@
 RestyGWT
 ========
 
+## [unreleased]
+---------------
+* add SafeHTML as basic property type for response DTOs. For effective XSS protection
+  it is crucial to use SafeHTML through the whole stack of the application and only
+  "resolve" it inside the view (http://code.google.com/webtoolkit/doc/latest/DevGuideSecuritySafeHtml.html)
+* added explicit NULL check in JsonEncoderDecoder for SafeHTML type
+
 ## [resty-gwt 1.2](http://restygwt.fusesource.org/blog/release-1-2.html), un-released
+
 * Add support for Sending Lists and Sets as repeated parameters.
 * Add support for byte data type
 * Added JSON support for Unix timestamps and null values.
@@ -12,6 +20,8 @@ RestyGWT
 * no retrying behaviour on 301, 302 or 404, fallback to error handler in this case directly
 * call onError in org.fusesource.restygwt.client.callback.FilterawareRetryingCallback
   when there is a !GET error request
+* refactor caching, retrying and other configurable stuff to be located in ``DispatcherFilter``
+  or ``CallbackFilter``
 * add scoped QueueableRuntimeCache to be able to invalidate a particular ident, e.g.
   a domain scope.
 * add definition for org.fusesource.restygwt.annotationresolver

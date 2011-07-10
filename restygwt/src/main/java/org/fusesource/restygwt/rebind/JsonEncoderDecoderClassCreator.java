@@ -46,10 +46,10 @@ import org.fusesource.restygwt.client.Json.Style;
  *
  *         Updates: added getter & setter support, enhanced generics support
  * @author <a href="http://www.acuedo.com">Dave Finch</a>
- * 
+ *
  *                  added polymorphic support
  * @author <a href="http://charliemason.info">Charlie Mason</a>
- * 
+ *
  */
 
 public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
@@ -89,7 +89,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         if(sourceClazz.isAbstract()){
             if(typeInfo == null){
                 error("Abstract classes must be annotated with JsonTypeInfo");
-            } 
+            }
         }
         else if (!sourceClazz.isDefaultInstantiable()) {
             error("No default constuctor");
@@ -97,7 +97,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
         if(typeInfo == null){
             //Just add this type
-            possibleTypes.add(source); 
+            possibleTypes.add(source);
         }
         else{
             //Get all the possible types from the annotation
@@ -281,7 +281,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             JsonTypeInfo sourceTypeInfo = source.getAnnotation(JsonTypeInfo.class);
 
             if(sourceTypeInfo != null && sourceTypeInfo.include()==As.PROPERTY){
-                p("String sourceName = org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.decode(object.get(" + wrap(sourceTypeInfo.property()) + "));");
+                p("String sourceName = org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.decode(object.get("
+                        + wrap(sourceTypeInfo.property()) + "));");
             }
 
             for(JClassType possibleType : possibleTypes){
@@ -324,16 +325,18 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
                                 p("if(" + objectGetter + " != null) {").i(1);
 
-                                if (field.getType().isPrimitive() == null) {
-                                    p("if(" + objectGetter + " instanceof com.google.gwt.json.client.JSONNull) {").i(1);
+                                if (! field.getType().equals(locator.SAFE_HTML_TYPE)) {
+                                    if (field.getType().isPrimitive() == null) {
+                                        p("if(" + objectGetter + " instanceof com.google.gwt.json.client.JSONNull) {").i(1);
 
-                                    if (setterName != null) {
-                                        p("rc." + setterName + "(null);");
-                                    } else {
-                                        p("rc." + name + "=null;");
+                                        if (setterName != null) {
+                                            p("rc." + setterName + "(null);");
+                                        } else {
+                                            p("rc." + name + "=null;");
+                                        }
+
+                                        i(-1).p("} else {").i(1);
                                     }
-
-                                    i(-1).p("} else {").i(1);
                                 }
 
                                 if (setterName != null) {
@@ -343,8 +346,10 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                 }
                                 i(-1).p("}");
 
-                                if (field.getType().isPrimitive() == null) {
-                                    i(-1).p("}");
+                                if (! field.getType().equals(locator.SAFE_HTML_TYPE)) {
+                                    if (field.getType().isPrimitive() == null) {
+                                        i(-1).p("}");
+                                    }
                                 }
 
                             } else {
@@ -502,7 +507,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             //Just return the full class name
             return classType.getQualifiedSourceName();
         }
-        else if(typeInfo.use() == Id.NAME){     
+        else if(typeInfo.use() == Id.NAME){
 
             //Find the subtype entry
             for(JsonSubTypes.Type type : subTypes.value()){
