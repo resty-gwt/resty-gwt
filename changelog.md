@@ -20,8 +20,6 @@ RestyGWT
 * no retrying behaviour on 301, 302 or 404, fallback to error handler in this case directly
 * call onError in org.fusesource.restygwt.client.callback.FilterawareRetryingCallback
   when there is a !GET error request
-* refactor caching, retrying and other configurable stuff to be located in ``DispatcherFilter``
-  or ``CallbackFilter``
 * add scoped QueueableRuntimeCache to be able to invalidate a particular ident, e.g.
   a domain scope.
 * add definition for org.fusesource.restygwt.annotationresolver
