@@ -1,10 +1,15 @@
 RestyGWT
 ========
 
-[resty-gwt 1.1 Events]
+## [unreleased]
 ---------------
-* increase GWT dep to 2.2
+* add SafeHTML as basic property type for response DTOs. For effective XSS protection
+  it is crucial to use SafeHTML through the whole stack of the application and only
+  "resolve" it inside the view (http://code.google.com/webtoolkit/doc/latest/DevGuideSecuritySafeHtml.html)
+* added explicit NULL check in JsonEncoderDecoder for SafeHTML type
+
 ## [resty-gwt 1.2](http://restygwt.fusesource.org/blog/release-1-2.html), un-released
+
 * Add support for Sending Lists and Sets as repeated parameters.
 * Add support for byte data type
 * Added JSON support for Unix timestamps and null values.
