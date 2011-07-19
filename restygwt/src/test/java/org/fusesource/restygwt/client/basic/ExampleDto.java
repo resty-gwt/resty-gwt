@@ -4,4 +4,5 @@ public class ExampleDto {
 
     public String name;
 
+    private transient String code;
 }

@@ -481,7 +481,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private List<JField> getFields(List<JField> allFields, JClassType type) {
         JField[] fields = type.getFields();
         for (JField field : fields) {
-            allFields.add(field);
+            if(!field.isTransient()) {
+                allFields.add(field);
+            }
         }
         try {
             JType objectType = find(Object.class);
