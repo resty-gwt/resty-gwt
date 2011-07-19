@@ -9,7 +9,7 @@ public class XSRFToken {
     public String token;
     
     public XSRFToken(){
-        this("X-AUTHENTICATION-TOKEN");
+        this("X-CSRF-TOKEN");
     }
     
     public XSRFToken(String headerKey){

@@ -26,7 +26,7 @@ import org.fusesource.restygwt.client.dispatcher.XSRFTokenDispatcherFilter;
  * public class RestfulRetryingDispatcherSingleton implements Dispatcher{
  *
  *   public static Dispatcher INSTANCE = new DispatcherFactory().restfulCachingDispatcher();
- *   
+ *
  *   // do not allow concrete instances of this class
  *   private RestfulRetryingDispatcherSingleton(){
  *     throw new Error("never called");
@@ -37,7 +37,7 @@ import org.fusesource.restygwt.client.dispatcher.XSRFTokenDispatcherFilter;
  *   }
  * }
  * </pre></code>
- * 
+ *
  * @author kristian
  *
  */
@@ -47,49 +47,67 @@ public class DispatcherFactory {
         XSRFToken xsrf = new XSRFToken();
 
         DispatcherFilter xsrfDispatcherFilter = new XSRFTokenDispatcherFilter(xsrf);
-        
+
         CallbackFilter xsrfCallbackFilter = new XSRFTokenCallbackFilter(xsrf);
         CallbackFactory callbackFactory = new DefaultCallbackFactory(xsrfCallbackFilter);
         DispatcherFilter defaultDispatcherFilter = new DefaultDispatcherFilter(callbackFactory);
-        
+
         FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(xsrfDispatcherFilter, defaultDispatcherFilter);
-        
+
         return dispatcher;
     }
-    
+
     public FilterawareDispatcher cachingDispatcher(){
         QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
-        
+
         CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
         CallbackFactory callbackFactory = new DefaultCallbackFactory(cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache,callbackFactory);
-        
+
         FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(cachingDispatcherFilter);
-        
+
         return dispatcher;
     }
-    
+
+    public FilterawareDispatcher cachingXSRFProtectionDispatcher(){
+        XSRFToken xsrf = new XSRFToken();
+
+        DispatcherFilter xsrfDispatcherFilter = new XSRFTokenDispatcherFilter(xsrf);
+
+        CallbackFilter xsrfCallbackFilter = new XSRFTokenCallbackFilter(xsrf);
+
+        QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
+
+        CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
+        CallbackFactory callbackFactory = new DefaultCallbackFactory(xsrfCallbackFilter, cachingCallbackFilter);
+        DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
+
+        FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(xsrfDispatcherFilter, cachingDispatcherFilter);
+
+        return dispatcher;
+    }
+
     public FilterawareDispatcher retryingDispatcher(){
         QueueableCacheStorage cache = new VolatileQueueableCacheStorage();
-        
+
         CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
         CallbackFactory callbackFactory = new RetryingCallbackFactory(cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
-        
+
         FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(cachingDispatcherFilter);
-        
+
         return dispatcher;
     }
-    
+
     public FilterawareDispatcher retryingCachingDispatcher(){
         QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
-        
+
         CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
         CallbackFactory callbackFactory = new RetryingCallbackFactory(cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
-        
+
         FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(cachingDispatcherFilter);
-        
+
         return dispatcher;
     }
 
@@ -97,60 +115,78 @@ public class DispatcherFactory {
         XSRFToken xsrf = new XSRFToken();
 
         DispatcherFilter xsrfDispatcherFilter = new XSRFTokenDispatcherFilter(xsrf);
-        
+
         CallbackFilter xsrfCallbackFilter = new XSRFTokenCallbackFilter(xsrf);
 
         QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
-        
+
         CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
         CallbackFactory callbackFactory = new RetryingCallbackFactory(xsrfCallbackFilter, cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
-        
+
         FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(xsrfDispatcherFilter, cachingDispatcherFilter);
-        
+
         return dispatcher;
     }
-    
+
     public FilterawareDispatcher restfulCachingDispatcher(){
         QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
-        
+
         CallbackFilter cachingCallbackFilter = new RestfulCachingCallbackFilter(cache);
         CallbackFactory callbackFactory = new DefaultCallbackFactory(cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new RestfulCachingDispatcherFilter(cache, callbackFactory);
-        
+
         FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(cachingDispatcherFilter);
-        
+
+        return dispatcher;
+    }
+
+    public FilterawareDispatcher restfulCachingXSRFProtectionDispatcher(){
+        XSRFToken xsrf = new XSRFToken();
+
+        DispatcherFilter xsrfDispatcherFilter = new XSRFTokenDispatcherFilter(xsrf);
+
+        CallbackFilter xsrfCallbackFilter = new XSRFTokenCallbackFilter(xsrf);
+
+        QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
+
+        CallbackFilter cachingCallbackFilter = new RestfulCachingCallbackFilter(cache);
+        CallbackFactory callbackFactory = new DefaultCallbackFactory(xsrfCallbackFilter, cachingCallbackFilter);
+        DispatcherFilter cachingDispatcherFilter = new RestfulCachingDispatcherFilter(cache, callbackFactory);
+
+        FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(xsrfDispatcherFilter, cachingDispatcherFilter);
+
         return dispatcher;
     }
 
     public FilterawareDispatcher restfulRetryingCachingDispatcher(){
         QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
-        
+
         CallbackFilter cachingCallbackFilter = new RestfulCachingCallbackFilter(cache);
         CallbackFactory callbackFactory = new RetryingCallbackFactory(cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new RestfulCachingDispatcherFilter(cache, callbackFactory);
-        
+
         FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(cachingDispatcherFilter);
-        
+
         return dispatcher;
     }
-    
+
     public FilterawareDispatcher restfulRetryingCachingXSRFProtectionDispatcher(){
         XSRFToken xsrf = new XSRFToken();
 
         DispatcherFilter xsrfDispatcherFilter = new XSRFTokenDispatcherFilter(xsrf);
-        
+
         CallbackFilter xsrfCallbackFilter = new XSRFTokenCallbackFilter(xsrf);
 
         QueueableCacheStorage cache = new DefaultQueueableCacheStorage();
-        
+
         CallbackFilter cachingCallbackFilter = new RestfulCachingCallbackFilter(cache);
         CallbackFactory callbackFactory = new RetryingCallbackFactory(xsrfCallbackFilter, cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new RestfulCachingDispatcherFilter(cache, callbackFactory);
-        
+
         FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(xsrfDispatcherFilter, cachingDispatcherFilter);
-        
+
         return dispatcher;
     }
-    
+
 }
