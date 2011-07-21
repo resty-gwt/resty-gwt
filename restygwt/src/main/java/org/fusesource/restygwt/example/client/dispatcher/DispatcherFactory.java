@@ -43,9 +43,9 @@ import org.fusesource.restygwt.client.dispatcher.XSRFTokenDispatcherFilter;
  */
 public class DispatcherFactory {
 
-    public FilterawareDispatcher xsrfProtectionDispatcher(){
-        XSRFToken xsrf = new XSRFToken();
+    public static final XSRFToken xsrf = new XSRFToken();
 
+    public FilterawareDispatcher xsrfProtectionDispatcher(){
         DispatcherFilter xsrfDispatcherFilter = new XSRFTokenDispatcherFilter(xsrf);
 
         CallbackFilter xsrfCallbackFilter = new XSRFTokenCallbackFilter(xsrf);
@@ -70,8 +70,6 @@ public class DispatcherFactory {
     }
 
     public FilterawareDispatcher cachingXSRFProtectionDispatcher(){
-        XSRFToken xsrf = new XSRFToken();
-
         DispatcherFilter xsrfDispatcherFilter = new XSRFTokenDispatcherFilter(xsrf);
 
         CallbackFilter xsrfCallbackFilter = new XSRFTokenCallbackFilter(xsrf);
@@ -112,8 +110,6 @@ public class DispatcherFactory {
     }
 
     public FilterawareDispatcher retryingCachingXSRFProtectionDispatcher(){
-        XSRFToken xsrf = new XSRFToken();
-
         DispatcherFilter xsrfDispatcherFilter = new XSRFTokenDispatcherFilter(xsrf);
 
         CallbackFilter xsrfCallbackFilter = new XSRFTokenCallbackFilter(xsrf);
@@ -142,8 +138,6 @@ public class DispatcherFactory {
     }
 
     public FilterawareDispatcher restfulCachingXSRFProtectionDispatcher(){
-        XSRFToken xsrf = new XSRFToken();
-
         DispatcherFilter xsrfDispatcherFilter = new XSRFTokenDispatcherFilter(xsrf);
 
         CallbackFilter xsrfCallbackFilter = new XSRFTokenCallbackFilter(xsrf);
@@ -172,8 +166,6 @@ public class DispatcherFactory {
     }
 
     public FilterawareDispatcher restfulRetryingCachingXSRFProtectionDispatcher(){
-        XSRFToken xsrf = new XSRFToken();
-
         DispatcherFilter xsrfDispatcherFilter = new XSRFTokenDispatcherFilter(xsrf);
 
         CallbackFilter xsrfCallbackFilter = new XSRFTokenCallbackFilter(xsrf);
