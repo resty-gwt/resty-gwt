@@ -7,7 +7,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -49,6 +49,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
 
     /**
      * the one and only constructor
+     *
      * @param cacheStorage
      * @param cf
      */
@@ -64,55 +65,56 @@ public class CachingDispatcherFilter implements DispatcherFilter {
      * @return continue filtering or not
      */
     public boolean filter(final Method method, final RequestBuilder builder) {
-        final CacheKey cacheKey = new UrlCacheKey(builder);
-        final Response cachedResponse = cacheStorage.getResultOrReturnNull(cacheKey);
         final boolean cachable = builder.getHTTPMethod().equals(RequestBuilder.GET.toString());
 
         if (cachable == true) {
+            final CacheKey cacheKey = new UrlCacheKey(builder);
+            final Response cachedResponse = cacheStorage.getResultOrReturnNull(cacheKey);
+
             if (cachedResponse != null) {
-                //case 1: we got a result in cache => return it...
+                // case 1: we got a result in cache => return it...
                 if (LogConfiguration.loggingIsEnabled()) {
                     Logger.getLogger(Dispatcher.class.getName())
-                            .finer("already got a cached response for: " + builder.getHTTPMethod() + " "
-                            + builder.getUrl());
+                            .fine("already got a cached response for: " + cacheKey);
                 }
                 builder.getCallback().onResponseReceived(null, cachedResponse);
                 return false;
-            }  else {
-                final RequestCallback retryingCallback = callbackFactory.createCallback(method);
-
-                //case 2: => no cache in result => queue it....
-                if (!cacheStorage.hasCallback(cacheKey)) {
-                    //case 2.1 => first callback => make a new one and execute...
-                    cacheStorage.addCallback(cacheKey, builder.getCallback());
-
-                    if (LogConfiguration.loggingIsEnabled()) {
-                        Logger.getLogger(Dispatcher.class.getName())
-                                .finer("Sending *caching* http request: " + builder.getHTTPMethod() + " "
-                                + builder.getUrl());
-                    }
-
-                    // important part:
-                    builder.setCallback(retryingCallback);
-                    return true;
-                } else {
-                    //case 2.2 => a callback already in progress => queue to get response when back
-                    if (LogConfiguration.loggingIsEnabled()) {
-                        Logger.getLogger(Dispatcher.class.getName())
-                                .info("request in progress, queue callback: " + builder.getHTTPMethod() + " "
-                                + builder.getUrl());
-                    }
-                    cacheStorage.addCallback(cacheKey, retryingCallback);
-                    return false;
-                }
             }
+
+            // case 2: => no cache in result => queue it....
+            final RequestCallback retryingCallback = callbackFactory.createCallback(method);
+
+            if (!cacheStorage.hasCallback(cacheKey)) {
+                // case 2.1 => first callback => make a new one and execute...
+                cacheStorage.addCallback(cacheKey, builder.getCallback());
+
+                if (LogConfiguration.loggingIsEnabled()) {
+                    Logger.getLogger(Dispatcher.class.getName())
+                            .fine("Sending *caching* http request: " + cacheKey);
+                }
+
+                // important part:
+                builder.setCallback(retryingCallback);
+                return true;
+            }
+
+            // case 2.2 => a callback already in progress => queue to get response when back
+            if (LogConfiguration.loggingIsEnabled()) {
+                Logger.getLogger(Dispatcher.class.getName())
+                        .info("request in progress, queue callback: " + cacheKey);
+            }
+            cacheStorage.addCallback(cacheKey, retryingCallback);
+            return false;
+
         } else {
             // non cachable case
             if (LogConfiguration.loggingIsEnabled()) {
-                String content = builder.getRequestData();
+                final String content = builder.getRequestData();
+                final CacheKey cacheKey = new UrlCacheKey(builder);
+
                 Logger.getLogger(Dispatcher.class.getName())
-                        .finer("Sending *non-caching* http request: " + builder.getHTTPMethod() + " "
-                        + builder.getUrl() + " (Content: `" + content + "´)");
+                        .fine("Sending *non-caching* http request: " + cacheKey + " (Content: `"
+                                + content + "´)");
             }
 
             builder.setCallback(callbackFactory.createCallback(method));
