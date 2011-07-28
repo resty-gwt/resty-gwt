@@ -30,6 +30,7 @@ import org.fusesource.restygwt.client.cache.ScopableQueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.UrlCacheKey;
 
 import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -46,7 +47,8 @@ public class CachingCallbackFilter implements CallbackFilter {
 
     @Override
     public boolean canHandle(final String method, final int code) {
-        if (code < Response.SC_MULTIPLE_CHOICES
+        if (method.equals(RequestBuilder.GET.toString())
+                && code < Response.SC_MULTIPLE_CHOICES
                 && code >= Response.SC_OK) {
             return true;
         }
@@ -61,8 +63,6 @@ public class CachingCallbackFilter implements CallbackFilter {
     @Override
     public RequestCallback filter(final Method method, final Response response,
             RequestCallback callback) {
-        final int code = response.getStatusCode();
-
         final CacheKey ck = new UrlCacheKey(method.builder);
         final List<RequestCallback> removedCallbacks = cache.removeCallbacks(ck);
 

@@ -200,11 +200,12 @@ public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorag
     @Override
     public void purge(final String scope) {
         List<CacheKey> currentScope = scopeRef.get(scope);
-        List<CacheKey> tmpScope = new ArrayList<CacheKey>();
 
         if (null != currentScope) {
+            List<CacheKey> tmpScope = new ArrayList<CacheKey>();
+
             if (Defaults.canLog()) {
-                Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).finer(
+                Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).fine(
                         "will remove " + currentScope.size() + " elements from cache, scope: "
                         + scope);
             }
@@ -219,11 +220,12 @@ public class QueuableRuntimeCacheStorage implements ScopableQueueableCacheStorag
             for (CacheKey k : tmpScope) {
                 removeResult(k, scope);
             }
-        } else {
-            if (Defaults.canLog()) {
-                Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).info(
-                        "nothing to be removed for scope " + scope);
-            }
+            return;
+        }
+
+        if (Defaults.canLog()) {
+            Logger.getLogger(QueuableRuntimeCacheStorage.class.getName()).fine(
+                    "nothing to be removed for scope " + scope);
         }
     }
 
