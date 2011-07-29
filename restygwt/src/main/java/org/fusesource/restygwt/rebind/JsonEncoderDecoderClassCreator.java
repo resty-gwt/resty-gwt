@@ -28,6 +28,7 @@ import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
+import com.google.gwt.dev.jdt.FindJsniRefVisitor;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
@@ -76,7 +77,10 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     public void generate() throws UnableToCompleteException {
 
         JsonTypeInfo typeInfo = source.getAnnotation(JsonTypeInfo.class);
-        JsonSubTypes jacksonSubTypes = null;
+        JsonSubTypes jacksonSubTypes = source.getAnnotation(JsonSubTypes.class);
+        if(jacksonSubTypes == null && source.getSuperclass() != null){
+            jacksonSubTypes = source.getSuperclass().getAnnotation(JsonSubTypes.class);
+        }
         ArrayList<JClassType> possibleTypes = new ArrayList<JClassType>();
 
         locator = new JsonEncoderDecoderInstanceLocator(context, logger);
@@ -101,8 +105,6 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         }
         else{
             //Get all the possible types from the annotation
-            jacksonSubTypes = source.getAnnotation(JsonSubTypes.class);
-
             if(jacksonSubTypes != null){
                 for(JsonSubTypes.Type type : jacksonSubTypes.value())
                 {
@@ -173,7 +175,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
             p(JSON_OBJECT_CLASS + " rc = new " + JSON_OBJECT_CLASS + "();");
 
-            JsonTypeInfo sourceTypeInfo = source.getAnnotation(JsonTypeInfo.class);
+            JsonTypeInfo sourceTypeInfo = findJsonTypeInfo(source);
 
             for(JClassType possibleType : possibleTypes){
 
@@ -186,9 +188,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                 if(sourceTypeInfo != null && sourceTypeInfo.include()==As.PROPERTY){
                     //Write out the type info so it can be decoded correctly
                     p("com.google.gwt.json.client.JSONValue className=org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.encode(\"" + getTypeIdentifier(sourceTypeInfo, jacksonSubTypes, possibleType) + "\");");
-                    p("if( className!=null ) { ");
+                    p("if( className!=null ) { ").i(1);
                     p("rc.put(\"" + sourceTypeInfo.property() +"\", className);");
-                    p("}");
+                    i(-1).p("}");
                 }
 
                 p(possibleType.getParameterizedQualifiedSourceName() + " parseValue = (" + possibleType.getParameterizedQualifiedSourceName() +")value;");
@@ -277,17 +279,14 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         {
             p(JSON_OBJECT_CLASS + " object = toObject(value);");
 
-
-            JsonTypeInfo sourceTypeInfo = source.getAnnotation(JsonTypeInfo.class);
-
-            if(sourceTypeInfo != null && sourceTypeInfo.include()==As.PROPERTY){
-                p("String sourceName = org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.decode(object.get(" + wrap(sourceTypeInfo.property()) + "));");
+            if(typeInfo != null && typeInfo.include()==As.PROPERTY){
+                p("String sourceName = org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.decode(object.get(" + wrap(typeInfo.property()) + "));");
             }
 
             for(JClassType possibleType : possibleTypes){
                 if(possibleTypes.size() > 1){
                     //Generate a decoder for each possible type
-                    p("if(sourceName.equals(\"" + getTypeIdentifier(sourceTypeInfo, jacksonSubTypes, possibleType) + "\"))");
+                    p("if(sourceName.equals(\"" + getTypeIdentifier(typeInfo, jacksonSubTypes, possibleType) + "\"))");
                     p("{");
                 }
 
@@ -372,6 +371,14 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             i(-1).p("}");
             p();
         }
+    }
+
+    private JsonTypeInfo findJsonTypeInfo(JClassType type) {
+        JsonTypeInfo sourceTypeInfo = type.getAnnotation(JsonTypeInfo.class);
+        if (sourceTypeInfo == null && type.getSuperclass() != null) {
+            return findJsonTypeInfo(type.getSuperclass());
+        }
+        return sourceTypeInfo;
     }
 
     /**
