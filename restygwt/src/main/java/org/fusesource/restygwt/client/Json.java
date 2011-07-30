@@ -33,7 +33,7 @@ import static java.lang.annotation.RetentionPolicy.*;
 public @interface Json {
 
     public enum Style {
-        DEFAULT, SIMPLE, JETTISON_NATURAL,
+        DEFAULT, SIMPLE, JETTISON_NATURAL, RAILS,
     }
 
     Style style() default DEFAULT;

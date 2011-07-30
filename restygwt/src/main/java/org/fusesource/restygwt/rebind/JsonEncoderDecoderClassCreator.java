@@ -20,6 +20,15 @@ package org.fusesource.restygwt.rebind;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.codehaus.jackson.annotate.JsonSubTypes;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.codehaus.jackson.annotate.JsonTypeName;
+import org.codehaus.jackson.annotate.JsonTypeInfo.As;
+import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
+import org.fusesource.restygwt.client.Json;
+import org.fusesource.restygwt.client.Json.Style;
+
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -31,14 +40,6 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
-
-import org.codehaus.jackson.annotate.JsonSubTypes;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.codehaus.jackson.annotate.JsonTypeInfo.As;
-import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
-import org.codehaus.jackson.annotate.JsonTypeName;
-import org.fusesource.restygwt.client.Json;
-import org.fusesource.restygwt.client.Json.Style;
 
 /**
  *
@@ -122,6 +123,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
         Json jsonAnnotation = source.getAnnotation(Json.class);
         final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
+        final String railsWrapperName = jsonAnnotation != null && jsonAnnotation.name().length() > 0 ? 
+                jsonAnnotation.name() :
+                    sourceClazz.getName().toLowerCase();
 
         p();
         p("public static final " + shortName + " INSTANCE = new " + shortName + "();");
@@ -172,6 +176,10 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             i(-1).p("}");
 
             p(JSON_OBJECT_CLASS + " rc = new " + JSON_OBJECT_CLASS + "();");
+            if(classStyle == Style.RAILS) {
+                p(JSON_OBJECT_CLASS + " rrc = new " + JSON_OBJECT_CLASS + "();");
+                p("rrc.put(\"" + railsWrapperName + "\" , rc);");
+            }
 
             JsonTypeInfo sourceTypeInfo = source.getAnnotation(JsonTypeInfo.class);
 
@@ -257,7 +265,12 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
                 }
 
-                p("return rc;");
+                if(classStyle == Style.RAILS){
+                    p("return rrc;");
+                }
+                else {
+                    p("return rc;");
+                }
 
                 if(possibleTypes.size() > 1)
                 {
@@ -275,8 +288,12 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         p();
         p("public " + source.getName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
         {
-            p(JSON_OBJECT_CLASS + " object = toObject(value);");
-
+            if(classStyle == Style.RAILS){
+                p(JSON_OBJECT_CLASS + " object = toObject(value, \"" + railsWrapperName + "\");");
+            }
+            else{
+                p(JSON_OBJECT_CLASS + " object = toObject(value);");
+            }
 
             JsonTypeInfo sourceTypeInfo = source.getAnnotation(JsonTypeInfo.class);
 
