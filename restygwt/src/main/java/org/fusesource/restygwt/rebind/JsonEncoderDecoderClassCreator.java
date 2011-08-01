@@ -25,6 +25,7 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
@@ -69,7 +70,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     @Override
     protected ClassSourceFileComposerFactory createComposerFactory() {
         ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
-        composerFactory.setSuperclass(JSON_ENCODER_DECODER_CLASS + "<" + source.getParameterizedQualifiedSourceName() + ">");
+
+        composerFactory.setSuperclass(JSON_ENCODER_DECODER_CLASS + "<" + getClassParameterizedQualifiedSourceName(source) + ">");
         return composerFactory;
     }
 
@@ -131,7 +133,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
         if(null != sourceClazz.isEnum()) {
             p();
-            p("public " + JSON_VALUE_CLASS + " encode(" + source.getParameterizedQualifiedSourceName() + " value) {").i(1);
+            p("public " + JSON_VALUE_CLASS + " encode(" + getClassParameterizedQualifiedSourceName(source) + " value) {").i(1);
             {
                 p("if( value==null ) {").i(1);
                 {
@@ -155,7 +157,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     p("throw new DecodingException(\"Expected a json string (for enum), but was given: \"+value);").i(-1);
                 }
                 p("}");
-                p("return Enum.valueOf("+source.getParameterizedQualifiedSourceName()+".class, str.stringValue());").i(-1);
+                p("return Enum.valueOf("+getClassParameterizedQualifiedSourceName(source)+".class, str.stringValue());").i(-1);
             }
             p("}");
             p();
@@ -165,7 +167,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
 
 
-        p("public " + JSON_VALUE_CLASS + " encode(" + source.getParameterizedQualifiedSourceName() + " value) {").i(1);
+        p("public " + JSON_VALUE_CLASS + " encode(" + getClassParameterizedQualifiedSourceName(source) + " value) {").i(1);
         {
             p("if( value==null ) {").i(1);
             {
@@ -181,7 +183,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
                 if(possibleTypes.size() > 1){
                     //Generate a decoder for each possible type
-                    p("if(value.getClass().getName().equals(\"" + possibleType.getParameterizedQualifiedSourceName() + "\"))");
+                    p("if(value.getClass().getName().equals(\"" + getClassParameterizedQualifiedSourceName(possibleType) + "\"))");
                     p("{");
                 }
 
@@ -193,7 +195,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     i(-1).p("}");
                 }
 
-                p(possibleType.getParameterizedQualifiedSourceName() + " parseValue = (" + possibleType.getParameterizedQualifiedSourceName() +")value;");
+                p(getClassParameterizedQualifiedSourceName(possibleType) + " parseValue = (" + getClassParameterizedQualifiedSourceName(possibleType) +")value;");
 
 
                 for (final JField field : getFields(possibleType))
@@ -290,7 +292,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     p("{");
                 }
 
-                p("" + possibleType.getParameterizedQualifiedSourceName() + " rc = new " + possibleType.getParameterizedQualifiedSourceName() + "();");
+                p("" + getClassParameterizedQualifiedSourceName(possibleType) + " rc = new " + getClassParameterizedQualifiedSourceName(possibleType) + "();");
 
                 for (final JField field : getFields(possibleType)) {
 
@@ -545,5 +547,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         }
 
         return "";
+    }
+
+    private String getClassParameterizedQualifiedSourceName(final JClassType source) {
+        return source.getParameterizedQualifiedSourceName();
     }
 }

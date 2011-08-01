@@ -1,7 +1,15 @@
 RestyGWT
 ========
 
+## [unreleased]
+---------------
+* Bugfix for generic lists. When using a list like ``SomeList<T>`` as implementation
+  of ``SomeList<Foo>`` and ``SomeList<Bar>``, only the first implementation was generated.
+  (At least) during production run this caused ClassCast Exceptions when the second
+  implementation (``SomeList<Bar>``) was in use. 
+
 ## [resty-gwt 1.2](http://restygwt.fusesource.org/blog/release-1-2.html), un-released
+
 * Add support for Sending Lists and Sets as repeated parameters.
 * Add support for byte data type
 * Added JSON support for Unix timestamps and null values.
