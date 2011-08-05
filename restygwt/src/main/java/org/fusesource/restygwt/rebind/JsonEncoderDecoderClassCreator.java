@@ -124,8 +124,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         Json jsonAnnotation = source.getAnnotation(Json.class);
         final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
         final String railsWrapperName = jsonAnnotation != null && jsonAnnotation.name().length() > 0 ? 
-                jsonAnnotation.name() :
-                    sourceClazz.getName().toLowerCase();
+                jsonAnnotation.name() : sourceClazz.getName().toLowerCase();
 
         p();
         p("public static final " + shortName + " INSTANCE = new " + shortName + "();");

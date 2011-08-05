@@ -324,7 +324,9 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         if (object == null) {
             throw new DecodingException("Expected a json object, but was given: " + object);
         }
-        return toObject(object.get(name));
+        JSONValue result = object.get(name);
+        // if nothing was found under the given name then return null
+        return result == null ? null : toObject(result);
     }
 
     static public <Type> List<Type> toList(JSONValue value, AbstractJsonEncoderDecoder<Type> encoder) {
