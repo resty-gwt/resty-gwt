@@ -16,26 +16,26 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client;
+package org.fusesource.restygwt.examples.client;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import org.fusesource.restygwt.client.Json;
+import org.fusesource.restygwt.client.Json.Style;
+ 
+@Json(style = Style.RAILS)
+public class Group {
 
-import static org.fusesource.restygwt.client.Json.Style.*;
+    public int id;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+    public String name;
 
-@Documented
-@Retention(RUNTIME)
-@Target( { FIELD, PARAMETER, TYPE })
-public @interface Json {
-
-    public enum Style {
-        DEFAULT, SIMPLE, JETTISON_NATURAL, RAILS,
+    @Override
+    public boolean equals(Object obj) {
+        try {
+            Group other = (Group) obj;
+            return id == other.id;
+        } catch (Throwable e) {
+            return false;
+        }
     }
 
-    Style style() default DEFAULT;
-    String name() default "";
 }

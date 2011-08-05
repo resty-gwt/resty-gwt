@@ -314,9 +314,19 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
     static public JSONObject toObject(JSONValue value) {
         JSONObject object = value.isObject();
         if (object == null) {
-            throw new DecodingException("Expected a json obejct, but was given: " + object);
+            throw new DecodingException("Expected a json object, but was given: " + object);
         }
         return object;
+    }
+
+    static public JSONObject toObject(JSONValue value, String name) {
+        JSONObject object = value.isObject();
+        if (object == null) {
+            throw new DecodingException("Expected a json object, but was given: " + object);
+        }
+        JSONValue result = object.get(name);
+        // if nothing was found under the given name then return null
+        return result == null ? null : toObject(result);
     }
 
     static public <Type> List<Type> toList(JSONValue value, AbstractJsonEncoderDecoder<Type> encoder) {
