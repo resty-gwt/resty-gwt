@@ -47,12 +47,8 @@ public class CachingCallbackFilter implements CallbackFilter {
 
     @Override
     public boolean canHandle(final String method, final int code) {
-        if (method.equals(RequestBuilder.GET.toString())
-                && code < Response.SC_MULTIPLE_CHOICES
-                && code >= Response.SC_OK) {
-            return true;
-        }
-        return false;
+
+        return method.equals(RequestBuilder.GET.toString());
     }
 
     /**
