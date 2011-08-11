@@ -2,13 +2,13 @@
  * Copyright (C) 2009-2010 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -74,11 +74,10 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
     @Override
     public final void onResponseReceived(Request request, Response response) {
         for (CallbackFilter f : callbackFilters) {
-            if (f.canHandle(method.builder.getHTTPMethod(),
-                    response.getStatusCode())) {
+            if (f.canHandle(method.builder.getHTTPMethod(), response.getStatusCode())) {
                 if (Defaults.canLog()) {
-                    Logger.getLogger(FilterawareRetryingCallback.class.getName())
-                            .finest("apply filter " + f.getClass() + " to " + method);
+                    Logger.getLogger(FilterawareRetryingCallback.class.getName()).finest(
+                            "apply filter " + f.getClass() + " to " + method);
                 }
                 requestCallback = f.filter(method, response, requestCallback);
             }
@@ -88,8 +87,8 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
         if (method.builder.getHTTPMethod().equals(RequestBuilder.GET.toString())
                 && (response.getStatusCode() < 200 || response.getStatusCode() > 302)
                 && (response.getStatusCode() < 400 || response.getStatusCode() > 404)) {
-                handleErrorGracefully(request, response, requestCallback);
-                return;
+            handleErrorGracefully(request, response, requestCallback);
+            return;
         }
 
         requestCallback.onResponseReceived(request, response);
@@ -97,10 +96,10 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
 
     /**
      * replacement for the override of {@link #onResponseReceived(Request, Response)}
-     *
+     * 
      * but this is set to final because of the filter handling, this method has to be
      * implemented instead.
-     *
+     * 
      * @param request
      * @param response
      */
@@ -114,10 +113,10 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
     @Override
     public void onError(Request request, Throwable exception) {
         if (LogConfiguration.loggingIsEnabled()) {
-            Logger.getLogger(FilterawareRetryingCallback.class.getName())
-                    .severe("call onError in " + this.getClass() + ". this should not happen...");
+            Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe(
+                    "call onError in " + this.getClass() + ". this should not happen...");
         }
-        handleErrorGracefully(null, null, null);
+        handleErrorGracefully(request, null, requestCallback);
     }
 
     public void handleErrorGracefully(Request request, Response response,
@@ -126,8 +125,8 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
         if (currentRetryCounter < numberOfRetries) {
             if (LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe(
-                        "error handling in progress for: " + method.builder.getHTTPMethod()
-                        + " " + method.builder.getUrl());
+                        "error handling in progress for: " + method.builder.getHTTPMethod() + " "
+                                + method.builder.getUrl());
             }
 
             currentRetryCounter++;
@@ -138,8 +137,8 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
                         method.builder.send();
                     } catch (RequestException ex) {
                         if (LogConfiguration.loggingIsEnabled()) {
-                            Logger.getLogger(FilterawareRetryingCallback.class.getName())
-                                    .severe(ex.getMessage());
+                            Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe(
+                                    ex.getMessage());
                         }
                     }
                 }
@@ -149,19 +148,20 @@ public class FilterawareRetryingCallback implements FilterawareRequestCallback {
             gracePeriod = gracePeriod * 2;
         } else {
             if (LogConfiguration.loggingIsEnabled()) {
-                Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe("Request failed: "
-                        + method.builder.getHTTPMethod() + " " + method.builder.getUrl()
-                        + " after " + currentRetryCounter + " tries.");
+                Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe(
+                        "Request failed: " + method.builder.getHTTPMethod() + " "
+                                + method.builder.getUrl() + " after " + currentRetryCounter
+                                + " tries.");
             }
 
-            if (null != request
-                    && null != response
-                    && null != requestCallback) {
+            if (null != request && null != response && null != requestCallback) {
 
                 if (LogConfiguration.loggingIsEnabled()) {
-                    Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe("Response "
-                          + response.getStatusCode() + " for " + method.builder.getHTTPMethod() + " "
-                          + method.builder.getUrl() + " after " + numberOfRetries + " retries.");
+                    Logger.getLogger(FilterawareRetryingCallback.class.getName()).severe(
+                            "Response " + response.getStatusCode() + " for "
+                                    + method.builder.getHTTPMethod() + " "
+                                    + method.builder.getUrl() + " after " + numberOfRetries
+                                    + " retries.");
                 }
 
                 // got the original callback, call error here
