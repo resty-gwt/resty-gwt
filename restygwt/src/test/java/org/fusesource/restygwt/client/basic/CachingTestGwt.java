@@ -25,6 +25,7 @@ import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.cache.QueuableRuntimeCacheStorage;
 import org.fusesource.restygwt.client.cache.ScopableQueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.UrlCacheKey;
 import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
 import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
@@ -161,5 +162,56 @@ public class CachingTestGwt extends GWTTestCase {
         };
 
         timerCheck.scheduleRepeating(2000);
+    }
+
+    /**
+     * test if callback cache is cleaned after an error response
+     */
+    public void testCleanCacheCallbacksAfterErrorResponse() {
+
+        final EventBus eventBus = new SimpleEventBus();
+        final ScopableQueueableCacheStorage cacheStorage = new QueuableRuntimeCacheStorage();
+        final FilterawareDispatcher dispatcher = new FilterawareRetryingDispatcher();
+
+        dispatcher.addFilter(new CachingDispatcherFilter(cacheStorage, new CallbackFactory() {
+            public FilterawareRequestCallback createCallback(Method method) {
+                final FilterawareRequestCallback retryingCallback =
+                        new FilterawareRetryingCallback(method);
+
+                retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
+                retryingCallback.addFilter(new ModelChangeCallbackFilter(eventBus));
+                return retryingCallback;
+            }
+        }));
+
+        Defaults.setDispatcher(dispatcher);
+
+        final Resource resource = new Resource("xx");
+        // final Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
+        final UrlCacheKey cacheKey =
+                new UrlCacheKey(new RequestBuilder(RequestBuilder.GET, resource.getUri()));
+
+        final ExampleService service = GWT.create(ExampleService.class);
+        ((RestServiceProxy) service).setResource(resource);
+
+        delayTestFinish(4000);
+
+        service.getExampleDto(new MethodCallback<ExampleDto>() {
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                // CallBack should have been deleted because we got a response from the request
+                assertFalse(cacheStorage.hasCallback(cacheKey));
+                // Response of the request must have been saved in cache.
+                assertNotNull(cacheStorage.getResultOrReturnNull(cacheKey));
+                finishTest();
+            }
+
+            @Override
+            public void onSuccess(Method method, ExampleDto response) {
+            }
+
+        });
+
     }
 }
