@@ -170,6 +170,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         }
         i(-1).p("}");
 
+        p("public " + RESOURCE_CLASS + " getResource() {").i(1);
+        {
+            p("return this.resource;");
+        }
+        i(-1).p("}");
+
 
         Options options = source.getAnnotation(Options.class);
         if( options!=null && options.dispatcher()!=Dispatcher.class ) {
@@ -182,6 +188,13 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         p("public void setDispatcher(" + DISPATCHER_CLASS + " dispatcher) {").i(1);
         {
             p("this.dispatcher = dispatcher;");
+        }
+        i(-1).p("}");
+
+        p();
+        p("public " + DISPATCHER_CLASS + " getDispatcher() {").i(1);
+        {
+            p("return this.dispatcher;");
         }
         i(-1).p("}");
 
