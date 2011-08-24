@@ -26,6 +26,10 @@ public interface RestServiceProxy {
 
     void setResource(Resource resource);
 
+    Resource getResource();
+    
     void setDispatcher(Dispatcher dispatcher);
+    
+    Dispatcher getDispatcher();
 
 }
