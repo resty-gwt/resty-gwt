@@ -21,6 +21,8 @@ package org.fusesource.restygwt.rebind;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonTypeName;
@@ -33,7 +35,9 @@ import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JConstructor;
 import com.google.gwt.core.ext.typeinfo.JField;
+import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
@@ -47,10 +51,10 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
  *
  *         Updates: added getter & setter support, enhanced generics support
  * @author <a href="http://www.acuedo.com">Dave Finch</a>
- * 
+ *
  *                  added polymorphic support
  * @author <a href="http://charliemason.info">Charlie Mason</a>
- * 
+ *
  */
 
 public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
@@ -90,18 +94,21 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             error("Type is not a class");
         }
 
+        // Try to find a constuctor that is annotated as creator
+        final JConstructor creator = findCreator(sourceClazz);
+
         if(sourceClazz.isAbstract()){
             if(typeInfo == null){
                 error("Abstract classes must be annotated with JsonTypeInfo");
-            } 
+            }
         }
-        else if (!sourceClazz.isDefaultInstantiable()) {
+        else if(creator == null && !sourceClazz.isDefaultInstantiable()) {
             error("No default constuctor");
         }
 
         if(typeInfo == null){
             //Just add this type
-            possibleTypes.add(source); 
+            possibleTypes.add(source);
         }
         else{
             //Get all the possible types from the annotation
@@ -124,7 +131,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
         Json jsonAnnotation = source.getAnnotation(Json.class);
         final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
-        final String railsWrapperName = jsonAnnotation != null && jsonAnnotation.name().length() > 0 ? 
+        final String railsWrapperName = jsonAnnotation != null && jsonAnnotation.name().length() > 0 ?
                 jsonAnnotation.name() : sourceClazz.getName().toLowerCase();
 
         p();
@@ -308,68 +315,101 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     p("{");
                 }
 
-                p("" + possibleType.getParameterizedQualifiedSourceName() + " rc = new " + possibleType.getParameterizedQualifiedSourceName() + "();");
-
-                for (final JField field : getFields(possibleType)) {
-
-
-                    final String setterName = getSetterName(field);
-
-                    // If can ignore some fields right off the back..
-                    if (setterName == null && (field.isStatic() || field.isFinal() || field.isTransient())) {
-                        continue;
-                    }
-
-                    branch("Processing field: " + field.getName(), new Branch<Void>() {
-                        public Void execute() throws UnableToCompleteException {
-
-                            // TODO: try to set the field with a setter or JSNI
-                            if (setterName != null || field.isDefaultAccess() || field.isProtected() || field.isPublic()) {
-
+                if(creator != null) {
+                	p("// We found a creator so we use the annotated constructor");
+                	p("" + possibleType.getParameterizedQualifiedSourceName() + " rc = new " + possibleType.getParameterizedQualifiedSourceName() + "(");
+                	i(1).p("// The arguments are placed in the order they appear within the annotated constructor").i(-1);
+                	List<JField> orderedFields = getOrderedFields(getFields(possibleType), creator);
+                	final JField lastField = orderedFields.get(orderedFields.size() - 1);
+                	for (final JField field : orderedFields) {
+                		branch("Processing field: " + field.getName(), new Branch<Void>() {
+	                        public Void execute() throws UnableToCompleteException {
                                 Json jsonAnnotation = field.getAnnotation(Json.class);
                                 Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
-
-                                String name = field.getName();
                                 String jsonName = field.getName();
-
                                 if( jsonAnnotation !=null && jsonAnnotation.name().length() > 0  ) {
                                     jsonName = jsonAnnotation.name();
                                 }
-
                                 String objectGetter = "object.get(" + wrap(jsonName) + ")";
                                 String expression = locator.decodeExpression(field.getType(), objectGetter, style);
 
-                                p("if(" + objectGetter + " != null) {").i(1);
-
                                 if (field.getType().isPrimitive() == null) {
-                                    p("if(" + objectGetter + " instanceof com.google.gwt.json.client.JSONNull) {").i(1);
-
-                                    if (setterName != null) {
-                                        p("rc." + setterName + "(null);");
-                                    } else {
-                                        p("rc." + name + "=null;");
-                                    }
-
-                                    i(-1).p("} else {").i(1);
+                                	i(1).p("" + (objectGetter + " instanceof com.google.gwt.json.client.JSONNull ? null : " + expression + ((field != lastField) ? ", " : ""))).i(-1);
+                                }
+                                else {
+                                	i(1).p("" + expression + ((field != lastField) ? ", " : "")).i(-1);
                                 }
 
-                                if (setterName != null) {
-                                    p("rc." + setterName + "(" + expression + ");");
-                                } else {
-                                    p("rc." + name + "=" + expression + ";");
-                                }
-                                i(-1).p("}");
+                                return null;
+	                        }
+	                    });
+                	}
+                	p(");");
+                }
+                else {
+	                p("" + possibleType.getParameterizedQualifiedSourceName() + " rc = new " + possibleType.getParameterizedQualifiedSourceName() + "();");
 
-                                if (field.getType().isPrimitive() == null) {
-                                    i(-1).p("}");
-                                }
+	                for (final JField field : getFields(possibleType)) {
 
-                            } else {
-                                error("field must not be private.");
-                            }
-                            return null;
-                        }
-                    });
+
+	                    final String setterName = getSetterName(field);
+
+	                    // If can ignore some fields right off the back..
+	                    if (setterName == null && (field.isStatic() || field.isFinal() || field.isTransient())) {
+	                        continue;
+	                    }
+
+	                    branch("Processing field: " + field.getName(), new Branch<Void>() {
+	                        public Void execute() throws UnableToCompleteException {
+
+	                            // TODO: try to set the field with a setter or JSNI
+	                            if (setterName != null || field.isDefaultAccess() || field.isProtected() || field.isPublic()) {
+
+	                                Json jsonAnnotation = field.getAnnotation(Json.class);
+	                                Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
+
+	                                String name = field.getName();
+	                                String jsonName = field.getName();
+
+	                                if( jsonAnnotation !=null && jsonAnnotation.name().length() > 0  ) {
+	                                    jsonName = jsonAnnotation.name();
+	                                }
+
+	                                String objectGetter = "object.get(" + wrap(jsonName) + ")";
+	                                String expression = locator.decodeExpression(field.getType(), objectGetter, style);
+
+	                                p("if(" + objectGetter + " != null) {").i(1);
+
+	                                if (field.getType().isPrimitive() == null) {
+	                                    p("if(" + objectGetter + " instanceof com.google.gwt.json.client.JSONNull) {").i(1);
+
+	                                    if (setterName != null) {
+	                                        p("rc." + setterName + "(null);");
+	                                    } else {
+	                                        p("rc." + name + "=null;");
+	                                    }
+
+	                                    i(-1).p("} else {").i(1);
+	                                }
+
+	                                if (setterName != null) {
+	                                    p("rc." + setterName + "(" + expression + ");");
+	                                } else {
+	                                    p("rc." + name + "=" + expression + ";");
+	                                }
+	                                i(-1).p("}");
+
+	                                if (field.getType().isPrimitive() == null) {
+	                                    i(-1).p("}");
+	                                }
+
+	                            } else {
+	                                error("field must not be private.");
+	                            }
+	                            return null;
+	                        }
+	                    });
+	                }
                 }
 
                 p("return rc;");
@@ -390,6 +430,35 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             p();
         }
     }
+
+    private List<JField> getOrderedFields(List<JField> fields, JConstructor creator) throws UnableToCompleteException {
+		List<JField> orderedFields = new ArrayList<JField>();
+		for(JParameter param : creator.getParameters()) {
+			JsonProperty prop = param.getAnnotation(JsonProperty.class);
+			if(prop != null) {
+				for(JField field : fields) {
+					if(field.getName().equals(prop.value())) {
+						orderedFields.add(field);
+					}
+				}
+			}
+			else {
+				error("a constructor annotated with @JsonCreator requires that all paramaters are annotated with @JsonProperty.");
+			}
+		}
+
+		return orderedFields;
+	}
+
+	private JConstructor findCreator(JClassType sourceClazz) {
+    	for(JConstructor constructor : sourceClazz.getConstructors()) {
+    		if(constructor.getAnnotation(JsonCreator.class) != null) {
+    			return constructor;
+    		}
+    	}
+
+    	return null;
+	}
 
     private JsonTypeInfo findJsonTypeInfo(JClassType type) {
         JsonTypeInfo sourceTypeInfo = type.getAnnotation(JsonTypeInfo.class);
@@ -529,7 +598,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             //Just return the full class name
             return classType.getQualifiedSourceName();
         }
-        else if(typeInfo.use() == Id.NAME){     
+        else if(typeInfo.use() == Id.NAME){
 
             //Find the subtype entry
             for(JsonSubTypes.Type type : subTypes.value()){
