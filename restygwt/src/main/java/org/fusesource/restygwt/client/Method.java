@@ -167,9 +167,21 @@ public class Method {
         return this;
     }
 
-
+	/**
+     * Local file-system (file://) does not return any status codes.
+     * Therefore - if we read from the file-system we accept all codes.
+     * 
+     * This is for instance relevant when developing a PhoneGap application with
+     * restyGwt.
+     */
     public boolean isExpected(int status) {
-        if (anyStatus) {
+    	
+    	String baseUrl = GWT.getHostPageBaseURL();
+    	String requestUrl = builder.getUrl();
+		
+    	if (FileSystemHelper.isRequestGoingToFileSystem(baseUrl, requestUrl)) {
+    		return true;
+    	} else if (anyStatus) {
             return true;
         } else {
             return this.expectedStatuses.contains(status);
