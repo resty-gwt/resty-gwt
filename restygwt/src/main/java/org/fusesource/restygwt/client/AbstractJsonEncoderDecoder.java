@@ -319,14 +319,16 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         return object;
     }
 
-    static public JSONObject toObject(JSONValue value, String name) {
+    static public JSONObject toObjectFromWrapper(JSONValue value, String name) {
         JSONObject object = value.isObject();
         if (object == null) {
             throw new DecodingException("Expected a json object, but was given: " + object);
         }
         JSONValue result = object.get(name);
-        // if nothing was found under the given name then return null
-        return result == null ? null : toObject(result);
+        if (result == null) {
+            throw new DecodingException("No wrapper with name '" + name + "' found in given: " + object);
+        }
+        return toObject(result);
     }
 
     static public <Type> List<Type> toList(JSONValue value, AbstractJsonEncoderDecoder<Type> encoder) {

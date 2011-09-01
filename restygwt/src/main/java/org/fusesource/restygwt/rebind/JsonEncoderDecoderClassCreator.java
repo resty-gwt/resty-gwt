@@ -26,7 +26,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonTypeName;
-import org.codehaus.jackson.annotate.JsonTypeInfo.As;
 import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
@@ -120,7 +119,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         possibleTypes.add(context.getTypeOracle().getType(type.value().getName()));
                     }
                     catch (NotFoundException e){
-                        error("Unable to find decalred JsonSubType " + type.name());
+                        error("Unable to find decalred JsonSubType " + type.value());
                     }
                 }
             }
@@ -172,8 +171,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         }
 
 
-
-
+        String wrapperName = null;
         p("public " + JSON_VALUE_CLASS + " encode(" + source.getParameterizedQualifiedSourceName() + " value) {").i(1);
         {
             p("if( value==null ) {").i(1);
@@ -184,6 +182,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
             p(JSON_OBJECT_CLASS + " rc = new " + JSON_OBJECT_CLASS + "();");
             if(classStyle == Style.RAILS) {
+                wrapperName = railsWrapperName;
                 p(JSON_OBJECT_CLASS + " rrc = new " + JSON_OBJECT_CLASS + "();");
                 p("rrc.put(\"" + railsWrapperName + "\" , rc);");
             }
@@ -198,12 +197,21 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     p("{");
                 }
 
-                if(sourceTypeInfo != null && sourceTypeInfo.include()==As.PROPERTY){
-                    //Write out the type info so it can be decoded correctly
-                    p("com.google.gwt.json.client.JSONValue className=org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.encode(\"" + getTypeIdentifier(sourceTypeInfo, jacksonSubTypes, possibleType) + "\");");
-                    p("if( className!=null ) { ").i(1);
-                    p("rc.put(\"" + sourceTypeInfo.property() +"\", className);");
-                    i(-1).p("}");
+                if(sourceTypeInfo != null) {
+                    switch( sourceTypeInfo.include()){ 
+                        case PROPERTY:
+                            //Write out the type info so it can be decoded correctly
+                            p("com.google.gwt.json.client.JSONValue className=org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.encode(\"" + getTypeIdentifier(sourceTypeInfo, jacksonSubTypes, possibleType) + "\");");
+                            p("if( className!=null ) { ").i(1);
+                            p("rc.put(\"" + sourceTypeInfo.property() +"\", className);");
+                            i(-1).p("}");
+                            break;
+                        case WRAPPER_OBJECT:
+                            wrapperName = getTypeIdentifier(sourceTypeInfo, jacksonSubTypes, possibleType);
+                            p(JSON_OBJECT_CLASS + " rrc = new " + JSON_OBJECT_CLASS + "();");
+                            p("rrc.put(\"" + wrapperName + "\", rc);");
+                            break;
+                    }
                 }
 
                 p(possibleType.getParameterizedQualifiedSourceName() + " parseValue = (" + possibleType.getParameterizedQualifiedSourceName() +")value;");
@@ -272,7 +280,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
                 }
 
-                if(classStyle == Style.RAILS){
+                if (wrapperName != null) {
                     p("return rrc;");
                 }
                 else {
@@ -295,8 +303,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         p();
         p("public " + source.getName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
         {
-            if(classStyle == Style.RAILS){
-                p(JSON_OBJECT_CLASS + " object = toObject(value, \"" + railsWrapperName + "\");");
+            if(wrapperName != null){
+                p(JSON_OBJECT_CLASS + " object = toObject(value, \"" + wrapperName + "\");");
             }
             else{
                 p(JSON_OBJECT_CLASS + " object = toObject(value);");
@@ -304,8 +312,15 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
             JsonTypeInfo sourceTypeInfo = source.getAnnotation(JsonTypeInfo.class);
 
-            if(sourceTypeInfo != null && sourceTypeInfo.include()==As.PROPERTY){
-                p("String sourceName = org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.decode(object.get(" + wrap(sourceTypeInfo.property()) + "));");
+            if(sourceTypeInfo != null){
+                switch(sourceTypeInfo.include()){ 
+                    case PROPERTY:
+                        p("String sourceName = org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.decode(object.get(" + wrap(sourceTypeInfo.property()) + "));");
+                        break;
+                    case WRAPPER_OBJECT:
+                        p("String sourceName = \"" +  wrapperName + "\";");
+                        break;
+                }
             }
 
             for(JClassType possibleType : possibleTypes){
