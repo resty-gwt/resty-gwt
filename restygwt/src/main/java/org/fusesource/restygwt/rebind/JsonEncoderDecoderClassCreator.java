@@ -119,7 +119,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         possibleTypes.add(context.getTypeOracle().getType(type.value().getName()));
                     }
                     catch (NotFoundException e){
-                        error("Unable to find decalred JsonSubType " + type.value());
+                        error("Unable to find declared JsonSubType " + type.value());
                     }
                 }
             }
@@ -303,22 +303,22 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         p();
         p("public " + source.getName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
         {
-            if(wrapperName != null){
-                p(JSON_OBJECT_CLASS + " object = toObject(value, \"" + wrapperName + "\");");
+            JsonTypeInfo sourceTypeInfo = source.getAnnotation(JsonTypeInfo.class);
+            if(wrapperName != null && sourceTypeInfo == null){
+                p(JSON_OBJECT_CLASS + " object = toObjectFromWrapper(value, \"" + wrapperName + "\");");
             }
             else{
                 p(JSON_OBJECT_CLASS + " object = toObject(value);");
             }
 
-            JsonTypeInfo sourceTypeInfo = source.getAnnotation(JsonTypeInfo.class);
-
+            boolean subtypeWrapper = false;
             if(sourceTypeInfo != null){
                 switch(sourceTypeInfo.include()){ 
                     case PROPERTY:
                         p("String sourceName = org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.decode(object.get(" + wrap(sourceTypeInfo.property()) + "));");
                         break;
                     case WRAPPER_OBJECT:
-                        p("String sourceName = \"" +  wrapperName + "\";");
+                        subtypeWrapper = true;
                         break;
                 }
             }
@@ -326,8 +326,16 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             for(JClassType possibleType : possibleTypes){
                 if(possibleTypes.size() > 1){
                     //Generate a decoder for each possible type
-                    p("if(sourceName.equals(\"" + getTypeIdentifier(typeInfo, jacksonSubTypes, possibleType) + "\"))");
-                    p("{");
+                    String subtype = getTypeIdentifier(typeInfo, jacksonSubTypes, possibleType);
+                    if(subtypeWrapper){
+                        p("if(object.containsKey(\"" + subtype + "\"))");
+                        p("{");
+                        p("object = toObjectFromWrapper(value, \"" + subtype + "\");");
+                    }
+                    else{
+                        p("if(sourceName.equals(\"" + getTypeIdentifier(typeInfo, jacksonSubTypes, possibleType) + "\"))");
+                        p("{");
+                    }
                 }
 
                 if(creator != null) {

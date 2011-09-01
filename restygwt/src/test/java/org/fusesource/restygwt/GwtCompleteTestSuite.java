@@ -12,6 +12,7 @@ import org.fusesource.restygwt.client.basic.ResourcePassesHeadersTestGwt;
 import org.fusesource.restygwt.client.basic.ResourceTestGwt;
 import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
 import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorageTestGwt;
+import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.complex.BigNumberTestGwt;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
@@ -48,10 +49,11 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(CachingTestGwt.class);
         suite.addTestSuite(ExtendedRestTestGwt.class);
         suite.addTestSuite(BigNumberTestGwt.class);
-        suite.addTestSuite(ResourceTestGwt.class); 
-        suite.addTestSuite(ResourcePassesHeadersTestGwt.class);       
+        suite.addTestSuite(ResourceTestGwt.class);
+        suite.addTestSuite(ResourcePassesHeadersTestGwt.class);
         suite.addTestSuite(VolatileQueueableCacheStorageTestGwt.class);       
-        suite.addTestSuite(FailingTestGwt.class);       
+        suite.addTestSuite(FailingTestGwt.class);
+        suite.addTestSuite(EncoderDecoderTestGwt.class);
 
         return suite;
     }

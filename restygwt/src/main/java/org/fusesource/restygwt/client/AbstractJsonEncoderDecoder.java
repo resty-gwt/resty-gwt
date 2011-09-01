@@ -225,7 +225,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
             // Doing a straight conversion from string to BigInteger will not work for large values
             // So we convert to BigDecimal first and then convert it to BigInteger.
-            return new BigDecimal(number.doubleValue()).toBigInteger();
+            return new BigDecimal(value.toString()).toBigInteger();
         }
 
         public JSONValue encode(BigInteger value) throws EncodingException {
