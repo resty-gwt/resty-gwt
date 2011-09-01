@@ -213,12 +213,19 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             }
             JSONNumber number = value.isNumber();
             if (number == null) {
-                throw new DecodingException("Expected a json number, but was given: " + value);
+                JSONString str = value.isString();
+                if (str == null) {
+                    throw new DecodingException("Expected a json number r string, but was given: " + value);
+                }
+
+                // Doing a straight conversion from string to BigInteger will not work for large values
+                // So we convert to BigDecimal first and then convert it to BigInteger.
+                return new BigDecimal(str.stringValue()).toBigInteger();
             }
 
             // Doing a straight conversion from string to BigInteger will not work for large values
             // So we convert to BigDecimal first and then convert it to BigInteger.
-            return new BigDecimal(value.toString()).toBigInteger();
+            return new BigDecimal(number.doubleValue()).toBigInteger();
         }
 
         public JSONValue encode(BigInteger value) throws EncodingException {
