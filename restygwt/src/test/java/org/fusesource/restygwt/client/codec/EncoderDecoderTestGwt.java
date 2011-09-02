@@ -1,6 +1,7 @@
 package org.fusesource.restygwt.client.codec;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
 
@@ -10,7 +11,12 @@ import com.google.gwt.junit.client.GWTTestCase;
 
 
 public class EncoderDecoderTestGwt extends GWTTestCase{
-
+    
+    public interface WrapperLibraryCodec extends JsonEncoderDecoder<LibraryWithWrapper>{
+    }
+    public interface PropertyLibraryCodec extends JsonEncoderDecoder<LibraryWithProperty>{
+    }
+    
     static class ANumber<T extends Number> {
         
         T n;
@@ -27,6 +33,36 @@ public class EncoderDecoderTestGwt extends GWTTestCase{
     @Override
     public String getModuleName() {
         return "org.fusesource.restygwt.EncoderDecoderTestGwt";
+    }
+
+    public void testSubtypeWrappeObjectWithSingleSubtype() {
+        WrapperLibraryCodec lc = GWT.create(WrapperLibraryCodec.class);
+        LibraryWithWrapper l = new LibraryWithWrapper();
+        ArrayList<LibraryItemWithWrapper> libraryItems = new ArrayList<LibraryItemWithWrapper>();
+        SpriteBasedItemWithWrapper li = new SpriteBasedItemWithWrapper();
+        li.id = "1";
+        li.imageRef = "src.png";
+        libraryItems.add(li);
+        l.items = libraryItems;
+
+        JSONValue encode = lc.encode(l);
+        LibraryWithWrapper decode = lc.decode(encode);
+        assertEquals(l, decode);
+    }
+
+    public void testSubtypePropertytWithSingleSubtype() {
+        PropertyLibraryCodec lc = GWT.create(PropertyLibraryCodec.class);
+        LibraryWithProperty l = new LibraryWithProperty();
+        ArrayList<LibraryItemWithProperty> libraryItems = new ArrayList<LibraryItemWithProperty>();
+        SpriteBasedItemWithProperty li = new SpriteBasedItemWithProperty();
+        li.id = "1";
+        li.imageRef = "src.png";
+        libraryItems.add(li);
+        l.items = libraryItems;
+
+        JSONValue encode = lc.encode(l);
+        LibraryWithProperty decode = lc.decode(encode);
+        assertEquals(l, decode);
     }
 
     public void testGenericTypes(){

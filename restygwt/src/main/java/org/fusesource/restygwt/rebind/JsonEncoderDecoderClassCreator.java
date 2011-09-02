@@ -304,7 +304,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         p("public " + source.getName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
         {
             JsonTypeInfo sourceTypeInfo = source.getAnnotation(JsonTypeInfo.class);
-            if(wrapperName != null && sourceTypeInfo == null){
+            if(wrapperName != null && (sourceTypeInfo == null || possibleTypes.size() == 1)){
                 p(JSON_OBJECT_CLASS + " object = toObjectFromWrapper(value, \"" + wrapperName + "\");");
             }
             else{
