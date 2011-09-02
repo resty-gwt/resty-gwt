@@ -215,6 +215,34 @@ can use the `@Json` annotation to configure the desired name.  Example:
         public String messageId;
     }
 
+### Using readonly objects
+
+If you want to declare final fields and initialize an object through its constructor, 
+you can use the @JsonCreator and the @JsonProperty annotations. Example:
+
+public class Credentials {
+    @JsonProperty
+    private final String password;
+    @JsonProperty
+    private final String email;
+
+    @JsonCreator
+    public Credentials(@JsonProperty("email") String email, @JsonProperty("password") String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+}
+
+Note that all the paramaters of an annotated constructor should be annotated with the @JsonProperty. 
+As long as each property name matches the declared field names, the order can be freely chosen.
 
 ## Custom Annotation Handler
 
