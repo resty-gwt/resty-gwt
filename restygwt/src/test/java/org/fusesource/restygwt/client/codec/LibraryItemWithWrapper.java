@@ -10,7 +10,7 @@ import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
 
 @JsonSubTypes({@JsonSubTypes.Type(value = SpriteBasedItemWithWrapper.class)})
 @JsonTypeInfo(use = Id.CLASS, include = As.WRAPPER_OBJECT)
-public class LibraryItemWithWrapper {
+abstract public class LibraryItemWithWrapper {
     public String id;
     
     public boolean equals(Object other){
