@@ -103,6 +103,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private JClassType OVERLAY_VALUE_TYPE;
     private Set<JClassType> OVERLAY_ARRAY_TYPES;
     private Set<JClassType> QUERY_PARAM_LIST_TYPES;
+    private JClassType REST_SERVICE_TYPE;
     private JsonEncoderDecoderInstanceLocator locator;
 
     public RestServiceClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) throws UnableToCompleteException {
@@ -145,7 +146,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         this.QUERY_PARAM_LIST_TYPES = new HashSet<JClassType>();
         this.QUERY_PARAM_LIST_TYPES.add(find(List.class));
         this.QUERY_PARAM_LIST_TYPES.add(find(Set.class));
-
+		this.REST_SERVICE_TYPE = find(RestService.class);
+		
         String path = null;
         Path pathAnnotation = source.getAnnotation(Path.class);
         if (pathAnnotation != null) {
@@ -199,7 +201,11 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         i(-1).p("}");
 
         for (JMethod method : source.getInheritableMethods()) {
-            writeMethodImpl(method);
+        	JClassType iface = method.getReturnType().isInterface();
+        	if(iface != null && REST_SERVICE_TYPE.isAssignableFrom(iface))
+        		writeSubresourceLocatorImpl(method);
+        	else
+            	writeMethodImpl(method);
         }
     }
 
@@ -228,7 +234,40 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         }
         return false;
     }
+	
+    private void writeSubresourceLocatorImpl(JMethod method) throws UnableToCompleteException
+    {
+    	JClassType iface = method.getReturnType().isInterface();
+    	if(iface == null || !REST_SERVICE_TYPE.isAssignableFrom(iface)) {
+    		error("Invalid subresource locator method. Method must have return type of an interface that extends RestService: " + method.getReadableDeclaration());
+    	}
+    	
+        Path pathAnnotation = method.getAnnotation(Path.class);
+        if (pathAnnotation == null) {
+        	error("Invalid subresource locator method. Method must have @Path annotation: " + method.getReadableDeclaration());
+        }
+        String pathExpression = wrap(pathAnnotation.value());
 
+        for (JParameter arg : method.getParameters()) {
+            PathParam paramPath = arg.getAnnotation(PathParam.class);
+            if (paramPath != null) {
+                pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+" + toStringExpression(arg) + "+\"");
+                if (arg.getAnnotation(Attribute.class) != null) {
+					error("Attribute annotations not allowed on subresource locators");
+                }
+            }
+        }
+
+
+        p(method.getReadableDeclaration(false, false, false, false, true) + " {").i(1);
+        {
+        	p(method.getReturnType().getQualifiedSourceName() + " __subresource = " + GWT.class.getName() + ".create(" + method.getReturnType().getQualifiedSourceName() + ".class);");
+        	p("((" + RestServiceProxy.class.getName() + ")__subresource).setResource(getResource().resolve(" + pathExpression + "));");
+        	p("return __subresource;");
+        }
+        i(-1).p("}");
+    }
+    
     private void writeMethodImpl(JMethod method) throws UnableToCompleteException {
         if (method.getReturnType().isPrimitive() != JPrimitiveType.VOID) {
             error("Invalid rest method. Method must have void return type: " + method.getReadableDeclaration());
