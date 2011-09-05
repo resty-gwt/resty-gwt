@@ -14,7 +14,7 @@ public class SafeHtmlJsonEncoderDecoderTestGwt extends GWTTestCase {
         return "org.fusesource.restygwt.SafeHtmlJsonEncoderDecoderTestGwt";
     }
 
-    public void SafeHtmlEncodingTestGwt() {
+    public void testSafeHtmlEncodingTestGwt() {
         String s = "test";
         String tag = "\"";
         SafeHtml safeHtml = new SafeHtmlBuilder().appendEscaped(s).toSafeHtml();
