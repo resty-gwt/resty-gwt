@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.fusesource.restygwt</groupId>
     <artifactId>restygwt-project</artifactId>
-    <version>1.2-SEC.12-SNAPSHOT</version>
+    <version>1.2-SEC.13-SNAPSHOT</version>
 
   </parent>
 
