@@ -83,8 +83,45 @@
 
   <build>
     <defaultGoal>install</defaultGoal>
-    <plugins>
 
+    <pluginManagement>
+        <plugins>
+        <plugin>
+            <!--
+                This plugin's configuration is used to store Eclipse
+                m2e settings only. It has no influence on the Maven build itself.
+
+                @see: http://stackoverflow.com/questions/6352208/how-to-solve-plugin-execution-not-covered-by-lifecycle-configuration-for-spring
+                -->
+            <groupId>org.eclipse.m2e</groupId>
+            <artifactId>lifecycle-mapping</artifactId>
+            <version>1.0.0</version>
+            <configuration>
+                <lifecycleMappingMetadata>
+                    <pluginExecutions>
+                        <pluginExecution>
+                            <pluginExecutionFilter>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>gwt-maven-plugin</artifactId>
+                                <versionRange>[${gwt-version},)</versionRange>
+                                <goals>
+                                    <goal>resources</goal>
+                                    <goal>test</goal>
+                                    <goal>compile</goal>
+                                </goals>
+                            </pluginExecutionFilter>
+                            <action>
+                                <execute />
+                            </action>
+                        </pluginExecution>
+                    </pluginExecutions>
+                </lifecycleMappingMetadata>
+            </configuration>
+        </plugin>
+        </plugins>
+    </pluginManagement>
+
+    <plugins>
       <!-- IDE -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
