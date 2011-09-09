@@ -33,12 +33,12 @@
   <packaging>pom</packaging>
 
   <properties>
-    <scala-version>2.8.1</scala-version>
-    <scala-plugin-version>2.15.2</scala-plugin-version>
-    <scalate-version>1.4.1</scalate-version>
-    <scalamd-version>1.5</scalamd-version>
+    <scalate-version>1.5.1</scalate-version>
+    <scalamd-version>1.5</scalamd-version>    
     <slf4j-version>1.6.1</slf4j-version>
-    <jetty-plugin-version>7.2.1.v20101020</jetty-plugin-version>
+    <jetty-plugin-version>7.0.1.v20091125</jetty-plugin-version>
+    <scala-plugin-version>2.15.2</scala-plugin-version>
+    <scala-version>2.9.0-1</scala-version>
   </properties>
 
   <dependencies>
