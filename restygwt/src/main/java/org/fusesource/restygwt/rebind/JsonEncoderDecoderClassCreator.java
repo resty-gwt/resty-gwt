@@ -26,7 +26,9 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonTypeName;
+import org.codehaus.jackson.annotate.JsonTypeInfo.As;
 import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
+import org.codehaus.jackson.annotate.JsonTypeName;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
 
@@ -37,8 +39,10 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JConstructor;
 import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JParameter;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
+import com.google.gwt.core.ext.typeinfo.JTypeParameter;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
@@ -71,7 +75,40 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     @Override
     protected ClassSourceFileComposerFactory createComposerFactory() {
-        ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
+    	String parameters = "";
+    	if(source instanceof JParameterizedType)
+    	{
+    		JParameterizedType gtype = (JParameterizedType)source;
+			StringBuilder builder = new StringBuilder();
+			builder.append("<");
+			boolean first = true;
+   			for(JClassType arg : gtype.getTypeArgs())
+   			{
+   				if(!first)
+   					builder.append(",");
+   				if(arg instanceof JTypeParameter)
+   				{
+   	   				builder.append(arg.getName());
+	   				builder.append(" extends ");
+	   				boolean f2 = true;
+	   				for(JClassType type : ((JTypeParameter)arg).getBounds())
+	   				{
+	   					if(!f2)
+	   						builder.append(",");
+	   					builder.append(type.getParameterizedQualifiedSourceName());
+	   					f2 = false;
+	   				}
+   				}
+   				else
+   				{
+   					builder.append(arg.getParameterizedQualifiedSourceName());
+   				}
+	   			first = false;
+   			}
+   			builder.append(">");
+   			parameters = builder.toString();
+     	}
+        ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName + parameters);
         composerFactory.setSuperclass(JSON_ENCODER_DECODER_CLASS + "<" + source.getParameterizedQualifiedSourceName() + ">");
         return composerFactory;
     }

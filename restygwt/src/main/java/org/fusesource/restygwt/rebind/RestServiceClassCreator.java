@@ -112,12 +112,57 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
     @Override
     protected ClassSourceFileComposerFactory createComposerFactory() {
-        ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
-        composerFactory.addImplementedInterface(source.getName());
+    	String parameters = "";
+    	if(source instanceof JGenericType)
+    	{
+    		JGenericType gtype = (JGenericType)source;
+			StringBuilder builder = new StringBuilder();
+			builder.append("<");
+			boolean first = true;
+   			for(JTypeParameter arg : gtype.getTypeParameters())
+   			{
+   				if(!first)
+   					builder.append(",");
+   				builder.append(arg.getName());
+   				builder.append(" extends ");
+	   			builder.append(arg.getFirstBound().getParameterizedQualifiedSourceName());
+	   			first = false;
+   			}
+   			builder.append(">");
+   			parameters = builder.toString();
+     	}
+    	
+        ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName + parameters);
+        composerFactory.addImplementedInterface(source.getParameterizedQualifiedSourceName());
         composerFactory.addImplementedInterface(RestServiceProxy.class.getName());
         return composerFactory;
     }
 
+    private String getBoundedGenericDeclaration(JClassType type)
+    {
+    	if(type instanceof JGenericType)
+    	{
+    		JGenericType gtype = (JGenericType)type;
+			StringBuilder builder = new StringBuilder();
+			builder.append(gtype.getName());
+			builder.append("<");
+			boolean first = true;
+   			for(JTypeParameter arg : gtype.getTypeParameters())
+   			{
+   				if(!first)
+   					builder.append(",");
+	   			builder.append(getBoundedGenericDeclaration(arg.getFirstBound()));
+	   			first = false;
+   			}
+   			builder.append(">");
+   			return builder.toString();
+     	}
+    	else
+    	{
+	        return type.getName();
+    	}
+    }
+    
     @Override
     protected void generate() throws UnableToCompleteException {
 
