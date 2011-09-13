@@ -138,31 +138,6 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         return composerFactory;
     }
 
-    private String getBoundedGenericDeclaration(JClassType type)
-    {
-    	if(type instanceof JGenericType)
-    	{
-    		JGenericType gtype = (JGenericType)type;
-			StringBuilder builder = new StringBuilder();
-			builder.append(gtype.getName());
-			builder.append("<");
-			boolean first = true;
-   			for(JTypeParameter arg : gtype.getTypeParameters())
-   			{
-   				if(!first)
-   					builder.append(",");
-	   			builder.append(getBoundedGenericDeclaration(arg.getFirstBound()));
-	   			first = false;
-   			}
-   			builder.append(">");
-   			return builder.toString();
-     	}
-    	else
-    	{
-	        return type.getName();
-    	}
-    }
-    
     @Override
     protected void generate() throws UnableToCompleteException {
 
