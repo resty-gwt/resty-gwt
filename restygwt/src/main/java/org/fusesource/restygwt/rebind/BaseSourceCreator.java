@@ -75,21 +75,22 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         this.source = source;
         this.packageName = source.getPackage().getName();
 
-        final JParameterizedType parameterized = source.isParameterized();
-        final String simpleSourceName;
-
-        if (null == parameterized) {
-            simpleSourceName = source.getSimpleSourceName();
-            logger.log(TreeLogger.INFO, "generating non-generic type: " + simpleSourceName + " from "
-                    + source.getParameterizedQualifiedSourceName());
-        } else {
-            // TODO handle the case where there are more than one parameterized types
-            simpleSourceName = source.getSimpleSourceName() + "__" + parameterized.getTypeArgs()[0].getQualifiedSourceName().replace(".", "_");
-            logger.log(TreeLogger.INFO, "generating GENERIC type: " + simpleSourceName + " from "
-                    + source.getParameterizedQualifiedSourceName());
+        if(source instanceof JParameterizedType)
+        {
+    		JParameterizedType ptype = (JParameterizedType)source;
+			StringBuilder builder = new StringBuilder();
+			for(JClassType type : ptype.getTypeArgs())
+			{
+				builder.append("__");
+				builder.append(type.getParameterizedQualifiedSourceName().replace('.', '_'));
+			}
+			this.shortName = source.getSimpleSourceName() + builder.toString() + suffix;
+        }
+        else
+        {
+        	this.shortName = source.getSimpleSourceName() + suffix;
         }
 
-        this.shortName = simpleSourceName + suffix;
         this.name = packageName + "." + shortName;
     }
 

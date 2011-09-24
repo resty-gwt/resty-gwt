@@ -29,9 +29,13 @@ import org.codehaus.jackson.annotate.JsonTypeName;
 import org.codehaus.jackson.annotate.JsonTypeInfo.As;
 import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
 import org.codehaus.jackson.annotate.JsonTypeName;
+import org.codehaus.jackson.map.annotate.JsonTypeIdResolver;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
+import org.fusesource.restygwt.client.JsonEncoderDecoder;
+import org.fusesource.restygwt.client.JsonTypeResolver;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -75,40 +79,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     @Override
     protected ClassSourceFileComposerFactory createComposerFactory() {
-    	String parameters = "";
-    	if(source instanceof JParameterizedType)
-    	{
-    		JParameterizedType gtype = (JParameterizedType)source;
-			StringBuilder builder = new StringBuilder();
-			builder.append("<");
-			boolean first = true;
-   			for(JClassType arg : gtype.getTypeArgs())
-   			{
-   				if(!first)
-   					builder.append(",");
-   				if(arg instanceof JTypeParameter)
-   				{
-   	   				builder.append(arg.getName());
-	   				builder.append(" extends ");
-	   				boolean f2 = true;
-	   				for(JClassType type : ((JTypeParameter)arg).getBounds())
-	   				{
-	   					if(!f2)
-	   						builder.append(",");
-	   					builder.append(type.getParameterizedQualifiedSourceName());
-	   					f2 = false;
-	   				}
-   				}
-   				else
-   				{
-   					builder.append(arg.getParameterizedQualifiedSourceName());
-   				}
-	   			first = false;
-   			}
-   			builder.append(">");
-   			parameters = builder.toString();
-     	}
-        ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName + parameters);
+        ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
         composerFactory.setSuperclass(JSON_ENCODER_DECODER_CLASS + "<" + source.getParameterizedQualifiedSourceName() + ">");
         return composerFactory;
     }
@@ -121,6 +92,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         if(jacksonSubTypes == null && source.getSuperclass() != null){
             jacksonSubTypes = source.getSuperclass().getAnnotation(JsonSubTypes.class);
         }
+        JsonTypeIdResolver typeResolver = source.getAnnotation(JsonTypeIdResolver.class);
+        //TODO: search up the superclasses and interfaces for this?
+        
         ArrayList<JClassType> possibleTypes = new ArrayList<JClassType>();
 
         locator = new JsonEncoderDecoderInstanceLocator(context, logger);
@@ -160,7 +134,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     }
                 }
             }
-            else{
+            else if(typeResolver == null){
                 error("Unable to find required JsonSubTypes annotion on " + source.getQualifiedSourceName());
             }
         }
@@ -207,8 +181,13 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             return;
         }
 
+        if(typeResolver != null)
+        {
+        	p("private static final " + JsonTypeResolver.class.getName() + " __resolver = (" + JsonTypeResolver.class.getName() + ")" + GWT.class.getName() + ".create(" + typeResolver.value().getName() + ".class);");
+        }
 
         String wrapperName = null;
+        
         p("public " + JSON_VALUE_CLASS + " encode(" + source.getParameterizedQualifiedSourceName() + " value) {").i(1);
         {
             p("if( value==null ) {").i(1);
@@ -217,6 +196,13 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             }
             i(-1).p("}");
 
+            if(typeResolver != null)
+            {
+            	p(String.class.getName() + " type = __resolver.getType(value);");
+            	p(JsonEncoderDecoder.class.getName() + "<" + source.getName() + "> encoder = __resolver.getEncoderDecoder(type);");
+            	p("return encoder.encode(value);");
+            }
+            else{
             p(JSON_OBJECT_CLASS + " rc = new " + JSON_OBJECT_CLASS + "();");
             if(classStyle == Style.RAILS) {
                 wrapperName = railsWrapperName;
@@ -331,10 +317,11 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             }
 
             if(possibleTypes.size() > 1)
-            {
-                //Shouldn't get called
-                p("return null;");
-            }
+	            {
+	                //Shouldn't get called
+	                p("return null;");
+	            }
+	        }
         }
         i(-1).p("}");
         p();
@@ -360,6 +347,12 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                 }
             }
 
+if(typeResolver != null)
+{
+	p(JsonEncoderDecoder.class.getName() + "<" + source.getName() + "> encoder = __resolver.getEncoderDecoder(sourceName);");
+	p("return encoder.decode(object);");
+}
+else{
             for(JClassType possibleType : possibleTypes){
                 if(possibleTypes.size() > 1){
                     //Generate a decoder for each possible type
@@ -485,6 +478,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                 //Shouldn't get called
                 p("return null;");
             }
+}
 
             i(-1).p("}");
             p();

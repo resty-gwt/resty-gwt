@@ -18,11 +18,68 @@
 
 package org.fusesource.restygwt.rebind;
 
-import com.google.gwt.core.client.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.OPTIONS;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+
+import org.fusesource.restygwt.client.AbstractAsyncCallback;
+import org.fusesource.restygwt.client.AbstractRequestCallback;
+import org.fusesource.restygwt.client.Attribute;
+import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.Dispatcher;
+import org.fusesource.restygwt.client.JSONP;
+import org.fusesource.restygwt.client.Json;
+import org.fusesource.restygwt.client.Json.Style;
+import org.fusesource.restygwt.client.JsonCallback;
+import org.fusesource.restygwt.client.JsonpMethod;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.Options;
+import org.fusesource.restygwt.client.OverlayCallback;
+import org.fusesource.restygwt.client.Resource;
+import org.fusesource.restygwt.client.ResponseFormatException;
+import org.fusesource.restygwt.client.RestService;
+import org.fusesource.restygwt.client.RestServiceProxy;
+import org.fusesource.restygwt.client.TextCallback;
+import org.fusesource.restygwt.client.XmlCallback;
+
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayBoolean;
+import com.google.gwt.core.client.JsArrayInteger;
+import com.google.gwt.core.client.JsArrayNumber;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
-import com.google.gwt.core.ext.typeinfo.*;
+import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JGenericType;
+import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JParameter;
+import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
+import com.google.gwt.core.ext.typeinfo.JType;
+import com.google.gwt.core.ext.typeinfo.JTypeParameter;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -31,14 +88,6 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.xml.client.Document;
-import org.fusesource.restygwt.client.*;
-import org.fusesource.restygwt.client.Json.Style;
-
-import javax.ws.rs.*;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -281,7 +330,19 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
         p(method.getReadableDeclaration(false, false, false, false, true) + " {").i(1);
         {
-        	p(method.getReturnType().getQualifiedSourceName() + " __subresource = " + GWT.class.getName() + ".create(" + method.getReturnType().getQualifiedSourceName() + ".class);");
+        	JType type = method.getReturnType();
+        	String name;
+        	if(type instanceof JClassType)
+        	{
+                JClassType restService = (JClassType)type;
+                RestServiceClassCreator generator = new RestServiceClassCreator(logger, context, restService);
+                name = generator.create();
+        	}
+        	else
+        	{
+        		throw new UnsupportedOperationException("Subresource method may not return: " + type);
+        	}
+        	p(method.getReturnType().getQualifiedSourceName() + " __subresource = new " + name + "();");
         	p("((" + RestServiceProxy.class.getName() + ")__subresource).setResource(getResource().resolve(" + pathExpression + "));");
         	p("return __subresource;");
         }
