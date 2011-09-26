@@ -29,6 +29,29 @@ interface methods MUST return void.  Each method must declare at least one callb
 Methods can optionally declare one method argument before the callback to pass via the request
 body.
 
+### JAX/RS Subresource locators
+
+RestyGWT supports JAX/RS subresource locator methods as synchronous methods on service interfaces.  For instance:
+
+    public interface LibraryService extends RestService {
+        @Path("book/{isbn}")
+        public BookService getBook(@PathParam("isbn") String isbn);
+    }
+    
+    public interface BookService extends RestService {
+        @GET
+        @Path("title")
+        public void getTitle(MethodCallback<String> callback);
+        
+        @PUT
+        @Path("title")
+        public void setTitle(String newTitle, MethodCallback<Void> callback);
+    }
+
+This allows developers to decompose service interfaces into logical chunks and even reuse interfaces for multiple sections of the virtual
+REST URL hierarchy.  Currently only @PathParam subresource locators are supported.
+
+### JSON Encoding
 Java beans can be sent and received via JSON encoding/decoding.  Here what the classes declarations
 look like for the `PizzaOrder` and `OrderConfirmation` in the previous example:
 
@@ -411,7 +434,12 @@ Unfortunately the JSON spec doesn't directly support this behaviour. However it 
 added by including the type information in an extra JSON property. JSON parsers that are
 not aware of this special behaviour will see it as a regular JSON property.
 
-#### Example
+RestyGWT supports polymorphic sub-types via two of the Jackson features - `@JsonSubTypes` and `@JsonTypeIdResolver`.  
+`@JsonSubTypes` is used when you have perfect knowledge of all possible subtypes at coding time.  `@JsonTypeIdResolver` 
+can be used in situations where you want to classpath-scan or use some other dynamic mechanism to determine
+the possible subtypes at application assembly (GWT compilation) time.
+
+#### `@JsonSubTypes` Example
 
 The Jackson (a JSON parser) supports this behaviour by adding a series of annotations to the
 POJO classes will be serialised to JSON. Resty-GWT supports can also use these annotations 
@@ -465,4 +493,51 @@ Finally we can use the animal class as we would if it was a single concrete clas
 POJO is used in the GWT code you can use the animals list the same as you would with any
 polymorphic list. Usually by using  the instanceof keyword and casting the to the specific type.
 
+#### `@JsonTypeIdResolver` Example
 
+In this example, suppose we have an abstract class `Animal`, but we don't know until we have all of the
+jars assembled for the final application just what kinds of animal the application will be supporting.  Resty
+can handle this situation like this:
+
+    @JsonTypeIdResolver(my.project.AnimalResolver.class)
+    @JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="@type")
+    public abstract class Animal
+    {
+    }
+
+You may have a proper implementation of `AnimalResolver` (which must implement `org.codehaus.jackson.map.jsontype.TypeIdResolver`)
+for use by Jackson elsewhere in your system (e.g. on the server to write out these objects properly in response to 
+REST calls).  However, because the `TypeIdResolver` interface is not GWT compatible, you will need to create a stub implementation
+so the GWT compiler can resolve the class (and then generate a GWT compatible replacement - see below).
+
+This is done as follows:
+
+In your project's *.gwt.xml:
+
+    <super-source path="supersrc"/>
+    
+And then in that directory that is a peer to your *.gwt.xml file, create a stub implementation of AnimalResolver using directories for package elements.  
+So in this example: in the directory "supersrc/my/project", I create AnimalResolver.java as follows:
+
+    public class AnimalResolver implements TypeIdResolver
+    {
+		//no implementation needed
+    }
+    
+Next, you instruct RestyGWT to generate a replacement implentation by the following lines in your *.gwt.xml:
+
+      <generate-with class="my.project.gwt.AnimalResolverGenerator">
+          <when-type-is class="my.project.AnimalResolver"/>
+      </generate-with>
+    
+and then implement `AnimalResolverGenerator` as follows:
+
+	public class AnimalResolverGenerator extends extends JsonTypeResolverClassCreator
+    {
+	    @Override
+	    protected Map<String, Class<?>> getIdClassMap()
+	    {
+		    // use classpath scanning or SPI or some other dynamic way to generate
+		    // definitive map of subtypes and associated "tags"
+	    }
+    }

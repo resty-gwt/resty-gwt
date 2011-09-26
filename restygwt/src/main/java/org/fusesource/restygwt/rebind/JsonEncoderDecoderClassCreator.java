@@ -183,6 +183,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
         if(typeResolver != null)
         {
+        	JClassType type =context.getTypeOracle().findType(typeResolver.value().getName());
+        	
+        	System.out.println("FOUND TYPE: " + type);
         	p("private static final " + JsonTypeResolver.class.getName() + " __resolver = (" + JsonTypeResolver.class.getName() + ")" + GWT.class.getName() + ".create(" + typeResolver.value().getName() + ".class);");
         }
 

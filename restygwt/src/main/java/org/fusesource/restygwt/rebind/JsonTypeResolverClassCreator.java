@@ -80,7 +80,7 @@ public abstract class JsonTypeResolverClassCreator extends Generator
 				{
 					try
 					{
-						return context.getTypeOracle().getType(name);
+						return context.getTypeOracle().getType(name.replace('$', '.'));
 					}
 					catch (NotFoundException e)
 					{

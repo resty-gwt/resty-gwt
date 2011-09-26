@@ -44,6 +44,6 @@
 
   <source path="client"/>
   <source path="example/client"/>
-  <super-source path="src"/>
+  <super-source path="supersrc"/>
 
 </module>
