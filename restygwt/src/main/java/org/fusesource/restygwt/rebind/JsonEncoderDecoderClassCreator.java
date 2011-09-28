@@ -250,6 +250,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	    }
 
 	    for (Subtype possibleType : possibleTypes) {
+	        List<JField> orderedFields = creator == null ? null : getOrderedFields(getFields(possibleType.clazz), creator);
 
 		if (!isLeaf) {
 		    // Generate a decoder for each possible type
@@ -285,7 +286,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 		    final String getterName = getGetterName(field);
 
 		    // If can ignore some fields right off the back..
-		    if (getterName == null && (field.isStatic() || field.isFinal() || field.isTransient())) {
+		    // if there is a creator encode only final fields with JsonProperty annotation
+		    if (getterName == null && (field.isStatic() || (field.isFinal() && !(creator != null && orderedFields.contains(field))) || field.isTransient())) {
 			continue;
 		    }
 
@@ -392,11 +394,12 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 		    }
 		}
 
+		List<JField> orderedFields = null;
 		if (creator != null) {
 		    p("// We found a creator so we use the annotated constructor");
 		    p("" + possibleType.clazz.getParameterizedQualifiedSourceName() + " rc = new " + possibleType.clazz.getParameterizedQualifiedSourceName() + "(");
 		    i(1).p("// The arguments are placed in the order they appear within the annotated constructor").i(-1);
-		    List<JField> orderedFields = getOrderedFields(getFields(possibleType.clazz), creator);
+		    orderedFields = getOrderedFields(getFields(possibleType.clazz), creator);
 		    final JField lastField = orderedFields.get(orderedFields.size() - 1);
 		    for (final JField field : orderedFields) {
 			branch("Processing field: " + field.getName(), new Branch<Void>() {
@@ -421,10 +424,17 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 			});
 		    }
 		    p(");");
-		} else {
+		}
+		
+		if (orderedFields == null){
 		    p("" + possibleType.clazz.getParameterizedQualifiedSourceName() + " rc = new " + possibleType.clazz.getParameterizedQualifiedSourceName() + "();");
-
-		    for (final JField field : getFields(possibleType.clazz)) {
+		}
+		
+		for (final JField field : getFields(possibleType.clazz)) {
+		    
+		    if (orderedFields != null && orderedFields.contains(field)){
+		        continue;
+		    }
 
 			final String setterName = getSetterName(field);
 
@@ -484,9 +494,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 				return null;
 			    }
 			});
-		    }
 		}
-
+		
 		p("return rc;");
 
 		if (typeInfo != null && !isLeaf) {

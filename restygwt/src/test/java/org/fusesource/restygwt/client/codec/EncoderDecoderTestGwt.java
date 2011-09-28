@@ -105,10 +105,12 @@ public class EncoderDecoderTestGwt extends GWTTestCase{
     public void testCreators() {
         CreatorCodec codec = GWT.create(CreatorCodec.class);
         CredentialsWithCreator c = new CredentialsWithCreator("email", "password");
+        c.age = 12;
         JSONValue cJson = codec.encode(c);
         CredentialsWithCreator cRoundTrip = codec.decode(cJson);
         assertEquals("email", cRoundTrip.email);
         assertEquals("password", cRoundTrip.password);
+        assertEquals(12, cRoundTrip.age);
     }
 
     public interface WrapperCodec extends JsonEncoderDecoder<CredentialsWithWrapperObject>{

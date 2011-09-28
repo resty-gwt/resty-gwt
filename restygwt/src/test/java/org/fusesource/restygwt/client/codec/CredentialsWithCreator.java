@@ -12,6 +12,8 @@ class CredentialsWithCreator {
     @JsonProperty
     final String email;
     
+    int age;
+    
     @JsonCreator
     public CredentialsWithCreator(@JsonProperty("email") String email, @JsonProperty("password") String password) {
         this.email = email;
