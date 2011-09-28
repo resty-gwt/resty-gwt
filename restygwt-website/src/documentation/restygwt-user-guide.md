@@ -507,37 +507,34 @@ can handle this situation like this:
 
 You may have a proper implementation of `AnimalResolver` (which must implement `org.codehaus.jackson.map.jsontype.TypeIdResolver`)
 for use by Jackson elsewhere in your system (e.g. on the server to write out these objects properly in response to 
-REST calls).  However, because the `TypeIdResolver` interface is not GWT compatible, you will need to create a stub implementation
-so the GWT compiler can resolve the class (and then generate a GWT compatible replacement - see below).
+REST calls).  However, because the `TypeIdResolver` interface does not offer api that publishes all of the available subtypes, we
+will need to implement an extension interface - namely RestyJsonTypeIdResolver.
 
 This is done as follows:
 
-In your project's *.gwt.xml:
+First, in your *.gwt.xml, instruct Resty to add your implementation to the available RestyJsonTypeIdResolvers available at compile time.
 
-    <super-source path="supersrc"/>
+    <extend-configuration-property name="org.fusesource.restygwt.jsontypeidresolver" value="my.project.gwt.dev.AnimalRestyTypeIdResolver"/>
     
-And then in that directory that is a peer to your *.gwt.xml file, create a stub implementation of AnimalResolver using directories for package elements.  
-So in this example: in the directory "supersrc/my/project", I create AnimalResolver.java as follows:
+and then implement `AnimalRestyTypeIdResolver` as follows:
 
-    public class AnimalResolver implements TypeIdResolver
+	public class AnimalRestyTypeIdResolver extends extends RestyJsonTypeIdResolver
     {
-		//no implementation needed
-    }
-    
-Next, you instruct RestyGWT to generate a replacement implentation by the following lines in your *.gwt.xml:
+            @Override
+	    public Class<? extends TypeIdResolver> getTypeIdResolverClass()
+	    {
+	        return AnimalResolver.class;
+	    }
 
-      <generate-with class="my.project.gwt.AnimalResolverGenerator">
-          <when-type-is class="my.project.AnimalResolver"/>
-      </generate-with>
-    
-and then implement `AnimalResolverGenerator` as follows:
-
-	public class AnimalResolverGenerator extends extends JsonTypeResolverClassCreator
-    {
 	    @Override
-	    protected Map<String, Class<?>> getIdClassMap()
+	    public Map<String, Class<?>> getIdClassMap()
 	    {
 		    // use classpath scanning or SPI or some other dynamic way to generate
 		    // definitive map of subtypes and associated "tags"
 	    }
     }
+
+'AnimalRestyTypeIdResolver will be instantiated and interrogated at GWT compile time (deferred binding time, actually).  This code will not be compiled itself into
+javascript - just used to generate javascript classes that will be used to serialize your Jackson annotated pojos.
+
+You can optionally implement RestyJsonTypeIdResolver on your TypeIdResolver class, in which case you do not need to include the configuration property setting.

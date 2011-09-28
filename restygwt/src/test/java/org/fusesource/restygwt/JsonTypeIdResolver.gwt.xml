@@ -21,9 +21,7 @@
     <inherits name='com.google.gwt.logging.Logging'/>
     <inherits name='org.fusesource.restygwt.RestyGWT'/>
     
-  <generate-with class="org.fusesource.restygwt.server.complex.DTOTypeResolverGenerator">
-    <when-type-is class="org.fusesource.restygwt.server.complex.DTOTypeResolver"/>
-  </generate-with>
+    <extend-configuration-property name="org.fusesource.restygwt.jsontypeidresolver" value="org.fusesource.restygwt.server.complex.DTORestyTypeResolver"/>
   
     <servlet path='/api/jsontypeid' class='org.fusesource.restygwt.server.complex.DTOTypeResolverServlet' />
 

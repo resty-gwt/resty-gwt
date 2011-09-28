@@ -148,7 +148,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
     }
 
     protected JClassType find(Class<?> type) throws UnableToCompleteException {
-        return find(type.getName());
+        return find(type.getName().replace('$', '.'));
     }
 
     protected JClassType find(String type) throws UnableToCompleteException {

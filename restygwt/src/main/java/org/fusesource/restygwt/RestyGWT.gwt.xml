@@ -39,6 +39,8 @@
     <when-type-assignable class="org.fusesource.restygwt.client.JsonEncoderDecoder" />
   </generate-with>
 
+  <define-configuration-property name="org.fusesource.restygwt.jsontypeidresolver" is-multi-valued="true"/>
+  
   <define-configuration-property name="org.fusesource.restygwt.annotationresolver"
         is-multi-valued="true"/>
 
