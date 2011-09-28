@@ -8,12 +8,17 @@ import org.fusesource.restygwt.client.basic.CachingTestGwt;
 import org.fusesource.restygwt.client.basic.ExtendedRestTestGwt;
 import org.fusesource.restygwt.client.basic.FailingTestGwt;
 import org.fusesource.restygwt.client.basic.FlakyTestGwt;
+import org.fusesource.restygwt.client.basic.GenericsTestGwt;
+import org.fusesource.restygwt.client.basic.ParameterizedTypeDTO;
+import org.fusesource.restygwt.client.basic.ParameterizedTypeServiceInterfaces;
 import org.fusesource.restygwt.client.basic.ResourcePassesHeadersTestGwt;
 import org.fusesource.restygwt.client.basic.ResourceTestGwt;
+import org.fusesource.restygwt.client.basic.SubResourceClientGeneration;
 import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
 import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorageTestGwt;
 import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.complex.BigNumberTestGwt;
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolver;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
 
@@ -54,7 +59,11 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(VolatileQueueableCacheStorageTestGwt.class);       
         suite.addTestSuite(FailingTestGwt.class);
         suite.addTestSuite(EncoderDecoderTestGwt.class);
-
+        suite.addTestSuite(GenericsTestGwt.class);
+        suite.addTestSuite(ParameterizedTypeDTO.class);
+        suite.addTestSuite(ParameterizedTypeServiceInterfaces.class);
+        suite.addTestSuite(SubResourceClientGeneration.class);
+        suite.addTestSuite(JsonTypeIdResolver.class);
         return suite;
     }
 }

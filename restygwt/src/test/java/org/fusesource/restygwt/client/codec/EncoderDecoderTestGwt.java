@@ -14,6 +14,8 @@ public class EncoderDecoderTestGwt extends GWTTestCase{
     
     public interface WrapperLibraryCodec extends JsonEncoderDecoder<LibraryWithWrapper>{
     }
+    public interface ArrayWrapperLibraryCodec extends JsonEncoderDecoder<LibraryWithArrayWrapper>{
+    }
     public interface PropertyLibraryCodec extends JsonEncoderDecoder<LibraryWithProperty>{
     }
     
@@ -47,6 +49,21 @@ public class EncoderDecoderTestGwt extends GWTTestCase{
 
         JSONValue encode = lc.encode(l);
         LibraryWithWrapper decode = lc.decode(encode);
+        assertEquals(l, decode);
+    }
+
+    public void testSubtypeArrayWrappeObjectWithSingleSubtype() {
+        ArrayWrapperLibraryCodec lc = GWT.create(ArrayWrapperLibraryCodec.class);
+        LibraryWithArrayWrapper l = new LibraryWithArrayWrapper();
+        ArrayList<LibraryItemWithArrayWrapper> libraryItems = new ArrayList<LibraryItemWithArrayWrapper>();
+        SpriteBasedItemWithArrayWrapper li = new SpriteBasedItemWithArrayWrapper();
+        li.id = "1";
+        li.imageRef = "src.png";
+        libraryItems.add(li);
+        l.items = libraryItems;
+
+        JSONValue encode = lc.encode(l);
+        LibraryWithArrayWrapper decode = lc.decode(encode);
         assertEquals(l, decode);
     }
 
