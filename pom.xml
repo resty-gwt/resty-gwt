@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.fusesource</groupId>
     <artifactId>fusesource-pom</artifactId>
-    <version>1.5</version>
+    <version>1.8</version>
   </parent>
 
   <groupId>org.fusesource.restygwt</groupId>
@@ -39,8 +39,6 @@
   <properties>
     <forge-project-id>restygwt</forge-project-id>
     <forge-project-id-uc>RESTYGWT</forge-project-id-uc>
-
-    <release-altGitURL>scm:git:ssh://git@github.com:chirino/resty-gwt.git</release-altGitURL>
     <gwt-version>2.2.0</gwt-version>
   </properties>
 
@@ -72,7 +70,7 @@
   
   <scm>
     <connection>scm:git:git://github.com/chirino/resty-gwt.git</connection>
-    <developerConnection>${release-altGitURL}</developerConnection>
+    <developerConnection>scm:git:ssh://git@github.com:chirino/resty-gwt.git</developerConnection>
     <url>http://github.com/chirino/resty-gwt</url>
   </scm>
   <distributionManagement>
