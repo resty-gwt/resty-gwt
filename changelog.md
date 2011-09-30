@@ -1,12 +1,46 @@
-RestyGWT
-========
+# ![RestyGWT](http://restygwt.fusesource.org/images/restygwt-logo.png)
 
-## [resty-gwt 1.2](http://restygwt.fusesource.org/blog/release-1-2.html), un-released
-* Bugfix for generic lists. When using a list like ``SomeList<T>`` as implementation
-  of ``SomeList<Foo>`` and ``SomeList<Bar>``, only the first implementation was generated.
-  (At least) during production run this caused ClassCast Exceptions when the second
-  implementation (``SomeList<Bar>``) was in use. 
+## [resty-gwt 1.2](http://restygwt.fusesource.org/blog/release-1-2.html), 2011-09-30
 
+* JsonTypeIdResolver Support - Added support for Array wrapping
+* Support for generic interfaces and DTO serialization
+* Implementation of JAX-RS subresource locators with @PathParam annotations - closes #56
+* Use abstract baseclasses for the subtype tests
+* Allow a single subtype with WrapperObject declaration as well
+* Fix issue#47 with BigInteger roundtrip encoding
+* Add support for As.WRAPPER_OBJECT subtype declarations
+* Bugfix for generic lists (see changes) adapted pull request #50 from pansen:bugfix-generic-lists
+* Add support for @JsonCreator with polymorphic types
+* Added accessors to RestServiceProxy
+* Added integration test for rails: json and xsrf protection
+* add wrapper to json when style == RAILS
+* obey typeInfo of super class
+* share the xsrf token with all dispatchers from the factory
+* do not json-encode/decode transient fields
+* fixed bug in XSRF protection and follow the header name to RubyOnRails default
+* added file system support for isExpected
+* added extra header when response get cached, i.e. callback filters can use it
+* calculate uri in case it comes only the relative path as location header
+* added dispatcher factory with lots of samples
+* added XSS protection filters
+* refactored CachingCallbackFilter so it could be extended by RestfulCachingCallbackFilter
+* having a default callback without retrying and one with retrying
+* having a default without retry and a non-filtering callback factory and finally a retrying factory
+* with ignorance skip the factory and use "new" instead
+* filter without caching - can be use as last in the filter chain
+* refactored CachingDispatcherFilter so it could be extended to RestfulCachingDispatcherFilter
+* changed UrlCacheKey and move the old one to ComplexCacheKey
+* get default of INSTANCE of FilterawareRetryingDispatcher in place
+* INSTANCE needs to be set so you can use it with @Options annotations from a RestService
+* get async semantic back on response servered from cache
+* allow part of the arg-object participate in as PathParam and the object goes over the wire
+* use date format string for encoding if set
+* allow jsonp call with custom value objects
+* Do not set headers for JSONP methods.
+* Allow collection interfaces as service argument and fix bug with List impl as argument
+* Added parameter to pass a HTTP header map to a Resource
+* Use parseStrict instead of just parse
+* Bugfix for generic lists.
 * Add support for Sending Lists and Sets as repeated parameters.
 * Add support for byte data type
 * Added JSON support for Unix timestamps and null values.
