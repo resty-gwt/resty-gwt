@@ -1,5 +1,7 @@
 /**
- * Copyright (C) 2011 the original author or authors.
+ * Copyright (C) 2009-2011 the original author or authors.
+ * See the notice.md file distributed with this work for additional
+ * information regarding copyright ownership.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.fusesource.restygwt.client.basic;
 
 /**
