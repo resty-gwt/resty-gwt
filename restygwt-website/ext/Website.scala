@@ -39,7 +39,7 @@ object Website {
 
   val project_versions = List(
         project_version,
-        "1.1"
+        "1.1",
         "1.0")  
 
 
