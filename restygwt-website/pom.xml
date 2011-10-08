@@ -27,7 +27,7 @@
     <groupId>org.fusesource.restygwt</groupId>
     <artifactId>restygwt-project</artifactId>
     <version>1.2-SNAPSHOT</version>
-
+    <relativePath>..</relativePath>
   </parent>
 
   <artifactId>restygwt-website</artifactId>
