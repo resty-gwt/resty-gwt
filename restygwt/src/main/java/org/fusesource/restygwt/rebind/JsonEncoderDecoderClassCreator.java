@@ -414,7 +414,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         			String expression = locator.decodeExpression(field.getType(), objectGetter, style);
     
         			if (field.getType().isPrimitive() == null) {
-        			    i(1).p("" + (objectGetter + " instanceof com.google.gwt.json.client.JSONNull ? null : " + expression + ((field != lastField) ? ", " : ""))).i(-1);
+                        i(1).p("" + (objectGetter + " == null || " + objectGetter + " instanceof com.google.gwt.json.client.JSONNull ? null : " + expression + ((field != lastField) ? ", " : ""))).i(-1);
         			} else {
         			    i(1).p("" + expression + ((field != lastField) ? ", " : "")).i(-1);
         			}
