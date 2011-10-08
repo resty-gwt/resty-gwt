@@ -1,6 +1,6 @@
 # ![RestyGWT](http://restygwt.fusesource.org/images/restygwt-logo.png)
 
-## [resty-gwt 1.2](http://restygwt.fusesource.org/blog/release-1-2.html), 2011-09-30
+## [resty-gwt 1.2](http://restygwt.fusesource.org/blog/release-1-2.html), 2011-10-08
 
 * JsonTypeIdResolver Support - Added support for Array wrapping
 * Support for generic interfaces and DTO serialization
