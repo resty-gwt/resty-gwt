@@ -23,7 +23,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.fusesource.restygwt.client.basic.CachingTestGwt;
-import org.fusesource.restygwt.client.basic.ExtendedRestTestGwt;
 import org.fusesource.restygwt.client.basic.FailingTestGwt;
 import org.fusesource.restygwt.client.basic.FlakyTestGwt;
 import org.fusesource.restygwt.client.basic.GenericsTestGwt;
@@ -36,7 +35,6 @@ import org.fusesource.restygwt.client.basic.SubResourceClientGeneration;
 import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
 import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorageTestGwt;
 import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt;
-import org.fusesource.restygwt.client.complex.BigNumberTestGwt;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
@@ -71,8 +69,6 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(FlakyTestGwt.class);
         suite.addTestSuite(TimeoutTestGwt.class);
         suite.addTestSuite(CachingTestGwt.class);
-        suite.addTestSuite(ExtendedRestTestGwt.class);
-        suite.addTestSuite(BigNumberTestGwt.class);
         suite.addTestSuite(ResourceTestGwt.class);
         suite.addTestSuite(ResourcePassesHeadersTestGwt.class);
         suite.addTestSuite(VolatileQueueableCacheStorageTestGwt.class);       

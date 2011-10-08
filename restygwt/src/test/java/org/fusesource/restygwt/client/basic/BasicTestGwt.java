@@ -70,13 +70,4 @@ public class BasicTestGwt extends GWTTestCase {
 
     }
 
-    public void testBooleanDto() {
-        try {
-            BooleanDtoService service = GWT.create(BooleanDtoService.class);
-        } catch (Exception e) {
-            fail(" generator failed at creating an interface which " +
-                    "has an intermediate interface between it and its RestService");
-        }
-    }
-
 }
