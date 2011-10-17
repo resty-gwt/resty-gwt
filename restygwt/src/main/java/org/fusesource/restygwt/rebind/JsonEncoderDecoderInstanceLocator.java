@@ -36,6 +36,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.xml.client.Document;
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
 import org.fusesource.restygwt.client.Json;
+import org.fusesource.restygwt.client.ObjectEncoderDecoder;
 import org.fusesource.restygwt.client.Json.Style;
 import static org.fusesource.restygwt.rebind.BaseSourceCreator.*;
 
@@ -111,8 +112,13 @@ public class JsonEncoderDecoderInstanceLocator {
         if (rc == null) {
             JClassType ct = type.isClass();
             if (ct != null && !isCollectionType(ct)) {
-                JsonEncoderDecoderClassCreator generator = new JsonEncoderDecoderClassCreator(logger, context, ct);
-                return generator.create() + ".INSTANCE";
+        	if(ct.equals(find(Object.class))) {
+        	    return ObjectEncoderDecoder.class.getName() + ".INSTANCE";
+        	}
+        	else {
+        	    JsonEncoderDecoderClassCreator generator = new JsonEncoderDecoderClassCreator(logger, context, ct);
+        	    return generator.create() + ".INSTANCE";
+        	}
             }
         }
         return rc;
