@@ -32,4 +32,5 @@ public interface RestServiceProxy {
     
     Dispatcher getDispatcher();
 
+    <T extends RestService> T as(Class<T> iface);
 }

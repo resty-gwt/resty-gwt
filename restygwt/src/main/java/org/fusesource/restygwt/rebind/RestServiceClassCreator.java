@@ -64,6 +64,7 @@ import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.TextCallback;
 import org.fusesource.restygwt.client.XmlCallback;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayBoolean;
@@ -268,13 +269,25 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             p("return this.dispatcher;");
         }
         i(-1).p("}");
-
+        
+        p();
+        p("public <T extends " + RestService.class.getName() + "> T as(Class<T> iface) {").i(1);
+        {
+            p("T result = (T)" + GWT.class.getName() + ".create(iface);");
+            p("((" + RestServiceProxy.class.getName() + ")result).setResource(getResource());");
+            p("return result;");
+        }
+        i(-1).p("}");
+        
         for (JMethod method : source.getInheritableMethods()) {
+            if(!method.getName().equals("as")) // skip the "as" casting method if user exposes it in their interface.
+            {
         	JClassType iface = method.getReturnType().isInterface();
         	if(iface != null && REST_SERVICE_TYPE.isAssignableFrom(iface))
         		writeSubresourceLocatorImpl(method);
         	else
             	writeMethodImpl(method);
+            }
         }
     }
 
