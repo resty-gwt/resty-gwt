@@ -271,7 +271,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         i(-1).p("}");
         
         p();
-        p("public <T extends " + RestService.class.getName() + "> T as(Class<T> iface) {").i(1);
+        p("public <T extends " + RestService.class.getName() + "> T asRestService(Class<T> iface) {").i(1);
         {
             p("T result = (T)" + GWT.class.getName() + ".create(iface);");
             p("((" + RestServiceProxy.class.getName() + ")result).setResource(getResource());");
@@ -280,7 +280,17 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         i(-1).p("}");
         
         for (JMethod method : source.getInheritableMethods()) {
-            if(!method.getName().equals("as")) // skip the "as" casting method if user exposes it in their interface.
+            // generate the "as" method
+            if(method.getName().equals("as") && method.getParameters().length == 1 && Class.class.getName().equals(method.getParameters()[0].getType().getQualifiedSourceName()))
+            {
+        	
+                p(method.getReadableDeclaration(false, false, false, false, true) + " {").i(1);
+                {
+                    p("return asRestService(" + method.getParameters()[0].getName() + ");");
+                }
+                i(-1).p("}");
+            }
+            else
             {
         	JClassType iface = method.getReturnType().isInterface();
         	if(iface != null && REST_SERVICE_TYPE.isAssignableFrom(iface))

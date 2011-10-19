@@ -17,10 +17,10 @@ public class CastingServiceInterface extends GWTTestCase {
     
     public static interface Int1 extends RestService
     {
-	public <T extends RestService> T as(Class<T> iface);
+	public <T extends Int1> T as(Class<T> iface);
     }
     
-    public static interface Int2 extends RestService
+    public static interface Int2 extends Int1
     {
     }
 
