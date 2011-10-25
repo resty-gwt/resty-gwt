@@ -96,7 +96,9 @@ public class JsonEncoderDecoderInstanceLocator {
         builtInEncoderDecoders.put(JSON_VALUE_TYPE, JSON_ENCODER_DECODER_CLASS + ".JSON_VALUE");
 
         builtInEncoderDecoders.put(find(Date.class), JSON_ENCODER_DECODER_CLASS + ".DATE");
-
+        
+        builtInEncoderDecoders.put(find(Object.class), ObjectEncoderDecoder.class.getName() + ".INSTANCE");
+        
     }
 
     private JClassType find(Class<?> type) throws UnableToCompleteException {
@@ -112,13 +114,8 @@ public class JsonEncoderDecoderInstanceLocator {
         if (rc == null) {
             JClassType ct = type.isClass();
             if (ct != null && !isCollectionType(ct)) {
-        	if(ct.equals(find(Object.class))) {
-        	    return ObjectEncoderDecoder.class.getName() + ".INSTANCE";
-        	}
-        	else {
-        	    JsonEncoderDecoderClassCreator generator = new JsonEncoderDecoderClassCreator(logger, context, ct);
-        	    return generator.create() + ".INSTANCE";
-        	}
+        	JsonEncoderDecoderClassCreator generator = new JsonEncoderDecoderClassCreator(logger, context, ct);
+        	return generator.create() + ".INSTANCE";
             }
         }
         return rc;
