@@ -50,7 +50,38 @@ RestyGWT supports JAX/RS subresource locator methods as synchronous methods on s
 
 This allows developers to decompose service interfaces into logical chunks and even reuse interfaces for multiple sections of the virtual
 REST URL hierarchy.  Currently only @PathParam subresource locators are supported.
+####Polymorphic Subresources
+RestyGWT supports polymorphism in subresource locators with an explicit casting convention.  For instance, referring to the LibraryService / BookService example above, suppose you had a sub-type of BookService like this:
+    public interface EncyclopediaService extends BookService {
+        @GET
+        @Path("volumes")
+        void getVolumes(MethodCallback<Integer> callback);
+    }
 
+And further, that the LibraryService will return an instance of EncyclopediaService when you pass in the isbn for an encyclopedia. In this case, by default, Resty only knows that the return type will be BookService.  However, to support instances where the client knows that the isbn in question is an encyclopedia, you can cast the result like this:
+
+    BookService bookServiceThatReallyIsEncyclopedia;
+    EncyclopediaService encyclopediaService = ((RestServiceProxy)bookServiceThatReallyIsEncyclopedia).as(EncyclopediaService.class);
+
+Also, to make this pattern more seamless, Resty allows you to declare the "as" method in your RestService interfaces in a synchronous manner as follows:
+
+    public interface BookService extends RestService {
+        @GET
+        @Path("title")
+        public void getTitle(MethodCallback<String> callback);
+        
+        @PUT
+        @Path("title")
+        public void setTitle(String newTitle, MethodCallback<Void> callback);
+
+	public <T extends BookService> T as(Class<T> iface);
+    }
+
+Then you can invoke as follows:
+
+    BookService bookServiceThatReallyIsEncyclopedia;
+    EncyclopediaService encyclopediaService = bookServiceThatReallyIsEncyclopedia.as(EncyclopediaService.class);
+    
 ### JSON Encoding
 Java beans can be sent and received via JSON encoding/decoding.  Here what the classes declarations
 look like for the `PizzaOrder` and `OrderConfirmation` in the previous example:
