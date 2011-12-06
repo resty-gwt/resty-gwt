@@ -321,9 +321,6 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             PathParam paramPath = arg.getAnnotation(PathParam.class);
             if (paramPath != null) {
                 pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+" + toStringExpression(arg) + "+\"");
-                if (arg.getAnnotation(Attribute.class) != null) {
-					error("Attribute annotations not allowed on subresource locators");
-                }
             }
         }
 
