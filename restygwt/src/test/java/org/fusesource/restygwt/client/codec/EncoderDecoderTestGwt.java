@@ -21,6 +21,7 @@ package org.fusesource.restygwt.client.codec;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
+import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
 
 import com.google.gwt.core.client.GWT;
@@ -233,4 +234,15 @@ public class EncoderDecoderTestGwt extends GWTTestCase{
         B bRoundTrip = big.decode(bJson);
         assertEquals(b.age, bRoundTrip.age);
     }
+
+    public void testIntegerToStringDecode() {
+        Integer i = 123;
+        assertEquals(i.toString(), AbstractJsonEncoderDecoder.STRING.decode(AbstractJsonEncoderDecoder.INT.encode(i)));
+    }
+
+    public void testBooleanToStringDecode() {
+        Boolean b = true;
+        assertEquals(b.toString(), AbstractJsonEncoderDecoder.STRING.decode(AbstractJsonEncoderDecoder.BOOLEAN.encode(b)));
+    }
+
 }

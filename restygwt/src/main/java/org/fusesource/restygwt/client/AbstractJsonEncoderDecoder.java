@@ -181,7 +181,11 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             }
             JSONString str = value.isString();
             if (str == null) {
-                throw new DecodingException("Expected a json string, but was given: " + value);
+                if (value.isBoolean() != null || value.isNumber() != null) {
+                    return value.toString();
+                } else {
+                    throw new DecodingException("Expected a json string, but was given: " + value);
+                }
             }
             return str.stringValue();
         }
