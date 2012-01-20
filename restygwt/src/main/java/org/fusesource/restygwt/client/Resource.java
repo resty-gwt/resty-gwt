@@ -135,6 +135,7 @@ public class Resource {
     }
 
     public Resource addQueryParam(String key, String value) {
+    	if(value == null) return this;
         key = URL.encodeComponent(key);
         value = URL.encodeComponent(value);
         String q = query == null ? "" : query + "&";
@@ -142,10 +143,12 @@ public class Resource {
     }
 
     public Resource addQueryParams(String key, Iterable<String> values) {
+        if(values == null) return this;
         key = URL.encodeComponent(key);
         StringBuilder q = new StringBuilder(query == null ? "" : query + "&");
         boolean ampersand = false;
         for (String value : values) {
+          if(value == null) continue;
           if (ampersand) {
             q.append('&');
           } else {
