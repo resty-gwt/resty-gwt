@@ -1,5 +1,11 @@
 # ![RestyGWT](http://restygwt.fusesource.org/images/restygwt-logo.png)
 
+## develop
+
+* remove error in eclipse indigo complaining about not supported goal ``unpack``
+* fix endless build loop in eclipse indigo caused my misconfiguration of gwt-maven
+* move pluginConfiguration of m2e to parent pom as this applies to every project
+
 ## [resty-gwt 1.2](http://restygwt.fusesource.org/blog/release-1-2.html), 2011-10-08
 
 * JsonTypeIdResolver Support - Added support for Array wrapping
