@@ -24,10 +24,10 @@
 
   <parent>
     <groupId>org.fusesource.restygwt</groupId>
-    <artifactId>zt-restygwt-it-parent</artifactId>
+    <artifactId>restygwt-it-parent</artifactId>
     <version>@project.version@</version>
   </parent>
-  <artifactId>zt-restygwt-rails-example</artifactId>
+  <artifactId>restygwt-rails-example</artifactId>
   <packaging>war</packaging>
 
   <name>RestyGWT RAILS Example</name>

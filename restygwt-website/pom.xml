@@ -25,12 +25,12 @@
 
   <parent>
     <groupId>org.fusesource.restygwt</groupId>
-    <artifactId>zt-restygwt-project</artifactId>
+    <artifactId>restygwt-project</artifactId>
     <version>1.3-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
 
-  <artifactId>zt-restygwt-website</artifactId>
+  <artifactId>restygwt-website</artifactId>
   <name>${project.artifactId}</name>
 
   <description>The RestyGWT Website</description>
