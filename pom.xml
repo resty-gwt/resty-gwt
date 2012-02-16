@@ -29,7 +29,7 @@
   </parent>
 
   <groupId>org.fusesource.restygwt</groupId>
-  <artifactId>restygwt-project</artifactId>
+  <artifactId>zt-restygwt-project</artifactId>
   <version>1.3-SNAPSHOT</version>
   <packaging>pom</packaging>
   
@@ -100,6 +100,7 @@
         <version>1.9</version>
       </extension>
     </extensions>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -299,6 +300,70 @@
           <excludePackageNames>*.internal</excludePackageNames>
         </configuration>
       </plugin> 
+
+        <plugin>
+            <!--
+                This plugin's configuration is used to store Eclipse
+                m2e settings only. It has no influence on the Maven build itself.
+
+                @see: http://stackoverflow.com/questions/6352208/how-to-solve-plugin-execution-not-covered-by-lifecycle-configuration-for-spring
+                -->
+            <groupId>org.eclipse.m2e</groupId>
+            <artifactId>lifecycle-mapping</artifactId>
+            <version>1.0.0</version>
+            <configuration>
+                <lifecycleMappingMetadata>
+                    <pluginExecutions>
+
+                        <pluginExecution>
+                            <pluginExecutionFilter>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>gwt-maven-plugin</artifactId>
+                                <versionRange>[${gwt-version},)</versionRange>
+                                <goals>
+                                    <goal>css</goal>
+                                    <goal>i18n</goal>
+                                </goals>
+                            </pluginExecutionFilter>
+                            <action>
+                                <execute />
+                            </action>
+                        </pluginExecution>
+
+                        <pluginExecution>
+                            <pluginExecutionFilter>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>gwt-maven-plugin</artifactId>
+                                <versionRange>[${gwt-version},)</versionRange>
+                                <goals>
+                                    <goal>resources</goal>
+                                    <goal>test</goal>
+                                    <goal>compile</goal>
+                                </goals>
+                            </pluginExecutionFilter>
+                            <action>
+                                <ignore />
+                            </action>
+                        </pluginExecution>
+
+                        <pluginExecution>
+                            <pluginExecutionFilter>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-dependency-plugin</artifactId>
+                                <versionRange>[2.3,)</versionRange>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                            </pluginExecutionFilter>
+                            <action>
+                                <ignore />
+                            </action>
+                        </pluginExecution>
+
+                    </pluginExecutions>
+                </lifecycleMappingMetadata>
+            </configuration>
+        </plugin>
 
     </plugins>
     </pluginManagement>
