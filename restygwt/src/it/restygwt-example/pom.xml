@@ -24,10 +24,10 @@
 
   <parent>
     <groupId>org.fusesource.restygwt</groupId>
-    <artifactId>restygwt-it-parent</artifactId>
+    <artifactId>zt-restygwt-it-parent</artifactId>
     <version>@project.version@</version>
   </parent>
-  <artifactId>restygwt-example</artifactId>
+  <artifactId>zt-restygwt-example</artifactId>
   <version>@project.version@</version>
   <packaging>war</packaging>
 
