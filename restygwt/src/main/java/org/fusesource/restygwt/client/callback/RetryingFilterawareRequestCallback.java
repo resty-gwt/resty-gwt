@@ -20,6 +20,7 @@ package org.fusesource.restygwt.client.callback;
 
 import java.util.logging.Logger;
 
+import org.fusesource.restygwt.client.FailedStatusCodeException;
 import org.fusesource.restygwt.client.Method;
 
 import com.google.gwt.core.client.GWT;
@@ -58,9 +59,8 @@ public class RetryingFilterawareRequestCallback extends DefaultFilterawareReques
     }
 
     @Override
-    public final void onResponseReceived(Request request, Response response) {
-        int code = response.getStatusCode();
-        if (!(code < 300 && code >= 200)) {
+    public final void doError(Request request, Response response) {
+            int code = response.getStatusCode();
             /*
              * retry only on GET requests that are no redirects (301, 302, 303)
              */
@@ -82,35 +82,14 @@ public class RetryingFilterawareRequestCallback extends DefaultFilterawareReques
                  *  RuntimeException token from
                  *  com.google.gwt.http.client.Request#fireOnResponseReceived()
                  */
-                requestCallback.onError(request, new RuntimeException("Response "
-                        + response.getStatusCode() + " for " + method.builder.getHTTPMethod() + " "
-                        + method.builder.getUrl()));
+                requestCallback.onError(request, new FailedStatusCodeException(response.getStatusText(), response.getStatusCode()));
             }
-            return;
-        } else {
-            // filter only in success case for now
-            runFilters(request, response);
-        }
     }
 
-//    /**
-//     * TODO when is this used ? maybe just forward to requestCallback.onError
-//     */
-//    @Override
-//    public void onError(Request request, Throwable exception) {
-//        if (LogConfiguration.loggingIsEnabled()) {
-//            Logger.getLogger(RetryingFilterawareRequestCallback.class.getName())
-//                    .severe("call onError in " + this.getClass() + ". this should not happen...");
-//        }
-//        requestCallback.onError(request, exception);
-////        handleErrorGracefully(null, null, null);
-//    }
-
-    public void handleErrorGracefully(Request request, Response response,
+    private void handleErrorGracefully(Request request, Response response,
             RequestCallback requestCallback) {
         // error handling...:
         if (currentRetryCounter < numberOfRetries) {
-            System.out.println("counter " + currentRetryCounter);
             if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(RetryingFilterawareRequestCallback.class.getName()).severe(
                         "error handling in progress for: " + method.builder.getHTTPMethod()
@@ -122,8 +101,6 @@ public class RetryingFilterawareRequestCallback extends DefaultFilterawareReques
             Timer t = new Timer() {
                 public void run() {
                     try {
-                        System.out.println("run . . ." + method.builder.getCallback());
-                                    
                         method.builder.send();
                     } catch (RequestException ex) {
                         if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
