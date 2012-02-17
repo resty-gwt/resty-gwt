@@ -16,12 +16,15 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client.callback;
+package org.fusesource.restygwt.mocking;
 
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.callback.CallbackFilter;
+import org.fusesource.restygwt.client.callback.DefaultFilterawareRequestCallback;
+import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;

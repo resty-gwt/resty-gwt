@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client.callback;
+package org.fusesource.restygwt.mocking;
 
 import java.util.HashMap;
 
@@ -27,6 +27,7 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.DefaultQueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.SimpleCacheKey;
+import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;

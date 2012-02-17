@@ -16,11 +16,15 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client.cache;
+package org.fusesource.restygwt.mocking;
 
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
+import org.fusesource.restygwt.client.cache.CacheKey;
+import org.fusesource.restygwt.client.cache.DefaultQueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.SimpleCacheKey;
 import org.fusesource.restygwt.client.cache.DefaultQueueableCacheStorage.ResponseWrapper;
 
 import com.google.gwt.http.client.RequestCallback;
