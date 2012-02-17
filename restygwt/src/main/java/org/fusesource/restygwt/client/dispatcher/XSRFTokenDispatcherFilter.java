@@ -32,8 +32,8 @@ public class XSRFTokenDispatcherFilter implements DispatcherFilter {
     }
     
     public boolean filter(final Method method, final RequestBuilder builder) {
-        if (this.xsrf.token !=null) {
-            method.header(this.xsrf.getHeaderKey(), this.xsrf.token);
+        if (this.xsrf.getToken() !=null) {
+            method.header(this.xsrf.getHeaderKey(), this.xsrf.getToken());
         }
         return true;// continue filtering
     }
