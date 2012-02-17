@@ -60,6 +60,7 @@ public class DefaultFilterawareRequestCallbackTestCase extends TestCase {
         EasyMock.expect(builder.getCallback()).andReturn(rc);
         EasyMock.replay(builder);
         method.builder = builder;
+        EasyMock.expect(method.isExpected(200)).andReturn(true);
         EasyMock.replay(method);
         
         FilterawareRequestCallback callback = new DefaultFilterawareRequestCallback(method);
