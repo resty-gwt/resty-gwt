@@ -25,7 +25,6 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.ComplexCacheKey;
-import org.fusesource.restygwt.client.cache.UrlCacheKey;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
 import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
 

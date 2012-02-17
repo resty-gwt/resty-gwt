@@ -23,8 +23,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Logger;
-
 import org.fusesource.restygwt.rebind.AnnotationResolver;
 
 import com.google.gwt.core.client.GWT;
@@ -251,6 +249,7 @@ public class Method {
         defaultAcceptType(Resource.CONTENT_TYPE_JSON);
         try {
             send(new AbstractRequestCallback<T>(this, callback) {
+                @SuppressWarnings("unchecked")
                 protected T parseResult() throws Exception {
                     try {
                         JSONValue val = JSONParser.parseStrict(response.getText());
