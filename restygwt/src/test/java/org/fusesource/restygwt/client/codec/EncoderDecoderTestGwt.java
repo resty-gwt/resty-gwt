@@ -70,7 +70,6 @@ public class EncoderDecoderTestGwt extends GWTTestCase{
         Foo foo = new Foo();
         foo.bars.add(null);
         JSONValue fooJ = fooCoder.encode(foo);
-        System.out.println("-----------------" + fooJ.toString());
         assertEquals(foo.bars, fooCoder.decode(fooJ).bars);
     }
 
