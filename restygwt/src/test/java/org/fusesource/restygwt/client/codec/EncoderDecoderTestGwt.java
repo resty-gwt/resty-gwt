@@ -20,6 +20,7 @@ package org.fusesource.restygwt.client.codec;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
@@ -51,9 +52,26 @@ public class EncoderDecoderTestGwt extends GWTTestCase{
     public interface FloatCodec extends JsonEncoderDecoder<ANumber<Float>>{
     }
 
+    public static class Foo{
+        public List<String> bars = new ArrayList<String>();
+    }
+
+    public interface FooCodec extends JsonEncoderDecoder<Foo>{
+    }
+
     @Override
     public String getModuleName() {
         return "org.fusesource.restygwt.EncoderDecoderTestGwt";
+    }
+
+    public void testNullValueAsList(){
+        FooCodec fooCoder = GWT.create(FooCodec.class);
+
+        Foo foo = new Foo();
+        foo.bars.add(null);
+        JSONValue fooJ = fooCoder.encode(foo);
+        System.out.println("-----------------" + fooJ.toString());
+        assertEquals(foo.bars, fooCoder.decode(fooJ).bars);
     }
 
     public void testSubtypeWrappeObjectWithSingleSubtype() {
