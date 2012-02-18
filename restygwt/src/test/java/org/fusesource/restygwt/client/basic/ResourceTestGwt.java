@@ -21,6 +21,7 @@ package org.fusesource.restygwt.client.basic;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.Resource;
 
 import com.google.gwt.junit.client.GWTTestCase;
@@ -116,6 +117,13 @@ public class ResourceTestGwt extends GWTTestCase {
 		assertEquals(2, r2.getHeaders().size());
 	}
 
+	public void testPassOnOfHeaders(){
+	    Map<String, String> headers = new HashMap<String, String>();
+	    headers.put("X-CustomHeader", "123456789");
+	    Method method = new Resource("http://localhost", headers).get();
+	    assertEquals("123456789",method.builder.getHeader("X-CustomHeader"));
+	}
+	
 	// Uris with trailing '/'
 	public void testUriWithTrailingSlash() {
 		Resource r1 = new Resource(BU + "/");
