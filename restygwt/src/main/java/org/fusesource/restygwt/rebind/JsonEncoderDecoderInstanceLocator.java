@@ -36,6 +36,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.xml.client.Document;
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
 import org.fusesource.restygwt.client.Json;
+import org.fusesource.restygwt.client.ObjectEncoderDecoder;
 import org.fusesource.restygwt.client.Json.Style;
 import static org.fusesource.restygwt.rebind.BaseSourceCreator.*;
 
@@ -95,7 +96,9 @@ public class JsonEncoderDecoderInstanceLocator {
         builtInEncoderDecoders.put(JSON_VALUE_TYPE, JSON_ENCODER_DECODER_CLASS + ".JSON_VALUE");
 
         builtInEncoderDecoders.put(find(Date.class), JSON_ENCODER_DECODER_CLASS + ".DATE");
-
+        
+        builtInEncoderDecoders.put(find(Object.class), ObjectEncoderDecoder.class.getName() + ".INSTANCE");
+        
     }
 
     private JClassType find(Class<?> type) throws UnableToCompleteException {
@@ -111,8 +114,8 @@ public class JsonEncoderDecoderInstanceLocator {
         if (rc == null) {
             JClassType ct = type.isClass();
             if (ct != null && !isCollectionType(ct)) {
-                JsonEncoderDecoderClassCreator generator = new JsonEncoderDecoderClassCreator(logger, context, ct);
-                return generator.create() + ".INSTANCE";
+        	JsonEncoderDecoderClassCreator generator = new JsonEncoderDecoderClassCreator(logger, context, ct);
+        	return generator.create() + ".INSTANCE";
             }
         }
         return rc;
