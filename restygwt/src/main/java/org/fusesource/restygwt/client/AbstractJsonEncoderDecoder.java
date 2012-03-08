@@ -345,15 +345,20 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         }
         return toObject(result);
     }
+    
+    static private JSONArray asArray(JSONValue value) {
+        JSONArray array = value.isArray();
+        if (array == null) {
+            throw new DecodingException("Expected a json array, but was given: " + value);
+        }
+        return array;
+    }
 
     static public <Type> List<Type> toList(JSONValue value, AbstractJsonEncoderDecoder<Type> encoder) {
         if (value == null || value.isNull() != null) {
             return null;
         }
-        JSONArray array = value.isArray();
-        if (array == null) {
-            throw new DecodingException("Expected a json array, but was given: " + value);
-        }
+        JSONArray array = asArray(value);
 
         ArrayList<Type> rc = new ArrayList<Type>(array.size());
         int size = array.size();
@@ -363,14 +368,136 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         return rc;
     }
 
+    static public <Type> Type[] toArray(JSONValue value, AbstractJsonEncoderDecoder<Type> encoder, Type[] template) {
+        if (value == null || value.isNull() != null) {
+            return null;
+        }
+        JSONArray array = asArray(value);
+
+        int size = array.size();
+        for (int i = 0; i < size; i++) {
+            template[i] = encoder.decode(array.get(i));
+        }
+        return template;
+    }
+
+    static public short[] toArray(JSONValue value, AbstractJsonEncoderDecoder<Short> encoder, short[] template) {
+        if (value == null || value.isNull() != null) {
+            return null;
+        }
+        JSONArray array = asArray(value);
+
+        int size = array.size();
+        for (int i = 0; i < size; i++) {
+            template[i] = encoder.decode(array.get(i));
+        }
+        return template;
+    }
+
+    static public long[] toArray(JSONValue value, AbstractJsonEncoderDecoder<Long> encoder, long[] template) {
+        if (value == null || value.isNull() != null) {
+            return null;
+        }
+        JSONArray array = asArray(value);
+
+        int size = array.size();
+        for (int i = 0; i < size; i++) {
+            template[i] = encoder.decode(array.get(i));
+        }
+        return template;
+    }
+
+    static public int[] toArray(JSONValue value, AbstractJsonEncoderDecoder<Integer> encoder, int[] template) {
+        if (value == null || value.isNull() != null) {
+            return null;
+        }
+        JSONArray array = asArray(value);
+
+        int size = array.size();
+        for (int i = 0; i < size; i++) {
+            template[i] = encoder.decode(array.get(i));
+        }
+        return template;
+    }
+
+    static public float[] toArray(JSONValue value, AbstractJsonEncoderDecoder<Float> encoder, float[] template) {
+        if (value == null || value.isNull() != null) {
+            return null;
+        }
+        JSONArray array = asArray(value);
+
+        int size = array.size();
+        for (int i = 0; i < size; i++) {
+            template[i] = encoder.decode(array.get(i));
+        }
+        return template;
+    }
+
+    static public double[] toArray(JSONValue value, AbstractJsonEncoderDecoder<Double> encoder, double[] template) {
+        if (value == null || value.isNull() != null) {
+            return null;
+        }
+        JSONArray array = asArray(value);
+
+        int size = array.size();
+        for (int i = 0; i < size; i++) {
+            template[i] = encoder.decode(array.get(i));
+        }
+        return template;
+    }
+
+    static public byte[] toArray(JSONValue value, AbstractJsonEncoderDecoder<Byte> encoder, byte[] template) {
+        if (value == null || value.isNull() != null) {
+            return null;
+        }
+        JSONArray array = asArray(value);
+
+        int size = array.size();
+        for (int i = 0; i < size; i++) {
+            template[i] = encoder.decode(array.get(i));
+        }
+        return template;
+    }
+
+    static public char[] toArray(JSONValue value, AbstractJsonEncoderDecoder<Character> encoder, char[] template) {
+        if (value == null || value.isNull() != null) {
+            return null;
+        }
+        JSONArray array = asArray(value);
+
+        int size = array.size();
+        for (int i = 0; i < size; i++) {
+            template[i] = encoder.decode(array.get(i));
+        }
+        return template;
+    }
+
+    static public boolean[] toArray(JSONValue value, AbstractJsonEncoderDecoder<Boolean> encoder, boolean[] template) {
+        if (value == null || value.isNull() != null) {
+            return null;
+        }
+        JSONArray array = asArray(value);
+
+        int size = array.size();
+        for (int i = 0; i < size; i++) {
+            template[i] = encoder.decode(array.get(i));
+        }
+        return template;
+    }
+
+    static public int getSize(JSONValue value) {
+        if (value == null || value.isNull() != null) {
+            return 0;
+        }
+        JSONArray array = asArray(value);
+        return array.size();
+    }
+
     static public <Type> Set<Type> toSet(JSONValue value, AbstractJsonEncoderDecoder<Type> encoder) {
         if (value == null || value.isNull() != null) {
             return null;
         }
-        JSONArray array = value.isArray();
-        if (array == null) {
-            throw new DecodingException("Expected a json array, but was given: " + value);
-        }
+        JSONArray array = asArray(value);
 
         HashSet<Type> rc = new HashSet<Type>(array.size() * 2);
         int size = array.size();
@@ -568,6 +695,114 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         int i = 0;
         for (Type t : value) {
             rc.set(i++, encoder.encode(t));
+        }
+        return rc;
+    }
+
+    static public <Type> JSONValue toJSON(Type[] value, AbstractJsonEncoderDecoder<Type> encoder) {
+        if (value == null) {
+            return JSONNull.getInstance();
+        }
+        JSONArray rc = new JSONArray();
+        int i = 0;
+        for (Type t : value) {
+            rc.set(i++, encoder.encode(t));
+        }
+        return rc;
+    }
+
+    static public <Type> JSONValue toJSON(short[] value, AbstractJsonEncoderDecoder<Type> encoder) {
+        if (value == null) {
+            return JSONNull.getInstance();
+        }
+        JSONArray rc = new JSONArray();
+        int i = 0;
+        for (short t : value) {
+            rc.set(i++, new JSONNumber(t));
+        }
+        return rc;
+    }
+
+    static public <Type> JSONValue toJSON(int[] value, AbstractJsonEncoderDecoder<Type> encoder) {
+        if (value == null) {
+            return JSONNull.getInstance();
+        }
+        JSONArray rc = new JSONArray();
+        int i = 0;
+        for (int t : value) {
+            rc.set(i++, new JSONNumber(t));
+        }
+        return rc;
+    }
+
+    static public <Type> JSONValue toJSON(long[] value, AbstractJsonEncoderDecoder<Type> encoder) {
+        if (value == null) {
+            return JSONNull.getInstance();
+        }
+        JSONArray rc = new JSONArray();
+        int i = 0;
+        for (long t : value) {
+            rc.set(i++, new JSONNumber(t));
+        }
+        return rc;
+    }
+
+    static public <Type> JSONValue toJSON(float[] value, AbstractJsonEncoderDecoder<Type> encoder) {
+        if (value == null) {
+            return JSONNull.getInstance();
+        }
+        JSONArray rc = new JSONArray();
+        int i = 0;
+        for (float t : value) {
+            rc.set(i++, new JSONNumber(t));
+        }
+        return rc;
+    }
+    
+    static public <Type> JSONValue toJSON(double[] value, AbstractJsonEncoderDecoder<Type> encoder) {
+        if (value == null) {
+            return JSONNull.getInstance();
+        }
+        JSONArray rc = new JSONArray();
+        int i = 0;
+        for (double t : value) {
+            rc.set(i++, new JSONNumber(t));
+        }
+        return rc;
+    }
+
+    static public <Type> JSONValue toJSON(boolean[] value, AbstractJsonEncoderDecoder<Type> encoder) {
+        if (value == null) {
+            return JSONNull.getInstance();
+        }
+        JSONArray rc = new JSONArray();
+        int i = 0;
+        for (boolean t : value) {
+            rc.set(i++, JSONBoolean.getInstance(t));
+        }
+        return rc;
+    }
+
+    static public <Type> JSONValue toJSON(char[] value, AbstractJsonEncoderDecoder<Type> encoder) {
+        if (value == null) {
+            return JSONNull.getInstance();
+        }
+        JSONArray rc = new JSONArray();
+        int i = 0;
+        for (char t : value) {
+            rc.set(i++, new JSONNumber(t));
+        }
+        return rc;
+    }
+
+    static public <Type> JSONValue toJSON(byte[] value, AbstractJsonEncoderDecoder<Type> encoder) {
+        if (value == null) {
+            return JSONNull.getInstance();
+        }
+        JSONArray rc = new JSONArray();
+        int i = 0;
+        for (byte t : value) {
+            rc.set(i++, new JSONNumber(t));
         }
         return rc;
     }
