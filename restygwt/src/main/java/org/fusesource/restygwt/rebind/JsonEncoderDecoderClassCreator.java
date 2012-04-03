@@ -413,9 +413,12 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         			String objectGetter = "object.get(" + wrap(jsonName) + ")";
         			String expression = locator.decodeExpression(field.getType(), objectGetter, style);
     
-        			String defaultValue = field.getType().isPrimitive() == null ? "null": field.getType().isPrimitive().getUninitializedFieldExpression() + "";
-        			i(1).p("" + (objectGetter + " == null || " + objectGetter + " instanceof com.google.gwt.json.client.JSONNull ? " + defaultValue + " : " + expression + ((field != lastField) ? ", " : ""))).i(-1);
-        			
+        			if (field.getType().isPrimitive() == null) {
+                        i(1).p("" + (objectGetter + " == null || " + objectGetter + " instanceof com.google.gwt.json.client.JSONNull ? null : " + expression + ((field != lastField) ? ", " : ""))).i(-1);
+        			} else {
+        			    i(1).p("" + expression + ((field != lastField) ? ", " : "")).i(-1);
+        			}
+    
         			return null;
         		    }
         		});
@@ -462,25 +465,29 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     
         			    p("if(" + objectGetter + " != null) {").i(1);
     
+        			    if (field.getType().isPrimitive() == null) {
         				p("if(" + objectGetter + " instanceof com.google.gwt.json.client.JSONNull) {").i(1);
-                        String defaultValue = field.getType().isPrimitive() == null ? "null": field.getType().isPrimitive().getUninitializedFieldExpression() + "";
-
+    
         				if (setterName != null) {
-        				    p("rc." + setterName + "(" + defaultValue + ");");
+        				    p("rc." + setterName + "(null);");
         				} else {
-        				    p("rc." + name + "=" + defaultValue + ";");
+        				    p("rc." + name + "=null;");
         				}
     
         				i(-1).p("} else {").i(1);
-        			    
+        			    }
+    
         			    if (setterName != null) {
         				p("rc." + setterName + "(" + expression + ");");
         			    } else {
         				p("rc." + name + "=" + expression + ";");
         			    }
-        			    i(-1).p("}");    
-        			    i(-1).p("}");    
-
+        			    i(-1).p("}");
+    
+        			    if (field.getType().isPrimitive() == null) {
+        				i(-1).p("}");
+        			    }
+    
         			} else {
         			    error("field must not be private.");
         			}

@@ -119,7 +119,6 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
      * @param classes
      * @return
      */
-    @SuppressWarnings("rawtypes")
     private String[] getAnnotationsAsStringArray(final Class[] classes) {
         if (null == classes) return null;
 

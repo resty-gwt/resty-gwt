@@ -40,10 +40,10 @@ import com.google.gwt.logging.client.LogConfiguration;
  */
 public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
 
-    public static class ResponseWrapper extends Response {
+    static class ResponseWrapper extends Response {
 
-        // keep it public for testing
-        public final Response response;
+        // keep it package private for testing
+        Response response;
 
         public boolean equals(Object obj) {
             return response.equals(obj);

@@ -24,7 +24,7 @@ package org.fusesource.restygwt.client.callback;
 public class XSRFToken {
     private final String headerKey;
     
-    private String token;
+    public String token;
     
     public XSRFToken(){
         this("X-CSRF-TOKEN");
@@ -36,13 +36,5 @@ public class XSRFToken {
     
     public String getHeaderKey(){
        return this.headerKey;
-    }
-    
-    public String getToken(){
-        return token;
-    }
-    
-    public void setToken(String token){
-        this.token = token;
     }
 }
