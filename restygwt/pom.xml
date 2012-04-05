@@ -29,7 +29,7 @@
     <relativePath>..</relativePath>
   </parent>
 
-  <artifactId>restygwt</artifactId>
+  <artifactId>restygwt-heiler</artifactId>
   <packaging>jar</packaging>
 
   <name>${project.artifactId}</name>

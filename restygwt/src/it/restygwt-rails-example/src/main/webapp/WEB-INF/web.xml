@@ -22,9 +22,6 @@
 "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
 "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
-  <welcome-file-list>
-    <welcome-file>/index.html</welcome-file>
-  </welcome-file-list>
 
   <context-param>
     <param-name>jruby.max.runtimes</param-name>
@@ -54,4 +51,8 @@
     <res-auth>Container</res-auth>
   </resource-ref>
 -->
+
+  <welcome-file-list>
+    <welcome-file>/index.html</welcome-file>
+  </welcome-file-list>
 </web-app>
