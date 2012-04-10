@@ -52,6 +52,5 @@ public @interface ModelChange {
      *
      * @return
      */
-    @SuppressWarnings("rawtypes")
     Class[] domain() default {};
 }

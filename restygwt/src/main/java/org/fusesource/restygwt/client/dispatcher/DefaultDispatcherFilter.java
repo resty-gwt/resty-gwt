@@ -26,6 +26,7 @@ import org.fusesource.restygwt.client.callback.CallbackFactory;
 import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
 
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.logging.client.LogConfiguration;
 
 public class DefaultDispatcherFilter implements DispatcherFilter {

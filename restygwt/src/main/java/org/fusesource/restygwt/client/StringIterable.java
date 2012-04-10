@@ -34,7 +34,7 @@ public class StringIterable implements Iterable<String> {
     @Override
     public Iterator<String> iterator() {
         final Iterator<?> baseIterator = baseIterable.iterator();
-        return new Iterator<String>() {
+        return new Iterator() {
             @Override
             public boolean hasNext() {
                 return baseIterator.hasNext();
