@@ -42,12 +42,12 @@ public class DefaultCallbackFactory implements CallbackFactory {
      * @return
      */
     public FilterawareRequestCallback createCallback(Method method) {
-        final FilterawareRequestCallback callback = new DefaultFilterawareRequestCallback(
+        final FilterawareRequestCallback retryingCallback = new DefaultFilterawareRequestCallback(
                 method);
 
         for(CallbackFilter filter: callbackFilters){
-            callback.addFilter(filter);
+            retryingCallback.addFilter(filter);
         }
-        return callback;
+        return retryingCallback;
     }
 }
