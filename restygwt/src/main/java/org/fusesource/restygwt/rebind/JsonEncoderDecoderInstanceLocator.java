@@ -206,9 +206,8 @@ public class JsonEncoderDecoderInstanceLocator {
 				if (types.length != 2) {
 					error("Map must define two and only two type parameters");
 				}
-				if (isCollectionType(types[0])
-						|| !builtInEncoderDecoders.containsKey(types[0])) {
-					error("Map key can't be a collection or object");
+				if (isCollectionType(types[0])) {
+					error("Map key can't be a collection");
 				}
 				if (!builtInEncoderDecoders.containsKey(types[0])) {
 					error("Map key can't be an object");
