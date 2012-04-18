@@ -210,9 +210,6 @@ public class JsonEncoderDecoderInstanceLocator {
 						|| !builtInEncoderDecoders.containsKey(types[0])) {
 					error("Map key can't be a collection or object");
 				}
-				if (!builtInEncoderDecoders.containsKey(types[0])) {
-					error("Map key can't be an object");
-				}
 				String keyEncoderDecoder = getEncoderDecoder(types[0], logger);
 				encoderDecoder = getEncoderDecoder(types[1], logger);
 				if (encoderDecoder != null && keyEncoderDecoder != null) {

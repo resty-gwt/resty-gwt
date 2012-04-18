@@ -18,23 +18,9 @@
 
 package org.fusesource.restygwt.client.basic;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Map;
-
 public class ExampleDto {
 
-	public String name;
-	public Map<Integer, String> complexMap1;
-	public Map<String, String> complexMap2;
-	public Map<Long, String> complexMap3;
-	public Map<Boolean, String> complexMap4;
-	public Map<Double, String> complexMap5;
-	public Map<Float, String> complexMap7;
-	public Map<Byte, String> complexMap8;
-	public Map<BigDecimal, String> complexMap9;
-	public Map<BigInteger, String> complexMap10;
-	public Map<Character, String> complexMap11;
+    public String name;
 
-	private transient String code;
+    private transient String code;
 }
