@@ -321,9 +321,6 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             PathParam paramPath = arg.getAnnotation(PathParam.class);
             if (paramPath != null) {
                 pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+" + toStringExpression(arg) + "+\"");
-                if (arg.getAnnotation(Attribute.class) != null) {
-					error("Attribute annotations not allowed on subresource locators");
-                }
             }
         }
 
@@ -678,7 +675,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
           return "(new " + JSON_OBJECT_CLASS + "(" + expr + ")).toString()";
         }
 
-        return expr + ".toString()";
+        return String.format("%s != null ? %s.toString() : null", expr, expr);
     }
 
     protected String toIteratedStringExpression(JParameter arg) {
@@ -751,7 +748,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
      * {@link BindingDefaults#addAnnotationResolver(AnnotationResolver)}
      * @return
      */
-    @SuppressWarnings("unchecked")
+    // TODO remove suppression
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private List<AnnotationResolver> getAnnotationResolvers(final GeneratorContext context, final TreeLogger logger) {
         java.lang.reflect.Method m = null;
         ArrayList args = new ArrayList();
@@ -777,8 +775,6 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
         List<AnnotationResolver> l = new ArrayList<AnnotationResolver>();
         try {
-             Object[] params = new Object[]{context};
-
             l = (List<AnnotationResolver>) m.invoke(null, context, logger);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("could not call method `getAnnotationResolvers´ on "

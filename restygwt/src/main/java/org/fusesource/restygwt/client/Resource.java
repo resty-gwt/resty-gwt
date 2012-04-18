@@ -124,34 +124,37 @@ public class Resource {
 
         // it might be an absolute path...
         if (path.startsWith("http:") || path.startsWith("https:") || path.startsWith("file:")) {
-            return new Resource(path);
+            return new Resource(path, this.query, this.headers);
         }
 
         // strip prefix / if needed...
         if (path.startsWith("/")) {
             path = path.substring(1);
         }
-        return new Resource(this.path + "/" + path);
+        return new Resource(this.path + "/" + path, this.query, this.headers);
     }
 
     public Resource addQueryParam(String key, String value) {
-        key = URL.encodeComponent(key);
-        value = URL.encodeComponent(value);
+    	if(value == null) return this;
+        key = URL.encodeQueryString(key);
+        value = URL.encodeQueryString(value);
         String q = query == null ? "" : query + "&";
         return new Resource(path, q + key + "=" + value, headers);
     }
 
     public Resource addQueryParams(String key, Iterable<String> values) {
-        key = URL.encodeComponent(key);
+        if(values == null) return this;
+        key = URL.encodeQueryString(key);
         StringBuilder q = new StringBuilder(query == null ? "" : query + "&");
         boolean ampersand = false;
         for (String value : values) {
+          if(value == null) continue;
           if (ampersand) {
             q.append('&');
           } else {
             ampersand = true;
           }
-          value = URL.encodeComponent(value);
+          value = URL.encodeQueryString(value);
           q.append(key).append("=").append(value);
         }
 

@@ -59,9 +59,6 @@ public class CachingCallbackFilter implements CallbackFilter {
         final List<RequestCallback> removedCallbacks = cache.removeCallbacks(ck);
 
         if (removedCallbacks != null){
-            //TODO ????? && 1 < removedCallbacks.size()) {
-            //TODO ????? remove the first callback from list, as this is called explicitly
-            //TODO ??????removedCallbacks.remove(0);
             // fetch the builders callback and wrap it with a new one, calling all others too
             final RequestCallback originalCallback = callback;
 
@@ -160,18 +157,21 @@ public class CachingCallbackFilter implements CallbackFilter {
 
         final JSONValue jsonValue = JSONParser.parseStrict(method.getData()
                 .get(Domain.CACHE_DOMAIN_KEY));
-        if (null == jsonValue) return null;
+        if (null == jsonValue) {
+            return null;
+        }
 
-        JSONArray jsonArray = jsonValue.isArray();
-        final String[] dd = new String[jsonArray.size()];
-
+        final JSONArray jsonArray = jsonValue.isArray();
         if (null != jsonArray) {
+            final String[] dd = new String[jsonArray.size()];
             for (int i = 0; i < jsonArray.size(); ++i) {
                 dd[i] = jsonArray.get(i).isString().stringValue();
             }
 
             return dd;
         }
-        return null;
+        else {
+            return null;
+        }
     }
 }
