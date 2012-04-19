@@ -92,7 +92,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
                 return null;
             }
             return (byte) toDouble(value);
-      
+
         }
 
         public JSONValue encode(Byte value) throws EncodingException {
@@ -102,7 +102,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             return new JSONNumber(value);
         }
     };
-    
+
     public static final AbstractJsonEncoderDecoder<Short> SHORT = new AbstractJsonEncoderDecoder<Short>() {
 
         public Short decode(JSONValue value) throws DecodingException {
@@ -222,13 +222,17 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
                     throw new DecodingException("Expected a json number r string, but was given: " + value);
                 }
 
-                // Doing a straight conversion from string to BigInteger will not work for large values
-                // So we convert to BigDecimal first and then convert it to BigInteger.
+                // Doing a straight conversion from string to BigInteger will
+                // not work for large values
+                // So we convert to BigDecimal first and then convert it to
+                // BigInteger.
                 return new BigDecimal(str.stringValue()).toBigInteger();
             }
 
-            // Doing a straight conversion from string to BigInteger will not work for large values
-            // So we convert to BigDecimal first and then convert it to BigInteger.
+            // Doing a straight conversion from string to BigInteger will not
+            // work for large values
+            // So we convert to BigDecimal first and then convert it to
+            // BigInteger.
             return new BigDecimal(value.toString()).toBigInteger();
         }
 
@@ -278,7 +282,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
                 if (num == null) {
                     throw new DecodingException("Expected a json number, but was given: " + value);
                 }
-                return new Date((long)num.doubleValue());
+                return new Date((long) num.doubleValue());
             } else {
                 JSONString str = value.isString();
                 if (str == null) {
@@ -320,7 +324,6 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         }
         return number.doubleValue();
     }
-
 
     static public JSONObject toObject(JSONValue value) {
         JSONObject object = value.isObject();

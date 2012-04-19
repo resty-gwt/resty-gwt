@@ -61,7 +61,8 @@ public class JsonEncoderDecoderInstanceLocator {
     public final GeneratorContext context;
     public final TreeLogger logger;
 
-    public JsonEncoderDecoderInstanceLocator(GeneratorContext context, TreeLogger logger) throws UnableToCompleteException {
+    public JsonEncoderDecoderInstanceLocator(GeneratorContext context, TreeLogger logger)
+            throws UnableToCompleteException {
         this.context = context;
         this.logger = logger;
 
@@ -96,9 +97,9 @@ public class JsonEncoderDecoderInstanceLocator {
         builtInEncoderDecoders.put(JSON_VALUE_TYPE, JSON_ENCODER_DECODER_CLASS + ".JSON_VALUE");
 
         builtInEncoderDecoders.put(find(Date.class), JSON_ENCODER_DECODER_CLASS + ".DATE");
-        
+
         builtInEncoderDecoders.put(find(Object.class), ObjectEncoderDecoder.class.getName() + ".INSTANCE");
-        
+
     }
 
     private JClassType find(Class<?> type) throws UnableToCompleteException {
@@ -114,31 +115,35 @@ public class JsonEncoderDecoderInstanceLocator {
         if (rc == null) {
             JClassType ct = type.isClass();
             if (ct != null && !isCollectionType(ct)) {
-        	JsonEncoderDecoderClassCreator generator = new JsonEncoderDecoderClassCreator(logger, context, ct);
-        	return generator.create() + ".INSTANCE";
+                JsonEncoderDecoderClassCreator generator = new JsonEncoderDecoderClassCreator(logger, context, ct);
+                return generator.create() + ".INSTANCE";
             }
         }
         return rc;
     }
 
     public String encodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
-        return encodeDecodeExpression(type, expression, style, "encode", JSON_ENCODER_DECODER_CLASS + ".toJSON", JSON_ENCODER_DECODER_CLASS + ".toJSON", JSON_ENCODER_DECODER_CLASS
-                + ".toJSON");
+        return encodeDecodeExpression(type, expression, style, "encode", JSON_ENCODER_DECODER_CLASS + ".toJSON",
+                JSON_ENCODER_DECODER_CLASS + ".toJSON", JSON_ENCODER_DECODER_CLASS + ".toJSON");
     }
 
     public String decodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
-        return encodeDecodeExpression(type, expression, style, "decode", JSON_ENCODER_DECODER_CLASS + ".toMap", JSON_ENCODER_DECODER_CLASS + ".toSet", JSON_ENCODER_DECODER_CLASS
-                + ".toList");
+        return encodeDecodeExpression(type, expression, style, "decode", JSON_ENCODER_DECODER_CLASS + ".toMap",
+                JSON_ENCODER_DECODER_CLASS + ".toSet", JSON_ENCODER_DECODER_CLASS + ".toList");
     }
 
-    private String encodeDecodeExpression(JType type, String expression, Style style, String encoderMethod, String mapMethod, String setMethod, String listMethod)
-            throws UnableToCompleteException {
+    private String encodeDecodeExpression(JType type, String expression, Style style, String encoderMethod,
+            String mapMethod, String setMethod, String listMethod) throws UnableToCompleteException {
 
         if (null != type.isEnum()) {
             if (encoderMethod.equals("encode")) {
-                return encodeDecodeExpression(STRING_TYPE, expression + ".name()", style, encoderMethod, mapMethod, setMethod, listMethod);
+                return encodeDecodeExpression(STRING_TYPE, expression + ".name()", style, encoderMethod, mapMethod,
+                        setMethod, listMethod);
             } else {
-                return type.getQualifiedSourceName() + ".valueOf(" + encodeDecodeExpression(STRING_TYPE, expression, style, encoderMethod, mapMethod, setMethod, listMethod) + ")";
+                return type.getQualifiedSourceName()
+                        + ".valueOf("
+                        + encodeDecodeExpression(STRING_TYPE, expression, style, encoderMethod, mapMethod, setMethod,
+                                listMethod) + ")";
             }
         }
 
@@ -165,7 +170,8 @@ public class JsonEncoderDecoderInstanceLocator {
                 }
                 encoderDecoder = getEncoderDecoder(types[1], logger);
                 if (encoderDecoder != null) {
-                    return mapMethod + "(" + expression + ", " + encoderDecoder + ", " + JSON_CLASS + ".Style." + style.name() + ")";
+                    return mapMethod + "(" + expression + ", " + encoderDecoder + ", " + JSON_CLASS + ".Style."
+                            + style.name() + ")";
                 }
             } else if (clazz.isAssignableTo(SET_TYPE)) {
                 if (types.length != 1) {
@@ -192,7 +198,8 @@ public class JsonEncoderDecoderInstanceLocator {
     }
 
     boolean isCollectionType(JClassType clazz) {
-        return clazz != null && (clazz.isAssignableTo(SET_TYPE) || clazz.isAssignableTo(LIST_TYPE) || clazz.isAssignableTo(MAP_TYPE));
+        return clazz != null
+                && (clazz.isAssignableTo(SET_TYPE) || clazz.isAssignableTo(LIST_TYPE) || clazz.isAssignableTo(MAP_TYPE));
     }
 
     protected void error(String msg) throws UnableToCompleteException {
