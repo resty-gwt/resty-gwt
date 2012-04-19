@@ -434,6 +434,100 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         }
     }
 
+    // TODO(sbeutel): new map method to handle other key values than String
+    static public <KeyType, ValueType> Map<KeyType, ValueType> toMap(JSONValue value,
+            AbstractJsonEncoderDecoder<KeyType> keyEncoder, AbstractJsonEncoderDecoder<ValueType> valueEncoder,
+            Style style) {
+        if (value == null || value.isNull() != null) {
+            return null;
+        }
+
+        switch (style) {
+        case DEFAULT:
+        case SIMPLE: {
+            JSONObject object = value.isObject();
+            if (object == null) {
+                throw new DecodingException("Expected a json object, but was given: " + value);
+            }
+
+            HashMap<KeyType, ValueType> rc = new HashMap<KeyType, ValueType>(object.size() * 2);
+            for (String key : object.keySet()) {
+                // TODO(sbeutel): Convert value in the right way
+                rc.put((KeyType) key, valueEncoder.decode(object.get(key)));
+            }
+            return rc;
+        }
+        case JETTISON_NATURAL: {
+            JSONObject object = value.isObject();
+            if (object == null) {
+                throw new DecodingException("Expected a json object, but was given: " + value);
+            }
+            value = object.get("entry");
+            if (value == null) {
+                throw new DecodingException("Expected an entry array not found");
+            }
+            JSONArray entries = value.isArray();
+            if (entries == null) {
+                throw new DecodingException("Expected an entry array, but was given: " + value);
+            }
+
+            HashMap<KeyType, ValueType> rc = new HashMap<KeyType, ValueType>(object.size() * 2);
+            for (int i = 0; i < entries.size(); i++) {
+                JSONObject entry = entries.get(i).isObject();
+                if (entry == null)
+                    throw new DecodingException("Expected an entry object, but was given: " + value);
+                JSONValue key = entry.get("key");
+                if (key == null)
+                    throw new DecodingException("Expected an entry key field not found");
+                JSONString k = key.isString();
+                if (k == null)
+                    throw new DecodingException("Expected an entry key to be a string, but was given: " + value);
+
+                // TODO(sbeutel): Convert value in the right way
+                rc.put((KeyType) k.stringValue(), valueEncoder.decode(entry.get("value")));
+            }
+            return rc;
+        }
+        default:
+            throw new UnsupportedOperationException("The encoding style is not yet suppored: " + style.name());
+        }
+    }
+
+    // TODO(sbeutel): new map method to handle other key values than String
+    static public <KeyType, ValueType> JSONValue toJSON(Map<KeyType, ValueType> value,
+            AbstractJsonEncoderDecoder<KeyType> keyEncoder, AbstractJsonEncoderDecoder<ValueType> valueEncoder,
+            Style style) {
+        if (value == null) {
+            return JSONNull.getInstance();
+        }
+
+        switch (style) {
+        case DEFAULT:
+        case SIMPLE: {
+            JSONObject rc = new JSONObject();
+            for (Entry<KeyType, ValueType> t : value.entrySet()) {
+                rc.put(keyEncoder.encode(t.getKey()).toString(), valueEncoder.encode(t.getValue()));
+            }
+            return rc;
+        }
+        case JETTISON_NATURAL: {
+            JSONObject rc = new JSONObject();
+            JSONArray entries = new JSONArray();
+            int i = 0;
+            for (Entry<KeyType, ValueType> t : value.entrySet()) {
+                JSONObject entry = new JSONObject();
+                entry.put("key", new JSONString(keyEncoder.encode(t.getKey()).toString()));
+                entry.put("value", valueEncoder.encode(t.getValue()));
+                entries.set(i++, entry);
+            }
+            rc.put("entry", entries);
+            return rc;
+        }
+        default:
+            throw new UnsupportedOperationException("The encoding style is not yet suppored: " + style.name());
+        }
+    }
+
     static public <Type> JSONValue toJSON(Map<String, Type> value, AbstractJsonEncoderDecoder<Type> encoder, Style style) {
         if (value == null) {
             return JSONNull.getInstance();

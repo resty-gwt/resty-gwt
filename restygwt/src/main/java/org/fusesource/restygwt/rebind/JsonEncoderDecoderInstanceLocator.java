@@ -18,6 +18,12 @@
 
 package org.fusesource.restygwt.rebind;
 
+import static org.fusesource.restygwt.rebind.BaseSourceCreator.DEBUG;
+import static org.fusesource.restygwt.rebind.BaseSourceCreator.ERROR;
+import static org.fusesource.restygwt.rebind.BaseSourceCreator.INFO;
+import static org.fusesource.restygwt.rebind.BaseSourceCreator.TRACE;
+import static org.fusesource.restygwt.rebind.BaseSourceCreator.WARN;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -25,6 +31,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
+import org.fusesource.restygwt.client.Json;
+import org.fusesource.restygwt.client.Json.Style;
+
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -34,14 +45,9 @@ import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.xml.client.Document;
-import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
-import org.fusesource.restygwt.client.Json;
-import org.fusesource.restygwt.client.ObjectEncoderDecoder;
-import org.fusesource.restygwt.client.Json.Style;
-import static org.fusesource.restygwt.rebind.BaseSourceCreator.*;
 
 /**
- *
+ * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class JsonEncoderDecoderInstanceLocator {
@@ -97,8 +103,6 @@ public class JsonEncoderDecoderInstanceLocator {
         builtInEncoderDecoders.put(JSON_VALUE_TYPE, JSON_ENCODER_DECODER_CLASS + ".JSON_VALUE");
 
         builtInEncoderDecoders.put(find(Date.class), JSON_ENCODER_DECODER_CLASS + ".DATE");
-
-        builtInEncoderDecoders.put(find(Object.class), ObjectEncoderDecoder.class.getName() + ".INSTANCE");
 
     }
 
@@ -165,11 +169,18 @@ public class JsonEncoderDecoderInstanceLocator {
                 if (types.length != 2) {
                     error("Map must define two and only two type parameters");
                 }
-                if (types[0] != STRING_TYPE) {
-                    error("Map's first type parameter must be of type String");
+                if (isCollectionType(types[0])) {
+                    error("Map key can't be a collection");
                 }
+                if (!builtInEncoderDecoders.containsKey(types[0])) {
+                    error("Map key can't be an object");
+                }
+                String keyEncoderDecoder = getEncoderDecoder(types[0], logger);
                 encoderDecoder = getEncoderDecoder(types[1], logger);
-                if (encoderDecoder != null) {
+                if (encoderDecoder != null && keyEncoderDecoder != null) {
+                    return mapMethod + "(" + expression + ", " + keyEncoderDecoder + ", " + encoderDecoder + ", "
+                            + JSON_CLASS + ".Style." + style.name() + ")";
+                } else if (encoderDecoder != null) {
                     return mapMethod + "(" + expression + ", " + encoderDecoder + ", " + JSON_CLASS + ".Style."
                             + style.name() + ")";
                 }
