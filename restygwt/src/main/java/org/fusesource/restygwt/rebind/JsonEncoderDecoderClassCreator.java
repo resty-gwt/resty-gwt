@@ -668,8 +668,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	}
 	try {
 	    JType objectType = find(Object.class);
-	    JClassType superType = type.getSuperclass();
-	    if (!objectType.equals(superType)) {
+	    if (!objectType.equals(type)) {
+	        JClassType superType = type.getSuperclass();
 		return getFields(allFields, superType);
 	    }
 	} catch (UnableToCompleteException e) {
