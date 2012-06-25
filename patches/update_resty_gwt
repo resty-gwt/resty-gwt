@@ -1,39 +1,47 @@
 # This script updates the original resty-gwt and applies our very own patches.
-# It works as follows:
-#   1. revert the patches (if neccessary)
-#   2. git pull from resty-gwt
-#   3. apply patches
-#   4. add tag (to revert patch later on)
-#
 
-# fetch updates from the original resty-gwt
+# fetch updates from the original resty-gwt into master
+echo "update master"
+git checkout master
 git fetch chirino
+git merge chirino/master
 
-# switch to develop branch
+# switch to develop branch and update it
 git checkout develop
-
-# revert patches
-echo "revert patches"
-git reset --hard 'before_devbliss_patch'
-git tag -d "before_devbliss_patch"
+git merge master
 
 # udpate develop
 git merge chirino/master
-git tag "before_devbliss_patch"
-echo "added tag 'before_devbliss_patch'"
+name=patched_$(date +%d.%m.%Y-%H%M%S)
+# create new branch
+git checkout -b $name
 
 # apply patches
+
+echo "####################"
 echo "apply 'dont be evil' patch"
+echo "####################"
 git apply ~/Desktop/patches/0_dont_be_evil.patch
 git add .
 git commit -m "Don't be evil Patch"
 
+echo "####################"
 echo "apply 'interceptor' patch"
+echo "####################"
 git apply ~/Desktop/patches/1_interceptor.patch
 git add .
 git commit -m "interceptor patch"
 
+echo "####################"
 echo "apply 'cors' patch"
+echo "####################"
 git apply ~/Desktop/patches/2_cors.patch
 git add .
 git commit -m "Cors Patch"
+
+echo "####################"
+echo "publish branch $name"
+echo "####################"
+git push origin $name
+# switch back to develop
+git checkout develop
