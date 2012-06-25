@@ -1,47 +1,23 @@
 # This script updates the original resty-gwt and applies our very own patches.
 
+# stop the script on error
+set -e
+
 # fetch updates from the original resty-gwt into master
 echo "update master"
 git checkout master
 git fetch chirino
 git merge chirino/master
 
-# switch to develop branch and update it
+# switch to develop branch and merge the master into develop
 git checkout develop
 git merge master
 
-# udpate develop
-git merge chirino/master
-name=patched_$(date +%d.%m.%Y-%H%M%S)
-# create new branch
-git checkout -b $name
+git checkout patch_branch
+git rebase --onto patch_branch develop
 
-# apply patches
 
-echo "####################"
-echo "apply 'dont be evil' patch"
-echo "####################"
-git apply ~/Desktop/patches/0_dont_be_evil.patch
-git add .
-git commit -m "Don't be evil Patch"
 
-echo "####################"
-echo "apply 'interceptor' patch"
-echo "####################"
-git apply ~/Desktop/patches/1_interceptor.patch
-git add .
-git commit -m "interceptor patch"
-
-echo "####################"
-echo "apply 'cors' patch"
-echo "####################"
-git apply ~/Desktop/patches/2_cors.patch
-git add .
-git commit -m "Cors Patch"
-
-echo "####################"
-echo "publish branch $name"
-echo "####################"
-git push origin $name
+#git push patch_branch
 # switch back to develop
-git checkout develop
+#git checkout develop
