@@ -1,0 +1,146 @@
+diff --git a/restygwt/src/main/java/org/fusesource/restygwt/client/AbstractRequestCallback.java b/restygwt/src/main/java/org/fusesource/restygwt/client/AbstractRequestCallback.java
+index 0dbd2a135d93d59bc570e37170cc9a21743e194a..51710e3f2ddeef4cf6abb2b9d6474eb1cab8c164 100644
+--- a/restygwt/src/main/java/org/fusesource/restygwt/client/AbstractRequestCallback.java
++++ b/restygwt/src/main/java/org/fusesource/restygwt/client/AbstractRequestCallback.java
+@@ -19,12 +19,13 @@
+ package org.fusesource.restygwt.client;
+
+ import com.google.gwt.core.client.GWT;
++import com.google.gwt.http.client.Header;
+ import com.google.gwt.http.client.Request;
+ import com.google.gwt.http.client.RequestCallback;
+ import com.google.gwt.http.client.Response;
+
+ /**
+- *
++ *
+  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
+  */
+ public abstract class AbstractRequestCallback<T> implements RequestCallback {
+@@ -43,9 +44,41 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
+         callback.onFailure(this.method, exception);
+     }
+
+-    final public void onResponseReceived(Request request, Response response) {
++    final public void onResponseReceived(final Request request, final Response response) {
+         this.method.request = request;
+-        this.method.response = response;
++        this.method.response = new Response() {
++
++            @Override
++            public String getHeader(String header) {
++                return response.getHeader(header);
++            }
++
++            @Override
++            public Header[] getHeaders() {
++                return response.getHeaders();
++            }
++
++            @Override
++            public String getHeadersAsString() {
++                return response.getHeadersAsString();
++            }
++
++            @Override
++            public int getStatusCode() {
++                return response.getStatusCode();
++            }
++
++            @Override
++            public String getStatusText() {
++                return response.getStatusText();
++            }
++
++            @Override
++            public String getText() {
++                return response.getText().replaceFirst("^[ ]*<\\{\\(", "").replaceFirst("^[ ]*\\)\\}>", "");
++            }
++
++        };
+         if (response == null) {
+             callback.onFailure(this.method, new FailedStatusCodeException("TIMEOUT", 999));
+         } else if (isFailedStatus(response)) {
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/basic/DontBeEvilTestGwt.java b/restygwt/src/test/java/org/fusesource/restygwt/client/basic/DontBeEvilTestGwt.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..4680406a3a1052dc1db23fd7556dd7e7bd8575c3
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/client/basic/DontBeEvilTestGwt.java
+@@ -0,0 +1,76 @@
++/**
++ * Copyright (C) 2010 the original author or authors.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.basic;
++
++import org.fusesource.restygwt.client.Method;
++import org.fusesource.restygwt.client.MethodCallback;
++import org.fusesource.restygwt.client.Resource;
++import org.fusesource.restygwt.client.RestServiceProxy;
++import org.fusesource.restygwt.client.event.ModelChangeAnnotatedService;
++
++import com.google.gwt.core.client.GWT;
++import com.google.gwt.json.client.JSONArray;
++import com.google.gwt.json.client.JSONValue;
++import com.google.gwt.junit.client.GWTTestCase;
++
++/**
++ * @author <a href="mailto:andi.balke@gmail.com">andi</a>
++ */
++public class DontBeEvilTestGwt extends GWTTestCase {
++
++    /**
++     * fake response for the GET request (service.getItems)
++     */
++    private static final String responseGetBody = " <{([{id:1},{id:2},{id:3}]";
++
++    @Override
++    public String getModuleName() {
++        // load Event.gwt.xml with EchoServlet configured
++        return "org.fusesource.restygwt.Event";
++    }
++
++    public void testFilterWorks() {
++        /*
++         * setup the service, usually done in gin
++         */
++        Resource resource = new Resource(GWT.getModuleBaseURL());
++        final ModelChangeAnnotatedService service = GWT.create(ModelChangeAnnotatedService.class);
++        ((RestServiceProxy) service).setResource(resource);
++
++        service.getItems(responseGetBody, new MethodCallback<JSONValue>() {
++
++            @Override
++            public void onSuccess(Method method, JSONValue response) {
++                JSONArray jsonArray = response.isArray();
++
++                assertNotNull(jsonArray);
++
++                assertEquals(3, jsonArray.size());
++
++                // as we are here, although the response is invalid, all works well
++                finishTest();
++            }
++
++            @Override
++            public void onFailure(Method method, Throwable exception) {
++                fail("method failed: " + exception.getMessage());
++            }
++        });
++        // wait... we are in async testing...
++        delayTestFinish(10000);
++    }
++}
+\ No newline at end of file

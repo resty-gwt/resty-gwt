@@ -1,0 +1,54 @@
+diff --git a/restygwt/src/main/java/org/fusesource/restygwt/client/Method.java b/restygwt/src/main/java/org/fusesource/restygwt/client/Method.java
+index 82939f78138be37ffbfbacd69f24edea0d523326..e2f2f872e81da03d05d959c6f893278a70f8fd6c 100644
+--- a/restygwt/src/main/java/org/fusesource/restygwt/client/Method.java
++++ b/restygwt/src/main/java/org/fusesource/restygwt/client/Method.java
+@@ -57,12 +57,29 @@ public class Method {
+      * @author chirino
+      */
+     static private class MethodRequestBuilder extends RequestBuilder {
++
++        protected Map<String, String> duplicatedHeaders = new HashMap<String, String>();
++
+         public MethodRequestBuilder(String method, String url) {
+ 
+             super(method, url);
+ 
+             setHeader("X-HTTP-Method-Override", method);
+         }
++
++        @Override
++        public void setHeader(String header, String value) {
++            super.setHeader(header, value);
++            duplicatedHeaders.put(header, value);
++        }
++
++        /**
++         * Gets you the copy of the headers. Modifying this map wouldn't affect any request data.
++         */
++        public Map<String, String> getHeaders() {
++            return duplicatedHeaders;
++        }
++
+     }
+ 
+     public RequestBuilder builder;
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/GwtAnnotationResolverTestSuite.java b/restygwt/src/test/java/org/fusesource/restygwt/GwtAnnotationResolverTestSuite.java
+index bc16273953b326c055e9bd98a16f59144ba64507..42ea42b52ec4649acc30fd30dd3d03eb596f931d 100644
+--- a/restygwt/src/test/java/org/fusesource/restygwt/GwtAnnotationResolverTestSuite.java
++++ b/restygwt/src/test/java/org/fusesource/restygwt/GwtAnnotationResolverTestSuite.java
+@@ -21,6 +21,7 @@ package org.fusesource.restygwt;
+ import junit.framework.Test;
+ import junit.framework.TestCase;
+ 
++import org.fusesource.restygwt.client.cors.CORSAnnotationResolverTestGwt;
+ import org.fusesource.restygwt.client.event.ModelChangeAnnotationTestGwt;
+ import org.fusesource.restygwt.rebind.AnnotationResolver;
+ 
+@@ -42,6 +43,7 @@ public class GwtAnnotationResolverTestSuite extends TestCase {
+         GWTTestSuite suite = new GWTTestSuite("AnnotationResolver GwtTestCases" );
+ 
+         suite.addTestSuite(ModelChangeAnnotationTestGwt.class);
++        suite.addTestSuite(CORSAnnotationResolverTestGwt.class);
+ 
+         return suite;
+     }

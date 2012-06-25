@@ -1,0 +1,39 @@
+# This script updates the original resty-gwt and applies our very own patches.
+# It works as follows:
+#   1. revert the patches (if neccessary)
+#   2. git pull from resty-gwt
+#   3. apply patches
+#   4. add tag (to revert patch later on)
+#
+
+# fetch updates from the original resty-gwt
+git fetch chirino
+
+# switch to develop branch
+git checkout develop
+
+# revert patches
+echo "revert patches"
+git reset --hard 'before_devbliss_patch'
+git tag -d "before_devbliss_patch"
+
+# udpate develop
+git merge chirino/master
+git tag "before_devbliss_patch"
+echo "added tag 'before_devbliss_patch'"
+
+# apply patches
+echo "apply 'dont be evil' patch"
+git apply ~/Desktop/patches/0_dont_be_evil.patch
+git add .
+git commit -m "Don't be evil Patch"
+
+echo "apply 'interceptor' patch"
+git apply ~/Desktop/patches/1_interceptor.patch
+git add .
+git commit -m "interceptor patch"
+
+echo "apply 'cors' patch"
+git apply ~/Desktop/patches/2_cors.patch
+git add .
+git commit -m "Cors Patch"
