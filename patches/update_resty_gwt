@@ -13,11 +13,56 @@ git merge chirino/master
 git checkout develop
 git merge master
 
-git checkout patch_branch
-git rebase --onto patch_branch develop
+# udpate develop
+git merge chirino/master
+name=patched_$(date +%d.%m.%Y-%H%M%S)
+# create new branch
+git checkout -b $name
+
+###############
+# apply patches
+###############
+
+echo "
+####################
+apply 'dont be evil' patch
+####################
+"
+git apply patches/0_dont_be_evil.patch || echo "applying patch failed"
+git add .
+git commit -m "Don't be evil Patch"
+
+echo "
+####################
+apply 'interceptor' patch
+####################
+"
+git apply patches/1_interceptor.patch || echo "applying patch failed"
+git add .
+git commit -m "interceptor patch"
+
+echo "
+####################
+apply 'cors' patch
+####################
+"
+git apply patches/2_cors.patch || echo "applying patch failed"
+git add .
+git commit -m "Cors Patch"
 
 
-
-#git push patch_branch
+echo "
+####################
+mvn install
+####################
+"
+mvn install
+git push origin $name
+echo "
+####################
+install successfull
+-> published branch $name
+####################
+"
 # switch back to develop
-#git checkout develop
+git checkout develop
