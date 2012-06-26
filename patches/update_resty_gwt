@@ -50,6 +50,14 @@ git apply patches/2_cors.patch || echo "applying patch failed"
 git add .
 git commit -m "Cors Patch"
 
+echo "
+####################
+apply 'safe-html' patch
+####################
+"
+git apply patches/3_safe_html.patch || echo "applying patch failed"
+git add .
+git commit -m "SafeHtml Patch"
 
 echo "
 ####################
