@@ -65,7 +65,7 @@ mvn install
 ####################
 "
 mvn install
-git push origin $name
+#git push origin $name
 echo "
 ####################
 install successfull
@@ -73,4 +73,4 @@ install successfull
 ####################
 "
 # switch back to develop
-git checkout develop
+#git checkout develop

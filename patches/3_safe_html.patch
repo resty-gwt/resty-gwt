@@ -47,19 +47,6 @@ index d5ecfb1b9adcee31e6ff5bd3c6689114379329f8..1139f82f3be25e557c199ffa4d827f53
      public static final AbstractJsonEncoderDecoder<Character> CHAR = new AbstractJsonEncoderDecoder<Character>() {
  
          public Character decode(JSONValue value) throws DecodingException {
-diff --git a/restygwt/src/main/java/org/fusesource/restygwt/rebind/BaseSourceCreator.java b/restygwt/src/main/java/org/fusesource/restygwt/rebind/BaseSourceCreator.java
-index 52d0abce12d9161faff189c74f8653bf90f76b31..7b5379a48a094cba65937849caf45d21eb305bf7 100644
---- a/restygwt/src/main/java/org/fusesource/restygwt/rebind/BaseSourceCreator.java
-+++ b/restygwt/src/main/java/org/fusesource/restygwt/rebind/BaseSourceCreator.java
-@@ -169,7 +169,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
-     protected BaseSourceCreator p(String value) {
-         this.sourceWriter.println(value);
- 
--        // System.out.println(value);
-+        System.out.println(value);
-         return this;
-     }
- 
 diff --git a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java b/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
 index cf150367f060a0d60a32228ddad7f7e1449894dd..756ce1de6ce12da00779df088597f0b8811d5670 100644
 --- a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
@@ -108,9 +95,7 @@ index cf150367f060a0d60a32228ddad7f7e1449894dd..756ce1de6ce12da00779df088597f0b8
 +        			    i(-1).p("}");
 +
 +                        if (!field.getType().equals(locator.SAFE_HTML_TYPE)) {
-+//                            if (field.getType().isPrimitive() == null) {
-+                                i(-1).p("}");
-+//                            }
++                            i(-1).p("}");
 +                        }
 +
  
