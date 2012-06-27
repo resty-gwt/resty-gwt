@@ -1,3 +1,4 @@
+#!/bin/sh
 # This script updates the original resty-gwt and applies our very own patches.
 
 # stop the script on error
