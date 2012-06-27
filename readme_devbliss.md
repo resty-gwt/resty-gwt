@@ -34,17 +34,9 @@ When everything looks fine, then continue with
 ## Features
 So far we created four feature patches. 
 
-### Feature 1: SafeHtml
+##### IMPORTANT: The patches have to be applied in same order they are listed in this readme.
 
-File: patches/3\_safe_html.patch
-
-SafeHtml can be used to avoid the execution of scripts by escaping the "evil" characters.
-Since we have a lot of user-generated content which comes from an "untrusted" backend we wanted
-to provide an easy and safe way for the frontend developers to avoid cross-site-scripting (XSS).
-Therefore we added the functionality to have SafeHtml-Types in ours dtos, which will be encoded/decoded correctly.
-
-
-### Feature 2: Don't Be Evil
+### Feature 1: Don't Be Evil
 
 File: patches/0\_dont\_be_evil.patch
 
@@ -55,16 +47,26 @@ For further information read this very nice discussion on StackOverflow
 (http://stackoverflow.com/questions/2669690/why-does-google-append-while1-in-front-of-their-json-responses).
 
 
-### Feature 3: Json Raw Decoder Interceptor
+### Feature 2: Json Raw Decoder Interceptor
 
 File: patches/1\_interceptor.patch
 
 This feature allows us to process the json responses BEFORE they are encoded/decoded via a annotation and a given interceptor.
 
 
-### Feature 4: CORS
+### Feature 3: CORS
 
 File: patches/2\_cors.patch
 
 Resty-GWT does not provide an easy way to make single SSL calls. So we wrote this little enhancement.
+
+### Feature 4: SafeHtml
+
+File: patches/3\_safe_html.patch
+
+SafeHtml can be used to avoid the execution of scripts by escaping the "evil" characters.
+Since we have a lot of user-generated content which comes from an "untrusted" backend we wanted
+to provide an easy and safe way for the frontend developers to avoid cross-site-scripting (XSS).
+Therefore we added the functionality to have SafeHtml-Types in ours dtos, which will be encoded/decoded correctly.
+
 
