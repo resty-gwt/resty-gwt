@@ -12,6 +12,7 @@ UPSTREAM_REPO_NAME=chirino
 UPSTREAM_REPO=https://github.com/${UPSTREAM_REPO_NAME}/resty-gwt.git
 
 git remote show | grep -q $UPSTREAM_REPO_NAME || {
+    echo "> repository remote '$UPSTREAM_REPO_NAME' not found, we're adding it!"
     git remote add $UPSTREAM_REPO_NAME $UPSTREAM_REPO;
 }
 
@@ -35,7 +36,7 @@ echo
 echo "####################"
 echo "apply 'dont be evil' patch"
 echo "####################"
-git apply patches/0_dont_be_evil.patch || echo "applying patch failed"
+git apply --whitespace=fix --ignore-whitespace patches/0_dont_be_evil.patch || echo "applying patch failed"
 git add .
 git commit -m "Don't be evil Patch"
 
@@ -43,7 +44,7 @@ echo
 echo "####################"
 echo "apply 'interceptor' patch"
 echo "####################"
-git apply patches/1_interceptor.patch || echo "applying patch failed"
+git apply --whitespace=fix --ignore-whitespace patches/1_interceptor.patch || echo "applying patch failed"
 git add .
 git commit -m "interceptor patch"
 
@@ -51,7 +52,7 @@ echo
 echo "####################"
 echo "apply 'cors' patch"
 echo "####################"
-git apply patches/2_cors.patch || echo "applying patch failed"
+git apply --whitespace=fix --ignore-whitespace patches/2_cors.patch || echo "applying patch failed"
 git add .
 git commit -m "Cors Patch"
 
@@ -59,7 +60,7 @@ echo
 echo "####################"
 echo "apply 'safe-html' patch"
 echo "####################"
-git apply patches/3_safe_html.patch || echo "applying patch failed"
+git apply --whitespace=fix --ignore-whitespace patches/3_safe_html.patch || echo "applying patch failed"
 git add .
 git commit -m "SafeHtml Patch"
 
