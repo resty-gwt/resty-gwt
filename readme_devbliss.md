@@ -10,7 +10,7 @@ This repository has two major branches (master & develop respectively) and 'n' m
  * The master branch is the copy of original chirino repo and should be kept up-to-date. 
  * The develop branch has a directory "patches" which contains the patches (quelle surprise?) and 
 a script for the update process. 
- * The 'n' branches were hopefully created by the update script and will probably are named like "patch_YEARMONTHDAY_TIME". Whenever the chirino/master was updated by some commit a new devbliss resty-gwt version with our feature patches should be build.
+ * The 'n' branches were hopefully created by the update script and will probably are named like "patch_YYYYMMDD_HHMMSS". Whenever the chirino/master was updated by some commit a new devbliss resty-gwt version with our feature patches should be build.
 
 
 ## Preparation 
