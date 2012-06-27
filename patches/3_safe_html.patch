@@ -51,7 +51,7 @@ diff --git a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDe
 index cf150367f060a0d60a32228ddad7f7e1449894dd..756ce1de6ce12da00779df088597f0b8811d5670 100644
 --- a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
 +++ b/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
-@@ -461,27 +461,35 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
+@@ -461,27 +461,33 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
          			    String expression = locator.decodeExpression(field.getType(), objectGetter, style);
      
          			    p("if(" + objectGetter + " != null) {").i(1);
