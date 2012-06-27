@@ -75,7 +75,7 @@ index cf150367f060a0d60a32228ddad7f7e1449894dd..756ce1de6ce12da00779df088597f0b8
 -        			    i(-1).p("}");    
 -        			    i(-1).p("}");    
 +                            if (!field.getType().equals(locator.SAFE_HTML_TYPE)) {
-+        				        p("if(" + objectGetter + " instanceof com.google.gwt.json.client.JSONNull) {").i(1);
++                               p("if(" + objectGetter + " instanceof com.google.gwt.json.client.JSONNull) {").i(1);
 +                                    String defaultValue = field.getType().isPrimitive() == null ? "null": field.getType().isPrimitive().getUninitializedFieldExpression() + "";
 +
 +                                    if (setterName != null) {
@@ -83,8 +83,8 @@ index cf150367f060a0d60a32228ddad7f7e1449894dd..756ce1de6ce12da00779df088597f0b8
 +                                    } else {
 +                                        p("rc." + name + "=" + defaultValue + ";");
 +                                    }
-+    
-+        				        i(-1).p("} else {").i(1);
++
++                               i(-1).p("} else {").i(1);
 +                            }
 +
 +                            if (setterName != null) {
@@ -92,7 +92,7 @@ index cf150367f060a0d60a32228ddad7f7e1449894dd..756ce1de6ce12da00779df088597f0b8
 +                            } else {
 +                                p("rc." + name + "=" + expression + ";");
 +                            }
-+        			    i(-1).p("}");
++                        i(-1).p("}");
 +
 +                        if (!field.getType().equals(locator.SAFE_HTML_TYPE)) {
 +                            i(-1).p("}");
@@ -172,7 +172,7 @@ index 04e3de47a0e755187481d3748d30e654f3de8ef2..6c543b3532974d65e9625d76afb2fa7c
 -
  /**
 - *
-+ * 
++ *
   * <p>
   * <ul>
   * <li>Add GWTTestCases here</li>
@@ -181,7 +181,7 @@ index 04e3de47a0e755187481d3748d30e654f3de8ef2..6c543b3532974d65e9625d76afb2fa7c
 + * docu</a></li>
   * </ul>
 - *
-+ * 
++ *
   * IMPORTANT: Naming convention
   * <ul>
   * <li>Fast Junit Tests: end with "Test". Correct example: MyTest.java</li>
@@ -191,7 +191,7 @@ index 04e3de47a0e755187481d3748d30e654f3de8ef2..6c543b3532974d65e9625d76afb2fa7c
   * </ul>
   * </p>
 - *
-+ * 
++ *
   * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
   */
  public class GwtCompleteTestSuite extends TestCase {
