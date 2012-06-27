@@ -14,13 +14,12 @@ a script for the update process.
 
 
 ## Preparation 
-        git clone git@github.com:devbliss/resty-gwt.git
-        git remote add chirino https://github.com/chirino/resty-gwt.git
+    git clone git@github.com:devbliss/resty-gwt.git
 
 ## Update Process to build & deploy a new resty-gwt version
 
-        cd your/path/to/resty-gwt
-        patches/update_resty_gwt
+    cd resty-gwt
+    patches/update_resty_gwt.sh
 
 When everything looks fine, then continue with
 
