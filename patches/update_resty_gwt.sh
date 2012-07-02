@@ -22,7 +22,8 @@ git checkout master
 git fetch $UPSTREAM_REPO_NAME
 git merge $UPSTREAM_REPO_NAME/master
 
-NAME=patched_$(date +%Y%m%d-%H%M%S)
+DATE=$(date +%Y%m%d-%H%M%S)
+NAME=patched_${DATE}
 
 # create new branch
 git checkout -b $NAME
@@ -31,6 +32,12 @@ git checkout -b $NAME
 ###############
 # apply patches
 ###############
+
+echo
+echo "####################"
+echo "patching versions: SNAPSHOT -> SNAPSHOT_DEVBLISS-${DATE}"
+echo "####################"
+grep -lr SNAPSHOT .|grep -v .git|while read f; do echo "$f"; sed -i "" "s/SNAPSHOT/SNAPSHOT_DEVBLISS-${DATE}/g" "$f"; done
 
 echo
 echo "####################"
@@ -69,15 +76,17 @@ echo "####################"
 echo "mvn install"
 echo "####################"
 mvn install
-#git push origin $name
 
 echo
 echo "####################"
-echo "install successfull"
-echo "-> published branch $NAME"
+echo "-> publish branch $NAME"
 echo "####################"
-# switch back to develop
-#git checkout develop
+git push origin $NAME
+
+echo
+echo "#######################"
+echo "= install successfull ="
+echo "#######################"
 
 # jump back to previous directory
 cd $OLDPWD
