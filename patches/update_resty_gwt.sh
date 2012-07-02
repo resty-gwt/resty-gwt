@@ -37,7 +37,13 @@ echo
 echo "####################"
 echo "patching versions: SNAPSHOT -> SNAPSHOT_DEVBLISS-${DATE}"
 echo "####################"
-grep -lr SNAPSHOT .|grep -v .git|while read f; do echo "$f"; sed -i "" "s/SNAPSHOT/SNAPSHOT-DEVBLISS-${DATE}/g" "$f"; done
+grep -lr SNAPSHOT . |\
+    grep -v .git |\
+    grep -v "/patches" |\
+    while read f; do
+        echo "$f";
+        sed -i "" "s/SNAPSHOT/SNAPSHOT-DEVBLISS-${DATE}/g" "$f";
+        done
 
 echo
 echo "####################"
