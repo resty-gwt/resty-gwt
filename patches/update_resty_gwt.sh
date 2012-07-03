@@ -43,7 +43,7 @@ grep -lr SNAPSHOT . |\
     grep -v "/patches" |\
     while read f; do
         echo "$f";
-        sed -i "" "s/SNAPSHOT/DEVBLISS-${DATE}/g" "$f";
+        sed -i "" "s/SNAPSHOT/DEVBLISS-${DATE}-SNAPSHOT/g" "$f";
         done
 
 echo
