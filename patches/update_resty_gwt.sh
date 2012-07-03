@@ -22,8 +22,9 @@ git checkout master
 git fetch $UPSTREAM_REPO_NAME
 git merge $UPSTREAM_REPO_NAME/master
 
-DATE=$(date +%Y%m%d-%H%M%S)
-NAME=patched_${DATE}
+DATE=$(date +%Y%m%d)
+TIME=$(date +%H%M%S)
+NAME=patched_${DATE}-${TIME}
 
 # create new branch
 git checkout -b $NAME
@@ -35,14 +36,14 @@ git checkout -b $NAME
 
 echo
 echo "####################"
-echo "patching versions: SNAPSHOT -> SNAPSHOT_DEVBLISS-${DATE}"
+echo "patching versions: SNAPSHOT -> DEVBLISS-${DATE}"
 echo "####################"
 grep -lr SNAPSHOT . |\
     grep -v .git |\
     grep -v "/patches" |\
     while read f; do
         echo "$f";
-        sed -i "" "s/SNAPSHOT/SNAPSHOT-DEVBLISS-${DATE}/g" "$f";
+        sed -i "" "s/SNAPSHOT/DEVBLISS-${DATE}/g" "$f";
         done
 
 echo
