@@ -138,7 +138,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
 //            builder.setHeader("X-Testing", "Bude");
 
             builder.setCallback(callbackFactory.createCallback(method));
-            return true;
+            return true;// continue filtering
         }
     }
 }
