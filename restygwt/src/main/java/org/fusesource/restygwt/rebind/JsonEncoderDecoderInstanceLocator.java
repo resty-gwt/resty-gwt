@@ -39,6 +39,7 @@ import org.fusesource.restygwt.client.Json.Style;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.typeinfo.JArrayType;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
@@ -127,27 +128,23 @@ public class JsonEncoderDecoderInstanceLocator {
     }
 
     public String encodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
-        return encodeDecodeExpression(type, expression, style, "encode", JSON_ENCODER_DECODER_CLASS + ".toJSON",
-                JSON_ENCODER_DECODER_CLASS + ".toJSON", JSON_ENCODER_DECODER_CLASS + ".toJSON");
+        return encodeDecodeExpression(type, expression, style, "encode", JSON_ENCODER_DECODER_CLASS + ".toJSON", JSON_ENCODER_DECODER_CLASS + ".toJSON", JSON_ENCODER_DECODER_CLASS
+                + ".toJSON", JSON_ENCODER_DECODER_CLASS + ".toJSON");
     }
 
     public String decodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
-        return encodeDecodeExpression(type, expression, style, "decode", JSON_ENCODER_DECODER_CLASS + ".toMap",
-                JSON_ENCODER_DECODER_CLASS + ".toSet", JSON_ENCODER_DECODER_CLASS + ".toList");
+        return encodeDecodeExpression(type, expression, style, "decode", JSON_ENCODER_DECODER_CLASS + ".toMap", JSON_ENCODER_DECODER_CLASS + ".toSet", JSON_ENCODER_DECODER_CLASS
+                + ".toList", JSON_ENCODER_DECODER_CLASS + ".toArray");
     }
 
-    private String encodeDecodeExpression(JType type, String expression, Style style, String encoderMethod,
-            String mapMethod, String setMethod, String listMethod) throws UnableToCompleteException {
+    private String encodeDecodeExpression(JType type, String expression, Style style, String encoderMethod, String mapMethod, String setMethod, String listMethod, String arrayMethod)
+            throws UnableToCompleteException {
 
         if (null != type.isEnum()) {
             if (encoderMethod.equals("encode")) {
-                return encodeDecodeExpression(STRING_TYPE, expression + ".name()", style, encoderMethod, mapMethod,
-                        setMethod, listMethod);
+                return encodeDecodeExpression(STRING_TYPE, expression + ".name()", style, encoderMethod, mapMethod, setMethod, listMethod, arrayMethod);
             } else {
-                return type.getQualifiedSourceName()
-                        + ".valueOf("
-                        + encodeDecodeExpression(STRING_TYPE, expression, style, encoderMethod, mapMethod, setMethod,
-                                listMethod) + ")";
+                return type.getQualifiedSourceName() + ".valueOf(" + encodeDecodeExpression(STRING_TYPE, expression, style, encoderMethod, mapMethod, setMethod, listMethod, arrayMethod) + ")";
             }
         }
 
@@ -200,6 +197,24 @@ public class JsonEncoderDecoderInstanceLocator {
                 info("type encoder for: " + types[0] + " is " + encoderDecoder);
                 if (encoderDecoder != null) {
                     return listMethod + "(" + expression + ", " + encoderDecoder + ")";
+                }
+            }
+        } else if (type.isArray() != null) {
+            JType componentType = type.isArray().getComponentType();
+            
+            if (componentType.isArray() != null) {
+                error("Multi-dimensional arrays are not yet supported");
+            }
+            
+            encoderDecoder = getEncoderDecoder(componentType, logger);
+            info("type encoder for: " + componentType + " is " + encoderDecoder);
+            if (encoderDecoder != null) {
+                if (encoderMethod.equals("encode")) {
+                    return arrayMethod + "(" + expression + ", " + encoderDecoder + ")";
+                } else {
+                    return arrayMethod + "(" + expression + ", " + encoderDecoder
+                            + ", new " + componentType.getQualifiedSourceName()
+                            + "[" + JSON_ENCODER_DECODER_CLASS + ".getSize(" + expression + ")])";
                 }
             }
         }

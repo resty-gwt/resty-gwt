@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
@@ -285,8 +286,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     
         	    // If can ignore some fields right off the back..
         	    // if there is a creator encode only final fields with JsonProperty annotation
-        	    if (getterName == null && (field.isStatic() || (field.isFinal() && !(creator != null && orderedFields.contains(field))) || field.isTransient())) {
-        		continue;
+        	    if (getterName == null && (field.isStatic() || (field.isFinal() && !(creator != null && orderedFields.contains(field))) || field.isTransient() 
+        	            || field.isAnnotationPresent(JsonIgnore.class))) {
+        	        continue;
         	    }
     
         	    branch("Processing field: " + field.getName(), new Branch<Void>() {
@@ -436,7 +438,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         		final String setterName = getSetterName(field);
     
         		// If can ignore some fields right off the back..
-        		if (setterName == null && (field.isStatic() || field.isFinal() || field.isTransient())) {
+        		if (setterName == null && (field.isStatic() || field.isFinal() || field.isTransient()) || 
+        		        field.isAnnotationPresent(JsonIgnore.class)) {
         		    continue;
         		}
     
@@ -656,14 +659,14 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
      * @return
      */
     private List<JField> getFields(JClassType type) {
-	return getFields(new ArrayList<JField>(), type);
+    return getFields(new ArrayList<JField>(), type);
     }
 
     private List<JField> getFields(List<JField> allFields, JClassType type) {
 	JField[] fields = type.getFields();
 	for (JField field : fields) {
-	    if (!field.isTransient()) {
-		allFields.add(field);
+	    if (!field.isTransient() && !field.isAnnotationPresent(JsonIgnore.class)) {
+	        allFields.add(field);
 	    }
 	}
 	try {
