@@ -119,8 +119,7 @@ public class CachingCallbackFilter implements CallbackFilter {
             }
         }
 
-        if (code < Response.SC_MULTIPLE_CHOICES // code < 300
-                && code >= Response.SC_OK) { // code >= 200
+        if (isCachingStatusCode(code)) { 
             cacheResult(method, response);
             return callback;
         }
@@ -130,6 +129,11 @@ public class CachingCallbackFilter implements CallbackFilter {
                     .info("cannot cache due to invalid response code: " + code);
         }
         return callback;
+    }
+
+    protected boolean isCachingStatusCode(final int code) {
+        return code < Response.SC_MULTIPLE_CHOICES // code < 300
+                && code >= Response.SC_OK; // code >= 200
     }
 
     protected CacheKey cacheKey(final RequestBuilder builder) {
