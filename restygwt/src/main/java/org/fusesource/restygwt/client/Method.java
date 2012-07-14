@@ -57,12 +57,29 @@ public class Method {
      * @author chirino
      */
     static private class MethodRequestBuilder extends RequestBuilder {
+
+        protected Map<String, String> duplicatedHeaders = new HashMap<String, String>();
+
         public MethodRequestBuilder(String method, String url) {
 
             super(method, url);
 
             setHeader("X-HTTP-Method-Override", method);
         }
+
+        @Override
+        public void setHeader(String header, String value) {
+            super.setHeader(header, value);
+            duplicatedHeaders.put(header, value);
+        }
+
+        /**
+         * Gets you the copy of the headers. Modifying this map wouldn't affect any request data.
+         */
+        public Map<String, String> getHeaders() {
+            return duplicatedHeaders;
+        }
+
     }
 
     public RequestBuilder builder;
