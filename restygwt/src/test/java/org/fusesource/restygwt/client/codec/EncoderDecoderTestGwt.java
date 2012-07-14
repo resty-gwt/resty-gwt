@@ -377,4 +377,42 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
                 Arrays.toString(AbstractJsonEncoderDecoder.toArray(AbstractJsonEncoderDecoder.toJSON(array, encoder), 
                             encoder, new String[4])));
     }
+
+    static class CCC {
+        
+        @JsonIgnore
+        private String lastName;
+        
+        String name;
+        
+        @JsonIgnore
+        String firstName;
+        
+        String getLastName(){
+            return lastName;
+        }
+        
+        void setLastName(String name){
+            lastName = name;
+        }
+    }
+
+    static interface CCCCodec extends JsonEncoderDecoder<CCC> {
+    }
+
+    public void testIgnores() {
+        CCCCodec cccc = GWT.create(CCCCodec.class);
+        CCC ccc = new CCC();
+        ccc.name = "me and the corner";
+        ccc.firstName = "chaos";
+        
+        JSONValue json = cccc.encode(ccc);
+        System.err.println("\n\n\n\n\n\n" + json + "\n\n\n\n\n\n");
+        assertEquals("{\"name\":\"me and the corner\"}", json.toString());
+        CCC roundTrip = cccc.decode(json);
+        assertEquals(ccc.name, roundTrip.name);
+        assertNull(roundTrip.firstName);
+        assertNull(roundTrip.getLastName());
+    }
+
 }
