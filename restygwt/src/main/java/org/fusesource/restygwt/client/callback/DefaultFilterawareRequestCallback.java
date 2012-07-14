@@ -46,6 +46,14 @@ public class DefaultFilterawareRequestCallback extends AbstractNestedRequestCall
         requestCallback.onResponseReceived(request, response);
     }
 
+    @Override
+    protected void doError(Request request, Response response){
+        for (CallbackFilter f : callbackFilters) {
+            requestCallback = f.filter(method, response, requestCallback);
+        }
+        super.doError(request, response);
+    }
+
     /**
      * put a filter in the "chain of responsibility" of all callbackfilters that will be
      * performed on callback passing.
