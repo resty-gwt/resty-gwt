@@ -21,6 +21,7 @@ package org.fusesource.restygwt;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import org.fusesource.restygwt.client.cors.CORSAnnotationResolverTestGwt;
 import org.fusesource.restygwt.client.event.ModelChangeAnnotationTestGwt;
 import org.fusesource.restygwt.rebind.AnnotationResolver;
 
@@ -42,6 +43,7 @@ public class GwtAnnotationResolverTestSuite extends TestCase {
         GWTTestSuite suite = new GWTTestSuite("AnnotationResolver GwtTestCases" );
 
         suite.addTestSuite(ModelChangeAnnotationTestGwt.class);
+        suite.addTestSuite(CORSAnnotationResolverTestGwt.class);
 
         return suite;
     }
