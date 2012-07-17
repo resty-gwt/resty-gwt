@@ -1,0 +1,638 @@
+diff --git a/restygwt/src/main/java/org/fusesource/restygwt/client/Method.java b/restygwt/src/main/java/org/fusesource/restygwt/client/Method.java
+index 82939f78138be37ffbfbacd69f24edea0d523326..e2f2f872e81da03d05d959c6f893278a70f8fd6c 100644
+--- a/restygwt/src/main/java/org/fusesource/restygwt/client/Method.java
++++ b/restygwt/src/main/java/org/fusesource/restygwt/client/Method.java
+@@ -57,12 +57,29 @@ public class Method {
+      * @author chirino
+      */
+     static private class MethodRequestBuilder extends RequestBuilder {
++
++        protected Map<String, String> duplicatedHeaders = new HashMap<String, String>();
++
+         public MethodRequestBuilder(String method, String url) {
+ 
+             super(method, url);
+ 
+             setHeader("X-HTTP-Method-Override", method);
+         }
++
++        @Override
++        public void setHeader(String header, String value) {
++            super.setHeader(header, value);
++            duplicatedHeaders.put(header, value);
++        }
++
++        /**
++         * Gets you the copy of the headers. Modifying this map wouldn't affect any request data.
++         */
++        public Map<String, String> getHeaders() {
++            return duplicatedHeaders;
++        }
++
+     }
+ 
+     public RequestBuilder builder;
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/GwtAnnotationResolverTestSuite.java b/restygwt/src/test/java/org/fusesource/restygwt/GwtAnnotationResolverTestSuite.java
+index bc16273953b326c055e9bd98a16f59144ba64507..42ea42b52ec4649acc30fd30dd3d03eb596f931d 100644
+--- a/restygwt/src/test/java/org/fusesource/restygwt/GwtAnnotationResolverTestSuite.java
++++ b/restygwt/src/test/java/org/fusesource/restygwt/GwtAnnotationResolverTestSuite.java
+@@ -21,6 +21,7 @@ package org.fusesource.restygwt;
+ import junit.framework.Test;
+ import junit.framework.TestCase;
+ 
++import org.fusesource.restygwt.client.cors.CORSAnnotationResolverTestGwt;
+ import org.fusesource.restygwt.client.event.ModelChangeAnnotationTestGwt;
+ import org.fusesource.restygwt.rebind.AnnotationResolver;
+ 
+@@ -42,6 +43,7 @@ public class GwtAnnotationResolverTestSuite extends TestCase {
+         GWTTestSuite suite = new GWTTestSuite("AnnotationResolver GwtTestCases" );
+ 
+         suite.addTestSuite(ModelChangeAnnotationTestGwt.class);
++        suite.addTestSuite(CORSAnnotationResolverTestGwt.class);
+ 
+         return suite;
+     }
+
+diff --git a/restygwt/src/main/java/org/fusesource/restygwt/client/cors/CORS.java b/restygwt/src/main/java/org/fusesource/restygwt/client/cors/CORS.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..426ac87ee59cfe9414a77af83ffb6ddbce4e3b0b
+--- /dev/null
++++ b/restygwt/src/main/java/org/fusesource/restygwt/client/cors/CORS.java
+@@ -0,0 +1,57 @@
++/**
++ * Copyright (C) 2009-2010 the original author or authors.
++ * See the notice.md file distributed with this work for additional
++ * information regarding copyright ownership.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.cors;
++
++import java.lang.annotation.Documented;
++import java.lang.annotation.ElementType;
++import java.lang.annotation.Retention;
++import java.lang.annotation.RetentionPolicy;
++import java.lang.annotation.Target;
++
++/**
++ * Signals that another domain should be used for requests.
++ *
++ * You can apply the annotation at class-level or at method-level.
++ * Method-level annotations override class-level (general) settings.
++ */
++@Target({ElementType.METHOD, ElementType.TYPE})
++@Retention(RetentionPolicy.RUNTIME)
++@Documented
++public @interface CORS {
++
++    public static final String PROTOCOL = "cors_protocol";
++    public static final String PORT = "cors_port";
++    public static final String DOMAIN = "cors_domain";
++
++    /**
++     * The port, defaults to an empty string.
++     */
++    String port() default "";
++
++    /**
++     * The protocol, defaults to an empty string.
++     */
++    String protocol() default "";
++
++    /**
++     * The domain you want to access.
++     */
++    String domain();
++
++}
+diff --git a/restygwt/src/main/java/org/fusesource/restygwt/rebind/CORSAnnotationResolver.java b/restygwt/src/main/java/org/fusesource/restygwt/rebind/CORSAnnotationResolver.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..67b514dc39de992eaa5f81ec535f021aed871d27
+--- /dev/null
++++ b/restygwt/src/main/java/org/fusesource/restygwt/rebind/CORSAnnotationResolver.java
+@@ -0,0 +1,104 @@
++/**
++ * Copyright (C) 2009-2010 the original author or authors.
++ * See the notice.md file distributed with this work for additional
++ * information regarding copyright ownership.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.rebind;
++
++import java.util.HashMap;
++import java.util.Map;
++
++import org.fusesource.restygwt.client.cors.CORS;
++
++import com.google.gwt.core.ext.TreeLogger;
++import com.google.gwt.core.ext.UnableToCompleteException;
++import com.google.gwt.core.ext.typeinfo.JClassType;
++import com.google.gwt.core.ext.typeinfo.JMethod;
++
++/**
++ * A {@link AnnotationResolver} that specially applies to the {@link CORS} annotation.
++ */
++public class CORSAnnotationResolver implements AnnotationResolver {
++
++    /***
++     * Looks for {@link CORS} annotations at class- and method level.
++     */
++    @Override
++    public Map<String, String[]> resolveAnnotation(TreeLogger logger, JClassType jClass,
++            JMethod method, final String restMethod) throws UnableToCompleteException {
++        // get both the method and class annotations
++        CORS classAnnotation = jClass.getAnnotation(CORS.class);
++        CORS methodAnnotation = method.getAnnotation(CORS.class);
++        Map<String, String[]> results = new HashMap<String, String[]>();
++        String protocolValue = null;
++        String portValue = null;
++
++        // only do something if a CORS annotation is present
++        if (methodAnnotation != null || classAnnotation != null) {
++            // if there is a class-level annotation ...
++            if (classAnnotation != null) {
++                // ... assign a domain attribute
++                results.put(CORS.DOMAIN, new String[] {classAnnotation.domain()});
++
++                // ... get the protocol and port
++                if (!isNullOrEmpty(classAnnotation.protocol())) {
++                    protocolValue = classAnnotation.protocol();
++                }
++                if (!isNullOrEmpty(classAnnotation.port())) {
++                    portValue = classAnnotation.port();
++                }
++            }
++
++            // if there is a method level annotation ...
++            if (methodAnnotation != null) {
++                // ... override the domain may set at class level
++                results.put(CORS.DOMAIN, new String[] {methodAnnotation.domain()});
++
++                // ... get the protocol and port
++                if (!isNullOrEmpty(methodAnnotation.protocol())) {
++                    protocolValue = methodAnnotation.protocol();
++                }
++                if (!isNullOrEmpty(methodAnnotation.port())) {
++                    portValue = methodAnnotation.port();
++                }
++            }
++
++            // if no value is set ... assign the default one
++            if (protocolValue == null) {
++                results.put(CORS.PROTOCOL, new String[] {""});
++            } else {
++                results.put(CORS.PROTOCOL, new String[] {protocolValue});
++            }
++
++            // if no value is set ... assign the default one
++            if (portValue == null) {
++                results.put(CORS.PORT, new String[] {""});
++            } else {
++                results.put(CORS.PORT, new String[] {portValue});
++            }
++        }
++
++        return results;
++    }
++
++    /***
++     * Checks if the specified string is either null o r has a length of zero.
++     */
++    protected boolean isNullOrEmpty(String str) {
++        return str == null || str.trim().length() == 0;
++    }
++
++}
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/Event.gwt.xml b/restygwt/src/test/java/org/fusesource/restygwt/Event.gwt.xml
+index 6aa6cf71dbd411af9f83d045af1b9f759d8b8626..d0a38a8fcc255fa52eeb59509515270c261008e8 100644
+--- a/restygwt/src/test/java/org/fusesource/restygwt/Event.gwt.xml
++++ b/restygwt/src/test/java/org/fusesource/restygwt/Event.gwt.xml
+@@ -47,7 +47,10 @@
+ 
+     <extend-configuration-property name="org.fusesource.restygwt.annotationresolver"
+             value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
++    <extend-configuration-property name="org.fusesource.restygwt.annotationresolver"
++            value="org.fusesource.restygwt.rebind.CORSAnnotationResolver"/>
+ 
++    <servlet path='/my/*' class='org.fusesource.restygwt.server.event.EchoServlet' />
+     <servlet path='/foo/*' class='org.fusesource.restygwt.server.event.EchoServlet' />
+     <servlet path='/responseInterceptorDto/*' class='org.fusesource.restygwt.server.event.EchoServlet' />
+ 
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/cors/CORSAnnotationResolverTestGwt.java b/restygwt/src/test/java/org/fusesource/restygwt/client/cors/CORSAnnotationResolverTestGwt.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..a134dc975c57e5ee808c2226659c644160b41c25
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/client/cors/CORSAnnotationResolverTestGwt.java
+@@ -0,0 +1,235 @@
++/**
++ * Copyright (C) 2010 the original author or authors.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.cors;
++
++import org.fusesource.restygwt.client.Method;
++import org.fusesource.restygwt.client.MethodCallback;
++import org.fusesource.restygwt.client.Resource;
++import org.fusesource.restygwt.client.RestServiceProxy;
++
++import com.google.gwt.core.client.GWT;
++import com.google.gwt.junit.client.GWTTestCase;
++
++/**
++ * testcase for checking the data attribute of the method object.
++ */
++public class CORSAnnotationResolverTestGwt extends GWTTestCase {
++
++    @Override
++    public String getModuleName() {
++        return "org.fusesource.restygwt.Event";
++    }
++
++    public void testBasicFunctionality_ClassLevel1() {
++        CORSServiceClassLevelOnly service = null;
++
++        try {
++            Resource resource = new Resource(GWT.getModuleBaseURL());
++            service = GWT.create(CORSServiceClassLevelOnly.class);
++            ((RestServiceProxy) service).setResource(resource);
++            assertNotNull(service);
++        } catch (Exception e) {
++            e.printStackTrace();
++            fail("failed to generate CORSServiceClassLevelOnly");
++        }
++
++        delayTestFinish(1000);
++        // the request going nowhere, we merely want any response, so we can check for the data in the method object
++        service.getExampleDto(new MethodCallback<Void>() {
++
++            @Override
++            public void onSuccess(Method method, Void response) {
++                assertEquals("[\"api.host.com\"]", method.getData().get(CORS.DOMAIN));
++                assertEquals("[\"https\"]", method.getData().get(CORS.PROTOCOL));
++                assertEquals("[\"\"]", method.getData().get(CORS.PORT));
++                finishTest();
++            }
++
++            @Override
++            public void onFailure(Method method, Throwable exception) {
++                fail();
++            }
++
++        });
++    }
++
++    public void testBasicFunctionality_ClassLevel2() {
++        CORSServiceClassLevelOnly service = null;
++
++        try {
++            Resource resource = new Resource(GWT.getModuleBaseURL());
++            service = GWT.create(CORSServiceClassLevelOnly.class);
++            ((RestServiceProxy) service).setResource(resource);
++            assertNotNull(service);
++        } catch (Exception e) {
++            e.printStackTrace();
++            fail("failed to generate CORSServiceClassLevelOnly");
++        }
++
++        delayTestFinish(1000);
++        // the request going nowhere, we merely want any response, so we can check for the data in the method object
++        service.postExample(new MethodCallback<Void>() {
++
++            @Override
++            public void onSuccess(Method method, Void response) {
++                assertEquals("[\"api.host.com\"]", method.getData().get(CORS.DOMAIN));
++                assertEquals("[\"https\"]", method.getData().get(CORS.PROTOCOL));
++                assertEquals("[\"\"]", method.getData().get(CORS.PORT));
++                finishTest();
++            }
++
++            @Override
++            public void onFailure(Method method, Throwable exception) {
++                fail();
++            }
++
++        });
++    }
++
++    public void testBasicFunctionality_MethodLeve1() {
++        CORSServiceMethodLevelOnly service = null;
++
++        try {
++            Resource resource = new Resource(GWT.getModuleBaseURL());
++            service = GWT.create(CORSServiceMethodLevelOnly.class);
++            ((RestServiceProxy) service).setResource(resource);
++            assertNotNull(service);
++        } catch (Exception e) {
++            e.printStackTrace();
++            fail("failed to generate CORSServiceClassLevelOnly");
++        }
++
++        delayTestFinish(1000);
++        // the request going nowhere, we merely want any response, so we can check for the data in the method object
++        service.getExampleDto(new MethodCallback<Void>() {
++
++            @Override
++            public void onSuccess(Method method, Void response) {
++                assertEquals("[\"api.host.com\"]", method.getData().get(CORS.DOMAIN));
++                assertEquals("[\"https\"]", method.getData().get(CORS.PROTOCOL));
++                assertEquals("[\"\"]", method.getData().get(CORS.PORT));
++                finishTest();
++            }
++
++            @Override
++            public void onFailure(Method method, Throwable exception) {
++                fail();
++            }
++
++        });
++    }
++
++    public void testBasicFunctionality_MethodLevel2() {
++        CORSServiceMethodLevelOnly service = null;
++
++        try {
++            Resource resource = new Resource(GWT.getModuleBaseURL());
++            service = GWT.create(CORSServiceMethodLevelOnly.class);
++            ((RestServiceProxy) service).setResource(resource);
++            assertNotNull(service);
++        } catch (Exception e) {
++            e.printStackTrace();
++            fail("failed to generate CORSServiceClassLevelOnly");
++        }
++
++        delayTestFinish(1000);
++        // the request going nowhere, we merely want any response, so we can check for the data in the method object
++        service.postExample(new MethodCallback<Void>() {
++
++            @Override
++            public void onSuccess(Method method, Void response) {
++                assertEquals("[\"api2.host.com\"]", method.getData().get(CORS.DOMAIN));
++                assertEquals("[\"spdy\"]", method.getData().get(CORS.PROTOCOL));
++                assertEquals("[\"\"]", method.getData().get(CORS.PORT));
++                finishTest();
++            }
++
++            @Override
++            public void onFailure(Method method, Throwable exception) {
++                fail();
++            }
++
++        });
++    }
++
++    public void testBasicFunctionality_MixedLevels1() {
++        CORSServiceMixedLevels service = null;
++
++        try {
++            Resource resource = new Resource(GWT.getModuleBaseURL());
++            service = GWT.create(CORSServiceMixedLevels.class);
++            ((RestServiceProxy) service).setResource(resource);
++            assertNotNull(service);
++        } catch (Exception e) {
++            e.printStackTrace();
++            fail("failed to generate CORSServiceClassLevelOnly");
++        }
++
++        delayTestFinish(1000);
++        // the request going nowhere, we merely want any response, so we can check for the data in the method object
++        service.getExampleDto(new MethodCallback<Void>() {
++
++            @Override
++            public void onSuccess(Method method, Void response) {
++                assertEquals("[\"api.host.com\"]", method.getData().get(CORS.DOMAIN));
++                assertEquals("[\"https\"]", method.getData().get(CORS.PROTOCOL));
++                assertEquals("[\"8080\"]", method.getData().get(CORS.PORT));
++                finishTest();
++            }
++
++            @Override
++            public void onFailure(Method method, Throwable exception) {
++                fail();
++            }
++
++        });
++    }
++
++    public void testBasicFunctionality_MixedLevels2() {
++        CORSServiceMixedLevels service = null;
++
++        try {
++            Resource resource = new Resource(GWT.getModuleBaseURL());
++            service = GWT.create(CORSServiceMixedLevels.class);
++            ((RestServiceProxy) service).setResource(resource);
++            assertNotNull(service);
++        } catch (Exception e) {
++            e.printStackTrace();
++            fail("failed to generate CORSServiceClassLevelOnly");
++        }
++
++        delayTestFinish(1000);
++        // the request going nowhere, we merely want any response, so we can check for the data in the method object
++        service.postExample(new MethodCallback<Void>() {
++
++            @Override
++            public void onSuccess(Method method, Void response) {
++                assertEquals("[\"api2.host.com\"]", method.getData().get(CORS.DOMAIN));
++                assertEquals("[\"https\"]", method.getData().get(CORS.PROTOCOL));
++                assertEquals("[\"12345\"]", method.getData().get(CORS.PORT));
++                finishTest();
++            }
++
++            @Override
++            public void onFailure(Method method, Throwable exception) {
++                fail();
++            }
++
++        });
++    }
++
++}
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/cors/CORSServiceClassLevelOnly.java b/restygwt/src/test/java/org/fusesource/restygwt/client/cors/CORSServiceClassLevelOnly.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..c7dbf5d4904fe5a3f71a679835a348558649c28f
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/client/cors/CORSServiceClassLevelOnly.java
+@@ -0,0 +1,43 @@
++/**
++ * Copyright (C) 2010 the original author or authors.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.cors;
++
++import javax.ws.rs.GET;
++import javax.ws.rs.POST;
++import javax.ws.rs.Path;
++
++import org.fusesource.restygwt.client.MethodCallback;
++import org.fusesource.restygwt.client.RestService;
++import org.fusesource.restygwt.client.basic.ExampleDto;
++import org.fusesource.restygwt.client.cache.Domain;
++
++/**
++ * Supersimple example service for testing...
++ */
++@Domain({ExampleDto.class})
++@CORS(domain = "api.host.com", protocol = "https")
++public interface CORSServiceClassLevelOnly extends RestService {
++
++    @GET
++    @Path("/my/very/unique/path")
++    void getExampleDto(MethodCallback<Void> callback);
++
++    @POST
++    @Path("/my/very/unique/path")
++    void postExample(MethodCallback<Void> callback);
++
++}
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/cors/CORSServiceMethodLevelOnly.java b/restygwt/src/test/java/org/fusesource/restygwt/client/cors/CORSServiceMethodLevelOnly.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..b3eed5c01ad376551ece77b9566dff2d08abee8a
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/client/cors/CORSServiceMethodLevelOnly.java
+@@ -0,0 +1,46 @@
++/**
++ * Copyright (C) 2010 the original author or authors.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.cors;
++
++import javax.ws.rs.GET;
++import javax.ws.rs.POST;
++import javax.ws.rs.Path;
++
++import org.fusesource.restygwt.client.MethodCallback;
++import org.fusesource.restygwt.client.RestService;
++import org.fusesource.restygwt.client.basic.ExampleDto;
++import org.fusesource.restygwt.client.cache.Domain;
++
++/**
++ * Supersimple example service for testing...
++ */
++@Domain({ExampleDto.class})
++public interface CORSServiceMethodLevelOnly extends RestService {
++
++    @GET
++    @CORS(domain = "api.host.com", protocol = "https")
++    @Path("/my/very/unique/path")
++    void getExampleDto(MethodCallback<Void> callback);
++
++    @POST
++    @CORS(domain = "api2.host.com", protocol = "spdy")
++    @Path("/my/very/unique/path")
++    // path should be overridden
++    // different domains may be useful for Command Query Responsibility Segregation (CQRS)
++    void postExample(MethodCallback<Void> callback);
++
++}
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/cors/CORSServiceMixedLevels.java b/restygwt/src/test/java/org/fusesource/restygwt/client/cors/CORSServiceMixedLevels.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..7b6dde5b754ab6b0eea5541210457823afce9c73
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/client/cors/CORSServiceMixedLevels.java
+@@ -0,0 +1,47 @@
++/**
++ * Copyright (C) 2010 the original author or authors.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.cors;
++
++import javax.ws.rs.GET;
++import javax.ws.rs.POST;
++import javax.ws.rs.Path;
++
++import org.fusesource.restygwt.client.MethodCallback;
++import org.fusesource.restygwt.client.RestService;
++import org.fusesource.restygwt.client.basic.ExampleDto;
++import org.fusesource.restygwt.client.cache.Domain;
++
++/**
++ * Supersimple example service for testing...
++ */
++@Domain({ExampleDto.class})
++@CORS(domain = "api.host.com", protocol = "https", port = "8080")
++public interface CORSServiceMixedLevels extends RestService {
++
++    @GET
++    @Path("/my/very/unique/path")
++    void getExampleDto(MethodCallback<Void> callback);
++
++    @POST
++    @CORS(domain = "api2.host.com", port = "12345")
++    @Path("/my/very/unique/path")
++    // still has https as protocol
++    // path should be overridden
++    // different domains may be useful for Command Query Responsibility Segregation (CQRS)
++    void postExample(MethodCallback<Void> callback);
++
++}
