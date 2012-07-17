@@ -48,14 +48,6 @@ grep -lr SNAPSHOT . |\
 
 echo
 echo "####################"
-echo "apply 'dont be evil' patch"
-echo "####################"
-git apply --whitespace=fix --ignore-whitespace patches/0_dont_be_evil.patch || echo "applying patch failed"
-git add .
-git commit -m "Don't be evil Patch"
-
-echo
-echo "####################"
 echo "apply 'interceptor' patch"
 echo "####################"
 git apply --whitespace=fix --ignore-whitespace patches/1_interceptor.patch || echo "applying patch failed"
