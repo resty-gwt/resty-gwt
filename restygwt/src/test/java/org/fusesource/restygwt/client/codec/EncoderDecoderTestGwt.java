@@ -59,9 +59,14 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
 
     public interface FloatCodec extends JsonEncoderDecoder<ANumber<Float>> {
     }
+    
+    public static class Name {
+        public String name;
+    }
 
     public static class Foo {
         public List<String> bars = new ArrayList<String>();
+        public List<Name> names = new ArrayList<Name>();
     }
 
     public interface FooCodec extends JsonEncoderDecoder<Foo> {
@@ -72,13 +77,22 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         return "org.fusesource.restygwt.EncoderDecoderTestGwt";
     }
 
-    public void testNullValueAsList() {
+    public void testNullPrimitiveValueInList() {
         FooCodec fooCoder = GWT.create(FooCodec.class);
 
         Foo foo = new Foo();
         foo.bars.add(null);
         JSONValue fooJ = fooCoder.encode(foo);
         assertEquals(foo.bars, fooCoder.decode(fooJ).bars);
+    }
+
+    public void testNullPojoValueInList() {
+        FooCodec fooCoder = GWT.create(FooCodec.class);
+
+        Foo foo = new Foo();
+        foo.names.add(null);
+        JSONValue fooJ = fooCoder.encode(foo);
+        assertEquals(foo.names, fooCoder.decode(fooJ).names);
     }
 
     public void testSubtypeWrappeObjectWithSingleSubtype() {
@@ -407,7 +421,6 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         ccc.firstName = "chaos";
         
         JSONValue json = cccc.encode(ccc);
-        System.err.println("\n\n\n\n\n\n" + json + "\n\n\n\n\n\n");
         assertEquals("{\"name\":\"me and the corner\"}", json.toString());
         CCC roundTrip = cccc.decode(json);
         assertEquals(ccc.name, roundTrip.name);
