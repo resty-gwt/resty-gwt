@@ -77,6 +77,18 @@
         <version>3.0</version>
         <scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>org.jboss.resteasy</groupId>
+    	<artifactId>resteasy-jaxrs</artifactId>
+    	<version>${resteasy.version}</version>
+    	<scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.jboss.resteasy</groupId>
+    	<artifactId>resteasy-jackson-provider</artifactId>
+    	<version>${resteasy.version}</version>
+    	<scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -175,4 +187,7 @@
 
   </profiles>
 
+  <properties>
+  	<resteasy.version>2.3.4.Final</resteasy.version>
+  </properties>
 </project>
