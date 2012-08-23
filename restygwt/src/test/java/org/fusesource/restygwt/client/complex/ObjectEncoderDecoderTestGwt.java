@@ -35,7 +35,7 @@ import org.fusesource.restygwt.client.RestService;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 
-public class ObjectEncoderDecoderTest extends GWTTestCase
+public class ObjectEncoderDecoderTestGwt extends GWTTestCase
 {
 	@Override
 	public String getModuleName()

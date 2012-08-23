@@ -25,7 +25,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.ws.rs.Path;
 
-import org.fusesource.restygwt.client.complex.ObjectEncoderDecoderTest;
+import org.fusesource.restygwt.client.complex.ObjectEncoderDecoderTestGwt;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 import org.jboss.resteasy.spi.Registry;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
@@ -51,7 +51,7 @@ public class ObjectEncoderDecoderServlet extends HttpServletDispatcher
 	}
 
 	@Path("properties")
-	public static class PropertiesImpl implements ObjectEncoderDecoderTest.Properties
+	public static class PropertiesImpl implements ObjectEncoderDecoderTestGwt.Properties
 	{
 		@Override
 		public Object getProperty(String name)
