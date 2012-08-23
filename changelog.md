@@ -1,5 +1,45 @@
 # ![RestyGWT](http://restygwt.fusesource.org/images/restygwt-logo.png)
 
+## [resty-gwt 1.3](http://restygwt.fusesource.org/blog/release-1-3.html), 2012-08-23
+
+* Added additional tests to ensure ObjectEncoderDecoder is not left out again
+* fix  Issue #84: allow null values in collections of pojo and primitives
+* XSRFTokenCallbackFilter didn't set the XSRF token correctly in IE9
+* allow jsonignore to omit fields for de/serialization - issue #30
+* added test for arrays de/encoding
+* added support for one-dimensional arrays
+* go through ALL callbacks even in case of error
+* restful caching shall not cache collection
+* fix for #31
+* redone reverted patch from StephanBeutel against latest master branch
+* new invoker plugin version
+* use gwt 2.4.0
+* added testcase for passing on the headers when getting GET-method, etc
+* remove debug System.out.println
+* added testcase for issue #84
+* move easymock tests to mokcing package
+* remove obsolete files
+* since implementation changed we need an extra call
+* remove unwanted artifact prefix from previous commit
+* obey failed status codes as without cache.
+* use getter/setter for token to allow subclassing
+* allow null values for primitives and fill use the default values in such cases
+* remove yellow flags in eclipse, i.e. cleanup imports, deprectated method, suppress warnings
+* remove error in eclipse indigo complaining about not supported goal ... from pullrequest #85
+* Add support for numbers and booleans to be decoded to strings
+* Removed restriction on @Attribute for sub resource locators
+* Allow null to @QueryParam arguments
+* pass on headers and query when resolving the path on a Resource
+* Make ObjectEncoderDecoder an AbstractEncoderDecoder
+* Revert "Merge branch 'casting'"
+* Merge branch 'casting'
+* added JsonIgnore annotation; rearranged the Object encoder/decoder to be properly registered
+* slight change to accommodate situations where casting signature differs
+* Added support for casting of RestService interfaces.
+* some tests for #72
+* closed #72 - initial implementation of Object encoding/decoding
+* be less strict on wrapper objects
+
 ## [resty-gwt 1.2](http://restygwt.fusesource.org/blog/release-1-2.html), 2011-10-08
 
 * JsonTypeIdResolver Support - Added support for Array wrapping
