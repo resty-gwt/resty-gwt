@@ -675,7 +675,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
           return "(new " + JSON_OBJECT_CLASS + "(" + expr + ")).toString()";
         }
 
-        return String.format("%s != null ? %s.toString() : null", expr, expr);
+        return String.format("(%s != null ? %s.toString() : null)", expr, expr);
     }
 
     protected String toIteratedStringExpression(JParameter arg) {
