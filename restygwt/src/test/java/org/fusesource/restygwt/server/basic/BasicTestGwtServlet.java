@@ -34,7 +34,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class BasicTestGwtServlet extends HttpServlet {
 
-    String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
+    private static final long serialVersionUID = 7682753843344322868L;
+
+    private static final String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
 
 
     @Override
