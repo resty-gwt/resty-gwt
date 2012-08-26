@@ -47,14 +47,10 @@ public class EchoTestGwtServlet extends HttpServlet {
             HttpServletResponse response) throws IOException {
 
         Echo echo = new Echo();
-        echo.path = request.getPathInfo();  
-        System.out.println( echo.path);
-
+        echo.path = request.getPathInfo();
+ 
         echo.params = new HashMap<String, String>();
-      //  for ( @SuppressWarnings("unchecked")
-//        Iterator<Map.Entry<String, String[]>> iter = request.getParameterMap().entrySet().iterator(); iter.hasNext(); iter.next() ){
         for ( Map.Entry<String, String[]> entry:  (Set<Map.Entry<String, String[]>>) request.getParameterMap().entrySet() ){
-            System.out.println( entry.getKey() + "=>" + entry.getValue()[0]);
             echo.params.put(entry.getKey(), entry.getValue()[0]);
         }
         response.setContentType("application/json");

@@ -64,6 +64,7 @@ public class PathParamTestGwt extends GWTTestCase {
         EchoMethodCallback(String path){
             this.path = path;
         }
+        
         @Override
         public void onSuccess(Method method, Echo response) {
 
@@ -89,9 +90,6 @@ public class PathParamTestGwt extends GWTTestCase {
     public void testGet() {
 
         service.get(new EchoMethodCallback("/get"));
-        
-        // wait... we are in async testing...
-        delayTestFinish(10000);
 
     }
 
@@ -99,17 +97,11 @@ public class PathParamTestGwt extends GWTTestCase {
     
         service.get(new Integer(2), new EchoMethodCallback("/get/2"));
 
-        // wait... we are in async testing...
-        delayTestFinish(10000);
-
     }
 
     public void testGetWithNull() {
     
         service.get(null, new EchoMethodCallback("/get/null"));
-
-        // wait... we are in async testing...
-        delayTestFinish(10000);
 
     }
 
@@ -117,9 +109,12 @@ public class PathParamTestGwt extends GWTTestCase {
     
         service.get(123, new EchoMethodCallback("/get/123"));
 
-        // wait... we are in async testing...
-        delayTestFinish(10000);
-
     }
 
+    public void gwtTearDown() {
+
+        // wait... we are in async testing...
+        delayTestFinish(10000);
+        
+    }
 }
