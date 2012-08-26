@@ -29,6 +29,7 @@ import org.fusesource.restygwt.client.basic.GenericsTestGwt;
 import org.fusesource.restygwt.client.basic.JsonCreatorWithSubtypes;
 import org.fusesource.restygwt.client.basic.ParameterizedTypeDTO;
 import org.fusesource.restygwt.client.basic.ParameterizedTypeServiceInterfaces;
+import org.fusesource.restygwt.client.basic.PathParamTestGwt;
 import org.fusesource.restygwt.client.basic.ResourcePassesHeadersTestGwt;
 import org.fusesource.restygwt.client.basic.ResourceTestGwt;
 import org.fusesource.restygwt.client.basic.SubResourceClientGeneration;
@@ -80,6 +81,7 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(SubResourceClientGeneration.class);
         suite.addTestSuite(JsonTypeIdResolver.class);
         suite.addTestSuite(JsonCreatorWithSubtypes.class);
+        suite.addTestSuite(PathParamTestGwt.class);
         return suite;
     }
 }
