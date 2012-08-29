@@ -131,10 +131,10 @@ index 0000000000000000000000000000000000000000..ee87e2e9f7dd874fcb29bf921e7b9c13
 +    void intercept(final String input, final Method method, Class expectedType);
 +}
 diff --git a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java b/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
-index cf150367f060a0d60a32228ddad7f7e1449894dd..0c15059aa2b6cbb272f3d8bd5702bae561295c14 100644
+index fc0cac5c09562d7145d56801b98deaf45e2a9873..ec458876b2ceaa8a78c72931e0a2dabb3b24002a 100644
 --- a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
 +++ b/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
-@@ -51,6 +51,8 @@ import com.google.gwt.json.client.JSONValue;
+@@ -52,6 +52,8 @@ import com.google.gwt.json.client.JSONValue;
  import com.google.gwt.thirdparty.guava.common.collect.Lists;
  import com.google.gwt.thirdparty.guava.common.collect.Maps;
  import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
@@ -143,11 +143,10 @@ index cf150367f060a0d60a32228ddad7f7e1449894dd..0c15059aa2b6cbb272f3d8bd5702bae5
  
  /**
   * 
-@@ -363,6 +365,23 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
-         p();
-         p("public " + source.getName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
-         {
-+
+@@ -370,6 +372,18 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
+                 p("return null;").i(-1);
+             }
+             p("}");
 +
 +            JsonDecoderInterceptor classAnnotation = source.getAnnotation(JsonDecoderInterceptor.class);
 +
@@ -160,25 +159,20 @@ index cf150367f060a0d60a32228ddad7f7e1449894dd..0c15059aa2b6cbb272f3d8bd5702bae5
 +                }
 +            }
 +
-+
-+
-+
-+
              if (classStyle == Style.RAILS) {
          	p(JSON_OBJECT_CLASS + " object = toObjectFromWrapper(value, \"" + railsWrapperName + "\");");
              } else if (typeInfo != null && typeInfo.include() == As.WRAPPER_ARRAY) {
-@@ -677,4 +696,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
+@@ -685,4 +699,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
  	}
  	return allFields;
      }
 +
-+
-+    private String getClassParameterizedQualifiedSourceName(final JClassType source) {
-+        return source.getParameterizedQualifiedSourceName();
-+    }
++  private String getClassParameterizedQualifiedSourceName(final JClassType source) {
++          return source.getParameterizedQualifiedSourceName();
++  }
  }
 diff --git a/restygwt/src/main/java/org/fusesource/restygwt/rebind/RestServiceClassCreator.java b/restygwt/src/main/java/org/fusesource/restygwt/rebind/RestServiceClassCreator.java
-index f930b5a6a648495c4d0c3048db69254d1209491d..8d426b8a4c824cf58502a9ce2ed81fe97141eb2e 100644
+index 1fd6f90caf393f7006f3a2f07ca25fc39ba73a04..8016f6aac69458b765d92db37ea933fb8693a185 100644
 --- a/restygwt/src/main/java/org/fusesource/restygwt/rebind/RestServiceClassCreator.java
 +++ b/restygwt/src/main/java/org/fusesource/restygwt/rebind/RestServiceClassCreator.java
 @@ -63,6 +63,9 @@ import org.fusesource.restygwt.client.RestService;
@@ -255,7 +249,7 @@ index f930b5a6a648495c4d0c3048db69254d1209491d..8d426b8a4c824cf58502a9ce2ed81fe9
 +    }
  }
 diff --git a/restygwt/src/test/java/org/fusesource/restygwt/Event.gwt.xml b/restygwt/src/test/java/org/fusesource/restygwt/Event.gwt.xml
-index 7e48bb58b3170b13bd1f1080356c9e85a6230fe8..e8ce3cc833d69b1358f3025dc17b341386e10c83 100644
+index 791afb9f33ff4af55ed527cfe30634271fa6c677..ac59818b2e2f162b430d1a6c47109dddbaab29e6 100644
 --- a/restygwt/src/test/java/org/fusesource/restygwt/Event.gwt.xml
 +++ b/restygwt/src/test/java/org/fusesource/restygwt/Event.gwt.xml
 @@ -49,10 +49,11 @@
