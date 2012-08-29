@@ -31,35 +31,24 @@ When everything looks fine, then continue with
 
 
 ## Features
-So far we created four feature patches. 
+So far we created three feature patches. 
 
 ##### IMPORTANT: The patches have to be applied in same order they are listed in this readme.
 
-### Feature 1: Don't Be Evil
-
-File: patches/0\_dont\_be_evil.patch
-
-A feature to avoid Cross-Site-Forgery (XSFR).
-From a backend we receive JSON responses with a little prefix. This prefix makes it harder to steal our data via 
-script-tags on websites with a different origin. 
-For further information read this very nice discussion on StackOverflow 
-(http://stackoverflow.com/questions/2669690/why-does-google-append-while1-in-front-of-their-json-responses).
-
-
-### Feature 2: Json Raw Decoder Interceptor
+### Feature 1: Json Raw Decoder Interceptor
 
 File: patches/1\_interceptor.patch
 
 This feature allows us to process the json responses BEFORE they are encoded/decoded via a annotation and a given interceptor.
 
 
-### Feature 3: CORS
+### Feature 2: CORS
 
 File: patches/2\_cors.patch
 
 Resty-GWT does not provide an easy way to make single SSL calls. So we wrote this little enhancement.
 
-### Feature 4: SafeHtml
+### Feature 3: SafeHtml
 
 File: patches/3\_safe_html.patch
 
