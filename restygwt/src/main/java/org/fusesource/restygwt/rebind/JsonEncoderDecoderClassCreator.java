@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2011 the original author or authors.
+ * Copyright (C) 2009-2012 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -365,6 +365,11 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         p();
         p("public " + source.getName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
         {
+            p("if( value == null || value.isNull()!=null ) {").i(1);
+            {
+                p("return null;").i(-1);
+            }
+            p("}");
             if (classStyle == Style.RAILS) {
         	p(JSON_OBJECT_CLASS + " object = toObjectFromWrapper(value, \"" + railsWrapperName + "\");");
             } else if (typeInfo != null && typeInfo.include() == As.WRAPPER_ARRAY) {
