@@ -1,5 +1,5 @@
 diff --git a/restygwt/src/main/java/org/fusesource/restygwt/client/AbstractJsonEncoderDecoder.java b/restygwt/src/main/java/org/fusesource/restygwt/client/AbstractJsonEncoderDecoder.java
-index d5ecfb1b9adcee31e6ff5bd3c6689114379329f8..1139f82f3be25e557c199ffa4d827f532b28ebee 100644
+index 883234a1173d21c5d76db3da9da2d789dbbee286..925d67a1abfe88e9d7ce59a3b98e38ee9dfe07d2 100644
 --- a/restygwt/src/main/java/org/fusesource/restygwt/client/AbstractJsonEncoderDecoder.java
 +++ b/restygwt/src/main/java/org/fusesource/restygwt/client/AbstractJsonEncoderDecoder.java
 @@ -26,6 +26,8 @@ import com.google.gwt.json.client.JSONNumber;
@@ -48,10 +48,10 @@ index d5ecfb1b9adcee31e6ff5bd3c6689114379329f8..1139f82f3be25e557c199ffa4d827f53
  
          public Character decode(JSONValue value) throws DecodingException {
 diff --git a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java b/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
-index cf150367f060a0d60a32228ddad7f7e1449894dd..756ce1de6ce12da00779df088597f0b8811d5670 100644
+index fc0cac5c09562d7145d56801b98deaf45e2a9873..83fb94debc68cfd694597003bd03932d24fbbb7e 100644
 --- a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
 +++ b/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
-@@ -461,27 +461,33 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
+@@ -469,27 +469,33 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
          			    String expression = locator.decodeExpression(field.getType(), objectGetter, style);
      
          			    p("if(" + objectGetter + " != null) {").i(1);
@@ -105,7 +105,7 @@ index cf150367f060a0d60a32228ddad7f7e1449894dd..756ce1de6ce12da00779df088597f0b8
          			}
          			return null;
 diff --git a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderInstanceLocator.java b/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderInstanceLocator.java
-index 4b487e5c9e92bbdf66d8c39162694406ab965086..ef378a9d8a75172028465b7c14598eab1dd80524 100644
+index 364371e9dbc14ca58892018586d2315d24f01a81..4472225486c3ea6eb1ddc86827888796cea67558 100644
 --- a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderInstanceLocator.java
 +++ b/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderInstanceLocator.java
 @@ -32,6 +32,7 @@ import java.util.List;
@@ -116,7 +116,7 @@ index 4b487e5c9e92bbdf66d8c39162694406ab965086..ef378a9d8a75172028465b7c14598eab
  import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
  import org.fusesource.restygwt.client.Json;
  import org.fusesource.restygwt.client.Json.Style;
-@@ -61,6 +62,7 @@ public class JsonEncoderDecoderInstanceLocator {
+@@ -63,6 +64,7 @@ public class JsonEncoderDecoderInstanceLocator {
      public final JClassType MAP_TYPE;
      public final JClassType SET_TYPE;
      public final JClassType LIST_TYPE;
@@ -124,7 +124,7 @@ index 4b487e5c9e92bbdf66d8c39162694406ab965086..ef378a9d8a75172028465b7c14598eab
  
      public final HashMap<JType, String> builtInEncoderDecoders = new HashMap<JType, String>();
  
-@@ -78,6 +80,7 @@ public class JsonEncoderDecoderInstanceLocator {
+@@ -80,6 +82,7 @@ public class JsonEncoderDecoderInstanceLocator {
          this.MAP_TYPE = find(Map.class);
          this.SET_TYPE = find(Set.class);
          this.LIST_TYPE = find(List.class);
@@ -132,7 +132,7 @@ index 4b487e5c9e92bbdf66d8c39162694406ab965086..ef378a9d8a75172028465b7c14598eab
  
          builtInEncoderDecoders.put(JPrimitiveType.BOOLEAN, JSON_ENCODER_DECODER_CLASS + ".BOOLEAN");
          builtInEncoderDecoders.put(JPrimitiveType.BYTE, JSON_ENCODER_DECODER_CLASS + ".BYTE");
-@@ -97,6 +100,7 @@ public class JsonEncoderDecoderInstanceLocator {
+@@ -99,6 +102,7 @@ public class JsonEncoderDecoderInstanceLocator {
          builtInEncoderDecoders.put(find(Double.class), JSON_ENCODER_DECODER_CLASS + ".DOUBLE");
          builtInEncoderDecoders.put(find(BigDecimal.class), JSON_ENCODER_DECODER_CLASS + ".BIG_DECIMAL");
          builtInEncoderDecoders.put(find(BigInteger.class), JSON_ENCODER_DECODER_CLASS + ".BIG_INTEGER");
@@ -140,16 +140,17 @@ index 4b487e5c9e92bbdf66d8c39162694406ab965086..ef378a9d8a75172028465b7c14598eab
  
          builtInEncoderDecoders.put(STRING_TYPE, JSON_ENCODER_DECODER_CLASS + ".STRING");
          builtInEncoderDecoders.put(DOCUMENT_TYPE, JSON_ENCODER_DECODER_CLASS + ".DOCUMENT");
+@@ -253,4 +257,4 @@ public class JsonEncoderDecoderInstanceLocator {
+         logger.log(TRACE, msg);
+     }
+ 
+-}
++}
 diff --git a/restygwt/src/test/java/org/fusesource/restygwt/GwtCompleteTestSuite.java b/restygwt/src/test/java/org/fusesource/restygwt/GwtCompleteTestSuite.java
-index 04e3de47a0e755187481d3748d30e654f3de8ef2..6c543b3532974d65e9625d76afb2fa7ca21f7d90 100644
+index bafc22ea49a367cb389578798868b34ce64a185c..d0cf0fbe65c45cd3d2dfbfaa62024963ac967645 100644
 --- a/restygwt/src/test/java/org/fusesource/restygwt/GwtCompleteTestSuite.java
 +++ b/restygwt/src/test/java/org/fusesource/restygwt/GwtCompleteTestSuite.java
-@@ -18,10 +18,12 @@
- 
- package org.fusesource.restygwt;
- 
-+import org.fusesource.restygwt.client.basic.BasicTestGwt;
- 
+@@ -22,6 +22,7 @@ package org.fusesource.restygwt;
  import junit.framework.Test;
  import junit.framework.TestCase;
  
@@ -157,74 +158,25 @@ index 04e3de47a0e755187481d3748d30e654f3de8ef2..6c543b3532974d65e9625d76afb2fa7c
  import org.fusesource.restygwt.client.basic.CachingTestGwt;
  import org.fusesource.restygwt.client.basic.FailingTestGwt;
  import org.fusesource.restygwt.client.basic.FlakyTestGwt;
-@@ -36,42 +38,47 @@ import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
- import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorageTestGwt;
- import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt;
- import org.fusesource.restygwt.client.complex.JsonTypeIdResolver;
-+import org.fusesource.restygwt.client.basic.ResourcePassesHeadersTestGwt;
-+import org.fusesource.restygwt.client.basic.ResourceTestGwt;
+@@ -33,6 +34,8 @@ import org.fusesource.restygwt.client.basic.PathParamTestGwt;
+ import org.fusesource.restygwt.client.basic.QueryParamTestGwt;
+ import org.fusesource.restygwt.client.basic.ResourcePassesHeadersTestGwt;
+ import org.fusesource.restygwt.client.basic.ResourceTestGwt;
 +import org.fusesource.restygwt.client.basic.SafeHtmlJsonEncoderDecoderTestGwt;
 +import org.fusesource.restygwt.client.basic.SafeHtmlTestGwt;
-+import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
- 
- import com.google.gwt.junit.tools.GWTTestSuite;
- 
--
- /**
-- *
-+ *
-  * <p>
-  * <ul>
-  * <li>Add GWTTestCases here</li>
-- * <li>See also <a href="http://mojo.codehaus.org/gwt-maven-plugin/user-guide/testing.html">maven docu</a></li>
-+ * <li>See also <a href="http://mojo.codehaus.org/gwt-maven-plugin/user-guide/testing.html">maven
-+ * docu</a></li>
-  * </ul>
-- *
-+ *
-  * IMPORTANT: Naming convention
-  * <ul>
-  * <li>Fast Junit Tests: end with "Test". Correct example: MyTest.java</li>
-- * <li>GWT Tests: do NOT end with "Test". Do NOT start with GwtTest. Correct example: DateBeautifierTestGwt.java</li>
-+ * <li>GWT Tests: do NOT end with "Test". Do NOT start with GwtTest. Correct example:
-+ * DateBeautifierTestGwt.java</li>
-  * </ul>
-  * </p>
-- *
-+ *
-  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
-  */
- public class GwtCompleteTestSuite extends TestCase {
- 
--
-     /**
-      * @return the suite of that module
-      */
-     public static Test suite() {
--        GWTTestSuite suite = new GWTTestSuite("all GwtTestCases but AnnotationResolver" );
-+        GWTTestSuite suite = new GWTTestSuite("all GwtTestCases but AnnotationResolver");
- 
-         suite.addTestSuite(FlakyTestGwt.class);
-         suite.addTestSuite(TimeoutTestGwt.class);
-         suite.addTestSuite(CachingTestGwt.class);
-         suite.addTestSuite(ResourceTestGwt.class);
-         suite.addTestSuite(ResourcePassesHeadersTestGwt.class);
--        suite.addTestSuite(VolatileQueueableCacheStorageTestGwt.class);       
-+        suite.addTestSuite(VolatileQueueableCacheStorageTestGwt.class);
-         suite.addTestSuite(FailingTestGwt.class);
-         suite.addTestSuite(EncoderDecoderTestGwt.class);
-         suite.addTestSuite(GenericsTestGwt.class);
-@@ -80,6 +87,13 @@ public class GwtCompleteTestSuite extends TestCase {
-         suite.addTestSuite(SubResourceClientGeneration.class);
-         suite.addTestSuite(JsonTypeIdResolver.class);
+ import org.fusesource.restygwt.client.basic.SubResourceClientGeneration;
+ import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
+ import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorageTestGwt;
+@@ -84,6 +87,12 @@ public class GwtCompleteTestSuite extends TestCase {
          suite.addTestSuite(JsonCreatorWithSubtypes.class);
+         suite.addTestSuite(PathParamTestGwt.class);
+         suite.addTestSuite(QueryParamTestGwt.class);
 +        suite.addTestSuite(CachingTestGwt.class);
 +        suite.addTestSuite(SafeHtmlTestGwt.class);
 +        suite.addTestSuite(BasicTestGwt.class);
 +        suite.addTestSuite(ResourceTestGwt.class);
 +        suite.addTestSuite(ResourcePassesHeadersTestGwt.class);
 +        suite.addTestSuite(SafeHtmlJsonEncoderDecoderTestGwt.class);
-+
          return suite;
      }
  }
@@ -368,7 +320,7 @@ index 0000000000000000000000000000000000000000..3706abe3ace0ae7a303b96dd0aee6f52
 +}
 diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/basic/SafeHtmlTestGwt.java b/restygwt/src/test/java/org/fusesource/restygwt/client/basic/SafeHtmlTestGwt.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..8c75e4fd7894ac5316c0456e5c4f4ca92bf1b1c3
+index 0000000000000000000000000000000000000000..bd4f6411afa53b5881eb96985823ef42673616f3
 --- /dev/null
 +++ b/restygwt/src/test/java/org/fusesource/restygwt/client/basic/SafeHtmlTestGwt.java
 @@ -0,0 +1,98 @@
@@ -470,53 +422,37 @@ index 0000000000000000000000000000000000000000..8c75e4fd7894ac5316c0456e5c4f4ca9
 +    }
 +
 +}
-\ No newline at end of file
 diff --git a/restygwt/src/test/java/org/fusesource/restygwt/server/basic/BasicTestGwtServlet.java b/restygwt/src/test/java/org/fusesource/restygwt/server/basic/BasicTestGwtServlet.java
-index 559733973bc67dafbf82448add388fadad53ea27..cddadbabce2e048724ae8166a99f99b3739789c3 100644
+index 3260b73777ecfa5447e01f9f81eed038eb637b20..b8229259096ec4a303a73618b28e885314e344eb 100644
 --- a/restygwt/src/test/java/org/fusesource/restygwt/server/basic/BasicTestGwtServlet.java
 +++ b/restygwt/src/test/java/org/fusesource/restygwt/server/basic/BasicTestGwtServlet.java
-@@ -24,10 +24,12 @@ import javax.servlet.http.HttpServlet;
- import javax.servlet.http.HttpServletRequest;
- import javax.servlet.http.HttpServletResponse;
+@@ -37,16 +37,26 @@ public class BasicTestGwtServlet extends HttpServlet {
+     private static final long serialVersionUID = 7682753843344322868L;
  
-+import com.google.gwt.core.client.GWT;
-+
- /**
-  *
-- * Super simple servlet that simply does nothing to check if
-- * timeout management is okay.
-+ * Super simple servlet that simply does nothing to check if timeout management
-+ * is okay.
-  *
-  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
-  *
-@@ -35,16 +37,26 @@ import javax.servlet.http.HttpServletResponse;
- public class BasicTestGwtServlet extends HttpServlet {
- 
-     String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
+     private static final String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
 -
 +    String SAFEHTML_RESPONSE_VALUE = "<script>alert(123)</script>";
 +    String SAFEHTML_RESPONSE = "{\"safeHtml\":\"" + SAFEHTML_RESPONSE_VALUE + "\","
-+                                + "\"unsafeString\" : \"" + SAFEHTML_RESPONSE_VALUE + "\"}";
++                                   + "\"unsafeString\" : \"" + SAFEHTML_RESPONSE_VALUE + "\"}";
 +    String SAFEHTML_NULL_RESPONSE = "{\"safeHtml\":null, \"unsafeString\":\"test\"}";
  
      @Override
      protected void doGet(HttpServletRequest request,
              HttpServletResponse response) throws IOException {
  
-+        String responseString = null;
++            String responseString = null;
  
 -            response.getWriter().print(DUMMY_RESPONSE);
 -
-+        if (request.getPathInfo().contains("getendpoint")) {
-+            responseString = DUMMY_RESPONSE;
-+        } else if (request.getPathInfo().contains("getsafehtmldto")) {
-+            responseString = SAFEHTML_RESPONSE;
-+        } else if (request.getPathInfo().contains("getsafehtmlnulldto")) {
-+            responseString = SAFEHTML_NULL_RESPONSE;
-+        }
++            if (request.getPathInfo().contains("getendpoint")) {
++               responseString = DUMMY_RESPONSE;
++            } else if (request.getPathInfo().contains("getsafehtmldto")) {
++               responseString = SAFEHTML_RESPONSE;
++            } else if (request.getPathInfo().contains("getsafehtmlnulldto")) {
++               responseString = SAFEHTML_NULL_RESPONSE;
++            }
  
-+        response.getWriter().print(responseString);
++           response.getWriter().print(responseString);
      }
  
  }
