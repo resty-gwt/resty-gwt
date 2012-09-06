@@ -38,6 +38,9 @@
   <generate-with class="org.fusesource.restygwt.rebind.JsonEncoderDecoderGenerator">
     <when-type-assignable class="org.fusesource.restygwt.client.JsonEncoderDecoder" />
   </generate-with>
+  <generate-with class="org.fusesource.restygwt.rebind.DirectRestServiceGenerator">
+    <when-type-assignable class="org.fusesource.restygwt.client.DirectRestService" />
+  </generate-with>
 
   <define-configuration-property name="org.fusesource.restygwt.jsontypeidresolver" is-multi-valued="true"/>
   

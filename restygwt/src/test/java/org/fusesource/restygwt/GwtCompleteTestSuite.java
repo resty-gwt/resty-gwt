@@ -84,6 +84,7 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(JsonCreatorWithSubtypes.class);
         suite.addTestSuite(PathParamTestGwt.class);
         suite.addTestSuite(QueryParamTestGwt.class);
+        suite.addTestSuite(DirectRestServiceTestGwt.class);
         return suite;
     }
 }
