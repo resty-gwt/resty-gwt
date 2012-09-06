@@ -38,7 +38,7 @@ import com.google.gwt.junit.client.GWTTestCase;
  */
 public class QueryParamTestGwt extends GWTTestCase {
 
-    private TestRestService service;
+    private QueryTestRestService service;
 
     @Override
     public String getModuleName() {
@@ -46,7 +46,7 @@ public class QueryParamTestGwt extends GWTTestCase {
     }
 
     @Path("/get")
-    static interface TestRestService extends RestService {
+    static interface QueryTestRestService extends RestService {
         
         void get(@QueryParam(value = "id") int id, MethodCallback<Echo> callback);
 
@@ -80,7 +80,7 @@ public class QueryParamTestGwt extends GWTTestCase {
     @Override
     protected void gwtSetUp() throws Exception {
         super.gwtSetUp();        
-        service = GWT.create(TestRestService.class);  
+        service = GWT.create(QueryTestRestService.class);  
         Resource resource = new Resource(GWT.getModuleBaseURL() + "echo");
         ((RestServiceProxy) service).setResource(resource);
     }
