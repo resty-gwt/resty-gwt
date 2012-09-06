@@ -35,6 +35,7 @@ import org.fusesource.restygwt.client.basic.ResourcePassesHeadersTestGwt;
 import org.fusesource.restygwt.client.basic.ResourceTestGwt;
 import org.fusesource.restygwt.client.basic.SubResourceClientGeneration;
 import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
+import org.fusesource.restygwt.client.basic.DirectRestServiceTestGwt;
 import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorageTestGwt;
 import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver;
