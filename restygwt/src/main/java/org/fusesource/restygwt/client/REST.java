@@ -24,15 +24,15 @@ import org.fusesource.restygwt.client.callback.CallbackAware;
  * @param <T>
  * @param <R>
  */
-public class REST<T, R> {
+public class REST<R> {
     private MethodCallback<R> callback;
 
     public REST(MethodCallback<R> callback) {
         this.callback = callback;
     }
 
-    public static <T, R> REST<T, R> withCallback(MethodCallback<R> callback) {
-        return new REST<T, R>(callback);
+    public static <R> REST<R> withCallback(MethodCallback<R> callback) {
+        return new REST<R>(callback);
     }
 
     public final <T extends DirectRestService> T call(T service) {
