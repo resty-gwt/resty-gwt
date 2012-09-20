@@ -29,6 +29,15 @@ interface methods MUST return void.  Each method must declare at least one callb
 Methods can optionally declare one method argument before the callback to pass via the request
 body.
 
+or if using REST.withCallback(..).call(..), you can reuse the same interface on the serverside as well:
+
+    import javax.ws.rs.POST;
+    ...
+    public interface PizzaService extends DirectRestService {
+        @POST
+        public OrderConfirmation order(PizzaOrder request);
+    }
+
 ### JAX/RS Subresource locators
 
 RestyGWT supports JAX/RS subresource locator methods as synchronous methods on service interfaces.  For instance:
@@ -538,3 +547,75 @@ and then implement `AnimalRestyTypeIdResolver` as follows:
 javascript - just used to generate javascript classes that will be used to serialize your Jackson annotated pojos.
 
 You can optionally implement RestyJsonTypeIdResolver on your TypeIdResolver class, in which case you do not need to include the configuration property setting.
+
+### Reusing server interfaces.
+
+If you're using JAX-RS on the server-side as well, you might notice that you're repeating yourself in the client and
+server interfaces, with only a minor change for the client interface (since the callback must be asynchronously). So if
+you would have a JAX-RS service that just lists files, implemented like this:
+
+    public class ListFilesService
+    {
+        @Path("/files/list")
+        @POST
+        public List<FileVO> listFiles(@QueryParam("path") String path)
+        {
+            // actual logic to fetch the files.
+        }
+    }
+
+Your corresponding resty-gwt interface would be:
+
+    public interface ListFilesService extends RestService
+    {
+        @Path("/files/list")
+        @POST
+        public void listFiles(@QueryParam("path") String path, MethodCallback<List<FileVO>> callback);
+    }
+
+Now if on the server the interface would change, let's assume a new "filter" parameter would be added, your service call
+will fail at runtime, without giving you a chance to know this API contract is now invalidated at compile time.
+
+Using the new REST.withCallback().call() API this issue is addressed. How does it work?
+
+First you need now an interface that will extend the marker interface DirectRestService (not simply RestService):
+
+    public interface ListFilesService extends DirectRestService
+    {
+        @Path("/files/list")
+        @POST
+        public List<FileVO> listFiles(@QueryParam("path") String path);
+    }
+
+Secondly, your server will just implement it:
+
+    public class ListFilesServiceImpl implements ListFilesService
+    {
+        @Override
+        public List<FileVO> listFiles(String path)
+        {
+            // Logic to fetch the files. Annotations are being used from the interface, so there's no need to duplicate them here
+        }
+    }
+
+And third, clientside you will just declare it it:
+
+        ListFilesService listFilesService = GWT.create(ListFilesService.class);
+
+...and use it; since the calls are still async, you still need to provide a callback, and call it:
+
+        List<FileVO> noop = REST.withCallback(new MethodCallback<List<FileVO>>() {
+            // callback implementation.
+        }).call(listFilesService).listFiles("/mypath");
+
+Because the service is called asynchronously, the response returned by the listFiles method - from
+call(listFilesService).listFiles("/mypath") - will always be null, and in this example
+is being assigned just to enforce the check by the compiler of the return type as well.
+
+The parameters are the actual parameters sent to the service, and the response will be received by the callback.
+
+Since the same interface is reused, this is extremely well fit to changes, including service path,
+response type or parameters changes. In case the API changes, the compilation will break.
+
+Thus you basically have now statically typed JSON services, with JAX-RS/Jackson on the serverside, and resty-gwt on the
+clientside.
