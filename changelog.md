@@ -1,5 +1,11 @@
 # ![RestyGWT](http://restygwt.fusesource.org/images/restygwt-logo.png)
 
+## [resty-gwt 1.3.1](http://restygwt.fusesource.org/blog/release-1-3-1.html), 2012-09-20
+
+* added test for QueryParam
+* add test case for @PathParams
+* fix regression issue #102 : but expression insde brackets to allow further arithemitek to keep expression as is.
+
 ## [resty-gwt 1.3](http://restygwt.fusesource.org/blog/release-1-3.html), 2012-08-23
 
 * Added additional tests to ensure ObjectEncoderDecoder is not left out again
