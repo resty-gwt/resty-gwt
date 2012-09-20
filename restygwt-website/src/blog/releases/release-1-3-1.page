@@ -1,0 +1,45 @@
+---
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+blog_post: true
+title: RestyGWT 1.3 Released
+author: Hiram Chirino
+author_url: http://hiramchirino.com
+created_at: 2012-09-20 12:06:40 -0000
+--- 
+
+The [RestyGWT Team](http://restygwt.fusesource.org) is pleased to announce
+the release of RestyGWT 1.3.1. RestyGWT is a
+[GWT](http://code.google.com/webtoolkit/) generator for REST services and a
+Jackson style object to JSON encoder/decoder. It makes accessing REST based
+JSON services as easy to access as GWT RPC style services.
+
+Release Highlights:
+
+* added test for QueryParam
+* add test case for @PathParams
+* fix regression issue #102 : but expression insde brackets to allow further arithemitek to keep expression as is.
+
+Further information:
+
+* [Download](http://restygwt.fusesource.org/download.html)
+* [Change Log](https://github.com/chirino/resty-gwt/blob/master/changelog.md)
+* [Documentation](http://restygwt.fusesource.org/documentation/restygwt-user-guide.html)
+
+[Feedback](http://groups.google.com/group/restygwt) is always welcome! 
+
+
+
