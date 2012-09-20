@@ -38,14 +38,14 @@ import com.google.gwt.junit.client.GWTTestCase;
  */
 public class PathParamTestGwt extends GWTTestCase {
 
-    private TestRestService service;
+    private PTestRestService service;
 
     @Override
     public String getModuleName() {
         return "org.fusesource.restygwt.EchoTestGwt";
     }
 
-    static interface TestRestService extends RestService {
+    static interface PTestRestService extends RestService {
         
         @Path("/get")
         void get(MethodCallback<Echo> callback);
@@ -82,7 +82,7 @@ public class PathParamTestGwt extends GWTTestCase {
     @Override
     protected void gwtSetUp() throws Exception {
         super.gwtSetUp();        
-        service = GWT.create(TestRestService.class);  
+        service = GWT.create(PTestRestService.class);  
         Resource resource = new Resource(GWT.getModuleBaseURL() + "echo");
         ((RestServiceProxy) service).setResource(resource);
     }
