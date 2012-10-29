@@ -24,6 +24,7 @@ import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.xml.client.Document;
@@ -320,6 +321,15 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
     static public double toDouble(JSONValue value) {
         JSONNumber number = value.isNumber();
         if (number == null) {
+            JSONString val = value.isString();
+            if (val != null){
+                try {
+                    return Double.parseDouble(val.stringValue());
+                }
+                catch(NumberFormatException e){
+                    // just through exception below
+                }
+            }
             throw new DecodingException("Expected a json number, but was given: " + value);
         }
         return number.doubleValue();
@@ -561,7 +571,6 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         }
     }
 
-    // TODO(sbeutel): new map method to handle other key values than String
     static public <KeyType, ValueType> Map<KeyType, ValueType> toMap(JSONValue value,
             AbstractJsonEncoderDecoder<KeyType> keyEncoder, AbstractJsonEncoderDecoder<ValueType> valueEncoder,
             Style style) {
@@ -579,8 +588,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
             HashMap<KeyType, ValueType> rc = new HashMap<KeyType, ValueType>(object.size() * 2);
             for (String key : object.keySet()) {
-                // TODO(sbeutel): Convert value in the right way
-                rc.put((KeyType) key, valueEncoder.decode(object.get(key)));
+                rc.put(keyEncoder.decode(JSONParser.parseStrict(key)), valueEncoder.decode(object.get(key)));
             }
             return rc;
         }
@@ -609,14 +617,12 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
                 JSONString k = key.isString();
                 if (k == null)
                     throw new DecodingException("Expected an entry key to be a string, but was given: " + value);
-
-                // TODO(sbeutel): Convert value in the right way
-                rc.put((KeyType) k.stringValue(), valueEncoder.decode(entry.get("value")));
+                rc.put(keyEncoder.decode(JSONParser.parseStrict(k.stringValue())), valueEncoder.decode(entry.get("value")));
             }
             return rc;
         }
         default:
-            throw new UnsupportedOperationException("The encoding style is not yet suppored: " + style.name());
+            throw new UnsupportedOperationException("The encoding style is not yet supported: " + style.name());
         }
     }
 
@@ -651,7 +657,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             return rc;
         }
         default:
-            throw new UnsupportedOperationException("The encoding style is not yet suppored: " + style.name());
+            throw new UnsupportedOperationException("The encoding style is not yet supported: " + style.name());
         }
     }
 

@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
+import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
 import org.fusesource.restygwt.client.ObjectEncoderDecoder;
 
@@ -390,6 +391,68 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         assertEquals(Arrays.toString(array),
                 Arrays.toString(AbstractJsonEncoderDecoder.toArray(AbstractJsonEncoderDecoder.toJSON(array, encoder), 
                             encoder, new String[4])));
+    }
+
+    public void testTypeMapDecode() {
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        map.put("123", 321);
+        AbstractJsonEncoderDecoder<Integer> encoder = AbstractJsonEncoderDecoder.INT;
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, encoder, Json.Style.DEFAULT), 
+                        encoder, 
+                        Json.Style.DEFAULT).toString());
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, encoder, Json.Style.JETTISON_NATURAL), 
+                        encoder, 
+                        Json.Style.JETTISON_NATURAL).toString());
+    }
+
+    public void testTypeMapWithIntegerDecode() {
+        Map<Integer, String> map = new HashMap<Integer, String>();
+        map.put(123, "321");
+        AbstractJsonEncoderDecoder<Integer> keyEncoder = AbstractJsonEncoderDecoder.INT;
+        AbstractJsonEncoderDecoder<String> valueEncoder = AbstractJsonEncoderDecoder.STRING;
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, keyEncoder, valueEncoder, Json.Style.DEFAULT), 
+                        keyEncoder, 
+                        valueEncoder, 
+                        Json.Style.DEFAULT).toString());
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, keyEncoder, valueEncoder, Json.Style.JETTISON_NATURAL), 
+                        keyEncoder, 
+                        valueEncoder, 
+                        Json.Style.JETTISON_NATURAL).toString());
+    }
+
+    static class Email {
+        String name, email;
+        public String toString(){
+            return name + "<" + email + ">";
+        }
+    }
+
+    static interface EmailCodec extends JsonEncoderDecoder<Email> {
+    }
+        
+    public void testTypeMapWithComplexDecode() {
+        Map<Email, String> map = new HashMap<Email, String>();
+        Email email = new Email();
+        email.email = "me@example.com";
+        email.name = "me";
+        map.put(email, "done");
+        AbstractJsonEncoderDecoder<Email> keyEncoder = GWT.create(EmailCodec.class);
+        AbstractJsonEncoderDecoder<String> valueEncoder = AbstractJsonEncoderDecoder.STRING;
+
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, keyEncoder, valueEncoder, Json.Style.DEFAULT), 
+                        keyEncoder, 
+                        valueEncoder, 
+                        Json.Style.DEFAULT).toString());
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, keyEncoder, valueEncoder, Json.Style.JETTISON_NATURAL), 
+                        keyEncoder, 
+                        valueEncoder, 
+                        Json.Style.JETTISON_NATURAL).toString());
     }
 
     static class CCC {
