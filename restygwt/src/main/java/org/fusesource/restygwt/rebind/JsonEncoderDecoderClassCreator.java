@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
@@ -283,13 +284,23 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         	for (final JField field : getFields(possibleType.clazz)) {
     
         	    final String getterName = getGetterName(field);
+
+                    boolean ignoreField = false;
+                    if(possibleType.clazz.getAnnotation(JsonIgnoreProperties.class) != null) {
+                        for(String s : possibleType.clazz.getAnnotation(JsonIgnoreProperties.class).value()) {
+			    if(s.equals(field.getName())) {
+				ignoreField = true;
+				break;
+			    }
+                        }
+                    }
     
         	    // If can ignore some fields right off the back..
         	    // if there is a creator encode only final fields with JsonProperty annotation
-        	    if (getterName == null && (field.isStatic() || (field.isFinal() && !(creator != null && orderedFields.contains(field))) || field.isTransient() 
-        	            || field.isAnnotationPresent(JsonIgnore.class))) {
-        	        continue;
-        	    }
+                    if (ignoreField || getterName == null && (field.isStatic() || (field.isFinal() && !(creator != null && orderedFields.contains(field))) || field.isTransient() 
+                            || field.isAnnotationPresent(JsonIgnore.class))) {
+                        continue;
+                    }
     
         	    branch("Processing field: " + field.getName(), new Branch<Void>() {
         		public Void execute() throws UnableToCompleteException {
@@ -434,8 +445,21 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         	    p("" + possibleType.clazz.getParameterizedQualifiedSourceName() + " rc = new " + possibleType.clazz.getParameterizedQualifiedSourceName() + "();");
         	}
         	
-        	for (final JField field : getFields(possibleType.clazz)) {
-        	    
+                for (final JField field : getFields(possibleType.clazz)) {
+
+		    boolean ignoreField = false;
+                    if(possibleType.clazz.getAnnotation(JsonIgnoreProperties.class) != null) {
+                        for(String s : possibleType.clazz.getAnnotation(JsonIgnoreProperties.class).value()) {
+			    if(s.equals(field.getName())) {
+				ignoreField = true;
+				break;
+			    }
+                        }
+                    }
+                    if(ignoreField) {
+                        continue;
+                    }
+
         	    if (orderedFields != null && orderedFields.contains(field)){
         	        continue;
         	    }
