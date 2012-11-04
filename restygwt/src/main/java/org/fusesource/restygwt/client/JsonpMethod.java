@@ -25,6 +25,7 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
@@ -65,7 +66,14 @@ public class JsonpMethod extends Method {
     public void send(final JsonCallback callback) {
         builder.requestObject(resource.getUri(), new AsyncCallback<JavaScriptObject>() {
             public void onSuccess(JavaScriptObject result) {
-                callback.onSuccess(JsonpMethod.this, new JSONObject(result));
+                JSONObject obj = new JSONObject(result);
+                JSONArray arr = obj.isArray();
+                if (arr != null){
+                    callback.onSuccess(JsonpMethod.this, arr);
+                }
+                else {
+                    callback.onSuccess(JsonpMethod.this, obj);
+                }
             }
 
             public void onFailure(Throwable caught) {
