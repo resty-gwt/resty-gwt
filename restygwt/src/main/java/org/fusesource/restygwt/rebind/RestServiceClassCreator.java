@@ -110,6 +110,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private static final String JSON_PARSER_CLASS = JSONParser.class.getName();
     private static final String JSON_ARRAY_CLASS = JSONArray.class.getName();
     private static final String JSON_OBJECT_CLASS = JSONObject.class.getName();
+    private static final String JSON_VALUE_CLASS = JSONValue.class.getName();
     private static final String REQUEST_EXCEPTION_CLASS = RequestException.class.getName();
     private static final String RESPONSE_FORMAT_EXCEPTION_CLASS = ResponseFormatException.class.getName();
     private static final String JSONP_METHOD_CLASS = JsonpMethod.class.getName();
@@ -591,11 +592,14 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                                 p("try {").i(1);
                                 {
                                     if(resultType.isAssignableTo(locator.LIST_TYPE)){
-                                        p("result = new " + JSON_ARRAY_CLASS + "(result.getJavaScriptObject());");
+                                        p(JSON_VALUE_CLASS + " val = new " + JSON_ARRAY_CLASS + "(result.getJavaScriptObject());");
+                                    }
+                                    else {
+                                        p(JSON_VALUE_CLASS + " val = result;");
                                     }
                                     jsonAnnotation = method.getAnnotation(Json.class);
                                     Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
-                                    p("return " + locator.decodeExpression(resultType, "result", style) + ";");
+                                    p("return " + locator.decodeExpression(resultType, "val", style) + ";");
                                 }
                                 i(-1).p("} catch (Throwable __e) {").i(1);
                                 {
