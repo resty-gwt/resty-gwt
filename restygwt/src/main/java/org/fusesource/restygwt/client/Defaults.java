@@ -33,7 +33,7 @@ import com.google.gwt.core.client.GWT;
  */
 public class Defaults {
 
-    public static Dispatcher dispatcher = DefaultDispatcher.INSTANCE;
+    private static Dispatcher dispatcher = DefaultDispatcher.INSTANCE;
 
     private static String serviceRoot = GWT.getModuleBaseURL();
     private static String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
