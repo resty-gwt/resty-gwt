@@ -583,7 +583,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                     p("((" + JSONP_METHOD_CLASS + ")__method).send(new " + ABSTRACT_ASYNC_CALLBACK_CLASS + "<" + resultType.getParameterizedQualifiedSourceName() + ">((" + JSONP_METHOD_CLASS + ")__method, "
                                     + callbackArg.getName() + ") {").i(1);
                     {
-                        p("protected " + resultType.getParameterizedQualifiedSourceName() + " parseResult(" + JSON_OBJECT_CLASS + " result) throws Exception {").i(1);
+                        p("protected " + resultType.getParameterizedQualifiedSourceName() + " parseResult(" + JSON_VALUE_CLASS + " result) throws Exception {").i(1);
                         {
                             if(resultType.getParameterizedQualifiedSourceName().equals("java.lang.Void")) {
                                 p("return (java.lang.Void) null;");
@@ -592,14 +592,11 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                                 p("try {").i(1);
                                 {
                                     if(resultType.isAssignableTo(locator.LIST_TYPE)){
-                                        p(JSON_VALUE_CLASS + " val = new " + JSON_ARRAY_CLASS + "(result.getJavaScriptObject());");
-                                    }
-                                    else {
-                                        p(JSON_VALUE_CLASS + " val = result;");
+                                        p("result = new " + JSON_ARRAY_CLASS + "(result.getJavaScriptObject());");
                                     }
                                     jsonAnnotation = method.getAnnotation(Json.class);
                                     Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
-                                    p("return " + locator.decodeExpression(resultType, "val", style) + ";");
+                                    p("return " + locator.decodeExpression(resultType, "result", style) + ";");
                                 }
                                 i(-1).p("} catch (Throwable __e) {").i(1);
                                 {

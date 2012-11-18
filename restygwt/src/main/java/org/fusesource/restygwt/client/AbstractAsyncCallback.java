@@ -21,6 +21,7 @@ package org.fusesource.restygwt.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -57,5 +58,5 @@ public abstract class AbstractAsyncCallback<T> implements AsyncCallback<JavaScri
         }
     }
 
-    abstract protected T parseResult(JSONObject result) throws Exception;
+    abstract protected T parseResult(JSONValue result) throws Exception;
 }
