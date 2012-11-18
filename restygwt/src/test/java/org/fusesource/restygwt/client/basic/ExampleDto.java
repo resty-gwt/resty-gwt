@@ -36,5 +36,6 @@ public class ExampleDto {
 	public Map<BigInteger, String> complexMap10;
 	public Map<Character, String> complexMap11;
 
-	private transient String code;
+	@SuppressWarnings("unused")
+        private transient String code;
 }
