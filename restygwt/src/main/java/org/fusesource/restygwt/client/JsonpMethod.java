@@ -156,7 +156,7 @@ public class JsonpMethod extends Method {
     }
 
     private UnsupportedOperationException unsupported() {
-        return new UnsupportedOperationException("The jasonp method is restricted in what it can be configured with.");
+        return new UnsupportedOperationException("The jsonp method is restricted in what it can be configured with.");
     }
 
 }
