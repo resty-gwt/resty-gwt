@@ -253,7 +253,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         if( options!=null && options.dispatcher()!=Dispatcher.class ) {
             p("private " + DISPATCHER_CLASS + " dispatcher = "+options.dispatcher().getName()+".INSTANCE;");
         } else {
-            p("private " + DISPATCHER_CLASS + " dispatcher = "+DEFAULTS_CLASS+".getDispatcher();");
+            p("private " + DISPATCHER_CLASS + " dispatcher = null;");
         }
 
         p();
