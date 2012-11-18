@@ -18,6 +18,7 @@
 
 package org.fusesource.restygwt.client.codec;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -411,6 +412,23 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         Map<Integer, String> map = new HashMap<Integer, String>();
         map.put(123, "321");
         AbstractJsonEncoderDecoder<Integer> keyEncoder = AbstractJsonEncoderDecoder.INT;
+        AbstractJsonEncoderDecoder<String> valueEncoder = AbstractJsonEncoderDecoder.STRING;
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, keyEncoder, valueEncoder, Json.Style.DEFAULT), 
+                        keyEncoder, 
+                        valueEncoder, 
+                        Json.Style.DEFAULT).toString());
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, keyEncoder, valueEncoder, Json.Style.JETTISON_NATURAL), 
+                        keyEncoder, 
+                        valueEncoder, 
+                        Json.Style.JETTISON_NATURAL).toString());
+    }
+
+    public void testTypeMapWithBigDecimalDecode() {
+        Map<BigDecimal, String> map = new HashMap<BigDecimal, String>();
+        map.put(BigDecimal.valueOf(123), "321");
+        AbstractJsonEncoderDecoder<BigDecimal> keyEncoder = AbstractJsonEncoderDecoder.BIG_DECIMAL;
         AbstractJsonEncoderDecoder<String> valueEncoder = AbstractJsonEncoderDecoder.STRING;
         assertEquals(map.toString(),
                 AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, keyEncoder, valueEncoder, Json.Style.DEFAULT), 

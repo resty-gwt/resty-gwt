@@ -645,8 +645,16 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         case DEFAULT:
         case SIMPLE: {
             JSONObject rc = new JSONObject();
+            
             for (Entry<KeyType, ValueType> t : value.entrySet()) {
-                rc.put(keyEncoder.encode(t.getKey()).toString(), valueEncoder.encode(t.getValue()));
+                //TODO find a way to check only once
+                JSONValue k = keyEncoder.encode(t.getKey());
+                if (k.isString() != null) {
+                    rc.put(k.isString().stringValue(), valueEncoder.encode(t.getValue()));
+                }
+                else {
+                    rc.put(k.toString(), valueEncoder.encode(t.getValue()));
+                }
             }
             return rc;
         }
@@ -656,7 +664,14 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             int i = 0;
             for (Entry<KeyType, ValueType> t : value.entrySet()) {
                 JSONObject entry = new JSONObject();
-                entry.put("key", new JSONString(keyEncoder.encode(t.getKey()).toString()));
+                //TODO find a way to check only once
+                JSONValue k = keyEncoder.encode(t.getKey());
+                if (k.isString() != null) {
+                    entry.put("key", k);
+                }
+                else {
+                    entry.put("key", new JSONString(k.toString()));
+                }
                 entry.put("value", valueEncoder.encode(t.getValue()));
                 entries.set(i++, entry);
             }
