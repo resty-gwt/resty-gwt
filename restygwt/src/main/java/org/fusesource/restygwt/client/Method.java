@@ -78,7 +78,7 @@ public class Method {
 
     Request request;
     Response response;
-    Dispatcher dispatcher = Defaults.getDispatcher();
+    Dispatcher dispatcher;
 
     /**
      * additional data which can be set per instance, e.g. from a {@link AnnotationResolver}
@@ -189,7 +189,9 @@ public class Method {
     public void send(final RequestCallback callback) throws RequestException {
         doSetTimeout();
         builder.setCallback(callback);
-        dispatcher.send(this, builder);
+        // lazily load dispatcher from defaults, if one is not set yet.
+        Dispatcher localDispatcher = dispatcher == null ? Defaults.getDispatcher() : dispatcher;
+        localDispatcher.send(this, builder);
     }
 
     public void send(final TextCallback callback) {
