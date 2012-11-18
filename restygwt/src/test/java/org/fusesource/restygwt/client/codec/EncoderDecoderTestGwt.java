@@ -490,5 +490,45 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         assertNull(roundTrip.firstName);
         assertNull(roundTrip.getLastName());
     }
+    
+    static class Shorty {
 
+        private short shorty;
+        private long id;
+
+        public Shorty() {
+            shorty = 0;
+        }
+
+        public short getShorty() {
+            return shorty;
+        }
+
+        public void setShorty(short shorty) {
+            this.shorty = shorty;
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+    }
+    
+    static interface ShortyCodec extends JsonEncoderDecoder<Shorty> {
+    }
+    
+    public void testShortys() {
+        ShortyCodec shortyCodec = GWT.create(ShortyCodec.class);
+        Shorty shorty = new Shorty();
+        
+        JSONValue json = shortyCodec.encode(shorty);
+        assertEquals("{\"shorty\":0, \"id\":0}", json.toString());
+        Shorty roundTrip = shortyCodec.decode(json);
+        assertEquals(shorty.getShorty(), 0);
+        assertEquals(roundTrip.getShorty(), 0);
+    }    
 }

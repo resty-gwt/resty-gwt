@@ -430,7 +430,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         			}
         			String objectGetter = "object.get(" + wrap(jsonName) + ")";
         			String expression = locator.decodeExpression(field.getType(), objectGetter, style);
-    
+
         			String defaultValue = field.getType().isPrimitive() == null ? "null": field.getType().isPrimitive().getUninitializedFieldExpression() + "";
         			i(1).p("" + (objectGetter + " == null || " + objectGetter + " instanceof com.google.gwt.json.client.JSONNull ? " + defaultValue + " : " + expression + ((field != lastField) ? ", " : ""))).i(-1);
         			
@@ -486,29 +486,30 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         			    String jsonName = field.getName();
     
         			    if (jsonAnnotation != null && jsonAnnotation.name().length() > 0) {
-        				jsonName = jsonAnnotation.name();
+                            jsonName = jsonAnnotation.name();
         			    }
     
         			    String objectGetter = "object.get(" + wrap(jsonName) + ")";
         			    String expression = locator.decodeExpression(field.getType(), objectGetter, style);
     
+                        String cast = field.getType().isPrimitive() == JPrimitiveType.SHORT ? "(short) " : "";
         			    p("if(" + objectGetter + " != null) {").i(1);
     
         				p("if(" + objectGetter + " instanceof com.google.gwt.json.client.JSONNull) {").i(1);
                         String defaultValue = field.getType().isPrimitive() == null ? "null": field.getType().isPrimitive().getUninitializedFieldExpression() + "";
-
+                        
         				if (setterName != null) {
-        				    p("rc." + setterName + "(" + defaultValue + ");");
+                            p("rc." + setterName + "(" + cast + defaultValue + ");");
         				} else {
-        				    p("rc." + name + "=" + defaultValue + ";");
+                            p("rc." + name + "=" + cast + defaultValue + ";");
         				}
     
         				i(-1).p("} else {").i(1);
         			    
         			    if (setterName != null) {
-        				p("rc." + setterName + "(" + expression + ");");
+                            p("rc." + setterName + "(" + cast + expression + ");");
         			    } else {
-        				p("rc." + name + "=" + expression + ";");
+                            p("rc." + name + "=" + cast + expression + ";");
         			    }
         			    i(-1).p("}");    
         			    i(-1).p("}");    
