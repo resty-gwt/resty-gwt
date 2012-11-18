@@ -21,6 +21,7 @@ package org.fusesource.restygwt.client;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
+import com.google.gwt.json.client.JSONException;
 import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
@@ -588,7 +589,13 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
             HashMap<KeyType, ValueType> rc = new HashMap<KeyType, ValueType>(object.size() * 2);
             for (String key : object.keySet()) {
-                rc.put(keyEncoder.decode(JSONParser.parseStrict(key)), valueEncoder.decode(object.get(key)));
+                try{
+                    rc.put(keyEncoder.decode(JSONParser.parseStrict(key)), valueEncoder.decode(object.get(key)));
+                }
+                catch(JSONException e){
+                    // that can happen for generic key types like Object and then a String key gets passed in
+                    rc.put(keyEncoder.decode(JSONParser.parseStrict("\"" + key + "\"")), valueEncoder.decode(object.get(key)));                    
+                }
             }
             return rc;
         }
