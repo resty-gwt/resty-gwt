@@ -35,20 +35,29 @@ import org.fusesource.restygwt.client.basic.Echo;
  * just echos back the request path and the request parameters.
  *
  * @author mkristian
- *
+ * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</<a>
  */
 public class EchoTestGwtServlet extends HttpServlet {
 
     private static final long serialVersionUID = -746275386378921292L;
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void doGet(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+                         HttpServletResponse response) throws IOException {
+        doEchoRequest(request, response);
+    }
 
+    @Override
+    protected void doPost(HttpServletRequest request,
+                         HttpServletResponse response) throws IOException {
+        doEchoRequest(request, response);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void doEchoRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Echo echo = new Echo();
         echo.path = request.getPathInfo();
- 
+
         echo.params = new HashMap<String, String>();
         for ( Map.Entry<String, String[]> entry:  (Set<Map.Entry<String, String[]>>) request.getParameterMap().entrySet() ){
             echo.params.put(entry.getKey(), entry.getValue()[0]);

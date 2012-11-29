@@ -142,6 +142,12 @@ public class Method {
         return this;
     }
 
+    public Method form(String encodedFormData) {
+        defaultContentType(Resource.CONTENT_TYPE_FORM);
+        builder.setRequestData(encodedFormData);
+        return this;
+    }
+
     public Method timeout(int timeout) {
         builder.setTimeoutMillis(timeout);
         return this;
