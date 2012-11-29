@@ -18,27 +18,27 @@
 
 package org.fusesource.restygwt.client.basic;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.Resource;
-import org.fusesource.restygwt.client.RestService;
-import org.fusesource.restygwt.client.RestServiceProxy;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
+import org.fusesource.restygwt.client.*;
+
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import java.util.HashMap;
 
 /**
  *
  *
  * @author mkristian
+ * @author Bogdan Mustiata &lt;bogdan.mustiata@gmail.com&gt;
  *
  */
-public class QueryParamTestGwt extends GWTTestCase {
+public class FormParamTestGwt extends GWTTestCase {
 
-    private QueryTestRestService service;
+    private FormParamTestRestService service;
 
     @Override
     public String getModuleName() {
@@ -46,11 +46,16 @@ public class QueryParamTestGwt extends GWTTestCase {
     }
 
     @Path("/get")
-    static interface QueryTestRestService extends RestService {
-        
-        void get(@QueryParam(value = "id") int id, MethodCallback<Echo> callback);
+    static interface FormParamTestRestService extends RestService {
 
-        void get(@QueryParam(value = "id") Integer id, MethodCallback<Echo> callback);
+        @POST
+        void get(@FormParam(value = "id") int id, MethodCallback<Echo> callback);
+
+        @POST
+        void get(@FormParam(value = "id") Integer id, MethodCallback<Echo> callback);
+
+        @POST
+        void twoParams(@FormParam(value = "id") int id, @FormParam(value = "dto") ExampleDto exampleDto, MethodCallback<Echo> callback);
     }
     
     class EchoMethodCallback implements MethodCallback<Echo> {
@@ -63,6 +68,7 @@ public class QueryParamTestGwt extends GWTTestCase {
         
         @Override
         public void onSuccess(Method method, Echo response) {
+            GWT.log("method was called: " + response.params.get("id"));
 
             assertEquals(response.params.get("id"), id);
             assertEquals(response.params.size(), 1);
@@ -73,6 +79,7 @@ public class QueryParamTestGwt extends GWTTestCase {
 
         @Override
         public void onFailure(Method method, Throwable exception) {
+            System.out.println("test failed");
             fail();
         }
     }
@@ -80,49 +87,67 @@ public class QueryParamTestGwt extends GWTTestCase {
     @Override
     protected void gwtSetUp() throws Exception {
         super.gwtSetUp();        
-        service = GWT.create(QueryTestRestService.class);  
+        service = GWT.create(FormParamTestRestService.class);
         Resource resource = new Resource(GWT.getModuleBaseURL() + "echo");
         ((RestServiceProxy) service).setResource(resource);
+
+        delayTestFinish(10000);
     }
 
     public void testGetWithInteger() {
-    
         service.get(new Integer(2), new EchoMethodCallback("2"));
-
     }
 
     public void testGetWithNull() {
-    
         service.get(null, new MethodCallback<Echo>(){
-
             @Override
             public void onFailure(Method method, Throwable exception) {
-                
                 fail();
-                
             }
 
             @Override
             public void onSuccess(Method method, Echo response) {
-                
                 assertFalse(response.params.containsKey("id"));
                 assertEquals(response.params.size(), 0);
-                
+
+                finishTest();
             }
         });
+    }
 
+    public interface ExampleDtoDecoder extends JsonEncoderDecoder<ExampleDto> {
+    }
+
+    public void testPostWithDto() {
+        final ExampleDtoDecoder dtoEncoder = GWT.create(ExampleDtoDecoder.class);
+
+        final ExampleDto dto = new ExampleDto();
+        dto.name = "dtoName";
+        dto.complexMap1 = new HashMap<Integer, String>();
+        dto.complexMap1.put(1, "one");
+        dto.complexMap1.put(2, "two");
+        dto.complexMap1.put(3, "three");
+
+        service.twoParams(3, dto, new MethodCallback<Echo>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+            }
+
+            @Override
+            public void onSuccess(Method method, Echo response) {
+                assertEquals(2, response.params.size());
+                assertEquals("3", response.params.get("id"));
+
+                JSONValue jsonDto = JSONParser.parseStrict(response.params.get("dto"));
+                assertEquals(dto, dtoEncoder.decode(jsonDto));
+
+                finishTest();
+            }
+        });
     }
 
     public void testGetWithInt() {
-    
         service.get(123, new EchoMethodCallback("123"));
-
-    }
-
-    public void gwtTearDown() {
-
-        // wait... we are in async testing...
-        delayTestFinish(10000);
-        
     }
 }

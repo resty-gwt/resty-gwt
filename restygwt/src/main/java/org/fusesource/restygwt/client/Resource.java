@@ -33,6 +33,7 @@ public class Resource {
     public static final String CONTENT_TYPE_XML = "application/xml";
     public static final String CONTENT_TYPE_RSS = "application/rss+xml";
     public static final String CONTENT_TYPE_ATOM = "application/atom+xml";
+    public static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
     public static final String HEADER_ACCEPT = "Accept";
     public static final String HEADER_CONTENT_TYPE = "Content-Type";
 
