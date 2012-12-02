@@ -40,6 +40,9 @@ public class JsonpServlet extends HttpServlet {
         if ("list".equals(function)){
             data = "[" + data + "]";
         }
+        if ("null".equals(function)){
+            data = "";
+        }
         String jsonp = function + "(" + data + ")";
         System.out.println("Responding with: " + jsonp);
         resp.getWriter().println(jsonp);

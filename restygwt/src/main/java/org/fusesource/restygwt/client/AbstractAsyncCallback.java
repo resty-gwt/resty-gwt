@@ -48,9 +48,14 @@ public abstract class AbstractAsyncCallback<T> implements AsyncCallback<JavaScri
     final public void onSuccess(JavaScriptObject result) {
         try {
             GWT.log("Received http response for jsonp request", null);
-            JSONObject json = new JSONObject(result); 
-            GWT.log(json.toString(), null);
-            callback.onSuccess(this.method, parseResult(json));
+            if (result == null){
+                callback.onSuccess(this.method, null);
+            }
+            else{
+                JSONObject json = new JSONObject(result);
+                GWT.log(json.toString(), null);
+                callback.onSuccess(this.method, parseResult(json));
+            }
         } catch (Throwable e) {
             GWT.log("Could not parse response: " + e, e);
             callback.onFailure(this.method, e);

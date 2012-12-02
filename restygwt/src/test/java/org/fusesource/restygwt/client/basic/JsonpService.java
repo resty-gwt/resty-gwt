@@ -38,4 +38,7 @@ public interface JsonpService extends RestService {
     @JSONP(callbackParam = "list") // param name used by test servlet produce list
     public void someJsonpWithList(MethodCallback<List<ExampleDto>> callback);
 
+    @JSONP(callbackParam = "null") // param name used by test servlet produce null
+    public void someOtherJsonp(MethodCallback<ExampleDto> callback);
+
 }
