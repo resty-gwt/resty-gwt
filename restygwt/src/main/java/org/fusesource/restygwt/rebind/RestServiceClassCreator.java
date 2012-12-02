@@ -181,11 +181,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             path = relativePath.value();
         }
 
-        if (path == null) {
-            p("private " + RESOURCE_CLASS + " resource = new " + RESOURCE_CLASS + "(" + DEFAULTS_CLASS + ".getServiceRoot());");
-        } else {
-            p("private " + RESOURCE_CLASS + " resource = new " + RESOURCE_CLASS + "(" + DEFAULTS_CLASS + ".getServiceRoot()).resolve("+quote(path)+");");
-        }
+        p("private " + RESOURCE_CLASS + " resource = null;");
         p();
 
         p("public void setResource(" + RESOURCE_CLASS + " resource) {").i(1);
@@ -196,6 +192,13 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
         p("public " + RESOURCE_CLASS + " getResource() {").i(1);
         {
+            p("if (this.resource == null) {").i(1);
+            if (path == null) {
+                p("this.resource = new " + RESOURCE_CLASS + "(" + DEFAULTS_CLASS + ".getServiceRoot());");
+            } else {
+                p("this.resource = new " + RESOURCE_CLASS + "(" + DEFAULTS_CLASS + ".getServiceRoot()).resolve("+quote(path)+");");
+            }
+            i(-1).p("}");
             p("return this.resource;");
         }
         i(-1).p("}");
@@ -394,7 +397,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
             p("final " + METHOD_CLASS + " __method =");
 
-            p("this.resource");
+            p("getResource()");
             if (pathExpression != null) {
                 p(".resolve(" + pathExpression + ")");
             }
