@@ -22,20 +22,7 @@ package org.fusesource.restygwt;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.fusesource.restygwt.client.basic.CachingTestGwt;
-import org.fusesource.restygwt.client.basic.FailingTestGwt;
-import org.fusesource.restygwt.client.basic.FlakyTestGwt;
-import org.fusesource.restygwt.client.basic.GenericsTestGwt;
-import org.fusesource.restygwt.client.basic.JsonCreatorWithSubtypes;
-import org.fusesource.restygwt.client.basic.ParameterizedTypeDTO;
-import org.fusesource.restygwt.client.basic.ParameterizedTypeServiceInterfaces;
-import org.fusesource.restygwt.client.basic.PathParamTestGwt;
-import org.fusesource.restygwt.client.basic.QueryParamTestGwt;
-import org.fusesource.restygwt.client.basic.ResourcePassesHeadersTestGwt;
-import org.fusesource.restygwt.client.basic.ResourceTestGwt;
-import org.fusesource.restygwt.client.basic.SubResourceClientGeneration;
-import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
-import org.fusesource.restygwt.client.basic.DirectRestServiceTestGwt;
+import org.fusesource.restygwt.client.basic.*;
 import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorageTestGwt;
 import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver;
@@ -85,6 +72,7 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(JsonCreatorWithSubtypes.class);
         suite.addTestSuite(PathParamTestGwt.class);
         suite.addTestSuite(QueryParamTestGwt.class);
+        suite.addTestSuite(FormParamTestGwt.class);
         suite.addTestSuite(DirectRestServiceTestGwt.class);
         return suite;
     }
