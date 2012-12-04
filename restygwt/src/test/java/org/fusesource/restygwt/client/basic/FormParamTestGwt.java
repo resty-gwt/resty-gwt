@@ -27,7 +27,7 @@ import org.fusesource.restygwt.client.*;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  *
@@ -56,6 +56,12 @@ public class FormParamTestGwt extends GWTTestCase {
 
         @POST
         void twoParams(@FormParam(value = "id") int id, @FormParam(value = "dto") ExampleDto exampleDto, MethodCallback<Echo> callback);
+
+        @POST
+        void listParams(@FormParam(value = "dtoList") List<ExampleDto> exampleDtoList, MethodCallback<Echo> callback);
+
+        @POST
+        void arrayParams(@FormParam(value = "dtoArray") ExampleDto[] exampleDtoArray, MethodCallback<Echo> callback);
     }
     
     class EchoMethodCallback implements MethodCallback<Echo> {
@@ -94,6 +100,10 @@ public class FormParamTestGwt extends GWTTestCase {
         delayTestFinish(10000);
     }
 
+    public void testGetWithInt() {
+        service.get(123, new EchoMethodCallback("123"));
+    }
+
     public void testGetWithInteger() {
         service.get(new Integer(2), new EchoMethodCallback("2"));
     }
@@ -119,14 +129,8 @@ public class FormParamTestGwt extends GWTTestCase {
     }
 
     public void testPostWithDto() {
-        final ExampleDtoDecoder dtoEncoder = GWT.create(ExampleDtoDecoder.class);
-
-        final ExampleDto dto = new ExampleDto();
-        dto.name = "dtoName";
-        dto.complexMap1 = new HashMap<Integer, String>();
-        dto.complexMap1.put(1, "one");
-        dto.complexMap1.put(2, "two");
-        dto.complexMap1.put(3, "three");
+        final ExampleDtoDecoder dtoDecoder = GWT.create(ExampleDtoDecoder.class);
+        final ExampleDto dto = createDtoObject();
 
         service.twoParams(3, dto, new MethodCallback<Echo>() {
             @Override
@@ -140,14 +144,100 @@ public class FormParamTestGwt extends GWTTestCase {
                 assertEquals("3", response.params.get("id"));
 
                 JSONValue jsonDto = JSONParser.parseStrict(response.params.get("dto"));
-                assertEquals(dto, dtoEncoder.decode(jsonDto));
+                assertEquals(dto, dtoDecoder.decode(jsonDto));
 
                 finishTest();
             }
         });
     }
 
-    public void testGetWithInt() {
-        service.get(123, new EchoMethodCallback("123"));
+    public void testPostWithDtoList() {
+        final ObjectEncoderDecoder objectEncoderDecoder = new ObjectEncoderDecoder();
+        final List<ExampleDto> dtoList = Collections.singletonList( createDtoObject() );
+
+        service.listParams(dtoList, new MethodCallback<Echo>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+            }
+
+            @Override
+            public void onSuccess(Method method, Echo response) {
+                assertEquals(1, response.params.size());
+
+                JSONValue jsonDto = JSONParser.parseStrict(response.params.get("dtoList"));
+                assertEquals(createDtoObjectAsList(), objectEncoderDecoder.decode(jsonDto));
+
+                finishTest();
+            }
+        });
+    }
+
+    public void testPostWithDtoArray() {
+        final ObjectEncoderDecoder objectEncoderDecoder = new ObjectEncoderDecoder();
+        final ExampleDto[] dtoList = new ExampleDto[] { createDtoObject() };
+
+        service.arrayParams(dtoList, new MethodCallback<Echo>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+            }
+
+            @Override
+            public void onSuccess(Method method, Echo response) {
+                assertEquals(1, response.params.size());
+
+                JSONValue jsonDto = JSONParser.parseStrict(response.params.get("dtoArray"));
+                assertEquals(createDtoObjectAsList(), objectEncoderDecoder.decode(jsonDto));
+
+                finishTest();
+            }
+        });
+    }
+
+
+    private List createDtoObjectAsList() {
+        ArrayList result = new ArrayList();
+
+        result.add(
+            map("name", "dtoName",
+                "complexMap1", map(
+                    "1", "one",
+                    "2", "two",
+                    "3", "three"
+                ),
+                "complexMap2", null,
+                "complexMap3", null,
+                "complexMap4", null,
+                "complexMap5", null,
+                "complexMap7", null,
+                "complexMap8", null,
+                "complexMap9", null,
+                "complexMap10", null,
+                "complexMap11", null
+            )
+        );
+
+        return result;
+    }
+
+    public HashMap map(Object... keyValues) {
+        HashMap result = new HashMap();
+
+        for (int i = 0; i < keyValues.length; i += 2 ) {
+            result.put(keyValues[i], keyValues[i + 1]);
+        }
+
+        return result;
+    }
+
+    private ExampleDto createDtoObject() {
+        final ExampleDto dto = new ExampleDto();
+        dto.name = "dtoName";
+        dto.complexMap1 = new HashMap<Integer, String>();
+        dto.complexMap1.put(1, "one");
+        dto.complexMap1.put(2, "two");
+        dto.complexMap1.put(3, "three");
+        return dto;
     }
 }
