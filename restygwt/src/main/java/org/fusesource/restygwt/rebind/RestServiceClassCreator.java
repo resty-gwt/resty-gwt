@@ -661,7 +661,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 OVERLAY_VALUE_TYPE.isAssignableFrom(type.isClass())) {
             return "(new " + JSON_OBJECT_CLASS + "(" + expr + ")).toString()";
         }
-        if (type.getQualifiedBinaryName().startsWith("java.")) {
+        if (type.getQualifiedBinaryName().startsWith("java.lang.")) {
             return String.format("(%s != null ? %s.toString() : null)", expr, expr);
         }
 
