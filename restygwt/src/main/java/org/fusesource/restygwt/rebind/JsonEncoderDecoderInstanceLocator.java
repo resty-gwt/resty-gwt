@@ -197,7 +197,7 @@ public class JsonEncoderDecoderInstanceLocator {
                     error("List must define one and only one type parameter");
                 }
                 encoderDecoder = getEncoderDecoder(types[0], logger);
-                info("type encoder for: " + types[0] + " is " + encoderDecoder);
+                debug("type encoder for: " + types[0] + " is " + encoderDecoder);
                 if (encoderDecoder != null) {
                     return listMethod + "(" + expression + ", " + encoderDecoder + ")";
                 }
@@ -210,7 +210,7 @@ public class JsonEncoderDecoderInstanceLocator {
             }
             
             encoderDecoder = getEncoderDecoder(componentType, logger);
-            info("type encoder for: " + componentType + " is " + encoderDecoder);
+            debug("type encoder for: " + componentType + " is " + encoderDecoder);
             if (encoderDecoder != null) {
                 if (encoderMethod.equals("encode")) {
                     return arrayMethod + "(" + expression + ", " + encoderDecoder + ")";
