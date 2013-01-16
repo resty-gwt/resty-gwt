@@ -28,6 +28,7 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
+import org.fusesource.restygwt.client.AbstractNestedJsonEncoderDecoder;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
 import org.fusesource.restygwt.client.ObjectEncoderDecoder;
@@ -473,6 +474,43 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
                         Json.Style.JETTISON_NATURAL).toString());
     }
 
+    public void testTypeMapWithListValueDecode() {
+        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        map.put("key", new ArrayList<String>(Arrays.asList("me and the corner")));
+        AbstractJsonEncoderDecoder<List<String>> valueEncoder = AbstractNestedJsonEncoderDecoder.listEncoderDecoder( AbstractJsonEncoderDecoder.STRING );
+        
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, valueEncoder, Json.Style.DEFAULT), 
+                        valueEncoder, 
+                        Json.Style.DEFAULT).toString());
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, valueEncoder, Json.Style.JETTISON_NATURAL), 
+                        valueEncoder, 
+                        Json.Style.JETTISON_NATURAL).toString());
+    }
+    public void testTypeMapWithListValueDecodeAndComplexKey() {
+        Map<Email, List<String>> map = new HashMap<Email, List<String>>();
+        Email email = new Email();
+        email.email = "me@example.com";
+        email.name = "me";
+        map.put(email, new ArrayList<String>(Arrays.asList("me and the corner")));
+        AbstractJsonEncoderDecoder<Email> keyEncoder = GWT.create(EmailCodec.class);
+        AbstractJsonEncoderDecoder<List<String>> valueEncoder = AbstractNestedJsonEncoderDecoder.listEncoderDecoder( AbstractJsonEncoderDecoder.STRING );
+  
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, keyEncoder, 
+                        valueEncoder, Json.Style.DEFAULT), 
+                        keyEncoder, 
+                        valueEncoder, 
+                        Json.Style.DEFAULT).toString());
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, keyEncoder, 
+                        valueEncoder, Json.Style.JETTISON_NATURAL), 
+                        keyEncoder, 
+                        valueEncoder, 
+                        Json.Style.JETTISON_NATURAL).toString());
+    }
+    
     static class CCC {
         
         @JsonIgnore
