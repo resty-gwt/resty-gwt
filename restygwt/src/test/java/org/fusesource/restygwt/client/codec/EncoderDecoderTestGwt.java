@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
 import org.fusesource.restygwt.client.AbstractNestedJsonEncoderDecoder;
 import org.fusesource.restygwt.client.Json;
@@ -586,5 +587,121 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         Shorty roundTrip = shortyCodec.decode(json);
         assertEquals(shorty.getShorty(), 0);
         assertEquals(roundTrip.getShorty(), 0);
-    }    
+    }
+    
+    static class Bean {
+        
+        @JsonIgnore
+        private int myAge = 123;
+
+        int getAge(){
+            return myAge;
+        }
+        
+        void setAge( int a ){
+            this.myAge = a;
+        }
+        
+        void setYearOfBirth( long a ){
+        }
+        
+        long getYearOfBirth(){
+            return 1234;
+        }
+    }
+
+    static class NestedBean extends Bean {
+
+        String name = "asterix";
+
+        String getName(){
+            return name;
+        }
+        
+        void setName( String name ){
+            this.name = name;
+        }
+    }
+    
+    static interface BeanCodec extends JsonEncoderDecoder<Bean> {
+    }
+    static interface NestedBeanCodec extends JsonEncoderDecoder<NestedBean> {
+    }
+    
+    public void testBean() {
+        BeanCodec beanCodec = GWT.create(BeanCodec.class);
+        Bean bean = new Bean();
+        
+        JSONValue json = beanCodec.encode(bean);
+        assertEquals("{\"age\":123, \"yearOfBirth\":1234}", json.toString());
+        Bean roundTrip = beanCodec.decode(json);
+        assertEquals(roundTrip.getAge(), 123);
+        assertEquals(roundTrip.getYearOfBirth(), 1234);
+    }
+    
+
+    public void testNestedBean() {
+        NestedBeanCodec beanCodec = GWT.create(NestedBeanCodec.class);
+        NestedBean bean = new NestedBean();
+        
+        JSONValue json = beanCodec.encode(bean);
+        assertEquals("{\"name\":\"asterix\", \"age\":123, \"yearOfBirth\":1234}", json.toString());
+        NestedBean roundTrip = beanCodec.decode(json);
+        assertEquals(roundTrip.getAge(), 123);
+        assertEquals(roundTrip.getYearOfBirth(), 1234);
+    }
+
+    static class Renamed {
+        
+        @JsonProperty( "my-age")
+        private int age;
+        
+        @Json( name = "year-of-birth")
+        private long yearOfBirth;
+
+        private String n;
+        
+        int getAge(){
+            return age;
+        }
+        
+        void setAge( int a ){
+            this.age = a;
+        }
+        
+        void setYearOfBirth( long a ){
+            this.yearOfBirth = a;
+        }
+        
+        long getYearOfBirth(){
+            return yearOfBirth;
+        }
+        
+        void setName( String name ){
+            this.n = name;
+        }
+
+        @JsonProperty( "my-name")
+        String getName(){
+            return n;
+        }
+    }
+    
+    static interface RenamedCodec extends JsonEncoderDecoder<Renamed> {
+    }
+    
+    public void testRenamed() {
+        RenamedCodec renamedCodec = GWT.create(RenamedCodec.class);
+        Renamed renamed = new Renamed();
+        renamed.setName("marvin the robot");
+        renamed.setAge(123);
+        renamed.setYearOfBirth(1234);
+        
+        JSONValue json = renamedCodec.encode(renamed);
+        assertEquals("{\"my-age\":123, \"year-of-birth\":1234, \"my-name\":\"marvin the robot\"}", json.toString());
+        Renamed roundTrip = renamedCodec.decode(json);
+        assertEquals(roundTrip.age, 123);
+        assertEquals(roundTrip.yearOfBirth, 1234);
+        assertEquals(roundTrip.getName(), "marvin the robot");
+    }
 }
