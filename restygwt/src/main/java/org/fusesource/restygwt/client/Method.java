@@ -194,18 +194,19 @@ public class Method {
         }
     }
 
-    public void send(final RequestCallback callback) throws RequestException {
+    public Object send(final RequestCallback callback) throws RequestException {
         doSetTimeout();
         builder.setCallback(callback);
         // lazily load dispatcher from defaults, if one is not set yet.
         Dispatcher localDispatcher = dispatcher == null ? Defaults.getDispatcher() : dispatcher;
-        localDispatcher.send(this, builder);
+        return localDispatcher.send(this, builder);
     }
 
-    public void send(final TextCallback callback) {
+    public Object send(final TextCallback callback) {
         defaultAcceptType(Resource.CONTENT_TYPE_TEXT);
         try {
-            send(new AbstractRequestCallback<String>(this, callback) {
+            return send(new AbstractRequestCallback<String>(this, callback) {
+                @Override
                 protected String parseResult() throws Exception {
                     return response.getText();
                 }
@@ -213,14 +214,16 @@ public class Method {
         } catch (Throwable e) {
             GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
             callback.onFailure(this, e);
+            return null;
         }
     }
 
-    public void send(final JsonCallback callback) {
+    public Object send(final JsonCallback callback) {
         defaultAcceptType(Resource.CONTENT_TYPE_JSON);
 
         try {
-            send(new AbstractRequestCallback<JSONValue>(this, callback) {
+            return send(new AbstractRequestCallback<JSONValue>(this, callback) {
+                @Override
                 protected JSONValue parseResult() throws Exception {
                     try {
                         return JSONParser.parseStrict(response.getText());
@@ -232,13 +235,15 @@ public class Method {
         } catch (Throwable e) {
             GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
             callback.onFailure(this, e);
+            return null;
         }
     }
 
-    public void send(final XmlCallback callback) {
+    public Object send(final XmlCallback callback) {
         defaultAcceptType(Resource.CONTENT_TYPE_XML);
         try {
-            send(new AbstractRequestCallback<Document>(this, callback) {
+            return send(new AbstractRequestCallback<Document>(this, callback) {
+                @Override
                 protected Document parseResult() throws Exception {
                     try {
                         return XMLParser.parse(response.getText());
@@ -250,16 +255,18 @@ public class Method {
         } catch (Throwable e) {
             GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
             callback.onFailure(this, e);
+            return null;
         }
     }
 
-    public <T extends JavaScriptObject> void send(final OverlayCallback<T> callback) {
+    public <T extends JavaScriptObject> Object send(final OverlayCallback<T> callback) {
 
 
         defaultAcceptType(Resource.CONTENT_TYPE_JSON);
         try {
-            send(new AbstractRequestCallback<T>(this, callback) {
+            return send(new AbstractRequestCallback<T>(this, callback) {
                 @SuppressWarnings("unchecked")
+                @Override
                 protected T parseResult() throws Exception {
                     try {
                         JSONValue val = JSONParser.parseStrict(response.getText());
@@ -280,6 +287,7 @@ public class Method {
         } catch (Throwable e) {
             GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
             callback.onFailure(this, e);
+            return null;
         }
     }
 

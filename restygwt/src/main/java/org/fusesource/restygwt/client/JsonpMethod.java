@@ -62,12 +62,14 @@ public class JsonpMethod extends Method {
     }
 
     @Override
-    public void send(final JsonCallback callback) {
-        builder.requestObject(resource.getUri(), new AsyncCallback<JavaScriptObject>() {
+    public Object send(final JsonCallback callback) {
+        return builder.requestObject(resource.getUri(), new AsyncCallback<JavaScriptObject>() {
+            @Override
             public void onSuccess(JavaScriptObject result) {
                 callback.onSuccess(JsonpMethod.this, new JSONObject(result));
             }
 
+            @Override
             public void onFailure(Throwable caught) {
                 callback.onFailure(JsonpMethod.this, caught);
             }
@@ -75,12 +77,14 @@ public class JsonpMethod extends Method {
     }
 
     @Override
-    public void send(final TextCallback callback) {
-        builder.requestString(resource.getUri(), new AsyncCallback<String>() {
+    public Object send(final TextCallback callback) {
+        return builder.requestString(resource.getUri(), new AsyncCallback<String>() {
+            @Override
             public void onSuccess(String result) {
                 callback.onSuccess(JsonpMethod.this, result);
             }
 
+            @Override
             public void onFailure(Throwable caught) {
                 callback.onFailure(JsonpMethod.this, caught);
             }
@@ -91,12 +95,12 @@ public class JsonpMethod extends Method {
      * helper method to make RestServiceClassCreator easier to maintain
      * @param callback
      */
-    public void send(final AsyncCallback<JavaScriptObject> callback) {
-        builder.requestObject(resource.getUri(), callback);
+    public Object send(final AsyncCallback<JavaScriptObject> callback) {
+        return builder.requestObject(resource.getUri(), callback);
     }
 
     @Override
-    public void send(RequestCallback callback) throws RequestException {
+    public Object send(RequestCallback callback) throws RequestException {
         throw unsupported();
     }
 
@@ -136,7 +140,7 @@ public class JsonpMethod extends Method {
     }
 
     @Override
-    public void send(XmlCallback callback) {
+    public Object send(XmlCallback callback) {
         throw unsupported();
     }
 
