@@ -19,12 +19,16 @@
 package org.fusesource.restygwt.client.basic;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Request;
 import com.google.gwt.junit.client.GWTTestCase;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
+import org.junit.Test;
 
 /**
  *
@@ -69,5 +73,33 @@ public class BasicTestGwt extends GWTTestCase {
         delayTestFinish(10000);
 
     }
+    
+    @Test
+    public void testCancelRequest() {
 
+        //configure RESTY
+        Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
+
+
+        ExampleService service = GWT.create(ExampleService.class);
+        ((RestServiceProxy) service).setResource(resource);
+
+        Request request = service.getExampleDtoCancelable(new MethodCallback<ExampleDto>() {
+
+            @Override
+            public void onSuccess(Method method, ExampleDto response) {
+                fail();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+            }
+        });
+
+        request.cancel();
+        
+        // wait... we are in async testing...
+        delayTestFinish(10000);
+    }
 }
