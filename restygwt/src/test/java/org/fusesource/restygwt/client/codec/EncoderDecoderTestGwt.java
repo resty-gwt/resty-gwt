@@ -489,6 +489,31 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
                         valueEncoder, 
                         Json.Style.JETTISON_NATURAL).toString());
     }
+
+    public void testTypeMapWithMapValueDecode() {
+        Map<String, Map<String, String>> map = new HashMap<String, Map<String, String>>();
+        Map<String, String> nested = new HashMap<String, String>();
+        nested.put("name", "me");
+        map.put("key", nested);
+
+        AbstractJsonEncoderDecoder<Map<String, String>> valueEncoder = AbstractNestedJsonEncoderDecoder.mapEncoderDecoder( AbstractJsonEncoderDecoder.STRING, AbstractJsonEncoderDecoder.STRING, Json.Style.DEFAULT );
+        
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, valueEncoder, Json.Style.DEFAULT), 
+                        valueEncoder, 
+                        Json.Style.DEFAULT).toString());
+        
+        // the JETTISON enoding it is important to use the special encoder with String keys
+        valueEncoder = AbstractNestedJsonEncoderDecoder.mapEncoderDecoder( AbstractJsonEncoderDecoder.STRING, Json.Style.JETTISON_NATURAL );
+        
+        System.err.println(AbstractJsonEncoderDecoder.toJSON(map, valueEncoder, Json.Style.JETTISON_NATURAL).toString());
+        
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, valueEncoder, Json.Style.JETTISON_NATURAL), 
+                        valueEncoder, 
+                        Json.Style.JETTISON_NATURAL).toString());
+    }
+    
     public void testTypeMapWithListValueDecodeAndComplexKey() {
         Map<Email, List<String>> map = new HashMap<Email, List<String>>();
         Email email = new Email();
