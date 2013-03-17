@@ -26,7 +26,11 @@ import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.jsonp.client.JsonpRequest;
 import com.google.gwt.junit.client.GWTTestCase;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
+import org.junit.Test;
 
 /**
  *
@@ -72,6 +76,36 @@ public class JsonpTestGwt extends GWTTestCase {
         // wait... we are in async testing...
         delayTestFinish(10000);
 
+    }
+    
+    @Test
+    public void testCancel() {
+
+        //configure RESTY
+        Resource resource = new Resource(GWT.getModuleBaseURL() + URI_PATH);
+
+
+        JsonpService service = GWT.create(JsonpService.class);
+        ((RestServiceProxy) service).setResource(resource);
+
+        JsonpRequest request = service.someCancelableJsonp(new MethodCallback<ExampleDto>() {
+
+            @Override
+            public void onSuccess(Method method, ExampleDto response) {
+                fail();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+
+            }
+        });
+        
+        request.cancel();
+
+        // wait... we are in async testing...
+        delayTestFinish(10000);
     }
 
     public void testListFunction() {
