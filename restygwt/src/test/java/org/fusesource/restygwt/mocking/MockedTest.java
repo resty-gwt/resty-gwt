@@ -18,6 +18,7 @@
 
 package org.fusesource.restygwt.mocking;
 
+import com.google.gwt.http.client.Request;
 import junit.framework.TestCase;
 
 import org.fusesource.restygwt.client.Method;
@@ -53,6 +54,13 @@ public class MockedTest extends TestCase {
                 ExampleDto exampleDto = new ExampleDto();
                 exampleDto.name = "name";
                callback.onSuccess(null, exampleDto);
+            }
+            @Override
+            public Request getExampleDtoCancelable(MethodCallback<ExampleDto> callback) {
+                ExampleDto exampleDto = new ExampleDto();
+                exampleDto.name = "name";
+                callback.onSuccess(null, exampleDto);
+                return null;
             }
         };
 

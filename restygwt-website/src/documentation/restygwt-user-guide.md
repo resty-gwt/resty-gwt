@@ -25,7 +25,7 @@ GWT deferred binding by a RestyGWT generator.  See the following listing for an 
     }
 
 JAX-RS annotations are used to control how the methods interface map to HTTP requests.  The 
-interface methods MUST return void.  Each method must declare at least one callback argument.  
+interface methods MUST return either void, Request or JsonpRequest.  Each method must declare at least one callback argument.  
 Methods can optionally declare one method argument before the callback to pass via the request
 body.
 
