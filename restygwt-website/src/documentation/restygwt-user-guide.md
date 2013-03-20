@@ -237,6 +237,10 @@ Then you use it as follows
     // decoding an object to from json
     PizzaOrder other = codec.decode(json);
 
+In case you need to parse the JSON from a String use
+
+    JSONValue json = JSONParser.parseStrict( jsonString );
+
 ### Customizing the JSON Property Names 
 
 If you want to map a field name to a different json property name, you
@@ -244,6 +248,13 @@ can use the `@Json` annotation to configure the desired name.  Example:
 
     public class Message {
         @Json(name="message-id")
+        public String messageId;
+    }
+
+or with the jackson annotation
+
+    public class Message {
+        @JSONProperty("message-id")
         public String messageId;
     }
 
