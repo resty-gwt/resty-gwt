@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
@@ -50,6 +51,9 @@ import com.google.gwt.xml.client.Document;
 /**
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
+ * 
+ *          Update : Add support for JsonDeserialize annotation for interfaces
+ * @author <a href="http://wwww.ronanquillevere.fr">Ronan Quillevere</a>
  */
 public class JsonEncoderDecoderInstanceLocator {
 
@@ -122,8 +126,12 @@ public class JsonEncoderDecoderInstanceLocator {
         if (rc == null) {
             JClassType ct = type.isClass();
             if (ct != null && !isCollectionType(ct)) {
-                JsonEncoderDecoderClassCreator generator = new JsonEncoderDecoderClassCreator(logger, context, ct);
-                return generator.create() + ".INSTANCE";
+                return new JsonEncoderDecoderClassCreator(logger, context, ct).create() + ".INSTANCE";
+            }
+            
+            ct = type.isInterface();
+            if (ct != null && (ct.findAnnotationInTypeHierarchy(JsonDeserialize.class) != null)){
+                return new JsonEncoderDecoderClassCreator(logger, context, ct).create() + ".INSTANCE";
             }
         }
         return rc;
