@@ -116,15 +116,19 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         if (typeInfo != null) {
             final JsonSubTypes jacksonSubTypes = findAnnotation(source, JsonSubTypes.class);
             if (typeInfo.use() == Id.CLASS || typeInfo.use() == Id.MINIMAL_CLASS) {
+            List<JClassType> resolvedSubtypes = Lists.newArrayList();
         	if (jacksonSubTypes != null) {
         	    for (JsonSubTypes.Type type : jacksonSubTypes.value()) {
         		JClassType typeClass = find(type.value());
-        		if (!isLeaf || source.equals(typeClass))
-        		    possibleTypes.add(new Subtype(typeInfo.use() == Id.CLASS ? typeClass.getQualifiedSourceName() : typeClass.getSimpleSourceName(), typeClass));
+        		if (!isLeaf || source.equals(typeClass)) resolvedSubtypes.add(typeClass);
         	    }
         	} else {
-        	    error("@JsonSubTypes annotation missing for type: " + source);
+        		for (JClassType typeClass : context.getTypeOracle().getTypes()) {
+    			if (!typeClass.isAbstract() && typeClass.isAssignableTo(source)) resolvedSubtypes.add(typeClass);
+        		}
         	}
+        	for (JClassType typeClass : resolvedSubtypes)
+        	possibleTypes.add(new Subtype(typeInfo.use() == Id.CLASS ? typeClass.getQualifiedSourceName() : "." + typeClass.getSimpleSourceName(), typeClass));
             } else if (typeInfo.use() != Id.NONE) {
         	final JsonTypeIdResolver typeResolver = findAnnotation(source, JsonTypeIdResolver.class);
         	if (jacksonSubTypes != null) {
