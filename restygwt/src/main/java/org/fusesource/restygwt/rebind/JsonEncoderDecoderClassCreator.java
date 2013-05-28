@@ -265,7 +265,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         	    case PROPERTY:
         		p("com.google.gwt.json.client.JSONValue className=org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.encode(\"" + possibleType.tag + "\");");
         		p("if( className!=null ) { ").i(1);
-        		p("rc.put(" + getTypeInfoPropertyValue(typeInfo) + ", className);");
+        		p("rc.put(\"" + typeInfo.property() + "\", className);");
         		i(-1).p("}");
         		break;
         	    case WRAPPER_OBJECT:
@@ -399,7 +399,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             }
     
             if (!isLeaf && typeInfo != null && typeInfo.include() == As.PROPERTY) {
-                p("String sourceName = org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.decode(object.get(" + getTypeInfoPropertyValue(typeInfo) + "));");
+        	p("String sourceName = org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.decode(object.get(" + wrap(typeInfo.property()) + "));");
             }
     
             for (Subtype possibleType : possibleTypes) {
@@ -757,16 +757,5 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         }
         
     	return allFields;
-    }
-    
-    private String getTypeInfoPropertyValue(final JsonTypeInfo typeInfo){
-        String propValue;
-        if (typeInfo.use() == Id.CLASS && "".equals(typeInfo.property()))
-            propValue = Id.CLASS.getDefaultPropertyName();
-        else
-            propValue = typeInfo.property();
-
-        
-        return wrap(propValue);
     }
 }
