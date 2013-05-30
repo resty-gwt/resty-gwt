@@ -112,7 +112,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     public void generate() throws UnableToCompleteException {
         final List<Subtype> possibleTypes = Lists.newArrayList();
         final JsonTypeInfo typeInfo = findAnnotation(source, JsonTypeInfo.class);
-        final boolean isLeaf = !source.isAnnotationPresent(JsonTypeInfo.class);
+        final boolean isLeaf = isLeaf(source);
         if (typeInfo != null) {
             final JsonSubTypes jacksonSubTypes = findAnnotation(source, JsonSubTypes.class);
             if (typeInfo.use() == Id.CLASS || typeInfo.use() == Id.MINIMAL_CLASS) {
@@ -269,7 +269,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         	    case PROPERTY:
         		p("com.google.gwt.json.client.JSONValue className=org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.encode(\"" + possibleType.tag + "\");");
         		p("if( className!=null ) { ").i(1);
-        		p("rc.put(\"" + typeInfo.property() + "\", className);");
+        		p("rc.put(" + wrap(getTypeInfoPropertyValue(typeInfo)) + ", className);");
         		i(-1).p("}");
         		break;
         	    case WRAPPER_OBJECT:
@@ -403,7 +403,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             }
     
             if (!isLeaf && typeInfo != null && typeInfo.include() == As.PROPERTY) {
-        	p("String sourceName = org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.decode(object.get(" + wrap(typeInfo.property()) + "));");
+        	p("String sourceName = org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.decode(object.get(" + wrap(getTypeInfoPropertyValue(typeInfo)) + "));");
             }
     
             for (Subtype possibleType : possibleTypes) {
@@ -761,5 +761,19 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         }
         
     	return allFields;
+    }
+    
+    public static String getTypeInfoPropertyValue(final JsonTypeInfo typeInfo)
+    {
+        if (typeInfo.include() == JsonTypeInfo.As.PROPERTY)
+            if(typeInfo.property() == null || "".equals(typeInfo.property()))
+                return typeInfo.use().getDefaultPropertyName();
+        
+        return typeInfo.property();
+    }
+    
+    public static boolean isLeaf(JClassType source)
+    {
+        return !(source.getSubtypes() != null && source.getSubtypes().length > 0);
     }
 }
