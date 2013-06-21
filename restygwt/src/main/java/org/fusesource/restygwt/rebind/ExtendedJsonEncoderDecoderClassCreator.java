@@ -42,8 +42,8 @@ public class ExtendedJsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     protected ClassSourceFileComposerFactory createComposerFactory() throws UnableToCompleteException {
         ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
-        JClassType encodedType = getEncodedType(logger, context, source);
-        JsonEncoderDecoderClassCreator generator = new JsonEncoderDecoderClassCreator(logger, context, encodedType);
+        JClassType encodedType = getEncodedType(getLogger(), context, source);
+        JsonEncoderDecoderClassCreator generator = new JsonEncoderDecoderClassCreator(getLogger(), context, encodedType);
         composerFactory.setSuperclass(generator.create());
         composerFactory.addImplementedInterface(source.getQualifiedSourceName());
         return composerFactory;
@@ -52,29 +52,29 @@ public class ExtendedJsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private JClassType getEncodedType(TreeLogger logger, GeneratorContext context, JClassType type) throws UnableToCompleteException {
         JClassType intf = type.isInterface();
         if (intf == null) {
-            error("Expected " + type + " to be an interface.");
+            getLogger().log(ERROR, "Expected " + type + " to be an interface.");
             throw new UnableToCompleteException();
         }
 
         JClassType[] intfs = intf.getImplementedInterfaces();
         for (JClassType t : intfs) {
-            info("checking: " + t.getQualifiedSourceName() + ", type: " + t.getClass());
+            getLogger().log(INFO, "checking: " + t.getQualifiedSourceName() + ", type: " + t.getClass());
             if (t.getQualifiedSourceName().equals(JSON_ENCODER_DECODER)) {
 
                 JParameterizedType genericType = t.isParameterized();
                 if (genericType == null) {
-                    error("Expected the " + JSON_ENCODER_DECODER + " declaration to specify a parameterized type.");
+                    getLogger().log(ERROR, "Expected the " + JSON_ENCODER_DECODER + " declaration to specify a parameterized type.");
                     throw new UnableToCompleteException();
                 }
                 JClassType[] typeParameters = genericType.getTypeArgs();
                 if (typeParameters == null || typeParameters.length != 1) {
-                    error("Expected the " + JSON_ENCODER_DECODER + " declaration to specify 1 parameterized type.");
+                    getLogger().log(ERROR, "Expected the " + JSON_ENCODER_DECODER + " declaration to specify 1 parameterized type.");
                     throw new UnableToCompleteException();
                 }
                 return typeParameters[0].isClass();
             }
         }
-        error("Expected  " + type + " to extend the " + JSON_ENCODER_DECODER + " interface.");
+        getLogger().log(ERROR, "Expected  " + type + " to extend the " + JSON_ENCODER_DECODER + " interface.");
         throw new UnableToCompleteException();
     }
 

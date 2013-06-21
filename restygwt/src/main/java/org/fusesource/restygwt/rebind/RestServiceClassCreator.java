@@ -146,31 +146,32 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     protected void generate() throws UnableToCompleteException {
 
         if (source.isInterface() == null) {
-            error("Type is not an interface.");
+            getLogger().log(ERROR, "Type is not an interface.");
+            throw new UnableToCompleteException();
         }
 
-        locator = new JsonEncoderDecoderInstanceLocator(context, logger);
+        locator = new JsonEncoderDecoderInstanceLocator(context, getLogger());
 
-        this.XML_CALLBACK_TYPE = find(XmlCallback.class);
-        this.METHOD_CALLBACK_TYPE = find(MethodCallback.class);
-        this.TEXT_CALLBACK_TYPE = find(TextCallback.class);
-        this.JSON_CALLBACK_TYPE = find(JsonCallback.class);
-        this.OVERLAY_CALLBACK_TYPE = find(OverlayCallback.class);
-        this.DOCUMENT_TYPE = find(Document.class);
-        this.METHOD_TYPE = find(Method.class);
-        this.STRING_TYPE = find(String.class);
-        this.JSON_VALUE_TYPE = find(JSONValue.class);
-        this.OVERLAY_VALUE_TYPE = find(JavaScriptObject.class);
+        this.XML_CALLBACK_TYPE = find(XmlCallback.class, getLogger(), context);
+        this.METHOD_CALLBACK_TYPE = find(MethodCallback.class, getLogger(), context);
+        this.TEXT_CALLBACK_TYPE = find(TextCallback.class, getLogger(), context);
+        this.JSON_CALLBACK_TYPE = find(JsonCallback.class, getLogger(), context);
+        this.OVERLAY_CALLBACK_TYPE = find(OverlayCallback.class, getLogger(), context);
+        this.DOCUMENT_TYPE = find(Document.class, getLogger(), context);
+        this.METHOD_TYPE = find(Method.class, getLogger(), context);
+        this.STRING_TYPE = find(String.class, getLogger(), context);
+        this.JSON_VALUE_TYPE = find(JSONValue.class, getLogger(), context);
+        this.OVERLAY_VALUE_TYPE = find(JavaScriptObject.class, getLogger(), context);
         this.OVERLAY_ARRAY_TYPES = new HashSet<JClassType>();
-        this.OVERLAY_ARRAY_TYPES.add(find(JsArray.class));
-        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayBoolean.class));
-        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayInteger.class));
-        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayNumber.class));
-        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayString.class));
+        this.OVERLAY_ARRAY_TYPES.add(find(JsArray.class, getLogger(), context));
+        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayBoolean.class, getLogger(), context));
+        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayInteger.class, getLogger(), context));
+        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayNumber.class, getLogger(), context));
+        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayString.class, getLogger(), context));
         this.QUERY_PARAM_LIST_TYPES = new HashSet<JClassType>();
-        this.QUERY_PARAM_LIST_TYPES.add(find(List.class));
-        this.QUERY_PARAM_LIST_TYPES.add(find(Set.class));
-		this.REST_SERVICE_TYPE = find(RestService.class);
+        this.QUERY_PARAM_LIST_TYPES.add(find(List.class, getLogger(), context));
+        this.QUERY_PARAM_LIST_TYPES.add(find(Set.class, getLogger(), context));
+		this.REST_SERVICE_TYPE = find(RestService.class, getLogger(), context);
 		
         String path = null;
         Path pathAnnotation = source.getAnnotation(Path.class);
@@ -266,12 +267,14 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     {
     	JClassType iface = method.getReturnType().isInterface();
     	if(iface == null || !REST_SERVICE_TYPE.isAssignableFrom(iface)) {
-    		error("Invalid subresource locator method. Method must have return type of an interface that extends RestService: " + method.getReadableDeclaration());
+    		getLogger().log(ERROR, "Invalid subresource locator method. Method must have return type of an interface that extends RestService: " + method.getReadableDeclaration());
+            throw new UnableToCompleteException();
     	}
     	
         Path pathAnnotation = method.getAnnotation(Path.class);
         if (pathAnnotation == null) {
-        	error("Invalid subresource locator method. Method must have @Path annotation: " + method.getReadableDeclaration());
+        	getLogger().log(ERROR, "Invalid subresource locator method. Method must have @Path annotation: " + method.getReadableDeclaration());
+            throw new UnableToCompleteException();
         }
         String pathExpression = wrap(pathAnnotation.value());
 
@@ -290,7 +293,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         	if(type instanceof JClassType)
         	{
                 JClassType restService = (JClassType)type;
-                RestServiceClassCreator generator = new RestServiceClassCreator(logger, context, restService);
+                RestServiceClassCreator generator = new RestServiceClassCreator(getLogger(), context, restService);
                 name = generator.create();
         	}
         	else
@@ -309,7 +312,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         if (method.getReturnType() != JPrimitiveType.VOID) {
             if (!method.getReturnType().getQualifiedSourceName().equals(Request.class.getName()) && 
                 !method.getReturnType().getQualifiedSourceName().equals(JsonpRequest.class.getName())) {
-                error("Invalid rest method. Method must have void, Request or JsonpRequest return types: " + method.getReadableDeclaration());
+                getLogger().log(ERROR, "Invalid rest method. Method must have void, Request or JsonpRequest return types: " + method.getReadableDeclaration());
+                throw new UnableToCompleteException();
             } else {
                 returnRequest = true;
             }
@@ -328,13 +332,15 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
             // the last arg should be the callback.
             if (args.isEmpty()) {
-                error("Invalid rest method. Method must declare at least a callback argument: " + method.getReadableDeclaration());
+                getLogger().log(ERROR, "Invalid rest method. Method must declare at least a callback argument: " + method.getReadableDeclaration());
+                throw new UnableToCompleteException();
             }
             JParameter callbackArg = args.removeLast();
             JClassType callbackType = callbackArg.getType().isClassOrInterface();
             JClassType methodCallbackType = METHOD_CALLBACK_TYPE;
             if (callbackType == null || !callbackType.isAssignableTo(methodCallbackType)) {
-                error("Invalid rest method. Last argument must be a " + methodCallbackType.getName() + " type: " + method.getReadableDeclaration());
+                getLogger().log(ERROR, "Invalid rest method. Last argument must be a " + methodCallbackType.getName() + " type: " + method.getReadableDeclaration());
+                throw new UnableToCompleteException();
             }
             JClassType resultType = getCallbackTypeGenericClass(callbackType);
 
@@ -353,7 +359,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 PathParam paramPath = arg.getAnnotation(PathParam.class);
                 if (paramPath != null) {
                     if (pathExpression == null) {
-                        error("Invalid rest method.  Invalid @PathParam annotation. Method is missing the @Path annotation: " + method.getReadableDeclaration());
+                        getLogger().log(ERROR, "Invalid rest method.  Invalid @PathParam annotation. Method is missing the @Path annotation: " + method.getReadableDeclaration());
+                        throw new UnableToCompleteException();
                     }
                     pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+" + toStringExpression(arg) + "+\"");
                     if (arg.getAnnotation(Attribute.class) != null) {
@@ -382,12 +389,14 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 }
 
                 if (!formParams.isEmpty()) {
-                    error("You can not have both @FormParam parameters and a content parameter: " +
-                            method.getReadableDeclaration());
+                    getLogger().log(ERROR, "You can not have both @FormParam parameters and a content parameter: " +
+                                                method.getReadableDeclaration());
+                    throw new UnableToCompleteException();
                 }
 
                 if (contentArg != null) {
-                    error("Invalid rest method. Only one content parameter is supported: " + method.getReadableDeclaration());
+                    getLogger().log(ERROR, "Invalid rest method. Only one content parameter is supported: " + method.getReadableDeclaration());
+                    throw new UnableToCompleteException();
                 }
                 contentArg = arg;
             }
@@ -429,7 +438,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             final boolean isJsonp = restMethod.equals(METHOD_JSONP) && jsonpAnnotation!=null;
             if( isJsonp ) {
                 if (returnRequest && !method.getReturnType().getQualifiedSourceName().equals(JsonpRequest.class.getName())) {
-                    error("Invalid rest method. JSONP method must have void or JsonpRequest return types: " + method.getReadableDeclaration());
+                    getLogger().log(ERROR, "Invalid rest method. JSONP method must have void or JsonpRequest return types: " + method.getReadableDeclaration());
+                    throw new UnableToCompleteException();
                 }
                 if( jsonpAnnotation.callbackParam().length() > 0 ) {
                     p("(("+JSONP_METHOD_CLASS+")__method).callbackParam("+wrap(jsonpAnnotation.callbackParam())+");");
@@ -439,7 +449,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 }
             } else {
                 if (returnRequest && !method.getReturnType().getQualifiedSourceName().equals(Request.class.getName())) {
-                    error("Invalid rest method. Non JSONP method must have void or Request return types: " + method.getReadableDeclaration());
+                    getLogger().log(ERROR, "Invalid rest method. Non JSONP method must have void or Request return types: " + method.getReadableDeclaration());
+                    throw new UnableToCompleteException();
                 }
             }
 
@@ -526,7 +537,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                     if (contentClass == null) {
                         contentClass = contentArg.getType().isClassOrInterface();
                         if (!locator.isCollectionType(contentClass)) {
-                            error("Content argument must be a class.");
+                            getLogger().log(ERROR, "Content argument must be a class.");
+                            throw new UnableToCompleteException();
                         }
                     }
 
@@ -541,13 +553,13 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             }
 
 
-            List<AnnotationResolver> annotationResolvers = getAnnotationResolvers(context, logger);
-            logger.log(TreeLogger.DEBUG, "found " + annotationResolvers.size() + " additional AnnotationResolvers");
+            List<AnnotationResolver> annotationResolvers = getAnnotationResolvers(context, getLogger());
+            getLogger().log(TreeLogger.DEBUG, "found " + annotationResolvers.size() + " additional AnnotationResolvers");
 
             for (AnnotationResolver a : annotationResolvers) {
-                logger.log(TreeLogger.DEBUG, "(" + a.getClass().getName() + ") resolve `" + source.getName()
+                getLogger().log(TreeLogger.DEBUG, "(" + a.getClass().getName() + ") resolve `" + source.getName()
                         + "#" + method.getName() + "´ ...");
-                final Map<String, String[]> addDataParams = a.resolveAnnotation(logger, source, method, restMethod);
+                final Map<String, String[]> addDataParams = a.resolveAnnotation(getLogger(), source, method, restMethod);
 
                 if (addDataParams != null) {
                     for (String s : addDataParams.keySet()) {
@@ -564,7 +576,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                         }
                         sb.append("]");
 
-                        logger.log(TreeLogger.DEBUG, "add call with (\"" + s + "\", \"" +
+                        getLogger().log(TreeLogger.DEBUG, "add call with (\"" + s + "\", \"" +
                                 sb.toString() + "\")");
                         p("__method.addData(\"" + s + "\", \"" + sb.toString() + "\");");
                     }
@@ -723,28 +735,28 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             public JClassType execute() throws UnableToCompleteException {
 
                 for (JMethod method : callbackType.getOverridableMethods()) {
-                    debug("checking method: " + method.getName());
+                    getLogger().log(DEBUG, "checking method: " + method.getName());
                     if (method.getName().equals("onSuccess")) {
                         JParameter[] parameters = method.getParameters();
-                        debug("checking method params: " + parameters.length);
+                        getLogger().log(DEBUG, "checking method params: " + parameters.length);
                         if (parameters.length == 2) {
-                            debug("checking first param: " + parameters[0].getType());
+                            getLogger().log(DEBUG, "checking first param: " + parameters[0].getType());
                             if (parameters[0].getType() == METHOD_TYPE) {
-                                debug("checking 2nd param: " + parameters[1].getType());
+                                getLogger().log(DEBUG, "checking 2nd param: " + parameters[1].getType());
                                 JType param2Type = parameters[1].getType();
                                 JClassType type = param2Type.isClassOrInterface();
                                 if (type == null) {
-                                    error("The type of the callback not supported: " + param2Type.getJNISignature());
+                                    getLogger().log(ERROR, "The type of the callback not supported: " + param2Type.getJNISignature());
+                                    throw new UnableToCompleteException();
                                 }
-                                debug("match: " + type);
+                                getLogger().log(DEBUG, "match: " + type);
                                 return type;
                             }
                         }
                     }
                 }
-                error("The type of the callback could not be determined: " + callbackType.getParameterizedQualifiedSourceName());
-                return null;
-
+                getLogger().log(ERROR, "The type of the callback could not be determined: " + callbackType.getParameterizedQualifiedSourceName());
+                throw new UnableToCompleteException();
             }
         });
     }
@@ -768,7 +780,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         } else {
             restMethod = method.getName();
             if (!REST_METHODS.contains(restMethod)) {
-                error("Invalid rest method. It must either have a lower case rest method name or have a javax rs method annotation: " + method.getReadableDeclaration());
+                getLogger().log(ERROR, "Invalid rest method. It must either have a lower case rest method name or have a javax rs method annotation: " + method.getReadableDeclaration());
+                throw new UnableToCompleteException();
             }
         }
         return restMethod;
