@@ -36,8 +36,7 @@ public class RestServiceGenerator extends Generator {
             JClassType restService = find(logger, context, source);
             RestServiceClassCreator generator = new RestServiceClassCreator(logger, context, restService);
 
-            String generated = generator.create();
-            return generated;
+            return generator.create();
         } finally {
             BaseSourceCreator.clearGeneratedClasses();
         }
