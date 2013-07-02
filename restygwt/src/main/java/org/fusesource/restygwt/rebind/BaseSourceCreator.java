@@ -50,8 +50,8 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
     protected final String packageName;
     protected final String shortName;
     protected final String name;
-    protected TreeLogger logger;
     protected SourceWriter sourceWriter;
+    private TreeLogger logger;
     private PrintWriter writer;
 
     static final private ThreadLocal<HashSet<String>> GENERATED_CLASSES = new ThreadLocal<HashSet<String>>();
@@ -69,7 +69,11 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         GENERATED_CLASSES.set(null);
     }
 
-    public BaseSourceCreator(TreeLogger logger, GeneratorContext context, JClassType source, String suffix) {
+    public static JClassType find(Class<?> type, TreeLogger logger, GeneratorContext context) throws UnableToCompleteException {
+        return RestServiceGenerator.find(logger, context, type.getName().replace('$', '.'));
+    }
+
+    public BaseSourceCreator(final TreeLogger logger, GeneratorContext context, JClassType source, String suffix) {
         this.logger = logger;
         this.context = context;
         this.source = source;
@@ -100,7 +104,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
             return null;
         }
         classes.add(name);
-        PrintWriter writer = context.tryCreate(logger, packageName, shortName);
+        PrintWriter writer = context.tryCreate(getLogger(), packageName, shortName);
         if (writer == null) {
             return null;
         }
@@ -110,49 +114,19 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
     public interface Branch<R> {
         R execute() throws UnableToCompleteException;
     }
-
+    
     protected <R> R branch(String msg, Branch<R> callable) throws UnableToCompleteException {
         return branch(DEBUG, msg, callable);
     }
 
     protected <R> R branch(TreeLogger.Type level, String msg, Branch<R> callable) throws UnableToCompleteException {
-        TreeLogger original = logger;
+        TreeLogger original = getLogger();
         try {
-            logger = logger.branch(level, msg);
+            logger = getLogger().branch(level, msg);
             return callable.execute();
         } finally {
             logger = original;
         }
-    }
-
-    protected void error(String msg) throws UnableToCompleteException {
-        logger.log(ERROR, msg);
-        throw new UnableToCompleteException();
-    }
-
-    protected void warn(String msg) throws UnableToCompleteException {
-        logger.log(WARN, msg);
-        throw new UnableToCompleteException();
-    }
-
-    protected void info(String msg) throws UnableToCompleteException {
-        logger.log(INFO, msg);
-    }
-
-    protected void debug(String msg) throws UnableToCompleteException {
-        logger.log(DEBUG, msg);
-    }
-
-    protected void trace(String msg) throws UnableToCompleteException {
-        logger.log(TRACE, msg);
-    }
-
-    protected JClassType find(Class<?> type) throws UnableToCompleteException {
-        return find(type.getName().replace('$', '.'));
-    }
-
-    protected JClassType find(String type) throws UnableToCompleteException {
-        return RestServiceGenerator.find(logger, context, type);
     }
 
     protected BaseSourceCreator i(int i) {
@@ -176,6 +150,11 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
     protected BaseSourceCreator p() {
         this.sourceWriter.println();
         return this;
+    }
+
+    protected TreeLogger getLogger()
+    {
+        return logger;
     }
 
     static String join(int []values, String sep) {
@@ -205,13 +184,13 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         if (writer == null) {
             return name;
         }
-        logger = logger.branch(TreeLogger.DEBUG, "Generating: " + name);
+        logger = getLogger().branch(TreeLogger.DEBUG, "Generating: " + name);
 
         ClassSourceFileComposerFactory composerFactory = createComposerFactory();
         sourceWriter = composerFactory.createSourceWriter(context, writer);
 
         generate();
-        sourceWriter.commit(logger);
+        sourceWriter.commit(getLogger());
         return name;
     }
 

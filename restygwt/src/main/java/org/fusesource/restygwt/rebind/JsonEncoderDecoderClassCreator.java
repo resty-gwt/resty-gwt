@@ -31,10 +31,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonTypeInfo.As;
-import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
-import org.codehaus.jackson.annotate.JsonTypeName;
-import org.codehaus.jackson.map.annotate.JsonTypeIdResolver;
-import org.codehaus.jackson.map.jsontype.TypeIdResolver;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
 
@@ -83,52 +79,28 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     }
 
     @Override
-    protected ClassSourceFileComposerFactory createComposerFactory() {
-	ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
-	composerFactory.setSuperclass(JSON_ENCODER_DECODER_CLASS + "<" + source.getParameterizedQualifiedSourceName() + ">");
-	return composerFactory;
-    }
-
-    private static class Subtype {
-	final String tag;
-	final JClassType clazz;
-
-	public Subtype(String tag, JClassType clazz) {
-	    this.tag = tag;
-	    this.clazz = clazz;
-	}
-    }
-
-    private static <T extends Annotation> T findAnnotation(JClassType clazz, Class<T> annotation) {
-	if (clazz == null)
-	    return null;
-	else if (clazz.isAnnotationPresent(annotation))
-	    return clazz.getAnnotation(annotation);
-	else
-	    return findAnnotation(clazz.getSuperclass(), annotation);
-    }
-
-    @Override
     public void generate() throws UnableToCompleteException {
         final JsonTypeInfo typeInfo = findAnnotation(source, JsonTypeInfo.class);
         final boolean isLeaf = isLeaf(source);
         
-        final List<Subtype> possibleTypes = getPossibleTypes(context, source, typeInfo, isLeaf, logger);
+        final List<Subtype> possibleTypes = getPossibleTypes(typeInfo, isLeaf);
     
         JClassType sourceClazz = source.isClass();
         if (sourceClazz == null) {
-            error("Type is not a class");
+            getLogger().log(ERROR, "Type is not a class");
+            throw new UnableToCompleteException();
         }   
     
         if (sourceClazz.isAbstract()) {
             if (typeInfo == null) {
-        	error("Abstract classes must be annotated with JsonTypeInfo");
+                getLogger().log(ERROR, "Abstract classes must be annotated with JsonTypeInfo");
+                throw new UnableToCompleteException();
             }
         }
         Json jsonAnnotation = source.getAnnotation(Json.class);
         final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
         final String railsWrapperName = jsonAnnotation != null && jsonAnnotation.name().length() > 0 ? jsonAnnotation.name() : sourceClazz.getName().toLowerCase();
-        locator = new JsonEncoderDecoderInstanceLocator(context, logger);
+        locator = new JsonEncoderDecoderInstanceLocator(context, getLogger());
     
         generateSingleton(shortName);
         
@@ -137,79 +109,30 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         generateDecodeMethod(source, classStyle, typeInfo, railsWrapperName, possibleTypes, isLeaf, locator);
     }
 
-    private List<Subtype> getPossibleTypes(GeneratorContext context, JClassType classType, final JsonTypeInfo typeInfo, final boolean isLeaf, TreeLogger logger)
-            throws UnableToCompleteException
+    @Override
+    protected ClassSourceFileComposerFactory createComposerFactory() {
+	ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
+	composerFactory.setSuperclass(JSON_ENCODER_DECODER_CLASS + "<" + source.getParameterizedQualifiedSourceName() + ">");
+	return composerFactory;
+    }
+
+    public static <T extends Annotation> T findAnnotation(JClassType clazz, Class<T> annotation) {
+	if (clazz == null)
+	    return null;
+	else if (clazz.isAnnotationPresent(annotation))
+	    return clazz.getAnnotation(annotation);
+	else
+	    return findAnnotation(clazz.getSuperclass(), annotation);
+    }
+
+    private List<Subtype> getPossibleTypes(final JsonTypeInfo typeInfo, final boolean isLeaf) throws UnableToCompleteException
     {
-        final List<Subtype> possibleTypes = Lists.newArrayList();
-        if (typeInfo != null) {
-            final JsonSubTypes jacksonSubTypes = findAnnotation(classType, JsonSubTypes.class);
-            if (typeInfo.use() == Id.CLASS || typeInfo.use() == Id.MINIMAL_CLASS) {
-            List<JClassType> resolvedSubtypes = Lists.newArrayList();
-        	if (jacksonSubTypes != null) {
-        	    for (JsonSubTypes.Type type : jacksonSubTypes.value()) {
-        		JClassType typeClass = find(type.value());
-        		if (!isLeaf || classType.equals(typeClass)) resolvedSubtypes.add(typeClass);
-        	    }
-        	} else {
-        		for (JClassType typeClass : context.getTypeOracle().getTypes()) {
-    			if (!typeClass.isAbstract() && typeClass.isAssignableTo(classType)) resolvedSubtypes.add(typeClass);
-        		}
-        	}
-        	for (JClassType typeClass : resolvedSubtypes)
-        	possibleTypes.add(new Subtype(typeInfo.use() == Id.CLASS ? typeClass.getQualifiedSourceName() : "." + typeClass.getSimpleSourceName(), typeClass));
-            } else if (typeInfo.use() != Id.NONE) {
-        	final JsonTypeIdResolver typeResolver = findAnnotation(classType, JsonTypeIdResolver.class);
-        	if (jacksonSubTypes != null) {
-        	    for (JsonSubTypes.Type type : jacksonSubTypes.value()) {
-        		if (type.name() != null && !type.name().isEmpty()) {
-        		    JClassType typeClass = find(type.value());
-        		    if (!isLeaf || classType.equals(typeClass))
-        			possibleTypes.add(new Subtype(type.name(), typeClass));
-        		} else {
-        		    JsonTypeName nameAnnotation = type.value().getAnnotation(JsonTypeName.class);
-        		    if (nameAnnotation == null || nameAnnotation.value() == null || nameAnnotation.value().isEmpty())
-        			error("Cannot find @JsonTypeName annotation for type: " + type.value());
-        		    JClassType typeClass = find(type.value());
-        		    if (!isLeaf || classType.equals(typeClass))
-        			possibleTypes.add(new Subtype(nameAnnotation.value(), typeClass));
-        		}
-        	    }
-        	    if (isLeaf && possibleTypes.size() == 0)
-        		error("Could not find @JsonSubTypes entry for type: " + classType);
-        	} else if (typeResolver != null) {
-        	    Class<? extends TypeIdResolver> resolverClass = typeResolver.value();
-        	    RestyJsonTypeIdResolver restyResolver;
-        	    if (RestyJsonTypeIdResolver.class.isAssignableFrom(resolverClass)) {
-        		try {
-        		    restyResolver = (RestyJsonTypeIdResolver) resolverClass.newInstance();
-        		} catch (Exception e) {
-        		    logger.log(ERROR, "Could not acccess: " + resolverClass, e);
-        		    throw new UnableToCompleteException();
-        		}
-        	    } else {
-        		restyResolver = getRestyResolverClassMap(context, logger).get(resolverClass);
-        		if (restyResolver == null)
-        		    error("Could not find RestyJsonTypeIdResolver for " + resolverClass + " did you forget to put <extend-configuration-property name=\"org.fusesource.restygwt.jsontypeidresolver\" value=\"<fully-qualified-class-implementing-RestyJsonTypeIdResolver>\"/> in your *.gwt.xml?");
-        	    }
-    
-        	    for (Map.Entry<String, Class<?>> entry : restyResolver.getIdClassMap().entrySet()) {
-        		JClassType entryType = find(entry.getValue());
-        		if (!isLeaf || classType.equals(entryType))
-        		    possibleTypes.add(new Subtype(entry.getKey(), entryType));
-        	    }
-        	    if (isLeaf && possibleTypes.size() == 0)
-        		error("Could not find entry in " + restyResolver.getClass().getName() + " for type: " + classType);
-        	} else {
-        	    error("Cannot find required subtype resolution for type: " + classType);
-        	}
-            } else {
-        	error("Id.NONE not supported");
-            }
-        } else {
-            possibleTypes.add(new Subtype(null, classType));
+        if (typeInfo == null)
+            return Lists.newArrayList(new Subtype(null, source));
+        else {
+            PossibleTypesVisitor v = new PossibleTypesVisitor(context, source, isLeaf, getLogger(), findAnnotation(source, JsonSubTypes.class));
+            return v.visit(typeInfo.use());
         }
-        
-        return possibleTypes;
     }
 
     private void generateSingleton(String shortName)
@@ -355,7 +278,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     i(-1).p("}");
     
                     } else {
-                        logger.log(ERROR, "private field gets ignored: " + field.getEnclosingType().getQualifiedSourceName() + "." + field.getName());
+                        getLogger().log(ERROR, "private field gets ignored: " + field.getEnclosingType().getQualifiedSourceName() + "." + field.getName());
                     }
                     return null;
                 }
@@ -557,7 +480,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         i(-1).p("}");    
 
                     } else {
-                        logger.log(ERROR, "private field gets ignored: " + field.getEnclosingType().getQualifiedSourceName() + "." + field.getName());
+                        getLogger().log(ERROR, "private field gets ignored: " + field.getEnclosingType().getQualifiedSourceName() + "." + field.getName());
                     }
                     return null;
                     }
@@ -601,9 +524,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         p();
     }
     
-    private static Map<Class<?>, RestyJsonTypeIdResolver> sTypeIdResolverMap = null;
-
-    private static Map<Class<?>, RestyJsonTypeIdResolver> getRestyResolverClassMap(GeneratorContext context, TreeLogger logger) throws UnableToCompleteException {
+    public static Map<Class<?>, RestyJsonTypeIdResolver> getRestyResolverClassMap(GeneratorContext context, TreeLogger logger) throws UnableToCompleteException {
 	if (sTypeIdResolverMap == null) {
 	    try {
 		Map<Class<?>, RestyJsonTypeIdResolver> map = Maps.newHashMap();
@@ -636,7 +557,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 		    }
 		}
 	    } else {
-		error("a constructor annotated with @JsonCreator requires that all paramaters are annotated with @JsonProperty.");
+		getLogger().log(ERROR, "a constructor annotated with @JsonCreator requires that all paramaters are annotated with @JsonProperty.");
+        throw new UnableToCompleteException();
 	    }
 	}
 
@@ -680,7 +602,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	String fieldName = field.getName();
 	JType booleanType = null;
 	try {
-	    booleanType = find(Boolean.class);
+	    booleanType = find(Boolean.class, getLogger(), context);
 	} catch (UnableToCompleteException e) {
 	    // do nothing
 	}
@@ -737,7 +659,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	    return true;
 	} else {
 	    try {
-		JType objectType = find(Object.class);
+		JType objectType = find(Object.class, getLogger(), context);
 		JClassType superType = type.getSuperclass();
 		if (!objectType.equals(superType)) {
 		    return exists(superType, field, fieldName, isSetter);
@@ -800,7 +722,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             }
         }
         try {
-            JType objectType = find(Object.class);
+            JType objectType = find(Object.class, getLogger(), context);
             if (!objectType.equals(type)) {
                 JClassType superType = type.getSuperclass();
                 return getFields(allFields, superType);
@@ -826,4 +748,16 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     {
         return !(source.getSubtypes() != null && source.getSubtypes().length > 0);
     }
+
+    public static class Subtype {
+    final String tag;
+    final JClassType clazz;
+    
+    public Subtype(String tag, JClassType clazz) {
+        this.tag = tag;
+        this.clazz = clazz;
+    }
+    }
+
+    private static Map<Class<?>, RestyJsonTypeIdResolver> sTypeIdResolverMap = null;
 }
