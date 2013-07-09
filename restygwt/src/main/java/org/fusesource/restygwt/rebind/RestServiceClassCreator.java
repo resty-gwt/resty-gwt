@@ -281,7 +281,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         for (JParameter arg : method.getParameters()) {
             PathParam paramPath = arg.getAnnotation(PathParam.class);
             if (paramPath != null) {
-                pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+" + toStringExpression(arg) + "+\"");
+                pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+com.google.gwt.http.client.URL.encodePathSegment(" + toStringExpression(arg) + ")+\"");
             }
         }
 
@@ -362,7 +362,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                         getLogger().log(ERROR, "Invalid rest method.  Invalid @PathParam annotation. Method is missing the @Path annotation: " + method.getReadableDeclaration());
                         throw new UnableToCompleteException();
                     }
-                    pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+" + toStringExpression(arg) + "+\"");
+                    pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+com.google.gwt.http.client.URL.encodePathSegment(" + toStringExpression(arg) + ")+\"");
                     if (arg.getAnnotation(Attribute.class) != null) {
                         // allow part of the arg-object participate in as PathParam and the object goes over the wire
                         contentArg = arg;
