@@ -19,6 +19,7 @@
 package org.fusesource.restygwt.server;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +35,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class TimeoutConnectionServlet extends HttpServlet {
 
+    private static final long serialVersionUID = 1L;
+
+    private static final Logger log = Logger.getLogger(TimeoutConnectionServlet.class.getName());
+    
     //5 seconds timeout:
     long TIMEOUT = 100000;
 
@@ -46,7 +51,7 @@ public class TimeoutConnectionServlet extends HttpServlet {
 
 
             //here comes the timeout:
-            System.out.println("before true" + System.currentTimeMillis());
+            log.fine("before true" + System.currentTimeMillis());
 
             //NON BLOCKING WAIT:
             long beforeLoop = System.currentTimeMillis();
@@ -60,7 +65,7 @@ public class TimeoutConnectionServlet extends HttpServlet {
             }
 
 
-            System.out.println("afer true" + System.currentTimeMillis());
+            log.fine("afer true" + System.currentTimeMillis());
 
             response.getWriter().print(DUMMY_RESPONSE);
 

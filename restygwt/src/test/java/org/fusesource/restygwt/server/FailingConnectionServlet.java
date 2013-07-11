@@ -49,9 +49,9 @@ public class FailingConnectionServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
 
-        log.info("GET: failingMODE");
+        log.fine("GET: failingMODE");
 
-        log.info("respond code: " + 
+        log.fine("respond code: " + 
                 (HttpStatus.ORDINAL_500_Internal_Server_Error  + currentNumberOfServerFailures) + 
                 " with purpose");
         response.setStatus(HttpStatus.ORDINAL_500_Internal_Server_Error + currentNumberOfServerFailures++);

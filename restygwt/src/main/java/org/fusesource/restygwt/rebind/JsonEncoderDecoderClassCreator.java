@@ -278,7 +278,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     i(-1).p("}");
     
                     } else {
-                        getLogger().log(ERROR, "private field gets ignored: " + field.getEnclosingType().getQualifiedSourceName() + "." + field.getName());
+                        getLogger().log(DEBUG, "private field gets ignored: " + field.getEnclosingType().getQualifiedSourceName() + "." + field.getName());
                     }
                     return null;
                 }
@@ -480,7 +480,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         i(-1).p("}");    
 
                     } else {
-                        getLogger().log(ERROR, "private field gets ignored: " + field.getEnclosingType().getQualifiedSourceName() + "." + field.getName());
+                        getLogger().log(DEBUG, "private field gets ignored: " + field.getEnclosingType().getQualifiedSourceName() + "." + field.getName());
                     }
                     return null;
                     }

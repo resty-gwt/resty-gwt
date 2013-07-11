@@ -52,14 +52,14 @@ public class FlakyConnectionServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
 
-        log.info("GET: flakyMODE");
+        log.fine("GET: flakyMODE");
 
         if (currentNumberOfServerFailures < NUMBER_OF_SERVER_FAILURES_TO_SIMULATE) {
-            log.info("respond code: " + HttpStatus.ORDINAL_500_Internal_Server_Error + " with purpose");
+            log.fine("respond code: " + HttpStatus.ORDINAL_500_Internal_Server_Error + " with purpose");
             ++currentNumberOfServerFailures;
             response.setStatus(HttpStatus.ORDINAL_500_Internal_Server_Error);
         } else {
-            log.info("response: " + DUMMY_RESPONSE);
+            log.fine("response: " + DUMMY_RESPONSE);
             response.getWriter().print(DUMMY_RESPONSE);
         }
     }

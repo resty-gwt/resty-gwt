@@ -24,6 +24,7 @@ import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.RequestTimeoutException;
 import com.google.gwt.junit.client.GWTTestCase;
 
 /**
@@ -49,19 +50,22 @@ public class TimeoutTestGwt extends GWTTestCase {
 
             @Override
             public void onSuccess(Method method, ExampleDto response) {
-                System.out.println("finish");
                 assertEquals(response.name, "myName");
                 finishTest();
             }
 
             @Override
             public void onFailure(Method method, Throwable exception) {
-                fail();
+                if ( exception instanceof RequestTimeoutException ) {
+                    finishTest();
+                }
+                else {
+                    fail();
+                }
             }
         });
 
         // wait... we are in async testing...
-        System.out.println("waiting");
         delayTestFinish(10000);
     }
 }

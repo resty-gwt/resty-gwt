@@ -506,8 +506,6 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         // the JETTISON enoding it is important to use the special encoder with String keys
         valueEncoder = AbstractNestedJsonEncoderDecoder.mapEncoderDecoder( AbstractJsonEncoderDecoder.STRING, Json.Style.JETTISON_NATURAL );
         
-        System.err.println(AbstractJsonEncoderDecoder.toJSON(map, valueEncoder, Json.Style.JETTISON_NATURAL).toString());
-        
         assertEquals(map.toString(),
                 AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, valueEncoder, Json.Style.JETTISON_NATURAL), 
                         valueEncoder, 

@@ -56,11 +56,11 @@ public class CachingTestServlet extends HttpServlet {
 
         response.setStatus(200);
         if (request.getPathInfo().equals("/getnumberofcontacts")) {
-            log.info("response: \"" + contactCounter + "\"");
+            log.fine("response: \"" + contactCounter + "\"");
             response.getWriter().print(contactCounter);
         } else {
             ++contactCounter;
-            log.info("response: \"" + DUMMY_RESPONSE + "\", counter is " + contactCounter);
+            log.fine("response: \"" + DUMMY_RESPONSE + "\", counter is " + contactCounter);
             response.getWriter().print(DUMMY_RESPONSE);
         }
     }

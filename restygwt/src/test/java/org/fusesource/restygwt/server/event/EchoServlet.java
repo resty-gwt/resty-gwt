@@ -44,8 +44,8 @@ public class EchoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
-        if (log.isLoggable(Level.INFO)) {
-            log.info("path: " + request.getPathTranslated());
+        if (log.isLoggable(Level.FINE)) {
+            log.fine("path: " + request.getPathTranslated());
             @SuppressWarnings("unchecked")
             Enumeration<String> headerNames = request.getHeaderNames();
             StringBuilder sb = new StringBuilder();
@@ -69,7 +69,7 @@ public class EchoServlet extends HttpServlet {
                     sb.append(line).append("\n");
             } while(null != line);
             sb.append("========\n");
-            log.info(sb.toString());
+            log.fine(sb.toString());
         }
         response.setContentType(CONTENT_TYPE);
 
@@ -92,13 +92,13 @@ public class EchoServlet extends HttpServlet {
             try {
                 final int waitingTime =
                     Integer.parseInt(request.getHeader(RESPONSETIME_IN_SEC_HEADER_NAME)) * 1000;
-                log.info("need to wait for: " + waitingTime + " milliseconds");
+                log.fine("need to wait for: " + waitingTime + " milliseconds");
                 Thread.sleep(waitingTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        log.info("respond: (" + statusCode + ") `" + out + "´");
+        log.fine("respond: (" + statusCode + ") `" + out + "´");
     }
 
     @Override
