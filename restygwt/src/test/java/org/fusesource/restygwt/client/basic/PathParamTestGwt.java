@@ -55,28 +55,25 @@ public class PathParamTestGwt extends GWTTestCase {
 
         @Path("/get/{id}")
         void get(@PathParam(value = "id") Integer id, MethodCallback<Echo> callback);
+        
+        @Path("/get/{id}")
+        void get(@PathParam(value = "id") String id, MethodCallback<Echo> callback);
     }
     
-    class EchoMethodCallback implements MethodCallback<Echo> {
-        
-        private final String path;
-
-        EchoMethodCallback(String path){
-            this.path = path;
-        }
-        
+    private  MethodCallback<Echo> echoMethodCallback( final String path ){
+        return new MethodCallback<Echo>() {
+            
         @Override
         public void onSuccess(Method method, Echo response) {
-
             assertEquals(response.path, path);
             finishTest();
-
         }
 
         @Override
         public void onFailure(Method method, Throwable exception) {
             fail();
         }
+    };
     }
     
     @Override
@@ -88,33 +85,37 @@ public class PathParamTestGwt extends GWTTestCase {
     }
 
     public void testGet() {
-
-        service.get(new EchoMethodCallback("/get"));
+        
+        service.get(echoMethodCallback("/get"));
+        delayTestFinish(10000);
 
     }
 
     public void testGetWithInteger() {
     
-        service.get(new Integer(2), new EchoMethodCallback("/get/2"));
+        service.get(new Integer(2), echoMethodCallback("/get/2"));
+        delayTestFinish(10000);
 
     }
 
     public void testGetWithNull() {
     
-        service.get(null, new EchoMethodCallback("/get/null"));
+        service.get((String) null, echoMethodCallback("/get/null"));
+        delayTestFinish(10000);
+
+    }
+
+    public void testGetWithStringContainingSlashes() {
+
+        service.get("a\\b/c&", echoMethodCallback("/get/a\\b/c&") );
+        delayTestFinish(10000);
 
     }
 
     public void testGetWithInt() {
     
-        service.get(123, new EchoMethodCallback("/get/123"));
-
-    }
-
-    public void gwtTearDown() {
-
-        // wait... we are in async testing...
+        service.get(123, echoMethodCallback("/get/123"));
         delayTestFinish(10000);
-        
+
     }
 }

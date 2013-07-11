@@ -37,6 +37,7 @@ import org.fusesource.restygwt.client.*;
 import org.fusesource.restygwt.client.Json.Style;
 
 import javax.ws.rs.*;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -281,7 +282,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         for (JParameter arg : method.getParameters()) {
             PathParam paramPath = arg.getAnnotation(PathParam.class);
             if (paramPath != null) {
-                pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+com.google.gwt.http.client.URL.encodePathSegment(" + toStringExpression(arg) + ")+\"");
+                pathExpression = pathExpression(pathExpression, arg, paramPath);
             }
         }
 
@@ -305,6 +306,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         	p("return __subresource;");
         }
         i(-1).p("}");
+    }
+
+    private String pathExpression(String pathExpression, JParameter arg, PathParam paramPath) {
+        String expr = toStringExpression(arg);
+        return pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), 
+               "\"+(" + expr + "== null? null : com.google.gwt.http.client.URL.encodePathSegment(" + expr + "))+\"");
     }
     
     private void writeMethodImpl(JMethod method) throws UnableToCompleteException {
@@ -362,7 +369,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                         getLogger().log(ERROR, "Invalid rest method.  Invalid @PathParam annotation. Method is missing the @Path annotation: " + method.getReadableDeclaration());
                         throw new UnableToCompleteException();
                     }
-                    pathExpression = pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+com.google.gwt.http.client.URL.encodePathSegment(" + toStringExpression(arg) + ")+\"");
+                    pathExpression = pathExpression(pathExpression, arg, paramPath);
+                    //.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+com.google.gwt.http.client.URL.encodePathSegment(" + toStringExpression(arg) + ")+\"");
                     if (arg.getAnnotation(Attribute.class) != null) {
                         // allow part of the arg-object participate in as PathParam and the object goes over the wire
                         contentArg = arg;
