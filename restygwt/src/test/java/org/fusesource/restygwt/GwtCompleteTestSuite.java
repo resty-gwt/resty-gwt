@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2011 the original author or authors.
+ * Copyright (C) 2009-2012 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -29,6 +29,8 @@ import org.fusesource.restygwt.client.basic.GenericsTestGwt;
 import org.fusesource.restygwt.client.basic.JsonCreatorWithSubtypes;
 import org.fusesource.restygwt.client.basic.ParameterizedTypeDTO;
 import org.fusesource.restygwt.client.basic.ParameterizedTypeServiceInterfaces;
+import org.fusesource.restygwt.client.basic.PathParamTestGwt;
+import org.fusesource.restygwt.client.basic.QueryParamTestGwt;
 import org.fusesource.restygwt.client.basic.ResourcePassesHeadersTestGwt;
 import org.fusesource.restygwt.client.basic.ResourceTestGwt;
 import org.fusesource.restygwt.client.basic.SubResourceClientGeneration;
@@ -80,6 +82,8 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(SubResourceClientGeneration.class);
         suite.addTestSuite(JsonTypeIdResolver.class);
         suite.addTestSuite(JsonCreatorWithSubtypes.class);
+        suite.addTestSuite(PathParamTestGwt.class);
+        suite.addTestSuite(QueryParamTestGwt.class);
         return suite;
     }
 }

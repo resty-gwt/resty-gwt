@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2011 the original author or authors.
+ * Copyright (C) 2009-2012 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -34,7 +34,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class BasicTestGwtServlet extends HttpServlet {
 
-    String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
+    private static final long serialVersionUID = 7682753843344322868L;
+
+    private static final String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
 
 
     @Override

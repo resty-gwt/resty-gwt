@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2011 the original author or authors.
+ * Copyright (C) 2009-2012 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -138,7 +138,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
 //            builder.setHeader("X-Testing", "Bude");
 
             builder.setCallback(callbackFactory.createCallback(method));
-            return true;
+            return true;// continue filtering
         }
     }
 }

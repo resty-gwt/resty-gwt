@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2011 the original author or authors.
+ * Copyright (C) 2009-2012 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -36,7 +36,8 @@ public class XSRFTokenCallbackFilter implements CallbackFilter {
     public RequestCallback filter(final Method method, final Response response,
             RequestCallback callback) {
         String token = response.getHeader(this.xsrf.getHeaderKey());
-        if (token != null && response.getHeader(QueueableCacheStorage.RESTY_CACHE_HEADER) == null){
+        String restyCacheHeader = response.getHeader(QueueableCacheStorage.RESTY_CACHE_HEADER);
+        if (token != null && (restyCacheHeader == null || restyCacheHeader.isEmpty())){
             this.xsrf.setToken(token);
         }
         return callback;

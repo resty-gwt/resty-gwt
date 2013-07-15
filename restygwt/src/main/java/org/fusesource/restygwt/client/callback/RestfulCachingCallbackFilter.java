@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2011 the original author or authors.
+ * Copyright (C) 2009-2012 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -42,15 +42,20 @@ public class RestfulCachingCallbackFilter extends CachingCallbackFilter {
     }
 
     @Override
+    protected boolean isCachingStatusCode(final int code) {
+        return code == Response.SC_CONFLICT || super.isCachingStatusCode(code);
+    }
+    
+    @Override
     protected void cacheResult(Method method, Response response) {
         final CacheKey cacheKey;
         if (response.getStatusCode() == Response.SC_CREATED && response.getHeader("Location") != null){
-            // TODO very fragile way of getting the URL
             final String uri;
             if(response.getHeader("Location").startsWith("http")){
                 uri = response.getHeader("Location");
             }
             else {
+                // TODO very fragile way of getting the URL
                 uri = method.builder.getUrl().replaceFirst("/[^/]*$", "") + response.getHeader("Location");
             }
             cacheKey = new UrlCacheKey(uri);
@@ -58,14 +63,15 @@ public class RestfulCachingCallbackFilter extends CachingCallbackFilter {
         else {
             cacheKey = cacheKey(method.builder);
         }
-            
         if (RequestBuilder.DELETE.toString().equalsIgnoreCase(
                method.builder.getHTTPMethod()) || 
                // in case of a conflict the next GET request needs to
                // go remote !!
                response.getStatusCode() == Response.SC_CONFLICT) {
             cache.remove(cacheKey);
-        } else {
+        } else if (method.builder.getUrl().matches(".*/[0-9]+$")){
+            // if url has an ID at the end then treat it as single entity
+            // otherwise assume a collection which are not cached.
             cache.putResult(cacheKey, response);
         }
     }

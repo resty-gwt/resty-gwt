@@ -1,0 +1,837 @@
+diff --git a/restygwt/src/main/java/org/fusesource/restygwt/client/intercept/JsonDecoderInterceptor.java b/restygwt/src/main/java/org/fusesource/restygwt/client/intercept/JsonDecoderInterceptor.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..dfcb1bdb7cf73db666e8e940c7682b3798216600
+--- /dev/null
++++ b/restygwt/src/main/java/org/fusesource/restygwt/client/intercept/JsonDecoderInterceptor.java
+@@ -0,0 +1,38 @@
++/**
++ * Copyright (C) 2009-2010 the original author or authors.
++ * See the notice.md file distributed with this work for additional
++ * information regarding copyright ownership.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.intercept;
++
++import static java.lang.annotation.RetentionPolicy.RUNTIME;
++
++import java.lang.annotation.Documented;
++import java.lang.annotation.Retention;
++import java.lang.annotation.Target;
++
++/**
++ * annotation to handle raw responses in one or many filters
++ *
++ * @author abalke
++ */
++@Documented
++@Retention(RUNTIME)
++@Target({java.lang.annotation.ElementType.TYPE})
++public @interface JsonDecoderInterceptor {
++    @SuppressWarnings("rawtypes")
++    Class<? extends JsonDecoderInterceptorCallback>[] value();
++}
+diff --git a/restygwt/src/main/java/org/fusesource/restygwt/client/intercept/JsonDecoderInterceptorCallback.java b/restygwt/src/main/java/org/fusesource/restygwt/client/intercept/JsonDecoderInterceptorCallback.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..1a75af0cf8479d8a1d846168404d369a7bb695a7
+--- /dev/null
++++ b/restygwt/src/main/java/org/fusesource/restygwt/client/intercept/JsonDecoderInterceptorCallback.java
+@@ -0,0 +1,16 @@
++package org.fusesource.restygwt.client.intercept;
++
++import com.google.gwt.json.client.JSONValue;
++
++public interface JsonDecoderInterceptorCallback<T> {
++    /**
++     * the one and only interception method.
++     *
++     * you will get the raw response body, no interaction so far
++     *
++     * @param input
++     * @param expectedType class type for the final response
++     * @return
++     */
++    void intercept(final JSONValue input, Class<T> expectedType);
++}
+diff --git a/restygwt/src/main/java/org/fusesource/restygwt/client/intercept/JsonDecoderRawInterceptor.java b/restygwt/src/main/java/org/fusesource/restygwt/client/intercept/JsonDecoderRawInterceptor.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..a30eeba1fc052ed6ac99005ab4e2762a7abf1f01
+--- /dev/null
++++ b/restygwt/src/main/java/org/fusesource/restygwt/client/intercept/JsonDecoderRawInterceptor.java
+@@ -0,0 +1,38 @@
++/**
++ * Copyright (C) 2009-2010 the original author or authors.
++ * See the notice.md file distributed with this work for additional
++ * information regarding copyright ownership.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.intercept;
++
++import static java.lang.annotation.RetentionPolicy.RUNTIME;
++
++import java.lang.annotation.Documented;
++import java.lang.annotation.Retention;
++import java.lang.annotation.Target;
++
++/**
++ * annotation to handle raw responses in one or many filters
++ *
++ * @author abalke
++ */
++@Documented
++@Retention(RUNTIME)
++@Target({java.lang.annotation.ElementType.TYPE, java.lang.annotation.ElementType.METHOD})
++public @interface JsonDecoderRawInterceptor {
++    @SuppressWarnings("rawtypes")
++    Class<? extends JsonDecoderRawInterceptorCallback>[] value();
++}
+diff --git a/restygwt/src/main/java/org/fusesource/restygwt/client/intercept/JsonDecoderRawInterceptorCallback.java b/restygwt/src/main/java/org/fusesource/restygwt/client/intercept/JsonDecoderRawInterceptorCallback.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..ee87e2e9f7dd874fcb29bf921e7b9c136e9b4e38
+--- /dev/null
++++ b/restygwt/src/main/java/org/fusesource/restygwt/client/intercept/JsonDecoderRawInterceptorCallback.java
+@@ -0,0 +1,16 @@
++package org.fusesource.restygwt.client.intercept;
++
++import org.fusesource.restygwt.client.Method;
++
++public interface JsonDecoderRawInterceptorCallback {
++    /**
++     * the one and only interception method.
++     *
++     * you will get the raw response body, no interaction so far
++     *
++     * @param input
++     * @param expectedType class type for the final response
++     * @return
++     */
++    void intercept(final String input, final Method method, Class expectedType);
++}
+diff --git a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java b/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
+index fc0cac5c09562d7145d56801b98deaf45e2a9873..ec458876b2ceaa8a78c72931e0a2dabb3b24002a 100644
+--- a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
++++ b/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
+@@ -52,6 +52,8 @@ import com.google.gwt.json.client.JSONValue;
+ import com.google.gwt.thirdparty.guava.common.collect.Lists;
+ import com.google.gwt.thirdparty.guava.common.collect.Maps;
+ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
++import org.fusesource.restygwt.client.intercept.JsonDecoderInterceptor;
++import org.fusesource.restygwt.client.intercept.JsonDecoderInterceptorCallback;
+ 
+ /**
+  * 
+@@ -370,6 +372,18 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
+                 p("return null;").i(-1);
+             }
+             p("}");
++
++            JsonDecoderInterceptor classAnnotation = source.getAnnotation(JsonDecoderInterceptor.class);
++
++            if (null != classAnnotation && null != classAnnotation.value()
++                    && 0 < classAnnotation.value().length) {
++                for (Class<? extends JsonDecoderInterceptorCallback> callbackClazz : classAnnotation.value()) {
++                    // apply the incoming ``value`` straight to an interceptor
++                    p(callbackClazz.getName() + ".INSTANCE.intercept(value, "
++                            + getClassParameterizedQualifiedSourceName(source) + ".class);");
++                }
++            }
++
+             if (classStyle == Style.RAILS) {
+         	p(JSON_OBJECT_CLASS + " object = toObjectFromWrapper(value, \"" + railsWrapperName + "\");");
+             } else if (typeInfo != null && typeInfo.include() == As.WRAPPER_ARRAY) {
+@@ -685,4 +699,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
+ 	}
+ 	return allFields;
+     }
++
++  private String getClassParameterizedQualifiedSourceName(final JClassType source) {
++          return source.getParameterizedQualifiedSourceName();
++  }
+ }
+diff --git a/restygwt/src/main/java/org/fusesource/restygwt/rebind/RestServiceClassCreator.java b/restygwt/src/main/java/org/fusesource/restygwt/rebind/RestServiceClassCreator.java
+index 1fd6f90caf393f7006f3a2f07ca25fc39ba73a04..8016f6aac69458b765d92db37ea933fb8693a185 100644
+--- a/restygwt/src/main/java/org/fusesource/restygwt/rebind/RestServiceClassCreator.java
++++ b/restygwt/src/main/java/org/fusesource/restygwt/rebind/RestServiceClassCreator.java
+@@ -63,6 +63,9 @@ import org.fusesource.restygwt.client.RestService;
+ import org.fusesource.restygwt.client.RestServiceProxy;
+ import org.fusesource.restygwt.client.TextCallback;
+ import org.fusesource.restygwt.client.XmlCallback;
++import org.fusesource.restygwt.client.intercept.JsonDecoderInterceptor;
++import org.fusesource.restygwt.client.intercept.JsonDecoderRawInterceptor;
++import org.fusesource.restygwt.client.intercept.JsonDecoderRawInterceptorCallback;
+ 
+ import com.google.gwt.core.client.JavaScriptObject;
+ import com.google.gwt.core.client.JsArray;
+@@ -620,6 +623,41 @@ public class RestServiceClassCreator extends BaseSourceCreator {
+                                 {
+                                     jsonAnnotation = method.getAnnotation(Json.class);
+                                     Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
++
++                                    JsonDecoderRawInterceptor methodAnnotation = method.getAnnotation(JsonDecoderRawInterceptor.class);
++                                    p("final String responseText = __method.getResponse().getText();");
++
++                                    JsonDecoderRawInterceptor classAnnotation = resultType.getAnnotation(JsonDecoderRawInterceptor.class);
++
++                                    if (null != classAnnotation && null != classAnnotation.value() && 0 < classAnnotation.value().length) {
++
++                                        for (Class<? extends JsonDecoderRawInterceptorCallback> callbackClazz : classAnnotation.value()) {
++                                            // apply the incoming ``value`` straight to an
++                                            // interceptor
++                                            p(callbackClazz.getName() + ".INSTANCE.intercept(responseText, __method, " +
++                                                    resultType.getParameterizedQualifiedSourceName().toString().replaceAll("<.*", "")
++                                                    + ".class);");
++                                        }
++                                    }
++
++                                    if (null != methodAnnotation
++                                            && null != methodAnnotation.value()
++                                            && 0 < methodAnnotation.value().length) {
++                                        for (Class<? extends JsonDecoderRawInterceptorCallback> callbackClazz : methodAnnotation
++                                                .value()) {
++                                            // apply the incoming ``value`` straight to an
++                                            // interceptor
++                                            String expectedClassType =
++                                                    resultType
++                                                            .getParameterizedQualifiedSourceName()
++                                                            .toString().replaceAll("<.*", "");
++
++                                            p(callbackClazz.getName()
++                                                    + ".INSTANCE.intercept(responseText, __method, "
++                                                    + expectedClassType + ".class);");
++                                        }
++                                    }
++
+                                     p("return " + locator.decodeExpression(resultType, JSON_PARSER_CLASS + ".parse(__method.getResponse().getText())", style) + ";");
+                                 }
+                                 i(-1).p("} catch (Throwable __e) {").i(1);
+@@ -789,4 +827,20 @@ public class RestServiceClassCreator extends BaseSourceCreator {
+ 
+         return l;
+     }
++
++    /**
++     * resolve {@link JsonDecoderInterceptor} annotations and write appropriate handler code
++     *
++     * @return the generated code
++     */
++    private String writeRequestInterception(JMethod method) {
++        StringBuilder sb = new StringBuilder();
++        JsonDecoderInterceptor methodAnnot = method.getAnnotation(JsonDecoderInterceptor.class);
++
++        if (null != methodAnnot && null != methodAnnot.value() && 0 < methodAnnot.value().length) {
++            // p("__method.getResponse().getText();");
++        }
++
++        return sb.toString();
++    }
+ }
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/Event.gwt.xml b/restygwt/src/test/java/org/fusesource/restygwt/Event.gwt.xml
+index 791afb9f33ff4af55ed527cfe30634271fa6c677..ac59818b2e2f162b430d1a6c47109dddbaab29e6 100644
+--- a/restygwt/src/test/java/org/fusesource/restygwt/Event.gwt.xml
++++ b/restygwt/src/test/java/org/fusesource/restygwt/Event.gwt.xml
+@@ -49,10 +49,11 @@
+         </none>
+     </replace-with>
+ 
+-    <set-configuration-property name="org.fusesource.restygwt.annotationresolver"
++    <extend-configuration-property name="org.fusesource.restygwt.annotationresolver"
+             value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
+ 
+     <servlet path='/foo/*' class='org.fusesource.restygwt.server.event.EchoServlet' />
++    <servlet path='/responseInterceptorDto/*' class='org.fusesource.restygwt.server.event.EchoServlet' />
+ 
+     <source path='client'/>
+     <source path='example/client'/>
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/JsonDecoderInterceptorTestCallback.java b/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/JsonDecoderInterceptorTestCallback.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..5a8ac9685f0d7e139cb7772cecaaaaaa71522bc6
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/JsonDecoderInterceptorTestCallback.java
+@@ -0,0 +1,50 @@
++/**
++ * Copyright (C) 2011 the original author or authors.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.intercept;
++
++import com.google.gwt.json.client.JSONValue;
++
++public class JsonDecoderInterceptorTestCallback implements
++        JsonDecoderInterceptorCallback<SimpleResponseInterceptedDto> {
++
++    public static final JsonDecoderInterceptorCallback<SimpleResponseInterceptedDto> INSTANCE =
++            new JsonDecoderInterceptorTestCallback();
++
++    /**
++     * property for testing purpose
++     */
++    private JSONValue lastInput;
++
++    /**
++     * property for testing purpose
++     */
++    private Class<SimpleResponseInterceptedDto> lastType;
++
++    @Override
++    public void intercept(final JSONValue input, Class<SimpleResponseInterceptedDto> expectedType) {
++        lastInput = input;
++        lastType = expectedType;
++    }
++
++    public JSONValue getLastInput() {
++        return lastInput;
++    }
++
++    public Class<SimpleResponseInterceptedDto> getLastType() {
++        return lastType;
++    }
++}
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/JsonDecoderInterceptorTestGwt.java b/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/JsonDecoderInterceptorTestGwt.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..e3034deb62690df6ccb0d01df7eb2a07c03a2aaa
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/JsonDecoderInterceptorTestGwt.java
+@@ -0,0 +1,272 @@
++/**
++ * Copyright (C) 2010 the original author or authors.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.intercept;
++
++import com.google.gwt.core.client.GWT;
++import com.google.gwt.json.client.JSONValue;
++import com.google.gwt.junit.client.GWTTestCase;
++import org.fusesource.restygwt.client.*;
++import org.fusesource.restygwt.client.cache.DefaultQueueableCacheStorage;
++import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
++import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
++import org.fusesource.restygwt.client.callback.CallbackFactory;
++import org.fusesource.restygwt.client.callback.DefaultFilterawareRequestCallback;
++import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
++import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
++import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
++import org.fusesource.restygwt.client.dispatcher.FilterawareDispatcher;
++
++import java.util.Map;
++
++/**
++ * test to check if {@link CachingCallbackFilter} {@link QueueableCacheStorage} and caching stuff in
++ * complete works as expected
++ *
++ * @author <a href="mailto:andi.balke@gmail.com">andi</a>
++ */
++public class JsonDecoderInterceptorTestGwt extends GWTTestCase {
++
++    private ServiceWithResponseInterceptorDto service;
++
++    // defines our response dto via echoservlet - this is unusual formatted with purpose to
++    // to prove we're working on raw values
++    private final String JSON_RESPONSE = "{     \"name\":\"foo\",  \"id\":\"U:ui\"          }";
++
++    @Override
++    public String getModuleName() {
++        return "org.fusesource.restygwt.Event";
++    }
++
++    /**
++     * check the interceptor is working when a dto is annotated
++     *
++     * @see SimpleResponseInterceptedDto
++     * @see JsonDecoderRawInterceptorTestCallback
++     */
++    public void testGetAndInterceptRaw_OnDto() {
++
++        // before the test, there is nothing (only working on the first test)
++        String lastInput =
++                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                        .getLastInput();
++        Class<SimpleResponseInterceptedDto> lastType =
++                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                        .getLastType();
++        String lastUrl =
++                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                        .getLastUrl();
++        assertEquals(null, lastInput);
++        assertEquals(null, lastType);
++        assertEquals(null, lastUrl);
++
++        service.getDtoIntercepted(JSON_RESPONSE, "U:ui",
++                new MethodCallback<SimpleResponseInterceptedDto>() {
++
++                    @Override
++                    public void onSuccess(Method method, SimpleResponseInterceptedDto response) {
++                        // when the first interaction was done, we need to have valid input here
++                        String lastInput =
++                                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                                        .getLastInput();
++                        Class<SimpleResponseInterceptedDto> lastType =
++                                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                                        .getLastType();
++                        String lastUrl =
++                                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                                        .getLastUrl();
++
++                        // the stringified version of this must be the same as above
++                        assertEquals(JSON_RESPONSE, lastInput);
++                        assertEquals(SimpleResponseInterceptedDto.class, lastType);
++                        assertTrue(lastUrl.endsWith("responseInterceptorDto/U:ui"));
++                        finishTest();
++                    }
++
++                    @Override
++                    public void onFailure(Method method, Throwable exception) {
++                        fail("on failure: " + exception.getMessage());
++                    }
++                });
++
++        delayTestFinish(10000);
++    }
++
++    /**
++     * check the interceptor is working when a dto is annotated
++     *
++     * @see JsonDecoderRawInterceptorTestCallback
++     * @see SimpleResponseInterceptedDto
++     */
++    public void testGetAndInterceptRaw_OnServiceMethod() {
++        // clear all optional previous values
++        ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                .clear();
++        // all values should be null
++        String lastInput =
++                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                        .getLastInput();
++        Class<SimpleDto> lastType =
++                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                        .getLastType();
++        assertEquals(null, lastInput);
++        assertEquals(null, lastType);
++
++        service.getServiceIntercepted(JSON_RESPONSE, "U:uu", new MethodCallback<SimpleDto>() {
++
++            @Override
++            public void onSuccess(Method method, SimpleDto response) {
++                // when the first interaction was done, we need to have valid input here
++                String lastInput =
++                        ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                                .getLastInput();
++                Class<SimpleDto> lastType =
++                        ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                                .getLastType();
++
++                // the stringified version of this must be the same as above
++                assertEquals(JSON_RESPONSE, lastInput);
++                assertEquals(SimpleDto.class, lastType);
++                finishTest();
++            }
++
++            @Override
++            public void onFailure(Method method, Throwable exception) {
++                fail("on failure: " + exception.getMessage());
++            }
++        });
++
++        delayTestFinish(10000);
++    }
++
++    /**
++     * check the interceptor is working when a dto is annotated
++     *
++     * @see JsonDecoderRawInterceptorTestCallback
++     * @see SimpleResponseInterceptedDto
++     */
++    public void testGetAndInterceptRaw_OnServiceMethod_withGenericDto() {
++        // clear all optional previous values
++        ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                .clear();
++        // all values should be null
++        String lastInput =
++                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                        .getLastInput();
++        Class<Map> lastType =
++                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                        .getLastType();
++        assertEquals(null, lastInput);
++        assertEquals(null, lastType);
++        final String expectedResponse = "{\"key\":" + JSON_RESPONSE + "}";
++
++        service.getServiceInterceptedGeneric(expectedResponse, "U:uui",
++                new MethodCallback<Map<String, SimpleDto>>() {
++
++                    @Override
++                    public void onSuccess(Method method, Map<String, SimpleDto> response) {
++                        // when the first interaction was done, we need to have valid input here
++                        String lastInput =
++                                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                                        .getLastInput();
++                        Class<Map> lastType =
++                                ((JsonDecoderRawInterceptorTestCallback) JsonDecoderRawInterceptorTestCallback.INSTANCE)
++                                        .getLastType();
++
++                        // the stringified version of this must be the same as above
++                        assertEquals(expectedResponse, lastInput);
++                        assertEquals(Map.class, lastType);
++                        finishTest();
++                    }
++
++                    @Override
++                    public void onFailure(Method method, Throwable exception) {
++                        fail("on failure: " + exception.getMessage());
++                    }
++                });
++        delayTestFinish(10000);
++    }
++
++    /**
++     * check the interceptor is working when a dto is annotated
++     *
++     * @see SimpleResponseInterceptedDto
++     * @see JsonDecoderInterceptorTestCallback
++     */
++    public void testGetAndIntercept_OnDto() {
++        service.getServiceIntercepted(JSON_RESPONSE, "U:ua", new MethodCallback<SimpleDto>() {
++
++            @Override
++            public void onSuccess(Method method, SimpleDto response) {
++                // when the first interaction was done, we need to have valid input here
++                JSONValue lastInput =
++                        ((JsonDecoderInterceptorTestCallback) JsonDecoderInterceptorTestCallback.INSTANCE)
++                                .getLastInput();
++                Class<SimpleResponseInterceptedDto> lastType =
++                        ((JsonDecoderInterceptorTestCallback) JsonDecoderInterceptorTestCallback.INSTANCE)
++                                .getLastType();
++
++                // the stringified version is not the same as its already preprocessed
++                assertNotSame(JSON_RESPONSE, lastInput);
++                // the interceptor gets a preparsed JSONObject
++                assertNotNull(lastInput.isObject());
++                // ...instead we have a version here that is just a ``toString`` result of
++                // JSONObject
++                assertEquals("{\"name\":\"foo\", \"id\":\"U:ui\"}", lastInput.toString());
++                assertEquals(SimpleResponseInterceptedDto.class, lastType);
++                finishTest();
++            }
++
++            @Override
++            public void onFailure(Method method, Throwable exception) {
++                fail("on failure: " + exception.getMessage());
++            }
++        });
++
++        delayTestFinish(10000);
++    }
++
++    /**
++     * usually this stuff is all done by gin in a real application. or at least there
++     * would be a central place which is not the activity in the end.
++     */
++    @Override
++    public void gwtSetUp() {
++        /*
++         * configure RESTY to use cache, usually done in gin
++         */
++        final DefaultQueueableCacheStorage cacheStorage = new DefaultQueueableCacheStorage();
++        final FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher();
++
++        dispatcher.addFilter(new CachingDispatcherFilter(cacheStorage, new CallbackFactory() {
++            public FilterawareRequestCallback createCallback(Method method) {
++                final FilterawareRequestCallback retryingCallback =
++                        new DefaultFilterawareRequestCallback(method);
++
++                return retryingCallback;
++            }
++        }));
++
++        Defaults.setDispatcher(dispatcher);
++
++        /*
++         * setup the service, usually done in gin
++         */
++        Resource resource = new Resource(GWT.getModuleBaseURL());
++        service = GWT.create(ServiceWithResponseInterceptorDto.class);
++        ((RestServiceProxy) service).setResource(resource);
++    }
++}
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/JsonDecoderRawInterceptorTestCallback.java b/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/JsonDecoderRawInterceptorTestCallback.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..ee39845e58833450f6a43f4f736270fdcef1d979
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/JsonDecoderRawInterceptorTestCallback.java
+@@ -0,0 +1,66 @@
++/**
++ * Copyright (C) 2011 the original author or authors.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.intercept;
++
++import org.fusesource.restygwt.client.Method;
++
++public class JsonDecoderRawInterceptorTestCallback implements JsonDecoderRawInterceptorCallback {
++
++    public static final JsonDecoderRawInterceptorCallback INSTANCE =
++            new JsonDecoderRawInterceptorTestCallback();
++
++    /**
++     * property for testing purpose
++     */
++    private String lastInput;
++
++    /**
++     * property for testing purpose
++     */
++    private Class lastType;
++
++    /**
++     * property for testing purpose
++     */
++    private String lastUrl;
++
++    @Override
++    public void intercept(final String input, final Method m, Class expectedType) {
++        lastInput = input;
++        lastType = expectedType;
++        lastUrl = m.builder.getUrl();
++    }
++
++    public String getLastInput() {
++        return lastInput;
++    }
++
++    public Class getLastType() {
++        return lastType;
++    }
++
++    public String getLastUrl() {
++        return lastUrl;
++    }
++
++    public void clear() {
++        lastInput = null;
++        lastType = null;
++        lastUrl = null;
++    }
++
++}
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/ServiceWithResponseInterceptorDto.java b/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/ServiceWithResponseInterceptorDto.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..a8160c55180d3f6e68bdef8fcd3bb64f0b191b31
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/ServiceWithResponseInterceptorDto.java
+@@ -0,0 +1,50 @@
++/**
++ * Copyright (C) 2011 the original author or authors.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.intercept;
++
++import java.util.Map;
++
++import javax.ws.rs.GET;
++import javax.ws.rs.HeaderParam;
++import javax.ws.rs.Path;
++import javax.ws.rs.PathParam;
++
++import org.fusesource.restygwt.client.MethodCallback;
++import org.fusesource.restygwt.client.RestService;
++
++/**
++ * @author <a href="mailto:andi.balke@gmail.com">Andi</a>
++ */
++public interface ServiceWithResponseInterceptorDto extends RestService {
++    @GET
++    @Path("/responseInterceptorDto/{id}")
++    public void getDtoIntercepted(@HeaderParam("X-Echo-Body") String response,
++            @PathParam("id") String id, MethodCallback<SimpleResponseInterceptedDto> callback);
++
++    @GET
++    @Path("/responseInterceptorDto/{id}")
++    @JsonDecoderRawInterceptor(JsonDecoderRawInterceptorTestCallback.class)
++    public void getServiceIntercepted(@HeaderParam("X-Echo-Body") String response,
++            @PathParam("id") String id, MethodCallback<SimpleDto> callback);
++
++    @GET
++    @Path("/responseInterceptorDto/{id}")
++    @JsonDecoderRawInterceptor(JsonDecoderRawInterceptorTestCallback.class)
++    public void getServiceInterceptedGeneric(@HeaderParam("X-Echo-Body") String response,
++            @PathParam("id") String id, MethodCallback<Map<String, SimpleDto>> callback);
++
++}
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/SimpleDto.java b/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/SimpleDto.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..f5e3b9fd8021d1e0d92bc3c6f7f13d853922f2f4
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/SimpleDto.java
+@@ -0,0 +1,47 @@
++/**
++ * Copyright (C) 2011 the original author or authors.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.intercept;
++
++/**
++ * just a dummy dto that shows us our interception will work
++ *
++ * usually it might be useless to perform those pretty common interceptors at once,
++ * but this is just for testing.
++ *
++ * @author abalke
++ */
++public class SimpleDto {
++
++    public String id;
++    public String name;
++
++    public String getId() {
++        return id;
++    }
++
++    public void setId(String id) {
++        this.id = id;
++    }
++
++    public String getName() {
++        return name;
++    }
++
++    public void setName(String name) {
++        this.name = name;
++    }
++}
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/SimpleResponseInterceptedDto.java b/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/SimpleResponseInterceptedDto.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..eb1c7cb12ea20da252f2b0d5cba5ffb00e3dca9b
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/client/intercept/SimpleResponseInterceptedDto.java
+@@ -0,0 +1,49 @@
++/**
++ * Copyright (C) 2011 the original author or authors.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.intercept;
++
++/**
++ * just a dummy dto that shows us our interception will work
++ *
++ * usually it might be useless to perform those pretty common interceptors at once,
++ * but this is just for testing.
++ *
++ * @author abalke
++ */
++@JsonDecoderRawInterceptor({JsonDecoderRawInterceptorTestCallback.class})
++@JsonDecoderInterceptor({JsonDecoderInterceptorTestCallback.class})
++public class SimpleResponseInterceptedDto {
++
++    public String id;
++    public String name;
++
++    public String getId() {
++        return id;
++    }
++
++    public void setId(String id) {
++        this.id = id;
++    }
++
++    public String getName() {
++        return name;
++    }
++
++    public void setName(String name) {
++        this.name = name;
++    }
++}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2011 the original author or authors.
+ * Copyright (C) 2009-2012 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -31,7 +31,7 @@ import com.google.gwt.http.client.RequestBuilder;
  * <li>POST /model : will get the user responds into the cache using the location header for the key</li>
  * <li>GET /model/{id} : will use the cached responds from cache if present</li>
  * <li>PUT /model/{id} : will put the responds from the server into the cache. a conflict will delete the cache entry to allow
- * a get to retrieve the up to date date</li>
+ * a get to retrieve the up to date data</li>
  * <li>DELETE /model/{id} : will also delete the resource in the cache</li>
  *
  * @author <a href="blog.mkristian.tk">Kristian</a>

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2011 the original author or authors.
+ * Copyright (C) 2009-2012 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -44,6 +44,14 @@ public class DefaultFilterawareRequestCallback extends AbstractNestedRequestCall
             requestCallback = f.filter(method, response, requestCallback);
         }
         requestCallback.onResponseReceived(request, response);
+    }
+
+    @Override
+    protected void doError(Request request, Response response){
+        for (CallbackFilter f : callbackFilters) {
+            requestCallback = f.filter(method, response, requestCallback);
+        }
+        super.doError(request, response);
     }
 
     /**

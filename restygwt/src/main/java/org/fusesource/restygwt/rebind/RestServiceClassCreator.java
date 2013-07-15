@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2011 the original author or authors.
+ * Copyright (C) 2009-2012 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -675,7 +675,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
           return "(new " + JSON_OBJECT_CLASS + "(" + expr + ")).toString()";
         }
 
-        return String.format("%s != null ? %s.toString() : null", expr, expr);
+        return String.format("(%s != null ? %s.toString() : null)", expr, expr);
     }
 
     protected String toIteratedStringExpression(JParameter arg) {
