@@ -59,26 +59,16 @@ public class CachingCallbackFilter implements CallbackFilter {
         final List<RequestCallback> removedCallbacks = cache.removeCallbacks(ck);
 
         if (removedCallbacks != null){
-            // fetch the builders callback and wrap it with a new one, calling all others too
-            final RequestCallback originalCallback = callback;
-
             callback = new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
-                    // call the original callback
-                    if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
-                        Logger.getLogger(CachingCallbackFilter.class.getName())
-                                .finer("call original callback for " + ck);
-                    }
-                    originalCallback.onResponseReceived(request, response);
-
                     if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
                                 .finer("call "+ removedCallbacks.size()
                                         + " more queued callbacks for " + ck);
                     }
 
-                    // and all the others, found in cache
+                    // call all callbacks found in cache
                     for (RequestCallback cb : removedCallbacks) {
                         cb.onResponseReceived(request, response);
                     }
@@ -92,13 +82,6 @@ public class CachingCallbackFilter implements CallbackFilter {
                                         + " callbacks for " + ck + " due to error: "
                                         + exception.getMessage());
                     }
-                    // call the original callback
-                    if (LogConfiguration.loggingIsEnabled()) {
-                        Logger.getLogger(CachingCallbackFilter.class.getName())
-                                .finer("call original callback for " + ck);
-                    }
-
-                    originalCallback.onError(request, exception);
 
                     if (LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
