@@ -61,7 +61,8 @@ This allows developers to decompose service interfaces into logical chunks and e
 REST URL hierarchy. Currently only `@PathParam` subresource locators are supported.
 
 ### JSON Encoding
-Java beans can be sent and received via JSON encoding/decoding. Here what the classes declarations
+
+Java beans can be sent and received via JSON encoding/decoding. Here is what the classes declarations
 look like for the `PizzaOrder` and `OrderConfirmation` in the previous example:
 
     public class PizzaOrder {
@@ -153,6 +154,7 @@ For example, to set a 5 second timeout:
         public void order(PizzaOrder request,
                           MethodCallback<OrderConfirmation> callback);
 
+If no server response is received within the timeout, the `onFailure()` method of the callback is called.
 
 ### Configuring the Expected HTTP Status Code
 
@@ -381,6 +383,33 @@ Now we will have information about our custom annotation inside the
 
 A fully working example can be found in the integration-test:
 `org.fusesource.restygwt.client.event.ModelChangeAnnotationTestGwt`.
+
+## Runtime parameters
+
+You might need to pass a parameter at request time, without sending it to the server.
+The parameter can be used in the dispatcher or in a filter callback or int the method callback,
+at sending or receiving time.
+
+This allows to add information about a specific request and to handle it in the filters, for example.
+
+Example:
+
+        @GET
+        @Path("title")
+        public void getTitle(String bookId,
+                @MethodDataParam("callerId") String callerId,
+                MethodCallback<String> callback);
+
+The value of the parameter tagged with `@MethodDataParam` is added with the key given in the annotation
+to the `org.fusesource.restygwt.client.Method` used in the call via the
+`org.fusesource.restygwt.client.Method#addData(String key, String value)` method.
+
+Thus, the information is available ( as `method.getData().get("callerId")` for example) in the methods receiving a `Method` as parameter:
+
+  - `org.fusesource.restygwt.client.Dispatcher#send(Method method, RequestBuilder builder)`;
+  - `com.google.gwt.http.client.dispatcher.DispatcherFilter#filter(Method method, RequestBuilder builder)`
+  which can transmit the information to its callback;
+  - `org.fusesource.restygwt.client.MethodCallback`'s `onSuccess()` and `onFailure()` methods.
 
 
 ## REST API
