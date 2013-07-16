@@ -61,7 +61,7 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(CachingTestGwt.class);
         suite.addTestSuite(ResourceTestGwt.class);
         suite.addTestSuite(ResourcePassesHeadersTestGwt.class);
-        suite.addTestSuite(VolatileQueueableCacheStorageTestGwt.class);       
+        suite.addTestSuite(VolatileQueueableCacheStorageTestGwt.class);
         suite.addTestSuite(FailingTestGwt.class);
         suite.addTestSuite(EncoderDecoderTestGwt.class);
         suite.addTestSuite(GenericsTestGwt.class);
@@ -74,6 +74,7 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(QueryParamTestGwt.class);
         suite.addTestSuite(FormParamTestGwt.class);
         suite.addTestSuite(DirectRestServiceTestGwt.class);
+        suite.addTestSuite(MethodDataParamTestGwt.class);
         return suite;
     }
 }
