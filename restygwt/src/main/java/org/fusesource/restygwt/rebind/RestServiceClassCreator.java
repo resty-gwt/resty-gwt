@@ -361,6 +361,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             HashMap<String, JParameter> queryParams = new HashMap<String, JParameter>();
             HashMap<String, JParameter> formParams = new HashMap<String, JParameter>();
             HashMap<String, JParameter> headerParams = new HashMap<String, JParameter>();
+            HashMap<String, JParameter> dataParams = new HashMap<String, JParameter>();
 
             for (JParameter arg : args) {
                 PathParam paramPath = arg.getAnnotation(PathParam.class);
@@ -393,6 +394,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 HeaderParam headerParam = arg.getAnnotation(HeaderParam.class);
                 if (headerParam != null) {
                     headerParams.put(headerParam.value(), arg);
+                    continue;
+                }
+
+                MethodDataParam dataParam = arg.getAnnotation(MethodDataParam.class);
+                if (dataParam != null) {
+                    dataParams.put(dataParam.value(), arg);
                     continue;
                 }
 
@@ -487,6 +494,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             } else if( classOptions!=null && classOptions.timeout() >= 0 ) {
                 // Using class level defined value
                 p("__method.timeout("+classOptions.timeout()+");");
+            }
+
+            for (Map.Entry<String, JParameter> entry : dataParams.entrySet()) {
+                String expr = entry.getValue().getName();
+                p("__method.addData(" + wrap(entry.getKey()) + ", " +
+                  toStringExpression(entry.getValue().getType(), expr) + ");");
             }
 
             if(jsonpAnnotation == null) {
