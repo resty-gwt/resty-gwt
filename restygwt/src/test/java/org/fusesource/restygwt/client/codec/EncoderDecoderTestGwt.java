@@ -33,6 +33,7 @@ import org.fusesource.restygwt.client.AbstractNestedJsonEncoderDecoder;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
 import org.fusesource.restygwt.client.ObjectEncoderDecoder;
+import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt.WithEnum.Cycle;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONValue;
@@ -726,5 +727,48 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         assertEquals(roundTrip.age, 123);
         assertEquals(roundTrip.yearOfBirth, 1234);
         assertEquals(roundTrip.getName(), "marvin the robot");
+    }
+
+    static class WithEnum {
+        
+        enum Cycle { BEGIN, LIFE, END } 
+      
+        public Cycle first;
+        
+        private Cycle last;
+
+        public Cycle getLast() {
+            return last;
+        }
+
+        public void setLast(Cycle last) {
+            this.last = last;
+        }
+        
+    }
+
+    static interface WithEnumCodec extends JsonEncoderDecoder<WithEnum> {
+    }
+
+    public void testWithEnum() {
+        WithEnumCodec codec = GWT.create(WithEnumCodec.class);
+        WithEnum pojo = new WithEnum();
+        pojo.first = WithEnum.Cycle.BEGIN;
+        pojo.setLast( WithEnum.Cycle.END );
+    
+        JSONValue json = codec.encode( pojo );
+        assertEquals("{\"first\":\"BEGIN\", \"last\":\"END\"}", json.toString());
+        WithEnum roundTrip = codec.decode( json );
+        assertEquals( roundTrip.first, Cycle.BEGIN );
+        assertEquals( roundTrip.getLast(), Cycle.END );
+        
+        pojo.first = null;
+        pojo.setLast( null );
+    
+        json = codec.encode( pojo );
+        assertEquals("{\"first\":null, \"last\":null}", json.toString());
+        roundTrip = codec.decode( json );
+        assertEquals( roundTrip.first, null );
+        assertEquals( roundTrip.getLast(), null );
     }
 }

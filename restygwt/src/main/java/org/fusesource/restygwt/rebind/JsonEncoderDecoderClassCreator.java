@@ -46,7 +46,9 @@ import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 import com.google.gwt.thirdparty.guava.common.collect.Maps;
@@ -71,6 +73,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private static final String JSON_VALUE_CLASS = JSONValue.class.getName();
     private static final String JSON_OBJECT_CLASS = JSONObject.class.getName();
     private static final String JSON_ARRAY_CLASS = JSONArray.class.getName();
+    private static final String JSON_NULL_CLASS = JSONNull.class.getName();
+    private static final String JSON_STRING_CLASS = JSONString.class.getName();
 
     JsonEncoderDecoderInstanceLocator locator;
 
@@ -258,9 +262,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     p("{").i(1);
                     {
                         if (null != field.getType().isEnum()) {
-                        p("if(" + fieldExpr + " == null) {").i(1);
-                        p("rc.put(" + wrap(jsonName) + ", null);");
-                        i(-1).p("} else {").i(1);
+                            p("if(" + fieldExpr + " == null) {").i(1);
+                            p("rc.put(" + wrap(jsonName) + ", " + JSON_NULL_CLASS + ".getInstance());");
+                            i(-1).p("} else {").i(1);
                         }
     
                         p(JSON_VALUE_CLASS + " v=" + expression + ";");
@@ -271,7 +275,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         i(-1).p("}");
     
                         if (null != field.getType().isEnum()) {
-                        i(-1).p("}");
+                            i(-1).p("}");
                         }
     
                     }
@@ -313,10 +317,10 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         {
         p("if( value==null ) {").i(1);
         {
-            p("return com.google.gwt.json.client.JSONNull.getInstance();").i(-1);
+            p("return " + JSON_NULL_CLASS + ".getInstance();").i(-1);
         }
         p("}");
-        p("return new com.google.gwt.json.client.JSONString(value.name());");
+        p("return new " + JSON_STRING_CLASS + "(value.name());");
         }
         i(-1).p("}");
         p();
@@ -393,7 +397,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     String expression = locator.decodeExpression(field.getType(), objectGetter, style);
 
                     String defaultValue = field.getType().isPrimitive() == null ? "null": field.getType().isPrimitive().getUninitializedFieldExpression() + "";
-                    i(1).p("" + (objectGetter + " == null || " + objectGetter + " instanceof com.google.gwt.json.client.JSONNull ? " + defaultValue + " : " + expression + ((field != lastField) ? ", " : ""))).i(-1);
+                    i(1).p("" + (objectGetter + " == null || " + objectGetter + " instanceof " + JSON_NULL_CLASS + " ? " + defaultValue + " : " + expression + ((field != lastField) ? ", " : ""))).i(-1);
                     
                     return null;
                     }
@@ -460,7 +464,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         String cast = field.getType().isPrimitive() == JPrimitiveType.SHORT ? "(short) " : "";
                         p("if(" + objectGetter + " != null) {").i(1);
     
-                        p("if(" + objectGetter + " instanceof com.google.gwt.json.client.JSONNull) {").i(1);
+                        p("if(" + objectGetter + " instanceof " + JSON_NULL_CLASS + ") {").i(1);
                         String defaultValue = field.getType().isPrimitive() == null ? "null": field.getType().isPrimitive().getUninitializedFieldExpression() + "";
                         
                         if (setterName != null) {
@@ -512,7 +516,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             p("return null;").i(-1);
         }
         p("}");
-        p("com.google.gwt.json.client.JSONString str = value.isString();");
+        p(JSON_STRING_CLASS + " str = value.isString();");
         p("if( null == str ) {").i(1);
         {
             p("throw new DecodingException(\"Expected a json string (for enum), but was given: \"+value);").i(-1);
