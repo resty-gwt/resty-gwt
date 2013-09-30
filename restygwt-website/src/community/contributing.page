@@ -65,7 +65,9 @@ ensure that the problem stays fixed in future releases.
 We gladly accept patches if you can find ways to improve, tune or fix
 ${project_name} in some way.
 
-${include("/community/_creating_patches.ssp.md")}
+* Fork the project on github (${github_page})
+* Create a topic branch on your local clone
+* Push the topic branch and create Pull Request for it
 
 ## Becoming a committer
 
