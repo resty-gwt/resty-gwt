@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.callback.CallbackFilter;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -34,7 +35,7 @@ public class UnauthorizedCallbackFilter implements CallbackFilter {
     public RequestCallback filter(Method method, Response response,
             RequestCallback callback) {     
         if (response.getStatusCode() == Response.SC_UNAUTHORIZED) {
-                if (LogConfiguration.loggingIsEnabled()) {
+                if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                     Logger.getLogger(CallbackFilter.class.getName()).severe("Unauthorized: "
                             + method.builder.getUrl());
                     Window.Location.assign("login.html" + Window.Location.getQueryString());

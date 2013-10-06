@@ -36,11 +36,19 @@ import com.google.gwt.logging.client.LogConfiguration;
 public class ModelChangeCallbackFilter implements CallbackFilter {
 
     protected EventBus eventBus;
+    private Logger logger;
 
     public ModelChangeCallbackFilter(EventBus eventBus) {
         this.eventBus = eventBus;
     }
 
+    private Logger getLogger() {
+        if ( GWT.isClient() && LogConfiguration.loggingIsEnabled() && this.logger == null) {
+            this.logger = Logger.getLogger( ModelChangeCallbackFilter.class.getName() );
+        }
+        return this.logger;
+    }
+    
     /**
      * the real filter method, called independent of the response code
      *
@@ -57,8 +65,10 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
                     ModelChange.MODEL_CHANGED_DOMAIN_KEY);
 
             if (modelChangeIdentifier != null) {
-                GWT.log("found modelChangeIdentifier \"" + modelChangeIdentifier + "\" in "
+                if ( getLogger() != null ) {
+                    getLogger().fine("found modelChangeIdentifier \"" + modelChangeIdentifier + "\" in "
                         + response);
+                }
                 JSONValue jsonValue = JSONParser.parseStrict(modelChangeIdentifier);
                 JSONArray jsonArray = jsonValue.isArray();
 
@@ -67,23 +77,23 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
                         ModelChangeEvent e = new ModelChangeEvent(
                                 jsonArray.get(i).isString().stringValue());
 
-                        if (LogConfiguration.loggingIsEnabled()) {
-                            Logger.getLogger(ModelChangeCallbackFilter.class.getName())
-                                    .info("fire event \"" + e + "\" ...");
+                        if (getLogger() != null) {
+                            getLogger().info("fire event \"" + e + "\" ...");
                         }
                         eventBus.fireEvent(e);
                     }
                 } else {
-                    if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
-                        Logger.getLogger(ModelChangeCallbackFilter.class.getName())
-                        .info("found null array for model-change events");
+                    if (getLogger() != null) {
+                        getLogger().info("found null array for model-change events");
                     }
                 }
             }
             return callback;
         }
 
-        GWT.log("no event processing due to invalid response code: " + code);
+        if (getLogger() != null) {
+            getLogger().fine("no event processing due to invalid response code: " + code);
+        }
         return callback;
     }
 }

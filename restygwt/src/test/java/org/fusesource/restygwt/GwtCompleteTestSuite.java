@@ -56,6 +56,8 @@ public class GwtCompleteTestSuite extends TestCase {
     public static Test suite() {
         GWTTestSuite suite = new GWTTestSuite("all GwtTestCases but AnnotationResolver" );
 
+        suite.addTestSuite(EncoderDecoderTestGwt.class);
+        
         suite.addTestSuite(FlakyTestGwt.class);
         suite.addTestSuite(TimeoutTestGwt.class);
         suite.addTestSuite(CachingTestGwt.class);
@@ -63,7 +65,6 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(ResourcePassesHeadersTestGwt.class);
         suite.addTestSuite(VolatileQueueableCacheStorageTestGwt.class);       
         suite.addTestSuite(FailingTestGwt.class);
-        suite.addTestSuite(EncoderDecoderTestGwt.class);
         suite.addTestSuite(GenericsTestGwt.class);
         suite.addTestSuite(ParameterizedTypeDTO.class);
         suite.addTestSuite(ParameterizedTypeServiceInterfaces.class);

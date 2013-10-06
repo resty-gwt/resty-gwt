@@ -18,7 +18,6 @@
 
 package org.fusesource.restygwt.example.client.event;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -48,7 +47,6 @@ public class ModelChangeEventFactory {
     @SuppressWarnings("rawtypes")
     public static GwtEvent factory(final String domainName) {
         final GwtEvent e = new ModelChangeEvent(domainName);
-        GWT.log(e.toString());
 
         return e;
     }

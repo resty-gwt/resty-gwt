@@ -26,6 +26,7 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.callback.DefaultFilterawareRequestCallback;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
@@ -80,7 +81,7 @@ public class DefaultFilterawareDispatcher implements FilterawareDispatcher {
         for (DispatcherFilter f : dispatcherFilters) {
             if (!f.filter(method, builder)) {
                 // filter returned false, no continue
-                if (LogConfiguration.loggingIsEnabled()) {
+                if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                     Logger.getLogger(DefaultFilterawareDispatcher.class.getName())
                             .fine(f.getClass() + " told me not to continue filtering for: "
                                     + builder.getHTTPMethod() + " " + builder.getUrl());

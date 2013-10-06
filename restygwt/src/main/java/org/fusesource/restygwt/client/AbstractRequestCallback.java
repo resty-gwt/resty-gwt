@@ -18,10 +18,14 @@
 
 package org.fusesource.restygwt.client;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.logging.client.LogConfiguration;
 
 /**
  *
@@ -33,6 +37,8 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
 
     protected MethodCallback<T> callback;
 
+    private Logger logger;
+
     public AbstractRequestCallback(Method method, MethodCallback<T> callback) {
         this.method = method;
         this.callback = callback;
@@ -43,6 +49,13 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
         callback.onFailure(this.method, exception);
     }
 
+    private Logger getLogger() {
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled() && this.logger == null) {
+            this.logger = Logger.getLogger( AbstractRequestCallback.class.getName() );
+        }
+        return this.logger;
+    }
+    
     final public void onResponseReceived(Request request, Response response) {
         this.method.request = request;
         this.method.response = response;
@@ -53,18 +66,24 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
                     response.getStatusCode()));
         } else {
             T value;
-            try {
-                GWT.log("Received http response for request: " + this.method.builder.getHTTPMethod()
-                        + " " + this.method.builder.getUrl(), null);
+            try { 
+                if ( getLogger() != null ) {
+                    getLogger().fine("Received http response for request: " + this.method.builder.getHTTPMethod()
+                        + " " + this.method.builder.getUrl());
+                }
                 String content = response.getText();
                 if (content != null && content.length() > 0) {
-                    GWT.log(content, null);
+                    if ( getLogger() != null ) {
+                        getLogger().fine(content);
+                    }
                     value = parseResult();
                 } else {
                     value = null;
                 }
             } catch (Throwable e) {
-                GWT.log("Could not parse response: " + e, e);
+                if ( getLogger() != null ) {
+                    getLogger().log(Level.FINE, "Could not parse response: " + e, e);
+                }
                 callback.onFailure(this.method, e);
                 return;
             }

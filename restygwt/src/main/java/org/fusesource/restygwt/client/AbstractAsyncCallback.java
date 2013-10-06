@@ -18,10 +18,14 @@
 
 package org.fusesource.restygwt.client;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -34,6 +38,8 @@ public abstract class AbstractAsyncCallback<T> implements AsyncCallback<JavaScri
 
     protected MethodCallback<T> callback;
 
+    private Logger logger;
+
     public AbstractAsyncCallback(JsonpMethod method, MethodCallback<T> callback) {
         this.method = method;
         this.callback = callback;
@@ -44,20 +50,33 @@ public abstract class AbstractAsyncCallback<T> implements AsyncCallback<JavaScri
         callback.onFailure(this.method, exception);
     }
 
+    private Logger getLogger() {
+        if ( GWT.isClient() && LogConfiguration.loggingIsEnabled() && this.logger == null) {
+            this.logger = Logger.getLogger( AbstractRequestCallback.class.getName() );
+        }
+        return this.logger;
+    }
+    
     @Override
     final public void onSuccess(JavaScriptObject result) {
         try {
-            GWT.log("Received http response for jsonp request", null);
+            if ( getLogger() != null ) {
+                getLogger().fine("Received http response for jsonp request");
+            }
             if (result == null){
                 callback.onSuccess(this.method, null);
             }
             else{
                 JSONObject json = new JSONObject(result);
-                GWT.log(json.toString(), null);
+                if ( getLogger() != null ) {
+                    getLogger().fine(json.toString());
+                }
                 callback.onSuccess(this.method, parseResult(json));
             }
         } catch (Throwable e) {
-            GWT.log("Could not parse response: " + e, e);
+            if ( getLogger() != null ) {
+                getLogger().log(Level.FINE, "Could not parse response: " + e, e);
+            }
             callback.onFailure(this.method, e);
             return;
         }

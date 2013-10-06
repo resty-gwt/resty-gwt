@@ -23,6 +23,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.fusesource.restygwt.rebind.AnnotationResolver;
 
 import com.google.gwt.core.client.GWT;
@@ -35,6 +38,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONException;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
 /**
@@ -86,6 +90,8 @@ public class Method {
      * additional data which can be set per instance, e.g. from a {@link AnnotationResolver}
      */
     private final Map<String, String> data = new HashMap<String, String>();
+
+    private Logger logger;
 
     protected Method() {
     }
@@ -202,6 +208,13 @@ public class Method {
         return localDispatcher.send(this, builder);
     }
 
+    private Logger getLogger() {
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled() && this.logger == null) {
+            this.logger = Logger.getLogger( Method.class.getName() );
+        }
+        return this.logger;
+    }
+    
     public Object send(final TextCallback callback) {
         defaultAcceptType(Resource.CONTENT_TYPE_TEXT);
         try {
@@ -212,7 +225,9 @@ public class Method {
                 }
             });
         } catch (Throwable e) {
-            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            if( getLogger() != null ){
+                getLogger().log(Level.FINE, "Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            }
             callback.onFailure(this, e);
             return null;
         }
@@ -233,7 +248,9 @@ public class Method {
                 }
             });
         } catch (Throwable e) {
-            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            if( getLogger() != null ){
+                getLogger().log(Level.FINE, "Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            }
             callback.onFailure(this, e);
             return null;
         }
@@ -253,7 +270,9 @@ public class Method {
                 }
             });
         } catch (Throwable e) {
-            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            if( getLogger() != null ){
+                getLogger().log(Level.FINE, "Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            }
             callback.onFailure(this, e);
             return null;
         }
@@ -285,7 +304,9 @@ public class Method {
                 }
             });
         } catch (Throwable e) {
-            GWT.log("Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            if( getLogger() != null ){
+                getLogger().log(Level.FINE, "Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            }
             callback.onFailure(this, e);
             return null;
         }
