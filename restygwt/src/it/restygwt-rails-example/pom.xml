@@ -72,7 +72,7 @@
       <plugin>
 	<groupId>de.saumya.mojo</groupId>
         <artifactId>rails3-maven-plugin</artifactId>
-        <version>0.28.3</version>
+        <version>1.0.0-rc4</version>
         <executions>
           <execution>
             <phase>validate</phase>
