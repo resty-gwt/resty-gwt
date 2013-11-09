@@ -357,7 +357,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         return toObject(result);
     }
     
-    static private JSONArray asArray(JSONValue value) {
+    static JSONArray asArray(JSONValue value) {
         JSONArray array = value.isArray();
         if (array == null) {
             throw new DecodingException("Expected a json array, but was given: " + value);

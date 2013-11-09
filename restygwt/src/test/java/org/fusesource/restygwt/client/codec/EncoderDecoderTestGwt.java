@@ -23,8 +23,10 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -479,7 +481,8 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
     public void testTypeMapWithListValueDecode() {
         Map<String, List<String>> map = new HashMap<String, List<String>>();
         map.put("key", new ArrayList<String>(Arrays.asList("me and the corner")));
-        AbstractJsonEncoderDecoder<List<String>> valueEncoder = AbstractNestedJsonEncoderDecoder.listEncoderDecoder( AbstractJsonEncoderDecoder.STRING );
+        AbstractJsonEncoderDecoder<List<String>> valueEncoder =
+                AbstractNestedJsonEncoderDecoder.listEncoderDecoder( AbstractJsonEncoderDecoder.STRING );
         
         assertEquals(map.toString(),
                 AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, valueEncoder, Json.Style.DEFAULT), 
@@ -497,7 +500,10 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         nested.put("name", "me");
         map.put("key", nested);
 
-        AbstractJsonEncoderDecoder<Map<String, String>> valueEncoder = AbstractNestedJsonEncoderDecoder.mapEncoderDecoder( AbstractJsonEncoderDecoder.STRING, AbstractJsonEncoderDecoder.STRING, Json.Style.DEFAULT );
+        AbstractJsonEncoderDecoder<Map<String, String>> valueEncoder =
+                AbstractNestedJsonEncoderDecoder.mapEncoderDecoder( AbstractJsonEncoderDecoder.STRING,
+                                                                    AbstractJsonEncoderDecoder.STRING,
+                                                                    Json.Style.DEFAULT );
         
         assertEquals(map.toString(),
                 AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, valueEncoder, Json.Style.DEFAULT), 
@@ -535,7 +541,85 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
                         valueEncoder, 
                         Json.Style.JETTISON_NATURAL).toString());
     }
+
+    static interface WithArraysAndCollectionsCodec extends JsonEncoderDecoder<WithArraysAndCollections> {}
     
+    @SuppressWarnings("unchecked")
+    public void testTypeWithArrasAndCollections() {
+        WithArraysAndCollections obj = new WithArraysAndCollections();
+        
+        obj.ages = new int[] { 1, 2, 3, 4 };
+
+        obj.ageSet = new HashSet<int[]>();
+        obj.ageSet.add( obj.ages );
+        
+        Email email = new Email();
+        email.email = "me@example.com";
+        email.name = "me";
+        
+        obj.emailArray = new Email[]{ email };
+        
+        obj.emailList = new ArrayList<Email>();
+        obj.emailList.add(email);
+
+        obj.emailSet = new HashSet<Email>();
+        obj.emailSet.add( email );
+        
+        obj.emailListArray = new List[ 1 ];
+        obj.emailListArray[ 0 ] = obj.emailList;
+        
+        obj.emailSetArray = new Set[ 1 ];
+        obj.emailSetArray[ 0 ] = obj.emailSet;
+        
+        obj.personalEmailList = new HashMap<String, List<Email>>();
+        obj.personalEmailList.put( "me", obj.emailList );
+
+        obj.personalEmailSet = new HashMap<String, Set<Email>>();
+        obj.personalEmailSet.put( "me", obj.emailSet );
+
+        obj.personalEmailListArray = new HashMap<String, List<Email>[]>();
+        obj.personalEmailListArray.put( "me", obj.emailListArray );
+
+        obj.personalEmailSetArray = new HashMap<String, Set<Email>[]>();
+        obj.personalEmailSetArray.put( "me", obj.emailSetArray );
+
+        obj.personalEmailSetList = new ArrayList<Map<String, Set<Email>>>();
+        obj.personalEmailSetList.add( obj.personalEmailSet );
+
+        obj.personalEmailListSet = new HashSet<Map<String, List<Email>>>();
+        obj.personalEmailListSet.add( obj.personalEmailList );
+
+        obj.personalEmailSetMap = new HashMap<Email, Map<String, Set<Email>>>();
+        obj.personalEmailSetMap.put( email, obj.personalEmailSet );
+        
+        AbstractJsonEncoderDecoder<WithArraysAndCollections> encoder = GWT.create(WithArraysAndCollectionsCodec.class);
+  
+        JSONValue json = encoder.encode(obj);
+        assertEquals("{\"ages\":[1,2,3,4], " +
+                "\"emailArray\":[{\"name\":\"me\", \"email\":\"me@example.com\"}], " +
+                "\"emailList\":[{\"name\":\"me\", \"email\":\"me@example.com\"}], " +
+                "\"emailSet\":[{\"name\":\"me\", \"email\":\"me@example.com\"}], " +
+        		"\"emailListArray\":[[{\"name\":\"me\", \"email\":\"me@example.com\"}]], " +
+                "\"emailSetArray\":[[{\"name\":\"me\", \"email\":\"me@example.com\"}]], " +
+        		"\"personalEmailList\":{\"me\":[{\"name\":\"me\", \"email\":\"me@example.com\"}]}, " +
+        		"\"personalEmailSet\":{\"me\":[{\"name\":\"me\", \"email\":\"me@example.com\"}]}" +
+        		", \"personalEmailListArray\":{\"me\":[[{\"name\":\"me\", \"email\":\"me@example.com\"}]]}" +
+        		", \"personalEmailSetArray\":{\"me\":[[{\"name\":\"me\", \"email\":\"me@example.com\"}]]}" +
+                ", \"personalEmailSetList\":[{\"me\":[{\"name\":\"me\", \"email\":\"me@example.com\"}]}]" +
+                ", \"personalEmailListSet\":[{\"me\":[{\"name\":\"me\", \"email\":\"me@example.com\"}]}]" + 
+                ", \"personalEmailSetMap\":{\"{\\\"name\\\":\\\"me\\\", \\\"email\\\":\\\"me@example.com\\\"}\":" +
+                "{\"me\":[{\"name\":\"me\", \"email\":\"me@example.com\"}]}}" +
+        		"}",
+                json.toString() );
+
+        WithArraysAndCollections roundtrip = encoder.decode(json);
+        assertEquals("[1, 2, 3, 4],[me<me@example.com>],[me<me@example.com>],{me=[me<me@example.com>]},null," +
+        		"[me<me@example.com>],{me=[me<me@example.com>]},[[me<me@example.com>]],[[me<me@example.com>]]," +
+        		"[me]=>[[me<me@example.com>]],[me]=>[[me<me@example.com>]],[{me=[me<me@example.com>]}],[{me=[me<me@example.com>]}]," +
+        		"{me<me@example.com>={me=[me<me@example.com>]}}",
+                roundtrip.toString());
+    }
+
     static class CCC {
         
         @JsonIgnore

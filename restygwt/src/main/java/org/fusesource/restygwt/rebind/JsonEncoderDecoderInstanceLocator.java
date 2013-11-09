@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
+import org.fusesource.restygwt.client.AbstractNestedJsonEncoderDecoder;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
 import org.fusesource.restygwt.client.ObjectEncoderDecoder;
@@ -54,6 +55,7 @@ import com.google.gwt.xml.client.Document;
 public class JsonEncoderDecoderInstanceLocator {
 
     public static final String JSON_ENCODER_DECODER_CLASS = AbstractJsonEncoderDecoder.class.getName();
+    public static final String JSON_NESTED_ENCODER_DECODER_CLASS = AbstractNestedJsonEncoderDecoder.class.getName();
     public static final String JSON_CLASS = Json.class.getName();
 
     public final JClassType STRING_TYPE;
@@ -158,66 +160,40 @@ public class JsonEncoderDecoderInstanceLocator {
         JClassType clazz = type.isClassOrInterface();
 
         if (isCollectionType(clazz)) {
-            JParameterizedType parameterizedType = type.isParameterized();
-            if (parameterizedType == null || parameterizedType.getTypeArgs() == null) {
-                error("Collection types must be parameterized.");
-            }
-            JClassType[] types = parameterizedType.getTypeArgs();
+            JClassType[] types = getTypes(type);
 
-            if (clazz.isAssignableTo(MAP_TYPE)) {
-                if (types.length != 2) {
-                    error("Map must define two and only two type parameters");
-                }
-                if (isCollectionType(types[0])) {
-                    error("Map key can't be a collection");
-                }
-                if (!builtInEncoderDecoders.containsKey(types[0])) {
-                    error("Map key can't be an object");
-                }
-                String keyEncoderDecoder = getEncoderDecoder(types[0], logger);
-                encoderDecoder = getEncoderDecoder(types[1], logger);
+            String[] coders = isMapEncoderDecoder( clazz, types, style );
+            if ( coders != null ){
+                String keyEncoderDecoder = coders[ 1 ];
+                encoderDecoder = coders[ 0 ];
                 if (encoderDecoder != null && keyEncoderDecoder != null) {
                     return mapMethod + "(" + expression + ", " + keyEncoderDecoder + ", " + encoderDecoder + ", "
                             + JSON_CLASS + ".Style." + style.name() + ")";
-                } else if (encoderDecoder != null) {
+                } 
+                else if (encoderDecoder != null) {
                     return mapMethod + "(" + expression + ", " + encoderDecoder + ", " + JSON_CLASS + ".Style."
                             + style.name() + ")";
                 }
-            } else if (clazz.isAssignableTo(SET_TYPE)) {
-                if (types.length != 1) {
-                    error("Set must define one and only one type parameter");
-                }
-                encoderDecoder = getEncoderDecoder(types[0], logger);
-                if (encoderDecoder != null) {
-                    return setMethod + "(" + expression + ", " + encoderDecoder + ")";
-                }
-            } else if (clazz.isAssignableTo(LIST_TYPE)) {
-                if (types.length != 1) {
-                    error("List must define one and only one type parameter");
-                }
-                encoderDecoder = getEncoderDecoder(types[0], logger);
-                debug("type encoder for: " + types[0] + " is " + encoderDecoder);
-                if (encoderDecoder != null) {
-                    return listMethod + "(" + expression + ", " + encoderDecoder + ")";
-                }
             }
-        } else if (type.isArray() != null) {
-            JType componentType = type.isArray().getComponentType();
-            
-            if (componentType.isArray() != null) {
-                error("Multi-dimensional arrays are not yet supported");
-            }
-            
-            encoderDecoder = getEncoderDecoder(componentType, logger);
-            debug("type encoder for: " + componentType + " is " + encoderDecoder);
+            encoderDecoder = isSetEncoderDecoder(clazz, types, style);
             if (encoderDecoder != null) {
-                if (encoderMethod.equals("encode")) {
-                    return arrayMethod + "(" + expression + ", " + encoderDecoder + ")";
-                } else {
-                    return arrayMethod + "(" + expression + ", " + encoderDecoder
-                            + ", new " + componentType.getQualifiedSourceName()
-                            + "[" + JSON_ENCODER_DECODER_CLASS + ".getSize(" + expression + ")])";
-                }
+                return setMethod + "(" + expression + ", " + encoderDecoder + ")";
+            }
+            
+            encoderDecoder = isListEncoderDecoder(clazz, types, style);
+            if (encoderDecoder != null) {
+                return listMethod + "(" + expression + ", " + encoderDecoder + ")";
+            }
+        }
+        
+        encoderDecoder = isArrayEncoderDecoder(type, style);
+        if (encoderDecoder != null) {  
+            if (encoderMethod.equals("encode")) {
+                return arrayMethod + "(" + expression + ", " + encoderDecoder + ")";
+            } else {
+                return arrayMethod + "(" + expression + ", " + encoderDecoder
+                        + ", new " + type.isArray().getComponentType().getQualifiedSourceName()
+                        + "[" + JSON_ENCODER_DECODER_CLASS + ".getSize(" + expression + ")])";
             }
         }
 
@@ -225,6 +201,116 @@ public class JsonEncoderDecoderInstanceLocator {
         return null;
     }
 
+    protected String[] isMapEncoderDecoder(JClassType clazz, JClassType[] types,
+            Style style) throws UnableToCompleteException {
+        String encoderDecoder;
+        if (clazz.isAssignableTo(MAP_TYPE)) {
+            if (types.length != 2) {
+                error("Map must define two and only two type parameters");
+            }
+            if (isCollectionType(types[0])) {
+                error("Map key can't be a collection");
+            }
+
+            String keyEncoderDecoder = getNestedEncoderDecoder(types[0], style);
+            encoderDecoder = getNestedEncoderDecoder(types[1], style);
+            return new String[]{ encoderDecoder, keyEncoderDecoder };
+        }
+        return null;
+    }
+
+    String getNestedEncoderDecoder( JType type, Style style ) throws UnableToCompleteException{
+        String result = getEncoderDecoder(type, logger);
+        if ( result != null ){
+            return result;
+        }
+        
+        JClassType clazz = type.isClassOrInterface();
+        if (isCollectionType(clazz)) {  
+            JClassType[] types = getTypes(type);
+
+            String[] coders = isMapEncoderDecoder( clazz, types, style );
+            if ( coders != null ){
+                String keyEncoderDecoder = coders[ 1 ];
+                result = coders[ 0 ];
+                if (result != null && keyEncoderDecoder != null) {
+                    return JSON_NESTED_ENCODER_DECODER_CLASS + ".mapEncoderDecoder( " + keyEncoderDecoder +
+                            ", " + result + ", " +  JSON_CLASS + ".Style." + style.name() + " )";
+                } 
+                else if (result != null) {
+                    return JSON_NESTED_ENCODER_DECODER_CLASS + ".mapEncoderDecoder( " + result + 
+                            ", " + JSON_CLASS + ".Style." + style.name() + " )";
+                }
+            }
+            result = isListEncoderDecoder( clazz, types, style );
+            if( result != null ){
+                return JSON_NESTED_ENCODER_DECODER_CLASS + ".listEncoderDecoder( " + result + " )"; 
+            }
+            result = isSetEncoderDecoder( clazz, types, style );
+            if( result != null ){
+                return JSON_NESTED_ENCODER_DECODER_CLASS + ".setEncoderDecoder( " + result + " )"; 
+            }
+        }
+        else {
+            result = isArrayEncoderDecoder(type, style);
+            if( result != null ){
+                return JSON_NESTED_ENCODER_DECODER_CLASS + ".arrayEncoderDecoder( " + result + " )"; 
+            }
+        }
+        return null;
+    }
+
+    protected String isArrayEncoderDecoder( JType type, Style style )
+            throws UnableToCompleteException {
+        if (type.isArray() != null){ 
+            JType componentType = type.isArray().getComponentType();
+    
+            if (componentType.isArray() != null) {
+                error("Multi-dimensional arrays are not yet supported");
+            }
+        
+            String encoderDecoder = getNestedEncoderDecoder( componentType, style );
+            debug("type encoder for: " + componentType + " is " + encoderDecoder);
+            return encoderDecoder;
+        }
+        return null;
+    }
+    
+    protected String isSetEncoderDecoder( JClassType clazz, JClassType[] types, Style style )
+            throws UnableToCompleteException {
+        if (clazz.isAssignableTo(SET_TYPE)) {
+            if (types.length != 1) {
+                error("Set must define one and only one type parameter");
+            }
+            String encoderDecoder = getNestedEncoderDecoder( types[0], style );
+            debug("type encoder for: " + types[0] + " is " + encoderDecoder);
+            return encoderDecoder;
+        }
+        return null;
+    }
+
+    protected String isListEncoderDecoder( JClassType clazz,
+                                           JClassType[] types,
+                                           Style style) throws UnableToCompleteException {
+        if (clazz.isAssignableTo(LIST_TYPE)) {
+            if (types.length != 1) {
+                error("List must define one and only one type parameter");
+            }
+            String encoderDecoder = getNestedEncoderDecoder( types[0], style );
+            debug("type encoder for: " + types[0] + " is " + encoderDecoder);
+            return encoderDecoder;
+        }
+        return null;
+    }
+
+    protected JClassType[] getTypes(JType type) throws UnableToCompleteException {
+        JParameterizedType parameterizedType = type.isParameterized();
+        if (parameterizedType == null || parameterizedType.getTypeArgs() == null) {
+            error("Collection types must be parameterized.");
+        }
+        JClassType[] types = parameterizedType.getTypeArgs();
+        return types;
+    }
     boolean isCollectionType(JClassType clazz) {
         return clazz != null
                 && (clazz.isAssignableTo(SET_TYPE) || clazz.isAssignableTo(LIST_TYPE) || clazz.isAssignableTo(MAP_TYPE));

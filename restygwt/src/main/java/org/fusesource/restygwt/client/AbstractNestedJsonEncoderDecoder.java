@@ -38,10 +38,11 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
                 return toJSON(value, nested);
             }
 
+            @SuppressWarnings("unchecked")
             @Override
             public T[] decode(JSONValue value)
                     throws DecodingException {
-                return toArray(value, nested, null);
+                return toArray(value, nested, (T[]) new Object[ asArray( value ).size() ]);
             }
         };
     }
@@ -49,6 +50,7 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
     static public <T> AbstractJsonEncoderDecoder<List<T>> listEncoderDecoder(AbstractJsonEncoderDecoder<T> encoder){
         return new AbstractNestedJsonEncoderDecoder<List<T>, T, Void>( encoder ) {
             
+            @SuppressWarnings("unchecked")
             @Override
             public JSONValue encode(List<T> value)
                     throws EncodingException {
