@@ -677,7 +677,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     protected String toStringExpression(JParameter arg) {
         Attribute attribute = arg.getAnnotation(Attribute.class);
         if(attribute != null){
-            return arg.getName() + "." + attribute.value();
+            return "(" + arg.getName() + "." + attribute.value() + "+ \"\")";
         }
         return toStringExpression(arg.getType(), arg.getName());
     }
