@@ -639,7 +639,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     /**
      * checks whether a getter or setter exists on the specified type or any of
-     * its super classes excluding Object.
+     * its super classes excluding Object. respects JsonIgnore accordingly. 
      * 
      * @param type
      * @param field
@@ -658,9 +658,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	} else {
 	    args = new JType[] {};
 	}
-
-	if (null != type.findMethod(fieldName, args)) {
-	    return true;
+	JMethod m = type.findMethod(fieldName, args);
+	if (null != m) {
+	    return m.getAnnotation( JsonIgnore.class ) == null && (isSetter || m.getReturnType().equals( field.getType() ) );
 	} else {
 	    try {
 		JType objectType = find(Object.class, getLogger(), context);
@@ -687,10 +687,16 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         Map<String, JMethod> getters = new HashMap<String, JMethod>();
         Map<String, JType> setters = new HashMap<String, JType>();
         for( JMethod m: type.getInheritableMethods() ){
-            if( m.getName().startsWith("set") && m.getParameterTypes().length == 1 && m.getReturnType() == JPrimitiveType.VOID){
+            if( m.getName().startsWith("set") && 
+                    m.getParameterTypes().length == 1 && 
+                    m.getReturnType() == JPrimitiveType.VOID && 
+                    m.getAnnotation(JsonIgnore.class) == null){
                 setters.put( m.getName().replaceFirst("^set", ""), m.getParameterTypes()[0] );
             }
-            else if( m.getName().startsWith("get") && m.getParameterTypes().length == 0 &&  m.getReturnType() != JPrimitiveType.VOID){
+            else if( m.getName().startsWith("get") && 
+                    m.getParameterTypes().length == 0 &&
+                    m.getReturnType() != JPrimitiveType.VOID && 
+                    m.getAnnotation(JsonIgnore.class) == null){
                 getters.put( m.getName().replaceFirst("^get", ""), m );
             }
         }

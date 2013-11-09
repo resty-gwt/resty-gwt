@@ -622,6 +622,11 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
 
     static class CCC {
         
+        int age;
+        
+        @JsonIgnore
+        String noAge;
+        
         @JsonIgnore
         private String lastName;
         
@@ -637,6 +642,15 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         void setLastName(String name){
             lastName = name;
         }
+        
+        @JsonIgnore
+        String getAge(){
+            return noAge;
+        }
+        
+        void setAge( String age ){
+            this.noAge = age;
+        }
     }
 
     static interface CCCCodec extends JsonEncoderDecoder<CCC> {
@@ -645,15 +659,19 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
     public void testIgnores() {
         CCCCodec cccc = GWT.create(CCCCodec.class);
         CCC ccc = new CCC();
+        ccc.age = 20;
         ccc.name = "me and the corner";
         ccc.firstName = "chaos";
+        ccc.lastName = "club";
         
         JSONValue json = cccc.encode(ccc);
-        assertEquals("{\"name\":\"me and the corner\"}", json.toString());
+        assertEquals("{\"age\":20, \"name\":\"me and the corner\"}", json.toString());
         CCC roundTrip = cccc.decode(json);
         assertEquals(ccc.name, roundTrip.name);
+        assertEquals(ccc.age, roundTrip.age);
         assertNull(roundTrip.firstName);
         assertNull(roundTrip.getLastName());
+        assertNull(roundTrip.getAge());
     }
     
     static class Shorty {
