@@ -23,6 +23,7 @@
     <inherits name='com.google.gwt.logging.Logging'/>
     <inherits name='org.fusesource.restygwt.RestyGWT'/>
     <servlet path='/api/*' class='org.fusesource.restygwt.server.basic.BasicTestGwtServlet' />
+    <servlet path='/ui/*' class='org.fusesource.restygwt.server.basic.BasicTestGwtServlet' />
 
     <source path='client'/>
     <source path='example/client'/>
