@@ -102,7 +102,7 @@ public class CachingCallbackFilterTestCase extends TestCase {
         
         EasyMock.replay(response, method);
         
-        for( int i = 1; i < myCallbacks.length; i++){
+        for( int i = 0; i < myCallbacks.length; i++){
             this.storage.addCallback(key, myCallbacks[i]);
         }
         
