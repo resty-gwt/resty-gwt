@@ -41,6 +41,7 @@ import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
 import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorageTestGwt;
 import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.codec.InnerClassesEncoderDecoderTestGwt;
+import org.fusesource.restygwt.client.codec.MapWithEnumKeyEncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
@@ -76,6 +77,7 @@ public class GwtCompleteTestSuite extends TestCase {
         // TODO why ? and what goes wrong when at located at the end ?
         suite.addTestSuite(CacheCallbackTestGwt.class);
         suite.addTestSuite(InnerClassesEncoderDecoderTestGwt.class);
+        suite.addTestSuite(MapWithEnumKeyEncoderDecoderTestGwt.class);
         suite.addTestSuite(EncoderDecoderTestGwt.class);
         
         suite.addTestSuite(FlakyTestGwt.class);
