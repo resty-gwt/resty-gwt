@@ -787,6 +787,19 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
 
         private String n;
         
+        @JsonProperty("vacationId")
+        private Integer vacationActivityIdForEmployee;
+
+        @JsonProperty("vacationId")
+        public Integer getVacationActivityIdForEmployee() {
+            return vacationActivityIdForEmployee;
+        }
+        
+        @JsonProperty("vacationId")
+        public void setVacationActivityIdForEmployee(Integer v) {
+            vacationActivityIdForEmployee = v;
+        }
+        
         int getAge(){
             return age;
         }
@@ -822,12 +835,14 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         renamed.setName("marvin the robot");
         renamed.setAge(123);
         renamed.setYearOfBirth(1234);
+        renamed.setVacationActivityIdForEmployee(34);
         
         JSONValue json = renamedCodec.encode(renamed);
-        assertEquals("{\"my-age\":123, \"year-of-birth\":1234, \"my-name\":\"marvin the robot\"}", json.toString());
+        assertEquals("{\"my-age\":123, \"year-of-birth\":1234, \"vacationId\":34, \"my-name\":\"marvin the robot\"}", json.toString());
         Renamed roundTrip = renamedCodec.decode(json);
         assertEquals(roundTrip.age, 123);
         assertEquals(roundTrip.yearOfBirth, 1234);
+        assertEquals(roundTrip.getVacationActivityIdForEmployee().intValue(), 34);
         assertEquals(roundTrip.getName(), "marvin the robot");
     }
 
