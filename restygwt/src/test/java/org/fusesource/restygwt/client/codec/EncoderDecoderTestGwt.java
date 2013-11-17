@@ -714,6 +714,19 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         assertEquals(shorty.getShorty(), 0);
         assertEquals(roundTrip.getShorty(), 0);
     }
+
+    public void testSuperlongLongs() {
+        
+        ShortyCodec shortyCodec = GWT.create(ShortyCodec.class);
+        Shorty shorty = new Shorty();
+        shorty.id = 9007199254741115l;// = 2^53 + 123;
+        
+        // TODO that result is just wrong !!!!
+        JSONValue json = shortyCodec.encode(shorty);
+        assertEquals("{\"shorty\":0, \"id\":9007199254741116}", json.toString());
+        Shorty roundTrip = shortyCodec.decode(json);
+        assertEquals(roundTrip.getId(), 9007199254741116l);
+    }
     
     static class Bean {
         
