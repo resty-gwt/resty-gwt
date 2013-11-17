@@ -75,6 +75,7 @@ public class GwtCompleteTestSuite extends TestCase {
         // keep the cache-callback at the beginning to get it pass
         // TODO why ? and what goes wrong when at located at the end ?
         suite.addTestSuite(CacheCallbackTestGwt.class);
+        suite.addTestSuite(InnerClassesEncoderDecoderTestGwt.class);
         suite.addTestSuite(EncoderDecoderTestGwt.class);
         
         suite.addTestSuite(FlakyTestGwt.class);

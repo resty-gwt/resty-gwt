@@ -88,16 +88,24 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
 				builder.append("__");
 				builder.append(type.getParameterizedQualifiedSourceName().replace('.', '_'));
 			}
-			this.shortName = source.getSimpleSourceName() + builder.toString() + suffix;
+			this.shortName = getName( source ) + builder.toString() + suffix;
         }
         else
         {
-        	this.shortName = source.getSimpleSourceName() + suffix;
+        	this.shortName = getName( source ) + suffix;
         }
 
         this.name = packageName + "." + shortName;
     }
 
+    private String getName( JClassType source ){
+        if( source.getEnclosingType() != null ){
+            return getName( source.getEnclosingType() ) + "_" + source.getSimpleSourceName();
+        }
+        else {
+            return source.getSimpleSourceName();
+        }
+    }
     protected PrintWriter writer() throws UnableToCompleteException {
         HashSet<String> classes = getGeneratedClasses();
         if (classes.contains(name)) {
