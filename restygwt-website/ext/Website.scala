@@ -27,7 +27,7 @@ package
 object Website {
 
   val project_name= "RestyGWT"
-  val project_slogan= "Making Restful Services Accessible to GWT Applicaions"
+  val project_slogan= "Making Restful Services Accessible to GWT Applications"
   val project_id= "restygwt"
   val project_jira_key= "RESTYGWT"
   val project_issue_url= "http://github.com/chirino/resty-gwt/issues"
