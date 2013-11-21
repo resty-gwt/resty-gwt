@@ -40,26 +40,26 @@ public class PossibleTypesVisitor extends JsonTypeInfoIdVisitor<List<Subtype>, U
     @Override
     public List<Subtype> visitClass() throws UnableToCompleteException
     {
-        return getPossibleTypesForClass(context, classType, Id.CLASS, isLeaf, logger, jacksonSubTypes);
+        return getPossibleTypesForClass(context, classType, Id.CLASS, isLeaf, logger, types);
     }
 
     @Override
     public List<Subtype> visitMinClass() throws UnableToCompleteException
     {
-        return getPossibleTypesForClass(context, classType, Id.MINIMAL_CLASS, isLeaf, logger, jacksonSubTypes);
+        return getPossibleTypesForClass(context, classType, Id.MINIMAL_CLASS, isLeaf, logger, types);
     }
 
 
     @Override
     public List<Subtype> visitCustom() throws UnableToCompleteException
     {
-        return getPossibleTypesForOther(context, classType, isLeaf, logger, jacksonSubTypes);
+        return getPossibleTypesForOther(context, classType, isLeaf, logger, types);
     }
 
     @Override
     public List<Subtype> visitName() throws UnableToCompleteException
     {
-        return getPossibleTypesForOther(context, classType, isLeaf, logger, jacksonSubTypes);
+        return getPossibleTypesForOther(context, classType, isLeaf, logger, types);
     }
 
     @Override

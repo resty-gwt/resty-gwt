@@ -111,20 +111,20 @@ public class JsonCreatorWithSubtypesRecursive extends GWTTestCase {
     @Test
     public void test() {
 	ThingCodec codec = GWT.create(ThingCodec.class);
-//
-//	Thing1 t1 = new Thing1("Fred", 12.0);
-//	JSONValue t1v = codec.encode(t1);
-//	Thing1 t1a = (Thing1)codec.decode(t1v);
-//
-//	assertEquals("name", t1.getName(), t1a.getName());
-//	assertEquals("value", t1.getValue(), t1a.getValue(), 0.0);
-//
-//	Thing2 t2 = new Thing2("Fred", "Bob");
-//    JSONValue t2v = codec.encode(t2);
-//    Thing2 t2a = (Thing2)codec.decode(t2v);
-//
-//    assertEquals("name", t2.getName(), t2a.getName());
-//    assertEquals("value", t2.getValue(), t2a.getValue());
+
+	Thing1 t1 = new Thing1("Fred", 12.0);
+	JSONValue t1v = codec.encode(t1);
+	Thing1 t1a = (Thing1)codec.decode(t1v);
+
+	assertEquals("name", t1.getName(), t1a.getName());
+	assertEquals("value", t1.getValue(), t1a.getValue(), 0.0);
+
+	Thing2 t2 = new Thing2("Fred", "Bob");
+    JSONValue t2v = codec.encode(t2);
+    Thing2 t2a = (Thing2)codec.decode(t2v);
+
+    assertEquals("name", t2.getName(), t2a.getName());
+    assertEquals("value", t2.getValue(), t2a.getValue());
 
     Thing3 t3 = new Thing3("Fred", "Bob", "Wilma"); //$NON-NLS-1$
     JSONValue t3v = codec.encode(t3);
