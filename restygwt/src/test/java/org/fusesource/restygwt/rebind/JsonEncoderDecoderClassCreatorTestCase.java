@@ -1,5 +1,6 @@
 package org.fusesource.restygwt.rebind;
 
+import java.util.Collection;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -23,36 +24,36 @@ public class JsonEncoderDecoderClassCreatorTestCase extends TestCase
 {
     @Rule
     public ExpectedException exception = ExpectedException.none();
-    
+
     private static class MyPossibleTypesVisitor extends PossibleTypesVisitor {
 
         boolean hasEnteredGetPossibleTypesForClass;
         boolean hasEnteredGetPossibleTypesForOther;
-        
+
         public MyPossibleTypesVisitor(GeneratorContext context, JClassType classType, boolean isLeaf,
-                TreeLogger logger, JsonSubTypes jacksonSubTypes)
+                TreeLogger logger, Collection<JsonSubTypes.Type> types)
         {
-            super(context, classType, isLeaf, logger, jacksonSubTypes);
+            super(context, classType, isLeaf, logger, types);
         }
-        
+
         @Override
         protected List<Subtype> getPossibleTypesForClass(GeneratorContext context, JClassType classType, Id id,
-                boolean isLeaf, TreeLogger logger, JsonSubTypes jacksonSubTypes) throws UnableToCompleteException
+                boolean isLeaf, TreeLogger logger, Collection<JsonSubTypes.Type> types) throws UnableToCompleteException
         {
             hasEnteredGetPossibleTypesForClass = true;
             return null;
         }
-        
+
         @Override
         protected List<Subtype> getPossibleTypesForOther(GeneratorContext context, JClassType classType,
-                boolean isLeaf, TreeLogger logger, JsonSubTypes jacksonSubTypes) throws UnableToCompleteException
+                boolean isLeaf, TreeLogger logger, Collection<JsonSubTypes.Type> types) throws UnableToCompleteException
         {
             hasEnteredGetPossibleTypesForOther = true;
             return null;
         }
-        
+
     }
-    
+
     @Test
     public void testGetPossibleTypesForClass() throws Throwable {
         check(Id.CLASS, true, false);
@@ -60,7 +61,7 @@ public class JsonEncoderDecoderClassCreatorTestCase extends TestCase
         check(Id.CUSTOM, false, true);
         check(Id.NAME, false, true);
     }
-    
+
     @Test(expected=UnableToCompleteException.class)
     public void testGetPossibleTypesForClass2() throws Throwable {
         check(Id.NONE, false, true);
@@ -69,21 +70,21 @@ public class JsonEncoderDecoderClassCreatorTestCase extends TestCase
     private void check(final Id id, final boolean classMethodVisited, final boolean otherMethodVisited)
             throws Throwable
     {
-        MyPossibleTypesVisitor v = new MyPossibleTypesVisitor(null, null, true, new TreeLogger(){         
+        MyPossibleTypesVisitor v = new MyPossibleTypesVisitor(null, null, true, new TreeLogger(){
             @Override
             public void log(Type type, String msg, Throwable caught, HelpInfo helpInfo){
             }
-            
+
             @Override
             public boolean isLoggable(Type type){
                 return false;
             }
-            
+
             @Override
             public TreeLogger branch(Type type, String msg, Throwable caught, HelpInfo helpInfo){
                 return null;
             }
-        }, null);        
+        }, null);
         v.visit(id);
         assertEquals(v.hasEnteredGetPossibleTypesForClass, classMethodVisited);
         assertEquals(v.hasEnteredGetPossibleTypesForOther, otherMethodVisited);
