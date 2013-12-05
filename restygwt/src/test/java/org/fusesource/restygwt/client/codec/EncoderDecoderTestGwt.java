@@ -31,6 +31,8 @@ import java.util.Set;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
+import java.util.TreeMap;
+import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
@@ -45,6 +47,9 @@ import org.fusesource.restygwt.client.RestService;
 
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
 
@@ -733,6 +738,17 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         assertEquals("{\"shorty\":0, \"id\":9007199254741116}", json.toString());
         Shorty roundTrip = shortyCodec.decode(json);
         assertEquals(roundTrip.getId(), 9007199254741116l);
+    }
+
+    public void testSuperlongLongsAsString() {
+        ShortyCodec shortyCodec = GWT.create(ShortyCodec.class);
+        
+        JSONObject json = new JSONObject();
+        json.put("shorty", new JSONNumber(0));
+        json.put("id", new JSONString("9007199254741115"));
+        assertEquals("{\"shorty\":0, \"id\":\"9007199254741115\"}", json.toString());
+        Shorty roundTrip = shortyCodec.decode(json);
+        assertEquals(roundTrip.getId(), 9007199254741115l);
     }
     
     static class Bean {
