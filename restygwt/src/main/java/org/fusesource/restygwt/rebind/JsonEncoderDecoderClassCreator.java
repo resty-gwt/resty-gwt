@@ -76,13 +76,13 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private static final String JSON_ENCODER_SUFFIX = "_Generated_JsonEncoderDecoder_";
 
     private String JSON_ENCODER_DECODER_CLASS = JsonEncoderDecoderInstanceLocator.JSON_ENCODER_DECODER_CLASS;
-    private static final String JSON_VALUE_CLASS = JSONValue.class.getName();
+    protected static final String JSON_VALUE_CLASS = JSONValue.class.getName();
     private static final String JSON_OBJECT_CLASS = JSONObject.class.getName();
     private static final String JSON_ARRAY_CLASS = JSONArray.class.getName();
     private static final String JSON_NULL_CLASS = JSONNull.class.getName();
-    private static final String JSON_STRING_CLASS = JSONString.class.getName();
+    protected static final String JSON_STRING_CLASS = JSONString.class.getName();
 
-    JsonEncoderDecoderInstanceLocator locator;
+    protected JsonEncoderDecoderInstanceLocator locator;
 
     public JsonEncoderDecoderClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) throws UnableToCompleteException {
         super(logger, context, source, JSON_ENCODER_SUFFIX);
@@ -178,7 +178,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         return (clazz.getPackage().getName()+"."+clazz.getName()).equals(subclazz.getName());
     }
 
-    private void generateSingleton(String shortName)
+    protected void generateSingleton(String shortName)
     {
         p();
         p("public static final " + shortName + " INSTANCE = new " + shortName + "();");
@@ -435,7 +435,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     String objectGetter = "object.get(" + wrap(jsonName) + ")";
                     String expression = locator.decodeExpression(field.getType(), objectGetter, style);
 
-                    String defaultValue = field.getType().isPrimitive() == null ? "null": field.getType().isPrimitive().getUninitializedFieldExpression() + "";
+                    String defaultValue = getDefaultValue(field);
                     i(1).p("" + (objectGetter + " == null || " + objectGetter + " instanceof " + JSON_NULL_CLASS + " ? " + defaultValue + " : " + expression + ((field != lastField) ? ", " : ""))).i(-1);
 
                     return null;
@@ -500,27 +500,27 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         String objectGetter = "object.get(" + wrap(jsonName) + ")";
                         String expression = locator.decodeExpression(field.getType(), objectGetter, style);
 
+                        boolean needNullHandling = needNullHandling(field);
+
                         String cast = field.getType().isPrimitive() == JPrimitiveType.SHORT ? "(short) " : "";
-                        p("if(" + objectGetter + " != null) {").i(1);
 
-                        p("if(" + objectGetter + " instanceof " + JSON_NULL_CLASS + ") {").i(1);
-                        String defaultValue = field.getType().isPrimitive() == null ? "null": field.getType().isPrimitive().getUninitializedFieldExpression() + "";
+                        if (needNullHandling) {
+                            p("if(" + objectGetter + " != null) {").i(1);
+                                p("if(" + objectGetter + " instanceof " + JSON_NULL_CLASS + ") {").i(1);
+                                    String defaultValue = getDefaultValue(field);
 
-                        if (setterName != null) {
-                            p("rc." + setterName + "(" + cast + defaultValue + ");");
-                        } else {
-                            p("rc." + name + "=" + cast + defaultValue + ";");
+                                    assignFieldValue(name, defaultValue, cast, setterName);
+                                    i(-1);
+                                p("} else {").i(1);
                         }
 
-                        i(-1).p("} else {").i(1);
+                        assignFieldValue(name, expression, cast, setterName);
 
-                        if (setterName != null) {
-                            p("rc." + setterName + "(" + cast + expression + ");");
-                        } else {
-                            p("rc." + name + "=" + cast + expression + ";");
+                        if (needNullHandling) {
+                                i(-1);
+                                p("}").i(-1);
+                            p("}");
                         }
-                        i(-1).p("}");
-                        i(-1).p("}");
 
                     } else {
                         getLogger().log(DEBUG, "private field gets ignored: " + field.getEnclosingType().getQualifiedSourceName() + "." + field.getName());
@@ -545,7 +545,23 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         }
     }
 
-    private void generateEnumDecodeMethod(JClassType classType, String jsonValueClass)
+    private String getDefaultValue(JField field) {
+        return field.getType().isPrimitive() == null ? "null" : field.getType().isPrimitive().getUninitializedFieldExpression() + "";
+    }
+
+    private void assignFieldValue(String name, String expression, String cast, String setterName) {
+        if (setterName != null) {
+            p("rc." + setterName + "(" + cast + expression + ");");
+        } else {
+            p("rc." + name + "=" + cast + expression + ";");
+        }
+    }
+
+    private boolean needNullHandling(JField field) {
+        return field.getType().isPrimitive() != null || field.getType().isEnum() != null;
+    }
+
+    protected void generateEnumDecodeMethod(JClassType classType, String jsonValueClass)
     {
         p();
         p("public " + classType.getName() + " decode(" + jsonValueClass + " value) {").i(1);

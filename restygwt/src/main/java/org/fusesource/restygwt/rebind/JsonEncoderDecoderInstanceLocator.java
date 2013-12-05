@@ -24,6 +24,7 @@ import static org.fusesource.restygwt.rebind.BaseSourceCreator.INFO;
 import static org.fusesource.restygwt.rebind.BaseSourceCreator.TRACE;
 import static org.fusesource.restygwt.rebind.BaseSourceCreator.WARN;
 
+import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.core.ext.BadPropertyValueException;
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
 import org.fusesource.restygwt.client.AbstractNestedJsonEncoderDecoder;
 import org.fusesource.restygwt.client.Json;
@@ -57,6 +59,7 @@ public class JsonEncoderDecoderInstanceLocator {
     public static final String JSON_ENCODER_DECODER_CLASS = AbstractJsonEncoderDecoder.class.getName();
     public static final String JSON_NESTED_ENCODER_DECODER_CLASS = AbstractNestedJsonEncoderDecoder.class.getName();
     public static final String JSON_CLASS = Json.class.getName();
+    public static final String CUSTOM_SERIALIZER_GENERATORS = "org.fusesource.restygwt.restyjsonserializergenerator";
 
     public final JClassType STRING_TYPE;
     public final JClassType JSON_VALUE_TYPE;
@@ -66,6 +69,7 @@ public class JsonEncoderDecoderInstanceLocator {
     public final JClassType LIST_TYPE;
 
     public final HashMap<JType, String> builtInEncoderDecoders = new HashMap<JType, String>();
+    public final JsonSerializerGenerators customGenerators = new JsonSerializerGenerators();
 
     public final GeneratorContext context;
     public final TreeLogger logger;
@@ -109,6 +113,25 @@ public class JsonEncoderDecoderInstanceLocator {
         
         builtInEncoderDecoders.put(find(Object.class), ObjectEncoderDecoder.class.getName() + ".INSTANCE");
 
+        fillInCustomGenerators(context, logger);
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void fillInCustomGenerators(GeneratorContext context, TreeLogger logger) {
+        try {
+            List<String> classNames = context.getPropertyOracle().getConfigurationProperty(CUSTOM_SERIALIZER_GENERATORS).getValues();
+            for (String name: classNames) {
+                try {
+                    Class<? extends RestyJsonSerializerGenerator> clazz = (Class<? extends RestyJsonSerializerGenerator>) Class.forName(name);
+                    Constructor<? extends RestyJsonSerializerGenerator> constructor = clazz.getDeclaredConstructor();
+                    RestyJsonSerializerGenerator generator = constructor.newInstance();
+                    customGenerators.addGenerator(generator, context.getTypeOracle());
+                } catch (Exception e) {
+                    logger.log(WARN, "Could not access class: " + name, e);
+                }
+            }
+        } catch (BadPropertyValueException ignore) {}
     }
 
     private JClassType find(Class<?> type) throws UnableToCompleteException {
@@ -131,6 +154,22 @@ public class JsonEncoderDecoderInstanceLocator {
         return rc;
     }
 
+    private String getCustomEncoderDecoder(JType type) throws UnableToCompleteException {
+        RestyJsonSerializerGenerator restyGenerator = customGenerators.findGenerator(type);
+        if (restyGenerator == null) {
+            return null;
+        }
+        Class<? extends JsonEncoderDecoderClassCreator> clazz = restyGenerator.getGeneratorClass();
+        try {
+            Constructor<? extends JsonEncoderDecoderClassCreator> constructor = clazz.getDeclaredConstructor(TreeLogger.class, GeneratorContext.class, JClassType.class);
+            JsonEncoderDecoderClassCreator generator = constructor.newInstance(logger, context, type);
+            return generator.create() + ".INSTANCE";
+        } catch (Exception e) {
+            logger.log(WARN, "Could not access class: " + clazz, e);
+            return null;
+        }
+    }
+
     public String encodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
         return encodeDecodeExpression(type, expression, style, "encode", JSON_ENCODER_DECODER_CLASS + ".toJSON", JSON_ENCODER_DECODER_CLASS + ".toJSON", JSON_ENCODER_DECODER_CLASS
                 + ".toJSON", JSON_ENCODER_DECODER_CLASS + ".toJSON");
@@ -143,6 +182,11 @@ public class JsonEncoderDecoderInstanceLocator {
 
     private String encodeDecodeExpression(JType type, String expression, Style style, String encoderMethod, String mapMethod, String setMethod, String listMethod, String arrayMethod)
             throws UnableToCompleteException {
+
+        String customEncoderDecoder = getCustomEncoderDecoder(type);
+        if (customEncoderDecoder != null) {
+            return customEncoderDecoder + "." + encoderMethod + "(" + expression + ")";
+        }
 
         if (null != type.isEnum()) {
             if (encoderMethod.equals("encode")) {

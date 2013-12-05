@@ -43,4 +43,7 @@
 
     <set-configuration-property name="org.fusesource.restygwt.annotationresolver"
             value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
+
+    <set-configuration-property name="org.fusesource.restygwt.restyjsonserializergenerator"
+            value="org.fusesource.restygwt.server.complex.OptionalRestySerializerGenerator"/>
 </module>

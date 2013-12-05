@@ -35,6 +35,7 @@ import org.fusesource.restygwt.client.AbstractNestedJsonEncoderDecoder;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
 import org.fusesource.restygwt.client.ObjectEncoderDecoder;
+import org.fusesource.restygwt.client.basic.Optional;
 import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt.WithEnum.Cycle;
 
 import com.google.gwt.core.client.GWT;
@@ -900,5 +901,57 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         roundTrip = codec.decode( json );
         assertEquals( roundTrip.first, null );
         assertEquals( roundTrip.getLast(), null );
+    }
+
+    static class WithOptionalPrimitive {
+        public Optional<Integer> bar;
+    }
+
+    static interface WithOptionalPrimitiveCodec extends JsonEncoderDecoder<WithOptionalPrimitive> {
+    }
+
+    public void testCustomWithOptionalPrimitive() {
+        WithOptionalPrimitiveCodec codec = GWT.create(WithOptionalPrimitiveCodec.class);
+        WithOptionalPrimitive pojo = new WithOptionalPrimitive();
+        pojo.bar = Optional.absent();
+
+        JSONValue json = codec.encode(pojo);
+        assertEquals("{}", json.toString());
+        WithOptionalPrimitive roundTrip = codec.decode(json);
+        assertEquals(roundTrip.bar, Optional.<Integer>absent());
+
+        pojo.bar = Optional.of(1);
+
+        json = codec.encode(pojo);
+        assertEquals("{\"bar\":1}", json.toString());
+        roundTrip = codec.decode(json);
+        assertEquals(roundTrip.bar, Optional.of(1));
+    }
+
+    static class WithOptionalPojo {
+        public Optional<Name> name;
+    }
+
+    static interface WithOptionalPojoCodec extends JsonEncoderDecoder<WithOptionalPojo>{
+    }
+
+    public void testCustomWithOptionalPojo() {
+        WithOptionalPojoCodec codec = GWT.create(WithOptionalPojoCodec.class);
+        WithOptionalPojo pojo = new WithOptionalPojo();
+        pojo.name = Optional.absent();
+
+        JSONValue json = codec.encode(pojo);
+        assertEquals("{}", json.toString());
+        WithOptionalPojo roundTrip = codec.decode(json);
+        assertEquals(roundTrip.name, Optional.<Name>absent());
+
+        Name n = new Name();
+        n.name = "name1";
+        pojo.name = Optional.of(n);
+
+        json = codec.encode(pojo);
+        assertEquals("{\"name\":{\"name\":\"name1\"}}", json.toString());
+        roundTrip = codec.decode(json);
+        assertEquals(roundTrip.name.get().name, n.name);
     }
 }
