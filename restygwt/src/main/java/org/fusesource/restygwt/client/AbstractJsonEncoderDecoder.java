@@ -139,7 +139,12 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             if (value == null || value.isNull() != null) {
                 return null;
             }
-            return (long) toDouble(value);
+            final JSONString valueString = value.isString();
+            if (valueString != null) {
+                 return Long.parseLong(valueString.stringValue());
+            } else {
+                return (long) toDouble(value);
+            }
         }
 
         public JSONValue encode(Long value) throws EncodingException {
