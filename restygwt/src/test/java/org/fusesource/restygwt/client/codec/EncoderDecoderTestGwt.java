@@ -1053,4 +1053,26 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         assertEquals(value, o1.getValue());
         assertEquals(o1.getValue(), o2.getValue());
     }
+    
+
+    @JsonTypeInfo(use = Id.CLASS, include = As.PROPERTY, property = "@class")
+    @JsonSubTypes({ @Type(EnumOfSubTypeInterface.class) })
+    interface JsonSubTypesWithAnInterfaceForUseWithAnEnum {
+        @JsonProperty("name")
+        String name();
+    }
+    
+    enum EnumOfSubTypeInterface implements JsonSubTypesWithAnInterfaceForUseWithAnEnum {
+        HELLO,
+        WORLD
+    }
+    
+    static interface JsonSubTypesWithAnInterfaceForUseWithAnEnumCodec extends JsonEncoderDecoder<JsonSubTypesWithAnInterfaceForUseWithAnEnum> {}
+
+    public void testJsonSubTypesWithAnInterfaceImplementedByAnEnum() {
+        JsonSubTypesWithAnInterfaceForUseWithAnEnumCodec codec = GWT.create(JsonSubTypesWithAnInterfaceForUseWithAnEnumCodec.class);
+        JSONValue json = codec.encode(EnumOfSubTypeInterface.HELLO);
+        JsonSubTypesWithAnInterfaceForUseWithAnEnum useWithAnEnum = codec.decode(json);
+        assertEquals(useWithAnEnum.name(), EnumOfSubTypeInterface.HELLO.name());
+    }
 }
