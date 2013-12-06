@@ -287,6 +287,23 @@ you can use the `@JsonCreator` and the `@JsonProperty` annotations. Example:
 Note that all the parameters of an annotated constructor should be annotated with the `@JsonProperty`.
 As long as each property name matches the declared field names, the order can be freely chosen.
 
+### Custom Serializer Generators
+
+RestyGWT allows you to add another encode/decoder-generator which is used with certain classes. There are three simple steps for enabling fully customized serializer generation:
+* Extend [`org.fusesource.restygwt.rebind.JsonEncoderDecoderClassCreator`](https://github.com/cponomaryov/resty-gwt/blob/master/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java) to create an external serializer generator that can be registered to handle values of certain types. You should override the `generate()` method. Example: [`org.fusesource.restygwt.server.complex.OptionalSerializerGenerator`](https://github.com/cponomaryov/resty-gwt/blob/master/restygwt/src/test/java/org/fusesource/restygwt/server/complex/OptionalSerializerGenerator.java).
+* Extend [`org.fusesource.restygwt.rebind.RestyJsonSerializerGenerator`](https://github.com/cponomaryov/resty-gwt/blob/master/restygwt/src/main/java/org/fusesource/restygwt/rebind/RestyJsonSerializerGenerator.java) and specify two things:
+    * your custom serializer generator class created in the first step (`getGeneratorClass()` method)
+    * target class or its superclass to use this generator for (`getType(TypeOracle)` method).
+Example: [`org.fusesource.restygwt.server.complex.OptionalRestySerializerGenerator`](https://github.com/cponomaryov/resty-gwt/blob/master/restygwt/src/test/java/org/fusesource/restygwt/server/complex/OptionalRestySerializerGenerator.java).
+* Specify your `RestyJsonSerializerGenerator` custom implementation fully qualified class name in the `org.fusesource.restygwt.restyjsonserializergenerator` configuration property in your GWT module XML file. This property is multi-valued so you can add multiple custom serializer generators. Example:
+
+```xml
+   <extend-configuration-property name="org.fusesource.restygwt.restyjsonserializergenerator"
+               value="com.example.CustomRestySerializerGenerator1"/>
+   <extend-configuration-property name="org.fusesource.restygwt.restyjsonserializergenerator"
+               value="com.example.CustomRestySerializerGenerator2"/>
+```
+
 ## Custom Annotation Handler
 
 Due to the functionality of GWT generators, a generator needs to be responsible
