@@ -137,7 +137,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         }
     }
 
-    protected BaseSourceCreator i(int i) {
+    public BaseSourceCreator i(int i) {
         if (i == 1) {
             this.sourceWriter.indent();
         } else if (i == -1) {
@@ -148,7 +148,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         return this;
     }
 
-    protected BaseSourceCreator p(String value) {
+    public BaseSourceCreator p(String value) {
         this.sourceWriter.println(value);
 
         // System.out.println(value);

@@ -47,6 +47,8 @@
   <define-configuration-property name="org.fusesource.restygwt.annotationresolver"
         is-multi-valued="true"/>
 
+  <define-configuration-property name="org.fusesource.restygwt.restyjsonserializergenerator" is-multi-valued="true"/>
+
   <source path="client"/>
   <source path="example/client"/>
   <super-source path="supersrc"/>
