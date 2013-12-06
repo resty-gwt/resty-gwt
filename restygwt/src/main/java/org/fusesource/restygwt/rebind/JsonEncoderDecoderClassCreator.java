@@ -95,7 +95,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
         final List<Subtype> possibleTypes = getPossibleTypes(typeInfo, isLeaf);
 
-        JClassType sourceClazz = source.isClass();
+        final JClassType sourceClazz = source.isClass() == null ? source.isInterface() : source.isClass();
         if (sourceClazz == null) {
             getLogger().log(ERROR, "Type is not a class");
             throw new UnableToCompleteException();
