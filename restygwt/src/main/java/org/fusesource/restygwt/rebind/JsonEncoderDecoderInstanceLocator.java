@@ -170,6 +170,10 @@ public class JsonEncoderDecoderInstanceLocator {
         }
     }
 
+    public boolean hasCustomEncoderDecoder(JType type) throws UnableToCompleteException {
+        return getCustomEncoderDecoder(type) != null;
+    }
+
     public String encodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
         return encodeDecodeExpression(type, expression, style, "encode", JSON_ENCODER_DECODER_CLASS + ".toJSON", JSON_ENCODER_DECODER_CLASS + ".toJSON", JSON_ENCODER_DECODER_CLASS
                 + ".toJSON", JSON_ENCODER_DECODER_CLASS + ".toJSON");

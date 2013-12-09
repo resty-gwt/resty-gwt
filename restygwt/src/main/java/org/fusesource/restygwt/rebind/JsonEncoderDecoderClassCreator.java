@@ -500,7 +500,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         String objectGetter = "object.get(" + wrap(jsonName) + ")";
                         String expression = locator.decodeExpression(field.getType(), objectGetter, style);
 
-                        boolean needNullHandling = needNullHandling(field);
+                        boolean needNullHandling = !locator.hasCustomEncoderDecoder(field.getType());
 
                         String cast = field.getType().isPrimitive() == JPrimitiveType.SHORT ? "(short) " : "";
 
@@ -555,10 +555,6 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         } else {
             p("rc." + name + "=" + cast + expression + ";");
         }
-    }
-
-    private boolean needNullHandling(JField field) {
-        return field.getType().isPrimitive() != null || field.getType().isEnum() != null;
     }
 
     protected void generateEnumDecodeMethod(JClassType classType, String jsonValueClass)
