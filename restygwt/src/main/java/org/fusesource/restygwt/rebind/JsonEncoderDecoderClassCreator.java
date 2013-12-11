@@ -755,14 +755,16 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             if ( setters.containsKey( entry.getKey() ) && setters.get( entry.getKey() ).equals( entry.getValue().getReturnType() ) ) {
                 String name = entry.getKey().substring(0, 1).toLowerCase() + entry.getKey().substring(1);
 
+		JField f = null;
                 boolean found = false;
-                for( JField f : allFields ){
-                    if( f.getName().equals( name ) ){
+                for( JField fi : allFields ){
+                    if( fi.getName().equals( name ) ){
                         found = true;
+                        f = fi;
                         break;
                     }
                 }
-                JField f = type.getField( name );
+                 
                 if ( ! found && !( f != null && f.isAnnotationPresent( JsonIgnore.class ) ) ){
                     DummyJField dummy = new DummyJField( name, entry.getValue().getReturnType() );
                     if ( entry.getValue().isAnnotationPresent(JsonProperty.class) ) {
