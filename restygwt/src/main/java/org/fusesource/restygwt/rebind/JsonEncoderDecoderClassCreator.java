@@ -762,7 +762,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         break;
                     }
                 }
-                JField f = type.getField( name );
+                JField f = type.findField( name );
                 if ( ! found && !( f != null && f.isAnnotationPresent( JsonIgnore.class ) ) ){
                     DummyJField dummy = new DummyJField( name, entry.getValue().getReturnType() );
                     if ( entry.getValue().isAnnotationPresent(JsonProperty.class) ) {
