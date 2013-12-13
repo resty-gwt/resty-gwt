@@ -28,6 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
@@ -37,6 +40,9 @@ import org.fusesource.restygwt.client.JsonEncoderDecoder;
 import org.fusesource.restygwt.client.ObjectEncoderDecoder;
 import org.fusesource.restygwt.client.basic.Optional;
 import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt.WithEnum.Cycle;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
+
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONValue;
@@ -954,4 +960,33 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         roundTrip = codec.decode(json);
         assertEquals(roundTrip.name.get().name, n.name);
     }
+
+    /**
+    *  Classes for SubClassHierarchyEncoderDecoder
+    */
+
+    static class Base {
+    }
+
+    static class ExtBase extends Base {
+    }
+
+    static class OneMoreExtBase extends ExtBase {
+    }
+
+    static class Other extends Base {
+    }
+
+    static interface SubClassHierarchyRestService extends RestService {
+        @GET
+        @Path("/")
+        void myendpoint( MethodCallback<OneMoreExtBase> callback );
+    }
+    
+    public void testSubClassHierarchyEncoderDecoder() {
+        SubClassHierarchyRestService service = GWT.create(SubClassHierarchyRestService.class);
+        // we won't even get here if "Other" is put in the generated encoder/decoder for OneMoreExtBase
+        assertNotNull( service );
+    }
+
 }
