@@ -216,6 +216,12 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             }
 
             for (Subtype possibleType : possibleTypes) {
+              
+              if (!possibleType.clazz.isAssignableTo(classType)) {
+                getLogger().log(DEBUG, "Only assignable classes are allowed: " + possibleType.clazz.getParameterizedQualifiedSourceName() + " is not assignable to: " + classType.getParameterizedQualifiedSourceName());
+                continue;
+              }
+              
             // Try to find a constuctor that is annotated as creator
             final JConstructor creator = findCreator(possibleType.clazz);
 
@@ -401,6 +407,12 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             }
 
             for (Subtype possibleType : possibleTypes) {
+              
+              if (!possibleType.clazz.isAssignableTo(classType)) {
+                getLogger().log(DEBUG, "Only assignable classes are allowed: " + possibleType.clazz.getParameterizedQualifiedSourceName() + " is not assignable to: " + classType.getParameterizedQualifiedSourceName());
+                continue;
+              }
+              
             // Try to find a constuctor that is annotated as creator
             final JConstructor creator = findCreator(possibleType.clazz);
             if (typeInfo != null) {
