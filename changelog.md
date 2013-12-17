@@ -1,6 +1,6 @@
 # ![RestyGWT](http://restygwt.fusesource.org/images/restygwt-logo.png)
 
-## [resty-gwt 1.4](http://restygwt.fusesource.org/blog/release-1-4.html), 2013-11-18
+## [resty-gwt 1.4](http://restygwt.fusesource.org/blog/release-1-4.html), 2013-12-17
 
 * Support enum subtypes by serializing enums implementing an interface with a complex object containing the class name and the value. Issue #164 + Make sure we look up
 * Added a test exposing a bug in the generated serializers for enums implementing interfaces with @JsonSubTypes. Issue #164
