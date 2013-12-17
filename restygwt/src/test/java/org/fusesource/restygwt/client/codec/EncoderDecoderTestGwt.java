@@ -22,11 +22,13 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -1005,4 +1007,25 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         assertNotNull( service );
     }
 
+    static class MoreSpecificFieldThanConstructor {
+
+        private final TreeMap<String, String> elements;
+
+        @JsonCreator
+        MoreSpecificFieldThanConstructor(@JsonProperty("elements") final Map<String, String> elements) {
+            this.elements = new TreeMap<String, String>(elements);
+        }
+
+        public Map<String, String> getElements() {
+            return elements;
+        }
+    }
+
+    static interface MoreSpecificFieldThanConstructorCodec extends JsonEncoderDecoder<MoreSpecificFieldThanConstructor> {}
+
+    public void testMapFieldAsConstructorParam() {
+        MoreSpecificFieldThanConstructorCodec codec = GWT.create(MoreSpecificFieldThanConstructorCodec.class);
+        JSONValue value = codec.encode(new MoreSpecificFieldThanConstructor(Collections.<String, String> singletonMap("foo", "bar")));
+        assertEquals(value.toString(), codec.encode(codec.decode(value)).toString());
+    }
 }
