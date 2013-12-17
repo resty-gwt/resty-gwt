@@ -145,7 +145,7 @@ public class JsonEncoderDecoderInstanceLocator {
     private String getEncoderDecoder(JType type, TreeLogger logger) throws UnableToCompleteException {
         String rc = builtInEncoderDecoders.get(type);
         if (rc == null) {
-            JClassType ct = type.isClass();
+            JClassType ct = type.isClass() == null? type.isInterface() : type.isClass();
             if (ct != null && !isCollectionType(ct)) {
                 JsonEncoderDecoderClassCreator generator = new JsonEncoderDecoderClassCreator(logger, context, ct);
                 return generator.create() + ".INSTANCE";
