@@ -723,7 +723,19 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	}
 	JMethod m = type.findMethod(fieldName, args);
 	if (null != m) {
-	    return m.getAnnotation( JsonIgnore.class ) == null && (isSetter || m.getReturnType().equals( field.getType() ) );
+        if(m.getAnnotation(JsonIgnore.class) != null)
+            return false;
+        if(isSetter)
+            return true;
+        JClassType returnType = m.getReturnType().isClassOrInterface();
+        JClassType fieldType = field.getType().isClassOrInterface();
+        if(returnType == null || fieldType == null) {
+            // at least one is a primitive type
+            return m.getReturnType().equals(field.getType());
+        } else {
+            // both are non-primitives
+            return returnType.isAssignableFrom(fieldType);
+        }
 	} else {
 	    try {
 		JType objectType = find(Object.class, getLogger(), context);
