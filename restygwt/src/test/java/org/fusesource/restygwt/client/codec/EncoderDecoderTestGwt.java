@@ -37,6 +37,11 @@ import java.util.TreeMap;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonSubTypes;
+import org.codehaus.jackson.annotate.JsonSubTypes.Type;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.codehaus.jackson.annotate.JsonTypeInfo.As;
+import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
 import org.fusesource.restygwt.client.AbstractNestedJsonEncoderDecoder;
 import org.fusesource.restygwt.client.Json;
@@ -1027,5 +1032,62 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         MoreSpecificFieldThanConstructorCodec codec = GWT.create(MoreSpecificFieldThanConstructorCodec.class);
         JSONValue value = codec.encode(new MoreSpecificFieldThanConstructor(Collections.<String, String> singletonMap("foo", "bar")));
         assertEquals(value.toString(), codec.encode(codec.decode(value)).toString());
+    }
+    
+    @JsonTypeInfo(use = Id.CLASS, include = As.PROPERTY, property = "@class")
+    @JsonSubTypes({ @Type(DefaultImplementationOfSubTypeInterface.class) })
+    interface JsonSubTypesWithAnInterface {
+        String getValue();
+    }
+    
+    static class DefaultImplementationOfSubTypeInterface implements JsonSubTypesWithAnInterface {
+
+        private String value;
+
+        @JsonCreator
+        public DefaultImplementationOfSubTypeInterface(@JsonProperty("value") String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String getValue() {
+            return value;
+        }
+    }
+    
+    static interface JsonSubTypesWithAnInterfaceCodec extends JsonEncoderDecoder<JsonSubTypesWithAnInterface> {}
+
+    public void testJsonSubTypesWithAnInterface() {
+        JsonSubTypesWithAnInterfaceCodec codec = GWT.create(JsonSubTypesWithAnInterfaceCodec.class);
+        String value = "Hello, world!";
+        JsonSubTypesWithAnInterface o1 = new DefaultImplementationOfSubTypeInterface(value);
+
+        JSONValue json = codec.encode(o1);
+        JsonSubTypesWithAnInterface o2 = codec.decode(json);
+        assertEquals(json.toString(), codec.encode(o2).toString());
+        assertEquals(value, o1.getValue());
+        assertEquals(o1.getValue(), o2.getValue());
+    }
+    
+
+    @JsonTypeInfo(use = Id.CLASS, include = As.PROPERTY, property = "@class")
+    @JsonSubTypes({ @Type(EnumOfSubTypeInterface.class) })
+    interface JsonSubTypesWithAnInterfaceForUseWithAnEnum {
+        @JsonProperty("name")
+        String name();
+    }
+    
+    enum EnumOfSubTypeInterface implements JsonSubTypesWithAnInterfaceForUseWithAnEnum {
+        HELLO,
+        WORLD
+    }
+    
+    static interface JsonSubTypesWithAnInterfaceForUseWithAnEnumCodec extends JsonEncoderDecoder<JsonSubTypesWithAnInterfaceForUseWithAnEnum> {}
+
+    public void testJsonSubTypesWithAnInterfaceImplementedByAnEnum() {
+        JsonSubTypesWithAnInterfaceForUseWithAnEnumCodec codec = GWT.create(JsonSubTypesWithAnInterfaceForUseWithAnEnumCodec.class);
+        JSONValue json = codec.encode(EnumOfSubTypeInterface.HELLO);
+        JsonSubTypesWithAnInterfaceForUseWithAnEnum useWithAnEnum = codec.decode(json);
+        assertEquals(useWithAnEnum.name(), EnumOfSubTypeInterface.HELLO.name());
     }
 }

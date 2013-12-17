@@ -71,7 +71,8 @@ public class ExtendedJsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     getLogger().log(ERROR, "Expected the " + JSON_ENCODER_DECODER + " declaration to specify 1 parameterized type.");
                     throw new UnableToCompleteException();
                 }
-                return typeParameters[0].isClass();
+                final JClassType jClassType = typeParameters[0];
+                return jClassType.isClass() == null ? jClassType.isInterface() : jClassType.isClass();
             }
         }
         getLogger().log(ERROR, "Expected  " + type + " to extend the " + JSON_ENCODER_DECODER + " interface.");
