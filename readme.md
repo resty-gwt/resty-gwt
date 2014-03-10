@@ -1,6 +1,8 @@
 ![RestyGWT](http://restygwt.fusesource.org/images/restygwt-logo.png)
 ==============
 
+To know more have a look to [RestyGWT web site](http://resty-gwt.github.io/)
+
 Description
 -----------
 
@@ -13,4 +15,4 @@ Features
 * Java Object to JSON encoding/decoding
 * Easy to use REST API
 
-To know more have a look to [RestyGWT web site](http://resty-gwt.github.io/)
+
