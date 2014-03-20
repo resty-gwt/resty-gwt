@@ -52,6 +52,16 @@ import java.util.Set;
  */
 abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecoder<T> {
 
+    @Override
+    public T decode(String value) throws DecodingException {
+        try {
+            return decode(JSONParser.parseStrict(value));
+        } catch (JSONException e) {
+            // that can happen for generic key types like Object and then a String key gets passed in
+            return decode(JSONParser.parseStrict("\"" + value + "\""));
+        }
+    }
+
     // /////////////////////////////////////////////////////////////////
     // Built in encoders for the native types.
     // /////////////////////////////////////////////////////////////////
@@ -195,6 +205,11 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
                 }
             }
             return str.stringValue();
+        }
+
+        @Override
+        public String decode(String value) throws DecodingException {
+            return value;
         }
 
         public JSONValue encode(String value) throws EncodingException {
@@ -594,13 +609,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
             HashMap<KeyType, ValueType> rc = new HashMap<KeyType, ValueType>(object.size() * 2);
             for (String key : object.keySet()) {
-                try{
-                    rc.put(keyEncoder.decode(JSONParser.parseStrict(key)), valueEncoder.decode(object.get(key)));
-                }
-                catch(JSONException e){
-                    // that can happen for generic key types like Object and then a String key gets passed in
-                    rc.put(keyEncoder.decode(JSONParser.parseStrict("\"" + key + "\"")), valueEncoder.decode(object.get(key)));                    
-                }
+                rc.put(keyEncoder.decode(key), valueEncoder.decode(object.get(key)));
             }
             return rc;
         }
@@ -629,7 +638,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
                 JSONString k = key.isString();
                 if (k == null)
                     throw new DecodingException("Expected an entry key to be a string, but was given: " + value);
-                rc.put(keyEncoder.decode(JSONParser.parseStrict(k.stringValue())), valueEncoder.decode(entry.get("value")));
+                rc.put(keyEncoder.decode(k.stringValue()), valueEncoder.decode(entry.get("value")));
             }
             return rc;
         }

@@ -414,8 +414,8 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         String[] array = {"may", "all", "be", "happy"};
         AbstractJsonEncoderDecoder<String> encoder = AbstractJsonEncoderDecoder.STRING;
         assertEquals(Arrays.toString(array),
-                Arrays.toString(AbstractJsonEncoderDecoder.toArray(AbstractJsonEncoderDecoder.toJSON(array, encoder), 
-                            encoder, new String[4])));
+                Arrays.toString(AbstractJsonEncoderDecoder.toArray(AbstractJsonEncoderDecoder.toJSON(array, encoder),
+                        encoder, new String[4])));
     }
 
     public void testTypeMapDecode() {
@@ -466,6 +466,40 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
                         Json.Style.JETTISON_NATURAL).toString());
     }
 
+    public void testTypeMapWithLargeDigitStringDecode() {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("1234567890123456789", "321");
+        AbstractJsonEncoderDecoder<String> keyEncoder = AbstractJsonEncoderDecoder.STRING;
+        AbstractJsonEncoderDecoder<String> valueEncoder = AbstractJsonEncoderDecoder.STRING;
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, keyEncoder, valueEncoder, Json.Style.DEFAULT),
+                        keyEncoder,
+                        valueEncoder,
+                        Json.Style.DEFAULT).toString());
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, keyEncoder, valueEncoder, Json.Style.JETTISON_NATURAL), 
+                        keyEncoder, 
+                        valueEncoder, 
+                        Json.Style.JETTISON_NATURAL).toString());
+    }
+
+    public void testTypeMapWithJsonStringDecode() {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("[1,2, 3]", "value");
+        AbstractJsonEncoderDecoder<String> keyEncoder = AbstractJsonEncoderDecoder.STRING;
+        AbstractJsonEncoderDecoder<String> valueEncoder = AbstractJsonEncoderDecoder.STRING;
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, keyEncoder, valueEncoder, Json.Style.DEFAULT),
+                        keyEncoder,
+                        valueEncoder,
+                        Json.Style.DEFAULT).toString());
+        assertEquals(map.toString(),
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, keyEncoder, valueEncoder, Json.Style.JETTISON_NATURAL),
+                        keyEncoder,
+                        valueEncoder,
+                        Json.Style.JETTISON_NATURAL).toString());
+    }
+
     static class Email {
         String name, email;
         public String toString(){
@@ -491,9 +525,9 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
                         valueEncoder, 
                         Json.Style.DEFAULT).toString());
         assertEquals(map.toString(),
-                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, keyEncoder, valueEncoder, Json.Style.JETTISON_NATURAL), 
-                        keyEncoder, 
-                        valueEncoder, 
+                AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, keyEncoder, valueEncoder, Json.Style.JETTISON_NATURAL),
+                        keyEncoder,
+                        valueEncoder,
                         Json.Style.JETTISON_NATURAL).toString());
     }
 
@@ -796,7 +830,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
     }
     static interface NestedBeanCodec extends JsonEncoderDecoder<NestedBean> {
     }
-    
+
     public void testBean() {
         BeanCodec beanCodec = GWT.create(BeanCodec.class);
         Bean bean = new Bean();
