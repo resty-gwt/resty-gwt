@@ -44,4 +44,5 @@ public interface JsonEncoderDecoder<T> {
 
     public T decode(JSONValue value) throws DecodingException;
 
+    public T decode(String value) throws DecodingException;
 }
