@@ -837,8 +837,8 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         
         JSONValue json = beanCodec.encode(bean);
         // the order of keys depends on jdk7 vs. jdk8 so look at each key separately
-        assertEquals(123, json.isObject().get("age"));
-        assertEquals("1234", json.isObject().get("yearOfBirth"));
+        assertEquals(123.0, json.isObject().get("age").isNumber().doubleValue());
+        assertEquals(1234.0, json.isObject().get("yearOfBirth").isNumber().doubleValue());
         Bean roundTrip = beanCodec.decode(json);
         assertEquals(roundTrip.getAge(), 123);
         assertEquals(roundTrip.getYearOfBirth(), 1234);
@@ -851,9 +851,9 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         
         JSONValue json = beanCodec.encode(bean);
         // the order of keys depends on jdk7 vs. jdk8 so look at each key separately
-        assertEquals(123, json.isObject().get("age"));
-        assertEquals("1234", json.isObject().get("yearOfBirth"));
-        assertEquals("name", json.isObject().get("asterix"));
+        assertEquals(123.0, json.isObject().get("age").isNumber().doubleValue());
+        assertEquals(1234.0, json.isObject().get("yearOfBirth").isNumber().doubleValue());
+        assertEquals("asterix", json.isObject().get("name").isString().stringValue());
         NestedBean roundTrip = beanCodec.decode(json);
         assertEquals(roundTrip.getAge(), 123);
         assertEquals(roundTrip.getYearOfBirth(), 1234);
