@@ -5,8 +5,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.codehaus.jackson.annotate.JsonSubTypes;
-import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import org.fusesource.restygwt.rebind.JsonEncoderDecoderClassCreator.Subtype;
 import org.junit.Rule;
 import org.junit.Test;

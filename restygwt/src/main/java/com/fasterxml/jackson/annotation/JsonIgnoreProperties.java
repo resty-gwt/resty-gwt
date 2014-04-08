@@ -1,4 +1,4 @@
-package org.codehaus.jackson.annotate;
+package com.fasterxml.jackson.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,16 +14,19 @@ import java.lang.annotation.Target;
  *<pre>
  * // to prevent specified fields from being serialized or deserialized
  * // (i.e. not include in JSON output; or being set even if they were included)
- * \@JsonIgnoreProperties({ "internalId", "secretKey" })
+ * &#064;JsonIgnoreProperties({ "internalId", "secretKey" })
  * // To ignore any unknown properties in JSON input without exception:
- * \@JsonIgnoreProperties(ignoreUnknown=true)
+ * &#064;JsonIgnoreProperties(ignoreUnknown=true)
  *</pre>
  *<p>
- * Only applicable to classes, not for properties (getters, setters, fields).
- * 
- * @since 1.4
+ * Starting with 2.0, this annotation can be applied both to classes and
+ * to properties. If used for both, actual set will be union of all
+ * ignorals: that is, you can only add properties to ignore, not remove
+ * or override. So you can not remove properties to ignore using
+ * per-property annotation.
  */
-@Target({ElementType.TYPE})
+@Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE,
+    ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @JacksonAnnotation
 public @interface JsonIgnoreProperties

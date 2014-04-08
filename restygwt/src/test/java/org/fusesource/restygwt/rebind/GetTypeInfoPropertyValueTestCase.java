@@ -2,9 +2,9 @@ package org.fusesource.restygwt.rebind;
 
 import junit.framework.TestCase;
 
-import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.codehaus.jackson.annotate.JsonTypeInfo.As;
-import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import org.junit.Test;
 
 public class GetTypeInfoPropertyValueTestCase extends TestCase

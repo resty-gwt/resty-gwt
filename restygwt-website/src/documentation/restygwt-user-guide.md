@@ -542,7 +542,7 @@ can handle this situation like this:
     {
     }
 
-You may have a proper implementation of `AnimalResolver` (which must implement `org.codehaus.jackson.map.jsontype.TypeIdResolver`)
+You may have a proper implementation of `AnimalResolver` (which must implement `com.fasterxml.jackson.databind.jsontype.TypeIdResolver`)
 for use by Jackson elsewhere in your system (e.g. on the server to write out these objects properly in response to
 REST calls). However, because the `TypeIdResolver` interface does not offer an API that publishes all of the available subtypes, we
 will need to implement an extension interface -- namely `RestyJsonTypeIdResolver`.

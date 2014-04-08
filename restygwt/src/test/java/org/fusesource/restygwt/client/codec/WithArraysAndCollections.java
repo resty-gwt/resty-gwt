@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt.Email;
 
 class WithArraysAndCollections {

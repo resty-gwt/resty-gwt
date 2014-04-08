@@ -20,7 +20,7 @@ package org.fusesource.restygwt.rebind;
 
 import java.util.Map;
 
-import org.codehaus.jackson.map.jsontype.TypeIdResolver;
+import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 
 public interface RestyJsonTypeIdResolver {
     public Class<? extends TypeIdResolver> getTypeIdResolverClass();
