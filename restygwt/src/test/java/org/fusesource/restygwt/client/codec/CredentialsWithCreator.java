@@ -21,8 +21,8 @@
  */
 package org.fusesource.restygwt.client.codec;
 
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 class CredentialsWithCreator {
     @JsonProperty

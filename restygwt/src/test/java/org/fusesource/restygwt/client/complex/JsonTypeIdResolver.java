@@ -24,7 +24,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import org.codehaus.jackson.annotate.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
@@ -38,7 +38,7 @@ public class JsonTypeIdResolver extends GWTTestCase
 {
 	// is this needed?
 	@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-	@org.codehaus.jackson.map.annotate.JsonTypeIdResolver(DTOTypeResolver.class)
+	@com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver(DTOTypeResolver.class)
 	public static abstract class AbstractDTO
 	{
 		public String name;
