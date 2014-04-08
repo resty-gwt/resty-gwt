@@ -1,6 +1,6 @@
 package org.fusesource.restygwt.rebind.util;
 
-import org.codehaus.jackson.annotate.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 public abstract class JsonTypeInfoIdVisitor<OUT, EXCEPTION extends Throwable>
 {

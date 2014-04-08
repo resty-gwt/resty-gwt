@@ -26,9 +26,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
-import org.codehaus.jackson.map.type.TypeFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.AbstractDTO;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO1;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO2;
@@ -67,7 +67,7 @@ public class DTOTypeResolverServlet extends HttpServlet
 		ObjectMapper om = new ObjectMapper();
 		try
 		{
-			ObjectWriter writer = om.writer().withType(TypeFactory.type(getClass().getMethod("prototype").getGenericReturnType()));
+			ObjectWriter writer = om.writer().withType(om.constructType(getClass().getMethod("prototype").getGenericReturnType()));
 			writer.writeValue(resp.getOutputStream(), Lists.newArrayList(one, two, three));
 		}
 		catch (Exception e)

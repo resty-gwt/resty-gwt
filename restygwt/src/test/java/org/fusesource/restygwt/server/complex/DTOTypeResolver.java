@@ -18,10 +18,10 @@
 
 package org.fusesource.restygwt.server.complex;
 
-import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
-import org.codehaus.jackson.map.jsontype.TypeIdResolver;
-import org.codehaus.jackson.map.type.SimpleType;
-import org.codehaus.jackson.type.JavaType;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
+import com.fasterxml.jackson.databind.type.SimpleType;
+import com.fasterxml.jackson.databind.JavaType;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO1;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO2;
 
@@ -47,6 +47,12 @@ public class DTOTypeResolver implements TypeIdResolver
 			return "dto2";
 		else
 			throw new IllegalArgumentException("Unknown type: " + value);
+	}
+	
+	@Override
+	public String idFromBaseType()
+	{
+		throw new AssertionError();
 	}
 
 	@Override

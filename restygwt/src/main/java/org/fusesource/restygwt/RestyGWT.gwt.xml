@@ -29,7 +29,7 @@
 
 
   <replace-with class="org.fusesource.restygwt.emulated.JsonTypeInfo">
-    <when-type-is class="org.codehaus.jackson.annotate.JsonTypeInfo"/>
+    <when-type-is class="com.fasterxml.jackson.annotation.JsonTypeInfo"/>
   </replace-with>
 
   <generate-with class="org.fusesource.restygwt.rebind.RestServiceGenerator">
