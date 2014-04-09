@@ -687,6 +687,16 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         
         @JsonIgnore
         String firstName;
+
+        transient public byte[] document;
+
+        public void setDocument( String v ) {
+           document = v.getBytes();
+        }
+
+        public String getDocument() {
+           return new String( document );
+        }
         
         String getLastName(){
             return lastName;
@@ -716,9 +726,10 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         ccc.name = "me and the corner";
         ccc.firstName = "chaos";
         ccc.lastName = "club";
+        ccc.setDocument( "resty-docu" );
         
         JSONValue json = cccc.encode(ccc);
-        assertEquals("{\"age\":20, \"name\":\"me and the corner\"}", json.toString());
+        assertEquals("{\"age\":20, \"name\":\"me and the corner\", \"document\":\"resty-doc\"}", json.toString());
         CCC roundTrip = cccc.decode(json);
         assertEquals(ccc.name, roundTrip.name);
         assertEquals(ccc.age, roundTrip.age);
