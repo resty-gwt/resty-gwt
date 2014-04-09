@@ -729,7 +729,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         ccc.setDocument( "resty-docu" );
         
         JSONValue json = cccc.encode(ccc);
-        assertEquals("{\"age\":20, \"name\":\"me and the corner\", \"document\":\"resty-doc\"}", json.toString());
+        assertEquals("{\"age\":20, \"name\":\"me and the corner\", \"document\":\"resty-docu\"}", json.toString());
         CCC roundTrip = cccc.decode(json);
         assertEquals(ccc.name, roundTrip.name);
         assertEquals(ccc.age, roundTrip.age);
