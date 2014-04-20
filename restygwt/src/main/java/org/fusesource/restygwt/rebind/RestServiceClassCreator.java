@@ -302,7 +302,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         		throw new UnsupportedOperationException("Subresource method may not return: " + type);
         	}
         	p(method.getReturnType().getQualifiedSourceName() + " __subresource = new " + name + "();");
-        	p("((" + RestServiceProxy.class.getName() + ")__subresource).setResource(getResource().resolve(" + pathExpression + "));");
+                p("((" + RestServiceProxy.class.getName() + ")__subresource).setResource(getResource().resolve(" + pathExpression + "));");
+                p("((" + RestServiceProxy.class.getName() + ")__subresource).setDispatcher(getDispatcher());");
         	p("return __subresource;");
         }
         i(-1).p("}");
