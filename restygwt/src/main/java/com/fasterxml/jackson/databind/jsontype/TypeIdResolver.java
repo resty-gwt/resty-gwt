@@ -1,35 +1,21 @@
-/**
- * Copyright (C) 2009-2012 the original author or authors.
- * See the notice.md file distributed with this work for additional
- * information regarding copyright ownership.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package com.fasterxml.jackson.databind.jsontype;
 
-package org.codehaus.jackson.map.jsontype;
-
-import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.codehaus.jackson.type.JavaType;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.JavaType;
 
 /**
  * Interface that defines standard API for converting types
  * to type identifiers and vice versa. Used by type resolvers
- * ({@link org.codehaus.jackson.map.TypeSerializer},
- * {@link org.codehaus.jackson.map.TypeDeserializer}) for converting
+ * ({@link com.fasterxml.jackson.databind.jsontype.TypeSerializer},
+ * {@link com.fasterxml.jackson.databind.jsontype.TypeDeserializer}) for converting
  * between type and matching id; id is stored in JSON and needed for
  * creating instances of proper subtypes when deserializing values.
- * 
- * @since 1.5
+ *<p>
+ * NOTE: it is <b>strongly</b> recommended that developers always extend
+ * abstract base class {@link com.fasterxml.jackson.databind.jsontype.impl.TypeIdResolverBase}
+ * instead of directly implementing this interface; this helps prevent
+ * breakage in case new methds need to be added in this interface (something
+ * we try to avoid doing; but which may be necessary in some cases).
  */
 public interface TypeIdResolver
 {
@@ -67,10 +53,16 @@ public interface TypeIdResolver
      * value and type, using suggested type (that serializer provides)
      * and possibly value of that type. Most common implementation will
      * use suggested type as is.
-     * 
-     * @since 1.8
      */
     public String idFromValueAndType(Object value, Class<?> suggestedType);
+
+    /**
+     * Method that can be called to figure out type id to use for instances
+     * of base type (declared type of property). This is usually only used
+     * for fallback handling, for cases where real type information is not
+     * available for some reason.
+     */
+    public String idFromBaseType();
     
     /**
      * Method called to resolve type from given type identifier.

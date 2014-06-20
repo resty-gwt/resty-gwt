@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fusesource.restygwt.client.*;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.google.gwt.core.client.GWT;
 

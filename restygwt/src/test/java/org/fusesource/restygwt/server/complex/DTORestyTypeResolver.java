@@ -21,7 +21,7 @@ package org.fusesource.restygwt.server.complex;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.codehaus.jackson.map.jsontype.TypeIdResolver;
+import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO1;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO2;
 import org.fusesource.restygwt.rebind.RestyJsonTypeIdResolver;
