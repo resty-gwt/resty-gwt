@@ -157,7 +157,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         if (clazz == null)
             return Collections.emptyList();
         else if (clazz.isAnnotationPresent(JsonSubTypes.class)) {
-            JsonSubTypes annotation = (JsonSubTypes) clazz.getAnnotation(JsonSubTypes.class);
+            JsonSubTypes annotation = clazz.getAnnotation(JsonSubTypes.class);
             Set<Type> result = new HashSet<JsonSubTypes.Type>();
             Type[] value = annotation.value();
             for (Type type : value) {
