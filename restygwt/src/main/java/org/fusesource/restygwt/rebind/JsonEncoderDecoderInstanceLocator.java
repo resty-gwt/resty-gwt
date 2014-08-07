@@ -154,7 +154,7 @@ public class JsonEncoderDecoderInstanceLocator {
         return rc;
     }
 
-    private String getCustomEncoderDecoder(JType type) throws UnableToCompleteException {
+    private String getCustomEncoderDecoder(JType type) {
         RestyJsonSerializerGenerator restyGenerator = customGenerators.findGenerator(type);
         if (restyGenerator == null) {
             return null;
@@ -170,7 +170,7 @@ public class JsonEncoderDecoderInstanceLocator {
         }
     }
 
-    public boolean hasCustomEncoderDecoder(JType type) throws UnableToCompleteException {
+    public boolean hasCustomEncoderDecoder(JType type) {
         return getCustomEncoderDecoder(type) != null;
     }
 
@@ -374,15 +374,15 @@ public class JsonEncoderDecoderInstanceLocator {
         throw new UnableToCompleteException();
     }
 
-    protected void info(String msg) throws UnableToCompleteException {
+    protected void info(String msg) {
         logger.log(INFO, msg);
     }
 
-    protected void debug(String msg) throws UnableToCompleteException {
+    protected void debug(String msg) {
         logger.log(DEBUG, msg);
     }
 
-    protected void trace(String msg) throws UnableToCompleteException {
+    protected void trace(String msg) {
         logger.log(TRACE, msg);
     }
 

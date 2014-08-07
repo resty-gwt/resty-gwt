@@ -111,7 +111,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private JClassType REST_SERVICE_TYPE;
     private JsonEncoderDecoderInstanceLocator locator;
 
-    public RestServiceClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) throws UnableToCompleteException {
+    public RestServiceClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) {
         super(logger, context, source, REST_SERVICE_PROXY_SUFFIX);
     }
 

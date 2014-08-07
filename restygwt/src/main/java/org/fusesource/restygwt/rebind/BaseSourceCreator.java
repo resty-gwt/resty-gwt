@@ -106,7 +106,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
             return source.getSimpleSourceName();
         }
     }
-    protected PrintWriter writer() throws UnableToCompleteException {
+    protected PrintWriter writer() {
         HashSet<String> classes = getGeneratedClasses();
         if (classes.contains(name)) {
             return null;

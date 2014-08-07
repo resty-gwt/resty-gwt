@@ -84,7 +84,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     protected JsonEncoderDecoderInstanceLocator locator;
 
-    public JsonEncoderDecoderClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) throws UnableToCompleteException {
+    public JsonEncoderDecoderClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) {
         super(logger, context, source, JSON_ENCODER_SUFFIX);
     }
 
