@@ -48,8 +48,6 @@ public class RestfulCachingDispatcherFilter extends CachingDispatcherFilter {
         if (RequestBuilder.GET.toString().equalsIgnoreCase(builder.getHTTPMethod())){
             return new UrlCacheKey(builder);
         }
-        else {
-            return null;
-        }
+        return null;
     }
 }

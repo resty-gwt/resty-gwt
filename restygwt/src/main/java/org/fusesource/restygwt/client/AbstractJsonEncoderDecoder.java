@@ -163,9 +163,8 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             final JSONString valueString = value.isString();
             if (valueString != null) {
                  return Long.parseLong(valueString.stringValue());
-            } else {
-                return (long) toDouble(value);
             }
+            return (long) toDouble(value);
         }
 
         @Override
@@ -217,9 +216,8 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             if (str == null) {
                 if (value.isBoolean() != null || value.isNumber() != null) {
                     return value.toString();
-                } else {
-                    throw new DecodingException("Expected a json string, but was given: " + value);
                 }
+                throw new DecodingException("Expected a json string, but was given: " + value);
             }
             return str.stringValue();
         }
@@ -332,13 +330,12 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
                     throw new DecodingException("Expected a json number, but was given: " + value);
                 }
                 return new Date((long) num.doubleValue());
-            } else {
-                JSONString str = value.isString();
-                if (str == null) {
-                    throw new DecodingException("Expected a json string, but was given: " + value);
-                }
-                return DateTimeFormat.getFormat(format).parse(str.stringValue());
             }
+            JSONString str = value.isString();
+            if (str == null) {
+                throw new DecodingException("Expected a json string, but was given: " + value);
+            }
+            return DateTimeFormat.getFormat(format).parse(str.stringValue());
         }
 
         @Override
@@ -349,9 +346,8 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             String format = Defaults.getDateFormat();
             if (format == null) {
                 return new JSONNumber(value.getTime());
-            } else {
-                return new JSONString(DateTimeFormat.getFormat(format).format(value));
             }
+            return new JSONString(DateTimeFormat.getFormat(format).format(value));
         }
     };
 

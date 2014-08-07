@@ -102,9 +102,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         if( source.getEnclosingType() != null ){
             return getName( source.getEnclosingType() ) + "_" + source.getSimpleSourceName();
         }
-        else {
-            return source.getSimpleSourceName();
-        }
+        return source.getSimpleSourceName();
     }
     protected PrintWriter writer() {
         HashSet<String> classes = getGeneratedClasses();

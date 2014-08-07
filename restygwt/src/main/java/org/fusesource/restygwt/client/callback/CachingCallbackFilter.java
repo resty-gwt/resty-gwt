@@ -157,8 +157,6 @@ public class CachingCallbackFilter implements CallbackFilter {
 
             return dd;
         }
-        else {
-            return null;
-        }
+        return null;
     }
 }
