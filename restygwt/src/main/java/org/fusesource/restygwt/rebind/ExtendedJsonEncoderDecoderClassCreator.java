@@ -40,6 +40,7 @@ public class ExtendedJsonEncoderDecoderClassCreator extends BaseSourceCreator {
         super(logger, context, source, JSON_ENCODER_SUFFIX);
     }
 
+    @Override
     protected ClassSourceFileComposerFactory createComposerFactory() throws UnableToCompleteException {
         ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
         JClassType encodedType = getEncodedType(getLogger(), context, source);

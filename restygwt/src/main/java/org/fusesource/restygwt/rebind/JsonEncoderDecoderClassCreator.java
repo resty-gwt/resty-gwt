@@ -282,6 +282,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         }
 
                         branch("Processing field: " + field.getName(), new Branch<Void>() {
+                            @Override
                             public Void execute() throws UnableToCompleteException {
                                 // TODO: try to get the field with a setter or
                                 // JSNI
@@ -460,6 +461,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         final JField lastField = orderedFields.get(orderedFields.size() - 1);
                         for (final JField field : orderedFields) {
                             branch("Processing field: " + field.getName(), new Branch<Void>() {
+                                @Override
                                 public Void execute() throws UnableToCompleteException {
                                     Json jsonAnnotation = field.getAnnotation(Json.class);
                                     Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
@@ -512,6 +514,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         }
 
                         branch("Processing field: " + field.getName(), new Branch<Void>() {
+                            @Override
                             public Void execute() throws UnableToCompleteException {
 
                                 // TODO: try to set the field with a setter

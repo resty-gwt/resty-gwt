@@ -77,6 +77,7 @@ public class DefaultFilterawareDispatcher implements FilterawareDispatcher {
         }
     }
     
+    @Override
     public Request send(Method method, RequestBuilder builder) throws RequestException {
         for (DispatcherFilter f : dispatcherFilters) {
             if (!f.filter(method, builder)) {

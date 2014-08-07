@@ -99,6 +99,7 @@ public class RetryingFilterawareRequestCallback extends DefaultFilterawareReques
             currentRetryCounter++;
 
             Timer t = new Timer() {
+                @Override
                 public void run() {
                     try {
                         method.builder.send();

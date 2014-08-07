@@ -73,6 +73,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
      *
      * @return continue filtering or not
      */
+    @Override
     public boolean filter(final Method method, final RequestBuilder builder) {
         final CacheKey cacheKey = cacheKey(builder);
 
