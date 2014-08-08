@@ -45,10 +45,9 @@ public class OnceFirstIterator<T> implements Iterator<T> {
     public T next() {
         if (firstReturned) {
             return nextValue;
-        } else {
-            firstReturned = true;
-            return firstValue;
         }
+        firstReturned = true;
+        return firstValue;
     }
 
     @Override

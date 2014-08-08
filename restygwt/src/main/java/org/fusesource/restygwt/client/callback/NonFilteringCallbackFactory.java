@@ -30,6 +30,7 @@ import com.google.gwt.http.client.RequestCallback;
  */
 public class NonFilteringCallbackFactory implements CallbackFactory {
 
+    @Override
     public RequestCallback createCallback(Method method) {
         return method.builder.getCallback();
     }

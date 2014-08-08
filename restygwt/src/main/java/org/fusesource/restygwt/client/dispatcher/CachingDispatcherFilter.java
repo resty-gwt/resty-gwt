@@ -63,9 +63,8 @@ public class CachingDispatcherFilter implements DispatcherFilter {
         if (RequestBuilder.GET.toString().equalsIgnoreCase(
                 builder.getHTTPMethod())) {
             return new ComplexCacheKey(builder);
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -73,6 +72,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
      *
      * @return continue filtering or not
      */
+    @Override
     public boolean filter(final Method method, final RequestBuilder builder) {
         final CacheKey cacheKey = cacheKey(builder);
 
@@ -95,50 +95,47 @@ public class CachingDispatcherFilter implements DispatcherFilter {
                     }
                 });
                 return false;
-            }  else {
-                final RequestCallback callback = callbackFactory.createCallback(method);
+            }
+            final RequestCallback callback = callbackFactory.createCallback(method);
 
-                //case 2: => no cache in result => queue it....
-                if (!cacheStorage.hasCallback(cacheKey)) {
-                    //case 2.1 => first callback => make a new one and execute...
-                    cacheStorage.addCallback(cacheKey, builder.getCallback());
+            //case 2: => no cache in result => queue it....
+            if (!cacheStorage.hasCallback(cacheKey)) {
+                //case 2.1 => first callback => make a new one and execute...
+                cacheStorage.addCallback(cacheKey, builder.getCallback());
 
-                    if (LogConfiguration.loggingIsEnabled()) {
-                        Logger.getLogger(Dispatcher.class.getName())
-                                .info("Sending *caching* http request: " + builder.getHTTPMethod() + " "
-                                + builder.getUrl());
-                    }
-
-                    // important part:
-                    builder.setCallback(callback);
-                    return true;
-                } else {
-                    //case 2.2 => a callback already in progress => queue to get response when back
-                    if (LogConfiguration.loggingIsEnabled()) {
-                        Logger.getLogger(Dispatcher.class.getName())
-                                .info("request in progress, queue callback: " + builder.getHTTPMethod() + " "
-                                + builder.getUrl());
-                    }
-                    cacheStorage.addCallback(cacheKey, callback);
-                    return false;
+                if (LogConfiguration.loggingIsEnabled()) {
+                    Logger.getLogger(Dispatcher.class.getName())
+                            .info("Sending *caching* http request: " + builder.getHTTPMethod() + " "
+                            + builder.getUrl());
                 }
+
+                // important part:
+                builder.setCallback(callback);
+                return true;
             }
-        } else {
-            // non cachable case
+            //case 2.2 => a callback already in progress => queue to get response when back
             if (LogConfiguration.loggingIsEnabled()) {
-                String content = builder.getRequestData();
                 Logger.getLogger(Dispatcher.class.getName())
-                        .info("Sending *non-caching* http request: " + builder.getHTTPMethod() + " "
-                        + builder.getUrl() + " (Content: `" + content + "´)");
+                        .info("request in progress, queue callback: " + builder.getHTTPMethod() + " "
+                        + builder.getUrl());
             }
+            cacheStorage.addCallback(cacheKey, callback);
+            return false;
+        }
+        // non cachable case
+        if (LogConfiguration.loggingIsEnabled()) {
+            String content = builder.getRequestData();
+            Logger.getLogger(Dispatcher.class.getName())
+                    .info("Sending *non-caching* http request: " + builder.getHTTPMethod() + " "
+                    + builder.getUrl() + " (Content: `" + content + "´)");
+        }
 
 //            /*
 //             * add X-Request-Token to all non-caching calls (!= GET) if we have some
 //             */
 //            builder.setHeader("X-Testing", "Bude");
 
-            builder.setCallback(callbackFactory.createCallback(method));
-            return true;// continue filtering
-        }
+        builder.setCallback(callbackFactory.createCallback(method));
+        return true;// continue filtering
     }
 }

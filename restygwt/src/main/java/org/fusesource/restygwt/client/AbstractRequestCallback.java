@@ -44,6 +44,7 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
         this.callback = callback;
     }
 
+    @Override
     final public void onError(Request request, Throwable exception) {
         this.method.request = request;
         callback.onFailure(this.method, exception);
@@ -56,6 +57,7 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
         return this.logger;
     }
     
+    @Override
     final public void onResponseReceived(Request request, Response response) {
         this.method.request = request;
         this.method.response = response;

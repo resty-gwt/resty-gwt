@@ -36,10 +36,11 @@ public class ExtendedJsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private static final String JSON_ENCODER_DECODER = JsonEncoderDecoder.class.getName();
     private static final String JSON_ENCODER_SUFFIX = "_Generated_ExtendedJsonEncoderDecoder_";
 
-    public ExtendedJsonEncoderDecoderClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) throws UnableToCompleteException {
+    public ExtendedJsonEncoderDecoderClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) {
         super(logger, context, source, JSON_ENCODER_SUFFIX);
     }
 
+    @Override
     protected ClassSourceFileComposerFactory createComposerFactory() throws UnableToCompleteException {
         ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
         JClassType encodedType = getEncodedType(getLogger(), context, source);

@@ -43,12 +43,11 @@ public class RestfulCachingDispatcherFilter extends CachingDispatcherFilter {
         super(cacheStorage, cf);
     }
     
+    @Override
     protected CacheKey cacheKey(RequestBuilder builder){
         if (RequestBuilder.GET.toString().equalsIgnoreCase(builder.getHTTPMethod())){
             return new UrlCacheKey(builder);
         }
-        else {
-            return null;
-        }
+        return null;
     }
 }

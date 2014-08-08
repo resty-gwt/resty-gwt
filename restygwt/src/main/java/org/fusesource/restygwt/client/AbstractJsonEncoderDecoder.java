@@ -67,6 +67,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
     // /////////////////////////////////////////////////////////////////
     public static final AbstractJsonEncoderDecoder<Boolean> BOOLEAN = new AbstractJsonEncoderDecoder<Boolean>() {
 
+        @Override
         public Boolean decode(JSONValue value) throws DecodingException {
             if (value == null || value.isNull() != null) {
                 return null;
@@ -78,6 +79,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             return bool.booleanValue();
         }
 
+        @Override
         public JSONValue encode(Boolean value) throws EncodingException {
             return (value == null) ? getNullType() : JSONBoolean.getInstance(value);
         }
@@ -85,6 +87,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
     public static final AbstractJsonEncoderDecoder<Character> CHAR = new AbstractJsonEncoderDecoder<Character>() {
 
+        @Override
         public Character decode(JSONValue value) throws DecodingException {
             if (value == null || value.isNull() != null) {
                 return null;
@@ -92,6 +95,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             return (char) toDouble(value);
         }
 
+        @Override
         public JSONValue encode(Character value) throws EncodingException {
             return (value == null) ? getNullType() : new JSONNumber(value);
         }
@@ -99,6 +103,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
     public static final AbstractJsonEncoderDecoder<Byte> BYTE = new AbstractJsonEncoderDecoder<Byte>() {
 
+        @Override
         public Byte decode(JSONValue value) throws DecodingException {
             if (value == null || value.isNull() != null) {
                 return null;
@@ -107,6 +112,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
         }
 
+        @Override
         public JSONValue encode(Byte value) throws EncodingException {
             if (value == null) {
                 return null;
@@ -117,6 +123,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
     public static final AbstractJsonEncoderDecoder<Short> SHORT = new AbstractJsonEncoderDecoder<Short>() {
 
+        @Override
         public Short decode(JSONValue value) throws DecodingException {
             if (value == null || value.isNull() != null) {
                 return null;
@@ -124,6 +131,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             return (short) toDouble(value);
         }
 
+        @Override
         public JSONValue encode(Short value) throws EncodingException {
             return (value == null) ? getNullType() : new JSONNumber(value);
         }
@@ -131,6 +139,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
     public static final AbstractJsonEncoderDecoder<Integer> INT = new AbstractJsonEncoderDecoder<Integer>() {
 
+        @Override
         public Integer decode(JSONValue value) throws DecodingException {
             if (value == null || value.isNull() != null) {
                 return null;
@@ -138,6 +147,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             return (int) toDouble(value);
         }
 
+        @Override
         public JSONValue encode(Integer value) throws EncodingException {
             return (value == null) ? getNullType() : new JSONNumber(value);
         }
@@ -145,6 +155,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
     public static final AbstractJsonEncoderDecoder<Long> LONG = new AbstractJsonEncoderDecoder<Long>() {
 
+        @Override
         public Long decode(JSONValue value) throws DecodingException {
             if (value == null || value.isNull() != null) {
                 return null;
@@ -152,11 +163,11 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             final JSONString valueString = value.isString();
             if (valueString != null) {
                  return Long.parseLong(valueString.stringValue());
-            } else {
-                return (long) toDouble(value);
             }
+            return (long) toDouble(value);
         }
 
+        @Override
         public JSONValue encode(Long value) throws EncodingException {
             return (value == null) ? getNullType() : new JSONNumber(value);
         }
@@ -164,6 +175,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
     public static final AbstractJsonEncoderDecoder<Float> FLOAT = new AbstractJsonEncoderDecoder<Float>() {
 
+        @Override
         public Float decode(JSONValue value) throws DecodingException {
             if (value == null || value.isNull() != null) {
                 return null;
@@ -171,6 +183,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             return (float) toDouble(value);
         }
 
+        @Override
         public JSONValue encode(Float value) throws EncodingException {
             return (value == null) ? getNullType() : new JSONNumber(value);
         }
@@ -178,6 +191,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
     public static final AbstractJsonEncoderDecoder<Double> DOUBLE = new AbstractJsonEncoderDecoder<Double>() {
 
+        @Override
         public Double decode(JSONValue value) throws DecodingException {
             if (value == null || value.isNull() != null) {
                 return null;
@@ -185,6 +199,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             return toDouble(value);
         }
 
+        @Override
         public JSONValue encode(Double value) throws EncodingException {
             return (value == null) ? getNullType() : new JSONNumber(value);
         }
@@ -192,6 +207,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
     public static final AbstractJsonEncoderDecoder<String> STRING = new AbstractJsonEncoderDecoder<String>() {
 
+        @Override
         public String decode(JSONValue value) throws DecodingException {
             if (value == null || value.isNull() != null) {
                 return null;
@@ -200,9 +216,8 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             if (str == null) {
                 if (value.isBoolean() != null || value.isNumber() != null) {
                     return value.toString();
-                } else {
-                    throw new DecodingException("Expected a json string, but was given: " + value);
                 }
+                throw new DecodingException("Expected a json string, but was given: " + value);
             }
             return str.stringValue();
         }
@@ -212,6 +227,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             return value;
         }
 
+        @Override
         public JSONValue encode(String value) throws EncodingException {
             return (value == null) ? getNullType() : new JSONString(value);
         }
@@ -219,6 +235,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
     public static final AbstractJsonEncoderDecoder<BigDecimal> BIG_DECIMAL = new AbstractJsonEncoderDecoder<BigDecimal>() {
 
+        @Override
         public BigDecimal decode(JSONValue value) throws DecodingException {
             if (value == null || value.isNull() != null) {
                 return null;
@@ -226,6 +243,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             return toBigDecimal(value);
         }
 
+        @Override
         public JSONValue encode(BigDecimal value) throws EncodingException {
             return (value == null) ? getNullType() : new JSONString(value.toString());
         }
@@ -233,6 +251,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
     public static final AbstractJsonEncoderDecoder<BigInteger> BIG_INTEGER = new AbstractJsonEncoderDecoder<BigInteger>() {
 
+        @Override
         public BigInteger decode(JSONValue value) throws DecodingException {
             if (value == null || value.isNull() != null) {
                 return null;
@@ -258,6 +277,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             return new BigDecimal(value.toString()).toBigInteger();
         }
 
+        @Override
         public JSONValue encode(BigInteger value) throws EncodingException {
             return (value == null) ? getNullType() : new JSONString(value.toString());
         }
@@ -265,6 +285,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
     public static final AbstractJsonEncoderDecoder<Document> DOCUMENT = new AbstractJsonEncoderDecoder<Document>() {
 
+        @Override
         public Document decode(JSONValue value) throws DecodingException {
             if (value == null || value.isNull() != null) {
                 return null;
@@ -276,6 +297,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             return XMLParser.parse(str.stringValue());
         }
 
+        @Override
         public JSONValue encode(Document value) throws EncodingException {
             return (value == null) ? getNullType() : new JSONString(value.toString());
         }
@@ -283,10 +305,12 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
     public static final AbstractJsonEncoderDecoder<JSONValue> JSON_VALUE = new AbstractJsonEncoderDecoder<JSONValue>() {
 
+        @Override
         public JSONValue decode(JSONValue value) throws DecodingException {
             return value;
         }
 
+        @Override
         public JSONValue encode(JSONValue value) throws EncodingException {
             return value;
         }
@@ -294,6 +318,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
     public static final AbstractJsonEncoderDecoder<Date> DATE = new AbstractJsonEncoderDecoder<Date>() {
 
+        @Override
         public Date decode(JSONValue value) throws DecodingException {
             if (value == null || value.isNull() != null) {
                 return null;
@@ -305,15 +330,15 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
                     throw new DecodingException("Expected a json number, but was given: " + value);
                 }
                 return new Date((long) num.doubleValue());
-            } else {
-                JSONString str = value.isString();
-                if (str == null) {
-                    throw new DecodingException("Expected a json string, but was given: " + value);
-                }
-                return DateTimeFormat.getFormat(format).parse(str.stringValue());
             }
+            JSONString str = value.isString();
+            if (str == null) {
+                throw new DecodingException("Expected a json string, but was given: " + value);
+            }
+            return DateTimeFormat.getFormat(format).parse(str.stringValue());
         }
 
+        @Override
         public JSONValue encode(Date value) throws EncodingException {
             if (value == null) {
                 return getNullType();
@@ -321,9 +346,8 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             String format = Defaults.getDateFormat();
             if (format == null) {
                 return new JSONNumber(value.getTime());
-            } else {
-                return new JSONString(DateTimeFormat.getFormat(format).format(value));
             }
+            return new JSONString(DateTimeFormat.getFormat(format).format(value));
         }
     };
 
