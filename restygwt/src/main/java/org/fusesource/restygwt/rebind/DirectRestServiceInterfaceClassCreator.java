@@ -79,9 +79,8 @@ public class DirectRestServiceInterfaceClassCreator extends DirectRestBaseSource
     private String getMethodCallback(JMethod method) {
         if (isVoidMethod(method)) {
             return "org.fusesource.restygwt.client.MethodCallback<java.lang.Void> callback";
-        } else {
-            return "org.fusesource.restygwt.client.MethodCallback<" + method.getReturnType().getParameterizedQualifiedSourceName() + "> callback";
         }
+        return "org.fusesource.restygwt.client.MethodCallback<" + method.getReturnType().getParameterizedQualifiedSourceName() + "> callback";
     }
 
     private String getAnnotationsAsString(Annotation[] annotations) {

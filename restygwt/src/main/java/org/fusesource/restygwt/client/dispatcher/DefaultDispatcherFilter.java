@@ -49,6 +49,7 @@ public class DefaultDispatcherFilter implements DispatcherFilter {
      *
      * @return continue filtering or not
      */
+    @Override
     public boolean filter(final Method method, final RequestBuilder builder) {
         if (LogConfiguration.loggingIsEnabled()) {
             Logger.getLogger(Dispatcher.class.getName()).info(

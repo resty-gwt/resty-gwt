@@ -111,7 +111,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private JClassType REST_SERVICE_TYPE;
     private JsonEncoderDecoderInstanceLocator locator;
 
-    public RestServiceClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) throws UnableToCompleteException {
+    public RestServiceClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) {
         super(logger, context, source, REST_SERVICE_PROXY_SUFFIX);
     }
 
@@ -322,9 +322,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 !method.getReturnType().getQualifiedSourceName().equals(JsonpRequest.class.getName())) {
                 getLogger().log(ERROR, "Invalid rest method. Method must have void, Request or JsonpRequest return types: " + method.getReadableDeclaration());
                 throw new UnableToCompleteException();
-            } else {
-                returnRequest = true;
             }
+            returnRequest = true;
         }
 
         Json jsonAnnotation = source.getAnnotation(Json.class);

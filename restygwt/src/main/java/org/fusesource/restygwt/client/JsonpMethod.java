@@ -39,31 +39,31 @@ import com.google.gwt.xml.client.Document;
 public class JsonpMethod extends Method {
 
     private final Resource resource;
-    private final JsonpRequestBuilder builder = new JsonpRequestBuilder();
+    private final JsonpRequestBuilder jsonpBuilder = new JsonpRequestBuilder();
 
     public JsonpMethod(Resource resource) {
         this.resource = resource;
     }
     
     public JsonpMethod callbackParam(String callbackParam) {
-        builder.setCallbackParam(callbackParam);
+        jsonpBuilder.setCallbackParam(callbackParam);
         return this;
     }
 
     public JsonpMethod failureCallbackParam(String failureCallbackParam) {
-        builder.setFailureCallbackParam(failureCallbackParam);
+        jsonpBuilder.setFailureCallbackParam(failureCallbackParam);
         return this;
     }
 
     @Override
     public Method timeout(int timeout) {
-        builder.setTimeout(timeout);
+        jsonpBuilder.setTimeout(timeout);
         return this;
     }
 
     @Override
     public Object send(final JsonCallback callback) {
-        return builder.requestObject(resource.getUri(), new AsyncCallback<JavaScriptObject>() {
+        return jsonpBuilder.requestObject(resource.getUri(), new AsyncCallback<JavaScriptObject>() {
             @Override
             public void onSuccess(JavaScriptObject result) {
                 callback.onSuccess(JsonpMethod.this, new JSONObject(result));
@@ -78,7 +78,7 @@ public class JsonpMethod extends Method {
 
     @Override
     public Object send(final TextCallback callback) {
-        return builder.requestString(resource.getUri(), new AsyncCallback<String>() {
+        return jsonpBuilder.requestString(resource.getUri(), new AsyncCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 callback.onSuccess(JsonpMethod.this, result);
@@ -96,7 +96,7 @@ public class JsonpMethod extends Method {
      * @param callback
      */
     public Object send(final AsyncCallback<JavaScriptObject> callback) {
-        return builder.requestObject(resource.getUri(), callback);
+        return jsonpBuilder.requestObject(resource.getUri(), callback);
     }
 
     @Override

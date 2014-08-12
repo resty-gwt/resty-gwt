@@ -58,6 +58,7 @@ public class DefaultFilterawareRequestCallback extends AbstractNestedRequestCall
      * put a filter in the "chain of responsibility" of all callbackfilters that will be
      * performed on callback passing.
      */
+    @Override
     public void addFilter(CallbackFilter filter) {
         callbackFilters.add(filter);
     }

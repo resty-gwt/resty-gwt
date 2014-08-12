@@ -57,6 +57,7 @@ public class ModelChangeEvent extends GwtEvent<ModelChangedEventHandler> {
         handler.onModelChange(this);
     }
 
+    @Override
     public String toString() {
         return "ModelChangeEvent#" + domainIdentifier;
     }

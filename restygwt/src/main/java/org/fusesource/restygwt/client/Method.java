@@ -79,7 +79,7 @@ public class Method {
       expectedStatuses.add(204);
       // This is needed for MSIE mangling with status 204 to become 1223
       expectedStatuses.add(1223);
-    };
+    }
     boolean anyStatus;
 
     Request request;

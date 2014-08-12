@@ -154,7 +154,7 @@ public class JsonEncoderDecoderInstanceLocator {
         return rc;
     }
 
-    private String getCustomEncoderDecoder(JType type) throws UnableToCompleteException {
+    private String getCustomEncoderDecoder(JType type) {
         RestyJsonSerializerGenerator restyGenerator = customGenerators.findGenerator(type);
         if (restyGenerator == null) {
             return null;
@@ -170,7 +170,7 @@ public class JsonEncoderDecoderInstanceLocator {
         }
     }
 
-    public boolean hasCustomEncoderDecoder(JType type) throws UnableToCompleteException {
+    public boolean hasCustomEncoderDecoder(JType type) {
         return getCustomEncoderDecoder(type) != null;
     }
 
@@ -195,9 +195,8 @@ public class JsonEncoderDecoderInstanceLocator {
         if (null != type.isEnum()) {
             if (encoderMethod.equals("encode")) {
                 return encodeDecodeExpression(STRING_TYPE, expression + ".name()", style, encoderMethod, mapMethod, setMethod, listMethod, arrayMethod);
-            } else {
-                return type.getQualifiedSourceName() + ".valueOf(" + encodeDecodeExpression(STRING_TYPE, expression, style, encoderMethod, mapMethod, setMethod, listMethod, arrayMethod) + ")";
             }
+            return type.getQualifiedSourceName() + ".valueOf(" + encodeDecodeExpression(STRING_TYPE, expression, style, encoderMethod, mapMethod, setMethod, listMethod, arrayMethod) + ")";
         }
 
         String encoderDecoder = getEncoderDecoder(type, logger);
@@ -238,11 +237,10 @@ public class JsonEncoderDecoderInstanceLocator {
         if (encoderDecoder != null) {  
             if (encoderMethod.equals("encode")) {
                 return arrayMethod + "(" + expression + ", " + encoderDecoder + ")";
-            } else {
-                return arrayMethod + "(" + expression + ", " + encoderDecoder
-                        + ", new " + type.isArray().getComponentType().getQualifiedSourceName()
-                        + "[" + JSON_ENCODER_DECODER_CLASS + ".getSize(" + expression + ")])";
             }
+            return arrayMethod + "(" + expression + ", " + encoderDecoder
+                    + ", new " + type.isArray().getComponentType().getQualifiedSourceName()
+                    + "[" + JSON_ENCODER_DECODER_CLASS + ".getSize(" + expression + ")])";
         }
 
         error("Do not know how to encode/decode " + type);
@@ -375,15 +373,15 @@ public class JsonEncoderDecoderInstanceLocator {
         throw new UnableToCompleteException();
     }
 
-    protected void info(String msg) throws UnableToCompleteException {
+    protected void info(String msg) {
         logger.log(INFO, msg);
     }
 
-    protected void debug(String msg) throws UnableToCompleteException {
+    protected void debug(String msg) {
         logger.log(DEBUG, msg);
     }
 
-    protected void trace(String msg) throws UnableToCompleteException {
+    protected void trace(String msg) {
         logger.log(TRACE, msg);
     }
 

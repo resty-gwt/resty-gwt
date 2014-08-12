@@ -46,6 +46,7 @@ public class DefaultDispatcher implements Dispatcher {
 
     public static final DefaultDispatcher INSTANCE = new DefaultDispatcher();
     
+    @Override
     public Request send(Method method, RequestBuilder builder) throws RequestException {
         if(GWT.isClient() && LogConfiguration.loggingIsEnabled() ){
             Logger logger = Logger.getLogger( DefaultDispatcher.class.getName() );

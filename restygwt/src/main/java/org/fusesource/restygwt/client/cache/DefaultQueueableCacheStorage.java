@@ -45,10 +45,12 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
         // keep it public for testing
         public final Response response;
 
+        @Override
         public boolean equals(Object obj) {
             return response.equals(obj);
         }
 
+        @Override
         public String getHeader(String header) {
             if (RESTY_CACHE_HEADER.equals(header)) {
                 return "true";
@@ -56,6 +58,7 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
             return response.getHeader(header);
         }
 
+        @Override
         public Header[] getHeaders() {
             List<Header> headers = Arrays.asList(response.getHeaders());
             headers.add(new Header() {
@@ -73,27 +76,33 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
             return (Header[]) headers.toArray();
         }
 
+        @Override
         public String getHeadersAsString() {
             return response.getHeadersAsString() + RESTY_CACHE_HEADER
                     + "=true\r\n";
         }
 
+        @Override
         public int getStatusCode() {
             return response.getStatusCode();
         }
 
+        @Override
         public String getStatusText() {
             return response.getStatusText();
         }
 
+        @Override
         public String getText() {
             return response.getText();
         }
 
+        @Override
         public int hashCode() {
             return response.hashCode();
         }
 
+        @Override
         public String toString() {
             return response.toString();
         }
@@ -114,10 +123,12 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
 
     private final Map<CacheKey, List<RequestCallback>> pendingCallbacks = new HashMap<CacheKey, List<RequestCallback>>();
 
+    @Override
     public Response getResultOrReturnNull(CacheKey key) {
         return getResultOrReturnNull(key, DEFAULT_SCOPE);
     }
 
+    @Override
     public Response getResultOrReturnNull(final CacheKey key, final String scope) {
         final HashMap<CacheKey, Response> scoped = cache.get(scope);
         if (null != scoped) {
