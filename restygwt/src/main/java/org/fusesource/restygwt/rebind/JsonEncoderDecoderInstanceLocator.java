@@ -298,6 +298,7 @@ public class JsonEncoderDecoderInstanceLocator {
             if( result != null ){
                 return JSON_NESTED_ENCODER_DECODER_CLASS + ".setEncoderDecoder( " + result + " )"; 
             }
+            return JSON_NESTED_ENCODER_DECODER_CLASS + ".collectionEncoderDecoder( " + result + " )";
         }
         else {
             result = isArrayEncoderDecoder(type, style);

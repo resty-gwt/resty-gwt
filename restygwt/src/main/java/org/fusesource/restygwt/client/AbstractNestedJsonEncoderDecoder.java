@@ -1,5 +1,6 @@
 package org.fusesource.restygwt.client;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,6 +44,24 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
             public T[] decode(JSONValue value)
                     throws DecodingException {
                 return toArray(value, nested, (T[]) new Object[ asArray( value ).size() ]);
+            }
+        };
+    }
+
+    static public <T> AbstractJsonEncoderDecoder<Collection<T>> collectionEncoderDecoder(AbstractJsonEncoderDecoder<T> encoder){
+        return new AbstractNestedJsonEncoderDecoder<Collection<T>, T, Void>( encoder ) {
+            
+            @SuppressWarnings("unchecked")
+            @Override
+            public JSONValue encode(Collection<T> value)
+                    throws EncodingException {
+                return toJSON((T[])value.toArray(), nested);
+            }
+
+            @Override
+            public Collection<T> decode(JSONValue value)
+                    throws DecodingException {
+                return toList(value, nested);
             }
         };
     }

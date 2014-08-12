@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,7 +34,6 @@ import java.util.TreeMap;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
-import java.util.TreeMap;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -46,12 +46,11 @@ import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
 import org.fusesource.restygwt.client.AbstractNestedJsonEncoderDecoder;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
+import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.ObjectEncoderDecoder;
+import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.basic.Optional;
 import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt.WithEnum.Cycle;
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
-
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONNumber;
@@ -545,6 +544,13 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
                 AbstractJsonEncoderDecoder.toMap(AbstractJsonEncoderDecoder.toJSON(map, valueEncoder, Json.Style.JETTISON_NATURAL), 
                         valueEncoder, 
                         Json.Style.JETTISON_NATURAL).toString());
+    }
+    
+    public void testCollectionValueDecode() {
+        List<String> collection = new ArrayList<String>(Arrays.asList("me and the corner"));
+        AbstractJsonEncoderDecoder<Collection<String>> valueEncoder =
+                AbstractNestedJsonEncoderDecoder.collectionEncoderDecoder( AbstractJsonEncoderDecoder.STRING );
+        assertEquals(collection.toString(), valueEncoder.decode(valueEncoder.encode(collection)).toString() );
     }
 
     public void testTypeMapWithMapValueDecode() {
