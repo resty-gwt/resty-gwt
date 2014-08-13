@@ -306,11 +306,9 @@ public class JsonEncoderDecoderInstanceLocator {
             }
             return JSON_NESTED_ENCODER_DECODER_CLASS + ".collectionEncoderDecoder( " + result + " )";
         }
-        else {
-            result = isArrayEncoderDecoder(type, style);
-            if( result != null ){
-                return JSON_NESTED_ENCODER_DECODER_CLASS + ".arrayEncoderDecoder( " + result + " )"; 
-            }
+        result = isArrayEncoderDecoder(type, style);
+        if( result != null ){
+            return JSON_NESTED_ENCODER_DECODER_CLASS + ".arrayEncoderDecoder( " + result + " )"; 
         }
         return null;
     }
