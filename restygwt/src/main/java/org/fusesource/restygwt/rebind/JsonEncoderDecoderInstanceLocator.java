@@ -27,6 +27,7 @@ import static org.fusesource.restygwt.rebind.BaseSourceCreator.WARN;
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -67,6 +68,7 @@ public class JsonEncoderDecoderInstanceLocator {
     public final JClassType MAP_TYPE;
     public final JClassType SET_TYPE;
     public final JClassType LIST_TYPE;
+    public final JClassType COLLECTION_TYPE;
 
     public final HashMap<JType, String> builtInEncoderDecoders = new HashMap<JType, String>();
     public final JsonSerializerGenerators customGenerators = new JsonSerializerGenerators();
@@ -85,6 +87,7 @@ public class JsonEncoderDecoderInstanceLocator {
         this.MAP_TYPE = find(Map.class);
         this.SET_TYPE = find(Set.class);
         this.LIST_TYPE = find(List.class);
+        this.COLLECTION_TYPE = find(Collection.class);
 
         builtInEncoderDecoders.put(JPrimitiveType.BOOLEAN, JSON_ENCODER_DECODER_CLASS + ".BOOLEAN");
         builtInEncoderDecoders.put(JPrimitiveType.BYTE, JSON_ENCODER_DECODER_CLASS + ".BYTE");
@@ -339,7 +342,7 @@ public class JsonEncoderDecoderInstanceLocator {
     protected String isListEncoderDecoder( JClassType clazz,
                                            JClassType[] types,
                                            Style style) throws UnableToCompleteException {
-        if (clazz.isAssignableTo(LIST_TYPE)) {
+        if (clazz.isAssignableTo(LIST_TYPE) || clazz.isAssignableTo(COLLECTION_TYPE) ) {
             if (types.length != 1) {
                 error("List must define one and only one type parameter");
             }
@@ -360,7 +363,7 @@ public class JsonEncoderDecoderInstanceLocator {
     }
     boolean isCollectionType(JClassType clazz) {
         return clazz != null
-                && (clazz.isAssignableTo(SET_TYPE) || clazz.isAssignableTo(LIST_TYPE) || clazz.isAssignableTo(MAP_TYPE));
+                && (clazz.isAssignableTo(SET_TYPE) || clazz.isAssignableTo(LIST_TYPE) || clazz.isAssignableTo(MAP_TYPE) || clazz.isAssignableTo(COLLECTION_TYPE));
     }
 
     protected void error(String msg) throws UnableToCompleteException {
