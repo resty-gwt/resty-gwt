@@ -234,6 +234,11 @@ public class JsonEncoderDecoderInstanceLocator {
             if (encoderDecoder != null) {
                 return listMethod + "(" + expression + ", " + encoderDecoder + ")";
             }
+
+            encoderDecoder = isCollectionEncoderDecoder(clazz, types, style);
+            if (encoderDecoder != null) {
+                return listMethod + "(" + expression + ", " + encoderDecoder + ")";
+            }
         }
         
         encoderDecoder = isArrayEncoderDecoder(type, style);
@@ -345,6 +350,19 @@ public class JsonEncoderDecoderInstanceLocator {
                 error("List must define one and only one type parameter");
             }
             String encoderDecoder = getNestedEncoderDecoder( types[0], style );
+            debug("type encoder for: " + types[0] + " is " + encoderDecoder);
+            return encoderDecoder;
+        }
+        return null;
+    }
+
+    protected String isCollectionEncoderDecoder(JClassType clazz, JClassType[] types,
+            Style style) throws UnableToCompleteException {
+        if (clazz.isAssignableTo(COLLECTION_TYPE)) {
+            if (types.length != 1) {
+                error("Collection must define one and only one type parameter");
+            }
+            String encoderDecoder = getNestedEncoderDecoder(types[0], style);
             debug("type encoder for: " + types[0] + " is " + encoderDecoder);
             return encoderDecoder;
         }
