@@ -170,6 +170,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         this.OVERLAY_ARRAY_TYPES.add(find(JsArrayNumber.class, getLogger(), context));
         this.OVERLAY_ARRAY_TYPES.add(find(JsArrayString.class, getLogger(), context));
         this.QUERY_PARAM_LIST_TYPES = new HashSet<JClassType>();
+        this.QUERY_PARAM_LIST_TYPES.add(find(Collection.class, getLogger(), context));
         this.QUERY_PARAM_LIST_TYPES.add(find(List.class, getLogger(), context));
         this.QUERY_PARAM_LIST_TYPES.add(find(Set.class, getLogger(), context));
 		this.REST_SERVICE_TYPE = find(RestService.class, getLogger(), context);
