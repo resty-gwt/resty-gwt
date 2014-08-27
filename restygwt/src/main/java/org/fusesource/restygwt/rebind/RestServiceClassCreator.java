@@ -731,14 +731,17 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         final JClassType[] type_args = argument.getType().isParameterized().getTypeArgs();
         assert (type_args.length == 1);
         final JClassType class_type = type_args[0];
+        final String argument_expr = "final_"
+                + argument.getName();
 
         final StringBuilder result = new StringBuilder();
+        result.append(argument_expr + " == null ? null : ");
         result.append("new java.lang.Iterable<String> () {\n");
         result.append(" @Override\n");
         result.append(" public java.util.Iterator<String> iterator() {\n");
         result.append("     final java.util.Iterator<"
-                + class_type.getQualifiedSourceName() + "> baseIterator = final_"
-                + argument.getName() + ".iterator();\n");
+                + class_type.getParameterizedQualifiedSourceName()
+                + "> baseIterator =  " + argument_expr + ".iterator();\n");
         result.append("     return new java.util.Iterator<String>() {\n");
         result.append("         @Override\n");
         result.append("         public boolean hasNext() {\n");
