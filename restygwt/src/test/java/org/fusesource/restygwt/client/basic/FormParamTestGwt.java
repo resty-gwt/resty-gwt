@@ -166,7 +166,17 @@ public class FormParamTestGwt extends GWTTestCase {
                 assertEquals(1, response.params.size());
 
                 JSONValue jsonDto = JSONParser.parseStrict(response.params.get("dtoList"));
-                assertEquals(createDtoObjectAsList(), objectEncoderDecoder.decode(jsonDto));
+                final Object decoded_object = objectEncoderDecoder.decode(jsonDto);
+                if (decoded_object instanceof Collection) {
+                    final Collection<String> decoded_list = (Collection<String>) decoded_object;
+                    final List decoded_elem_list = new ArrayList();
+                    for (final String json_elem : decoded_list) {
+                        decoded_elem_list.add(objectEncoderDecoder.decode(json_elem));
+                    }
+                    assertEquals(createDtoObjectAsList(), decoded_elem_list);
+                } else {
+                    assertEquals(createDtoObjectAsList(), Arrays.asList(decoded_object));
+                }
 
                 finishTest();
             }

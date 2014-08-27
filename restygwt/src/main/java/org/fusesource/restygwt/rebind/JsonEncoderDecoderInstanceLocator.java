@@ -345,7 +345,7 @@ public class JsonEncoderDecoderInstanceLocator {
     protected String isListEncoderDecoder( JClassType clazz,
                                            JClassType[] types,
                                            Style style) throws UnableToCompleteException {
-        if (clazz.isAssignableTo(LIST_TYPE)) {
+        if (clazz.isAssignableTo(LIST_TYPE) || clazz.isAssignableTo(COLLECTION_TYPE) ) {
             if (types.length != 1) {
                 error("List must define one and only one type parameter");
             }
