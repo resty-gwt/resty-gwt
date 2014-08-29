@@ -262,9 +262,6 @@ public class JsonEncoderDecoderInstanceLocator {
             if (types.length != 2) {
                 error("Map must define two and only two type parameters");
             }
-            if (isCollectionType(types[0])) {
-                error("Map key can't be a collection");
-            }
 
             String keyEncoderDecoder = getNestedEncoderDecoder(types[0], style);
             encoderDecoder = getNestedEncoderDecoder(types[1], style);
