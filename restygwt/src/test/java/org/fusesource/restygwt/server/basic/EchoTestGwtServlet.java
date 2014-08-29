@@ -59,11 +59,16 @@ public class EchoTestGwtServlet extends HttpServlet {
         echo.path = request.getPathInfo();
 
         echo.params = new HashMap<String, String>();
+        ObjectMapper mapper = new ObjectMapper();
         for ( Map.Entry<String, String[]> entry:  (Set<Map.Entry<String, String[]>>) request.getParameterMap().entrySet() ){
-            echo.params.put(entry.getKey(), entry.getValue()[0]);
+            if (entry.getValue().length == 1) {
+                echo.params.put(entry.getKey(), entry.getValue()[0]);
+            } else {
+                echo.params.put(entry.getKey(), mapper.writeValueAsString(entry.getValue()));
+            }
         }
         response.setContentType("application/json");
-        new ObjectMapper().writeValue(response.getOutputStream(), echo);
+        mapper.writeValue(response.getOutputStream(), echo);
     }
 
 }
