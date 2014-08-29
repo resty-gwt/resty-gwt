@@ -301,7 +301,10 @@ public class JsonEncoderDecoderInstanceLocator {
             if( result != null ){
                 return JSON_NESTED_ENCODER_DECODER_CLASS + ".setEncoderDecoder( " + result + " )"; 
             }
-            return JSON_NESTED_ENCODER_DECODER_CLASS + ".collectionEncoderDecoder( " + result + " )";
+            result = isCollectionEncoderDecoder( clazz, types, style );
+            if ( result != null ){
+                return JSON_NESTED_ENCODER_DECODER_CLASS + ".collectionEncoderDecoder( " + result + " )";
+            }
         }
         result = isArrayEncoderDecoder(type, style);
         if( result != null ){
