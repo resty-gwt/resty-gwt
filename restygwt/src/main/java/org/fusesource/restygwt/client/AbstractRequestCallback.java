@@ -76,8 +76,8 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
                 }
                 String content = response.getText();
                 if (content != null && content.length() > 0) {
-                    if ( getLogger() != null ) {
-                        getLogger().fine(content);
+                    if (getLogger() != null) {
+                        getLogger().finest(content);
                     }
                     value = parseResult();
                 } else {
