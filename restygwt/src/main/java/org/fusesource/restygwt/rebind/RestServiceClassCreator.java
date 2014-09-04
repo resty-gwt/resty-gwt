@@ -337,6 +337,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         {
             String restMethod = getRestMethod(method);
             LinkedList<JParameter> args = new LinkedList<JParameter>(Arrays.asList(method.getParameters()));
+            for (final JParameter arg : args.subList(0, args.size() - 1)) {
+                p("final "
+                        + arg.getType().getParameterizedQualifiedSourceName()
+                        + " final_" + arg.getName() + " = " + arg.getName()
+                        + ";");
+            }
 
             // the last arg should be the callback.
             if (args.isEmpty()) {
@@ -519,10 +525,19 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 p(FORM_POST_CONTENT_CLASS + " __formPostContent = new " + FORM_POST_CONTENT_CLASS + "();");
 
                 for (Map.Entry<String, JParameter> entry : formParams.entrySet()) {
-                    p("__formPostContent.addParameter(" +
-                        wrap(entry.getKey()) + ", " +
-                        toFormStringExpression(entry.getValue(), classStyle) +
-                        ");");
+                    JClassType type = entry.getValue().getType()
+                            .isClassOrInterface();
+                    if (type != null && isQueryParamListType(type)) {
+                        p("__formPostContent.addParameters(" +
+                                wrap(entry.getKey()) + ", " +
+                                toIteratedFormStringExpression(entry.getValue(), classStyle) +
+                                ");");
+                    } else {
+                        p("__formPostContent.addParameter(" +
+                                wrap(entry.getKey()) + ", " +
+                                toFormStringExpression(entry.getValue(), classStyle) +
+                                ");");
+                    }
                 }
 
                 p("__method.form(__formPostContent.getTextContent());");
@@ -709,6 +724,62 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         final Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
 
         return locator.encodeExpression(type, expr, style) + ".toString()";
+    }
+
+    protected String toIteratedFormStringExpression(JParameter argument, Style classStyle) throws UnableToCompleteException {
+        assert isQueryParamListType(argument.getType().isClassOrInterface());
+        final JClassType[] type_args = argument.getType().isParameterized().getTypeArgs();
+        assert (type_args.length == 1);
+        final JClassType class_type = type_args[0];
+        final String argument_expr = "final_"
+                + argument.getName();
+
+        final StringBuilder result = new StringBuilder();
+        result.append(argument_expr + " == null ? null : ");
+        result.append("new java.lang.Iterable<String> () {\n");
+        result.append(" @Override\n");
+        result.append(" public java.util.Iterator<String> iterator() {\n");
+        result.append("     final java.util.Iterator<"
+                + class_type.getParameterizedQualifiedSourceName()
+                + "> baseIterator =  " + argument_expr + ".iterator();\n");
+        result.append("     return new java.util.Iterator<String>() {\n");
+        result.append("         @Override\n");
+        result.append("         public boolean hasNext() {\n");
+        result.append("           return baseIterator.hasNext();\n");
+        result.append("         }\n");
+        result.append("         @Override\n");
+        result.append("         public String next() {\n");
+        final String expr = "baseIterator.next()";
+        if (class_type.isPrimitive() != null) {
+            result.append("             return \"\"+ expr;\n");
+        }
+        if (STRING_TYPE == class_type) {
+            result.append("             return expr;\n");
+        }
+        if (class_type.isClass() != null &&
+            isOverlayArrayType(class_type.isClass())) {
+            result.append("             return (new " + JSON_ARRAY_CLASS + "(" + expr + ")).toString();\n");
+        }
+        if (class_type.isClass() != null &&
+            OVERLAY_VALUE_TYPE.isAssignableFrom(class_type.isClass())) {
+            result.append("             return (new " + JSON_OBJECT_CLASS + "(" + expr + ")).toString();\n");
+        }
+        if (class_type.getQualifiedBinaryName().startsWith("java.lang.")) {
+            result.append("             return " + String.format("%s != null ? %s.toString() : null;\n", expr, expr));
+        }
+        Json jsonAnnotation = argument.getAnnotation(Json.class);
+        final Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
+        result.append("             return " + locator.encodeExpression(class_type, expr, style) + ".toString();\n");
+        result.append("         }\n");
+        result.append("         @Override\n");
+        result.append("         public void remove() {\n");
+        result.append("             throw new UnsupportedOperationException();\n");
+        result.append("         }\n");
+        result.append("     };\n");
+        result.append(" }\n");
+        result.append("}\n");
+
+        return result.toString();
     }
 
     protected String toStringExpression(JType type, String expr) {
