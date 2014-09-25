@@ -62,8 +62,16 @@ public class FormParamTestGwt extends GWTTestCase {
 
         @POST
         void arrayParams(@FormParam(value = "dtoArray") ExampleDto[] exampleDtoArray, MethodCallback<Echo> callback);
+
+        @POST
+        void enumParam(@FormParam("param") FormParamTestEnum param, MethodCallback<Echo> callback);
     }
-    
+
+    enum FormParamTestEnum {
+
+        VALUE
+    }
+
     class EchoMethodCallback implements MethodCallback<Echo> {
         
         private final String id;
@@ -205,6 +213,38 @@ public class FormParamTestGwt extends GWTTestCase {
         });
     }
 
+    public void testPostWithEnum() {
+        service.enumParam(FormParamTestEnum.VALUE, new MethodCallback<Echo>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+            }
+
+            @Override
+            public void onSuccess(Method method, Echo response) {
+                assertEquals(1, response.params.size());
+                assertEquals("VALUE", response.params.get("param"));
+
+                finishTest();
+            }
+        });
+    }
+
+    public void testPostWithNullEnum() {
+        service.enumParam(null, new MethodCallback<Echo>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+            }
+
+            @Override
+            public void onSuccess(Method method, Echo response) {
+                assertTrue(response.params.isEmpty());
+
+                finishTest();
+            }
+        });
+    }
 
     private List createDtoObjectAsList() {
         ArrayList result = new ArrayList();
