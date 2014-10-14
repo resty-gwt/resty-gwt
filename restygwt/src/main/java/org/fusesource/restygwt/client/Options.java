@@ -33,7 +33,7 @@ public @interface Options {
     Class<? extends Dispatcher> dispatcher() default Dispatcher.class;
 
     /**
-     * sets the expected response status code.  If the response status code does not match
+     * Sets the expected response status code.  If the response status code does not match
      * any of the values specified then the request is considered to have failed.  Defaults to accepting
      * 200,201,204. If set to -1 then any status code is considered a success.
      */
@@ -45,4 +45,10 @@ public @interface Options {
      * @return
      */
     long timeout() default -1;
+    
+    /**
+     * Sets the key of the service root entry set with the {@link ServiceRoots#add(String, String)} method.
+     * If not used the default service root value set with {@link Defaults#setServiceRoot(String)} will be used.
+     */
+    String serviceRootKey() default "";
 }
