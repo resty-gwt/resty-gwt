@@ -69,6 +69,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private static final String RESPONSE_FORMAT_EXCEPTION_CLASS = ResponseFormatException.class.getName();
     private static final String JSONP_METHOD_CLASS = JsonpMethod.class.getName();
     private static final String FORM_POST_CONTENT_CLASS = FormPostContent.class.getName();
+    private static final String SERVICE_ROOTS_CLASS = ServiceRoots.class.getName();
 
     /*
      * static class in which are some compile-time relevant infos.
@@ -195,21 +196,30 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         }
         i(-1).p("}");
 
+        Options options = source.getAnnotation(Options.class);
+        
         p("public " + RESOURCE_CLASS + " getResource() {").i(1);
         {
             p("if (this.resource == null) {").i(1);
-            if (path == null) {
-                p("this.resource = new " + RESOURCE_CLASS + "(" + DEFAULTS_CLASS + ".getServiceRoot());");
+            
+            if (options.serviceRootKey() != null && !options.serviceRootKey().isEmpty()) {
+            	p("String serviceRoot = " + SERVICE_ROOTS_CLASS + ".get(\"" + options.serviceRootKey() + "\");");
             } else {
-                p("this.resource = new " + RESOURCE_CLASS + "(" + DEFAULTS_CLASS + ".getServiceRoot()).resolve("+quote(path)+");");
+            	p("String serviceRoot = " + DEFAULTS_CLASS + ".getServiceRoot();");
             }
+            
+            if (path == null) {
+                p("this.resource = new " + RESOURCE_CLASS + "(serviceRoot);");
+            } else {
+                p("this.resource = new " + RESOURCE_CLASS + "(serviceRoot).resolve("+quote(path)+");");
+            }
+            
             i(-1).p("}");
             p("return this.resource;");
         }
         i(-1).p("}");
 
 
-        Options options = source.getAnnotation(Options.class);
         if( options!=null && options.dispatcher()!=Dispatcher.class ) {
             p("private " + DISPATCHER_CLASS + " dispatcher = "+options.dispatcher().getName()+".INSTANCE;");
         } else {
