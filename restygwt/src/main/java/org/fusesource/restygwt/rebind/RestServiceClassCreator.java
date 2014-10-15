@@ -202,7 +202,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         {
             p("if (this.resource == null) {").i(1);
             
-            if (options.serviceRootKey() != null && !options.serviceRootKey().isEmpty()) {
+            if (options != null && options.serviceRootKey() != null && !options.serviceRootKey().isEmpty()) {
             	p("String serviceRoot = " + SERVICE_ROOTS_CLASS + ".get(\"" + options.serviceRootKey() + "\");");
             } else {
             	p("String serviceRoot = " + DEFAULTS_CLASS + ".getServiceRoot();");
