@@ -37,6 +37,7 @@ import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonTypeInfo.As;
+import org.codehaus.jackson.annotate.JsonValue;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
 
@@ -369,7 +370,6 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                 + possibleType.tag + "\");");
         p("rrc.put(" + wrap(getTypeInfoPropertyValue(typeInfo)) + ", className);");
         p("rrc.put(\"name\", new " + JSON_STRING_CLASS + "(value.name()));");
-
         p("return rrc;");
     }
 
@@ -378,14 +378,14 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         p();
         p("public " + jsonValueClass + " encode(" + classType.getParameterizedQualifiedSourceName() + " value) {").i(1);
         {
-        p("if( value==null ) {").i(1);
-        {
-            p("return " + JSON_NULL_CLASS + ".getInstance();").i(-1);
+            p("if( value==null ) {").i(1);
+            {
+                p("return " + JSON_NULL_CLASS + ".getInstance();").i(-1);
+            }
+            p("}");
+            p("return new " + JSON_STRING_CLASS + "(value.name());");
+            i(-1).p("}");
         }
-        p("}");
-        p("return new " + JSON_STRING_CLASS + "(value.name());");
-        }
-        i(-1).p("}");
         p();
     }
 
@@ -808,7 +808,6 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         for( Map.Entry<String, JMethod> entry: getters.entrySet() ){
             if ( setters.containsKey( entry.getKey() ) && setters.get( entry.getKey() ).equals( entry.getValue().getReturnType() ) ) {
                 String name = entry.getKey().substring(0, 1).toLowerCase() + entry.getKey().substring(1);
-
                 boolean found = false;
                 for( JField f : allFields ){
                     if( f.getName().equals( name ) ){
@@ -817,6 +816,24 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     }
                 }
                 JField f = type.findField( name );
+                // is getter annotated, if yes use this annotation for the field
+                JsonProperty propName = null;
+                if ( entry.getValue().isAnnotationPresent(JsonProperty.class) ) {
+                    propName = entry.getValue().getAnnotation(JsonProperty.class);
+                }
+                // is setter annotated, if yes use this annotation for the field
+                JMethod m = type.findMethod("s" + entry.getValue().getName().substring(1),
+                        new JType[]{ entry.getValue().getReturnType() });
+                if ( m != null && m.isAnnotationPresent(JsonProperty.class) ) {
+                    propName = m.getAnnotation(JsonProperty.class);
+                }
+                // if have a field and an annotation from the getter/setter then use that annotation 
+                if ( propName != null && found && !f.getName().equals(propName.value())) {
+                    allFields.remove(f);
+                    DummyJField dummy = new DummyJField( name, entry.getValue().getReturnType() );
+                    dummy.setAnnotation( propName );
+                    allFields.add(dummy);
+                }
                 if ( ! found && !( f != null && f.isAnnotationPresent( JsonIgnore.class ) ) ){
                     DummyJField dummy = new DummyJField( name, entry.getValue().getReturnType() );
                     if ( entry.getValue().isAnnotationPresent(JsonProperty.class) ) {

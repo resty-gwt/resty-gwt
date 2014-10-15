@@ -42,6 +42,7 @@ import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonTypeInfo.As;
 import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
+import org.codehaus.jackson.annotate.JsonValue;
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
 import org.fusesource.restygwt.client.AbstractNestedJsonEncoderDecoder;
 import org.fusesource.restygwt.client.Json;
@@ -885,18 +886,27 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         private long yearOfBirth;
 
         private String n;
-        
-        @JsonProperty("vacationId")
+
         private Integer vacationActivityIdForEmployee;
+
+        private Integer vacationActivityIdForEmployer;
 
         @JsonProperty("vacationId")
         public Integer getVacationActivityIdForEmployee() {
             return vacationActivityIdForEmployee;
         }
-        
-        @JsonProperty("vacationId")
+
         public void setVacationActivityIdForEmployee(Integer v) {
             vacationActivityIdForEmployee = v;
+        }
+
+        public Integer getVacationActivityIdForEmployer() {
+            return vacationActivityIdForEmployer;
+        }
+
+        @JsonProperty("vacation-id")
+        public void setVacationActivityIdForEmployer(Integer v) {
+            vacationActivityIdForEmployer = v;
         }
         
         int getAge(){
@@ -935,9 +945,10 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         renamed.setAge(123);
         renamed.setYearOfBirth(1234);
         renamed.setVacationActivityIdForEmployee(34);
+        renamed.setVacationActivityIdForEmployer(42);
         
         JSONValue json = renamedCodec.encode(renamed);
-        assertEquals("{\"my-age\":123, \"year-of-birth\":1234, \"vacationId\":34, \"my-name\":\"marvin the robot\"}", json.toString());
+        assertEquals("{\"my-age\":123, \"year-of-birth\":1234, \"my-name\":\"marvin the robot\", \"vacation-id\":42, \"vacationId\":34}", json.toString());
         Renamed roundTrip = renamedCodec.decode(json);
         assertEquals(roundTrip.age, 123);
         assertEquals(roundTrip.yearOfBirth, 1234);
