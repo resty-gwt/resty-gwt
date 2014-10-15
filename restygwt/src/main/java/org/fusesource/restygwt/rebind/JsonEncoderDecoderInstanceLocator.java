@@ -34,13 +34,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gwt.core.ext.BadPropertyValueException;
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
 import org.fusesource.restygwt.client.AbstractNestedJsonEncoderDecoder;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
 import org.fusesource.restygwt.client.ObjectEncoderDecoder;
 
+import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -195,16 +195,16 @@ public class JsonEncoderDecoderInstanceLocator {
             return customEncoderDecoder + "." + encoderMethod + "(" + expression + ")";
         }
 
+        String encoderDecoder = getEncoderDecoder(type, logger);
+        if (encoderDecoder != null) {
+            return encoderDecoder + "." + encoderMethod + "(" + expression + ")";
+        }
+        // TODO enum have an encodeDecoder now - should be obsolete code below
         if (null != type.isEnum()) {
             if (encoderMethod.equals("encode")) {
                 return encodeDecodeExpression(STRING_TYPE, expression + ".name()", style, encoderMethod, mapMethod, setMethod, listMethod, arrayMethod);
             }
             return type.getQualifiedSourceName() + ".valueOf(" + encodeDecodeExpression(STRING_TYPE, expression, style, encoderMethod, mapMethod, setMethod, listMethod, arrayMethod) + ")";
-        }
-
-        String encoderDecoder = getEncoderDecoder(type, logger);
-        if (encoderDecoder != null) {
-            return encoderDecoder + "." + encoderMethod + "(" + expression + ")";
         }
 
         JClassType clazz = type.isClassOrInterface();

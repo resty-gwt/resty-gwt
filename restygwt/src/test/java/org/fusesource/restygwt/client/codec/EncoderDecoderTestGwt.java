@@ -956,6 +956,40 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         assertEquals(roundTrip.getName(), "marvin the robot");
     }
 
+    static public enum Language {
+        ENGLISH("en"),
+        FRENCH("fr");
+
+        private String name;
+
+        @JsonCreator
+        private Language(String name) {
+            this.name = name;
+        }
+
+        @JsonValue
+        public String getName() {
+            return name;
+        }
+    }
+
+    static public class LangRequest {
+        public Language lang;
+    }
+
+    static interface LangRequestCodec extends JsonEncoderDecoder<LangRequest> {
+    }
+
+    public void testEnumAndJsonValue() {
+        LangRequestCodec codec = GWT.create(LangRequestCodec.class);
+        LangRequest pojo = new LangRequest();
+        pojo.lang = Language.FRENCH;
+        JSONValue json = codec.encode( pojo );
+        assertEquals("{\"lang\":\"fr\"}", json.toString());
+        LangRequest roundTrip = codec.decode( json );
+        assertEquals( roundTrip.lang, Language.FRENCH );
+    }
+
     static class WithEnum {
         
         enum Cycle { BEGIN, LIFE, END } 

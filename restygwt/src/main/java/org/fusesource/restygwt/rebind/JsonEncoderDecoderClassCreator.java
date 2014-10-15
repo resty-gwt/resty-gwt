@@ -369,7 +369,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         p(JSON_VALUE_CLASS + " className=org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.encode(\""
                 + possibleType.tag + "\");");
         p("rrc.put(" + wrap(getTypeInfoPropertyValue(typeInfo)) + ", className);");
-        p("rrc.put(\"name\", new " + JSON_STRING_CLASS + "(value.name()));");
+        p("rrc.put(\"name\", new " + JSON_STRING_CLASS + "(value." + getValueMethod(possibleType.clazz) + "()));");
         p("return rrc;");
     }
 
@@ -383,10 +383,21 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                 p("return " + JSON_NULL_CLASS + ".getInstance();").i(-1);
             }
             p("}");
-            p("return new " + JSON_STRING_CLASS + "(value.name());");
+            p("return new " + JSON_STRING_CLASS + "(value." + getValueMethod(classType) + "());");
             i(-1).p("}");
         }
         p();
+    }
+
+    protected String getValueMethod(JClassType classType) {
+        String method = "name";
+        for(JMethod jm : classType.isEnum().getMethods() ) {
+            if (jm.isAnnotationPresent(JsonValue.class)) {
+                method = jm.getName();
+                break;
+            }
+        }
+        return method;
     }
 
     private void generateDecodeMethod(JClassType classType,
@@ -588,8 +599,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             p("throw new DecodingException(\"Expected a string field called 'name' for enum; not found\");").i(-1);
         }
         p("}");
-        final String className = classType.getParameterizedQualifiedSourceName();
-        p("return Enum.valueOf(" + className + ".class, str.isString().stringValue());").i(-1);
+        decodeEnum(classType, "str.isString().stringValue()");
     }
 
     private String getDefaultValue(JField field) {
@@ -620,10 +630,32 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             p("throw new DecodingException(\"Expected a json string (for enum), but was given: \"+value);").i(-1);
         }
         p("}");
-        p("return Enum.valueOf(" + classType.getParameterizedQualifiedSourceName() + ".class, str.stringValue());").i(-1);
+
+        String value = "str.stringValue()";
+        decodeEnum(classType, value);
         }
         p("}");
         p();
+    }
+
+    protected void decodeEnum(JClassType classType, String value) {
+        String className = classType.getParameterizedQualifiedSourceName();
+        String method = getValueMethod(classType);
+        if ( method == null ) {
+            p("return Enum.valueOf(" + className + ".class, " + value + ");").i(-1);
+        }
+        else {
+            p("for(" + className + " v: " + className + ".values()) {").i(1);
+            {
+                p("if(v." + method + "().equals(" + value + ")) {").i(1);
+                {
+                    p("return v;").i(-1);
+                }
+                p("}").i(-1);
+            }
+            p("}");
+            p("throw new DecodingException(\"can not find enum for given value: \"+" + value + ");").i(-1);
+        }
     }
 
     public static Map<Class<?>, RestyJsonTypeIdResolver> getRestyResolverClassMap(GeneratorContext context, TreeLogger logger) throws UnableToCompleteException {
