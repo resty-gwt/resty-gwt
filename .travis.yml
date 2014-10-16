@@ -9,11 +9,11 @@ script: mvn install
 matrix:
   include:
     - jdk: openjdk7
-      script: mvn verify -Prun-its -Dmaven.test.skip -Dinvoker.test=restygwt-overlay-example
+      script: cd restygwt; mvn verify -Prun-its -Dmaven.test.skip -Dinvoker.test=restygwt-overlay-example
     - jdk: oraclejdk7
-      script: mvn verify -Prun-its -Dmaven.test.skip -Dinvoker.test=restygwt-rails
+      script: cd restygwt; mvn verify -Prun-its -Dmaven.test.skip -Dinvoker.test=restygwt-rails
     - jdk: oraclejdk8
-      script: mvn verify -Prun-its -Dmaven.test.skip -Dinvoker.test=restygwt-example
+      script: cd restygwt; mvn verify -Prun-its -Dmaven.test.skip -Dinvoker.test=restygwt-example
     - jdk: oraclejdk8
-      script: mvn verify -Prun-its -Dmaven.test.skip -Dinvoker.test=restygwt-jersey-*,restygwt-cxf-jaxson-*
+      script: cd restygwt; mvn verify -Prun-its -Dmaven.test.skip -Dinvoker.test=restygwt-jersey-*,restygwt-cxf-jaxson-*
 
