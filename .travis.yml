@@ -11,7 +11,7 @@ matrix:
     - jdk: openjdk7
       script: cd restygwt; mvn verify -Prun-its -Dmaven.test.skip -Dinvoker.test=restygwt-overlay-example
     - jdk: oraclejdk7
-      script: cd restygwt; mvn verify -Prun-its -Dmaven.test.skip -Dinvoker.test=restygwt-rails
+      script: cd restygwt; mvn verify -Prun-its -Dmaven.test.skip -Dinvoker.test=restygwt-rails-*
     - jdk: oraclejdk8
       script: cd restygwt; mvn verify -Prun-its -Dmaven.test.skip -Dinvoker.test=restygwt-example
     - jdk: oraclejdk8
