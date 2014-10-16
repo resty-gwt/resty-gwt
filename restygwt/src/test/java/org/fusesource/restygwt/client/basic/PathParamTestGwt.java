@@ -18,6 +18,7 @@
 
 package org.fusesource.restygwt.client.basic;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
@@ -51,14 +52,18 @@ public class PathParamTestGwt extends GWTTestCase {
         void get(MethodCallback<Echo> callback);
 
         @Path("/get/{id}")
-        void get(@PathParam(value = "id") int id, MethodCallback<Echo> callback);
+        void get(@PathParam(value = "id") int i, MethodCallback<Echo> callback);
 
         @Path("/get/{id}")
-        void get(@PathParam(value = "id") Integer id, MethodCallback<Echo> callback);
+        void get(@PathParam(value = "id") Integer i, MethodCallback<Echo> callback);
         
         @Path("/get/{id}")
-        void get(@PathParam(value = "id") String id, MethodCallback<Echo> callback);
+        void get(@PathParam(value = "id") String i, MethodCallback<Echo> callback);
+
+        @GET @Path("{url}")
+        void absolute(@PathParam(value = "url") String u, MethodCallback<Echo> callback);
     }
+
     
     private  MethodCallback<Echo> echoMethodCallback( final String path ){
         return new MethodCallback<Echo>() {
@@ -112,10 +117,25 @@ public class PathParamTestGwt extends GWTTestCase {
 
     }
 
+    public void testGetWithStringContainingSpaces() {
+
+        service.get("a b c", echoMethodCallback("/get/a b c") );
+        delayTestFinish(10000);
+
+    }
+
     public void testGetWithInt() {
     
         service.get(123, echoMethodCallback("/get/123"));
         delayTestFinish(10000);
 
     }
+
+    public void testAbsolute() {
+
+        service.absolute(GWT.getModuleBaseURL() + "echo/somewhere", echoMethodCallback("/somewhere") );
+        delayTestFinish(10000);
+
+    }
+
 }
