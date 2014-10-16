@@ -32,7 +32,7 @@
   <description>
     RestyGWT Parent POM for integration tests
   </description>
-
+<!--
   <pluginRepositories>
     <pluginRepository>
       <id>hiramchirino.com-release</id>
@@ -59,7 +59,7 @@
       <layout>legacy</layout>
     </repository>
   </repositories>
-
+-->
   <properties>
     <gwt-version>@gwt-version@</gwt-version>
   </properties>
