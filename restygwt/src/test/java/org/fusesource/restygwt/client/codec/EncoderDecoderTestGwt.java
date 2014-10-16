@@ -948,7 +948,11 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         renamed.setVacationActivityIdForEmployer(42);
         
         JSONValue json = renamedCodec.encode(renamed);
-        assertEquals("{\"my-age\":123, \"year-of-birth\":1234, \"my-name\":\"marvin the robot\", \"vacation-id\":42, \"vacationId\":34}", json.toString());
+        String[] values = json.toString().replace("}","").replace("{", "").split(",\\s");
+        Arrays.sort( values );
+        
+        assertEquals("[\"my-age\":123, \"my-name\":\"marvin the robot\", \"vacation-id\":42, \"vacationId\":34, \"year-of-birth\":1234]", 
+                Arrays.toString(values));
         Renamed roundTrip = renamedCodec.decode(json);
         assertEquals(roundTrip.age, 123);
         assertEquals(roundTrip.yearOfBirth, 1234);
