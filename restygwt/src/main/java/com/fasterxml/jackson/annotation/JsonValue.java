@@ -1,4 +1,4 @@
-package org.codehaus.jackson.annotate;
+package com.fasterxml.jackson.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -15,21 +15,29 @@ import java.lang.annotation.Target;
  * (String or Number), but it can be any serializable type (Collection,
  * Map or Bean).
  *<p>
- * At most one method of a Class can be annotated with this annotation;
+ * At most one method of a <code>Class</code> can be annotated with this annotation;
  * if more than one is found, an exception may be thrown.
  * Also, if method signature is not compatible with Getters, an exception
- * may be thrown.
- * Whether exception is thrown or not is an implementation detail (due
+ * may be thrown (whether exception is thrown or not is an implementation detail (due
  * to filtering during introspection, some annotations may be skipped)
- * and applications should not rely on specific behavior.
+ * and applications should not rely on specific behavior).
  *<p>
- * A typical use case is that of annotating <code>toString()</code>
- * method so that returned String value is Object's Json serialization.
+ * A typical usage is that of annotating <code>toString()</code>
+ * method so that returned String value is used as the JSON serialization;
+ * and if deserialization is needed, there is matching constructor
+ * or factory method annotated with {@link JsonCreator} annotation.
  *<p>
  * Boolean argument is only used so that sub-classes can "disable"
  * annotation if necessary.
+ *<p>
+ * NOTE: when use for Java <code>enum</code>s, one additional feature is
+ * that value returned by annotated method is also considered to be the
+ * value to deserialize from, not just JSON String to serialize as.
+ * This is possible since set of Enum values is constant and it is possible
+ * to define mapping, but can not be done in general for POJO types; as such,
+ * this is not used for POJO deserialization.
  */
-@Target({ElementType.METHOD})
+@Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @JacksonAnnotation
 public @interface JsonValue
