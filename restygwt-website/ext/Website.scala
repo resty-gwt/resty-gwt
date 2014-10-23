@@ -35,7 +35,7 @@ object Website {
   val project_wiki_url= "http://github.com/chirino/resty-gwt/"
   val project_logo= "/images/restygwt-logo.png"
   val project_version= "1.4"
-  val project_snapshot_version= "1.5-SNAPSHOT"
+  val project_snapshot_version= "2.0-SNAPSHOT"
 
   val project_versions = List(
         project_version,
