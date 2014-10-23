@@ -32,6 +32,7 @@ import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
 
 import org.fusesource.restygwt.client.Json.Style;
+import org.fusesource.restygwt.client.util.Base64Codec;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -501,17 +502,23 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         return template;
     }
 
-    static public byte[] toArray(JSONValue value, AbstractJsonEncoderDecoder<Byte> encoder, byte[] template) {
+    static public byte[] toArray(JSONValue value, AbstractJsonEncoderDecoder<Byte> encoder) {
         if (value == null || value.isNull() != null) {
             return null;
         }
-        JSONArray array = asArray(value);
-
-        int size = array.size();
-        for (int i = 0; i < size; i++) {
-            template[i] = encoder.decode(array.get(i));
+        
+        if (value.isString() != null) {
+           return Base64Codec.decode(value.isString().stringValue());
         }
-        return template;
+        else {
+            JSONArray array = asArray(value);
+            int size = array.size();
+            byte template[] = new byte[size];
+            for (int i = 0; i < size; i++) {
+                template[i] = encoder.decode(array.get(i));
+            }
+            return template;
+        }
     }
 
     static public char[] toArray(JSONValue value, AbstractJsonEncoderDecoder<Character> encoder, char[] template) {
@@ -865,12 +872,18 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         if (value == null) {
             return JSONNull.getInstance();
         }
-        JSONArray rc = new JSONArray();
-        int i = 0;
-        for (byte t : value) {
-            rc.set(i++, new JSONNumber(t));
+        
+        if (Defaults.isByteArraysToBase64()) {
+           return new JSONString(Base64Codec.encode(value));
         }
-        return rc;
+        else {
+            JSONArray rc = new JSONArray();
+            int i = 0;
+            for (byte t : value) {
+                rc.set(i++, new JSONNumber(t));
+            }
+            return rc;
+        }
     }
 
     static private JSONNull getNullType() {

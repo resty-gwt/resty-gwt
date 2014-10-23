@@ -41,6 +41,7 @@ public class Defaults {
     // patch TNY: timeout ms,
     // if >-1, used in Method class to set timeout
     private static int requestTimeout = -1;
+    private static boolean byteArraysToBase64 = false;
 
 
     public static String getServiceRoot() {
@@ -97,6 +98,20 @@ public class Defaults {
     }
 
     /**
+    * @return the byteArraysToBase64
+    */
+   public static boolean isByteArraysToBase64() {
+       return byteArraysToBase64;
+   }
+
+   /**
+    * @param byteArraysToBase64 the byteArraysToBase64 to set
+    */
+   public static void setByteArraysToBase64(boolean byteArraysToBase64) {
+       Defaults.byteArraysToBase64 = byteArraysToBase64;
+   }
+
+   /**
      * Sets the default dispatcher used by Method instances.
      *
      * @param value

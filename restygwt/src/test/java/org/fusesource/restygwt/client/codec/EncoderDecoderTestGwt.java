@@ -45,6 +45,7 @@ import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
 import org.codehaus.jackson.annotate.JsonValue;
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
 import org.fusesource.restygwt.client.AbstractNestedJsonEncoderDecoder;
+import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
 import org.fusesource.restygwt.client.MethodCallback;
@@ -59,6 +60,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.user.server.Base64Utils;
 
 public class EncoderDecoderTestGwt extends GWTTestCase {
 
@@ -357,9 +359,27 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
     public void testByteArrayDecode() {
         byte[] array = {2, 8};
         AbstractJsonEncoderDecoder<Byte> encoder = AbstractJsonEncoderDecoder.BYTE;
+       
+        JSONValue json = AbstractJsonEncoderDecoder.toJSON(array, encoder);
+        assertNotNull(json.isArray());
+        assertEquals(json.isArray().size(), 2);
+        assertEquals(json.isArray().get(0).isNumber().doubleValue(), (double)array[0]);
+        assertEquals(json.isArray().get(1).isNumber().doubleValue(), (double)array[1]);
+        assertEquals("[2, 8]", Arrays.toString(AbstractJsonEncoderDecoder.toArray(json, encoder)));
+
         assertEquals(Arrays.toString(array),
                 Arrays.toString(AbstractJsonEncoderDecoder.toArray(AbstractJsonEncoderDecoder.toJSON(array, encoder), 
-                            encoder, new byte[2])));
+                            encoder)));
+ 
+       Defaults.setByteArraysToBase64(true);
+        try {
+           json = AbstractJsonEncoderDecoder.toJSON(array, encoder);
+           assertEquals("Agg=", json.isString().stringValue());
+            assertEquals("[2, 8]", Arrays.toString(AbstractJsonEncoderDecoder.toArray(json, encoder)));
+        }
+        finally {
+           Defaults.setByteArraysToBase64(false);
+        }
     }
 
     public void testCharacterArrayDecode() {

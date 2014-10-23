@@ -245,6 +245,8 @@ public class JsonEncoderDecoderInstanceLocator {
         if (encoderDecoder != null) {  
             if (encoderMethod.equals("encode")) {
                 return arrayMethod + "(" + expression + ", " + encoderDecoder + ")";
+            } else if (type.isArray().getComponentType().isPrimitive() == JPrimitiveType.BYTE) {
+                return arrayMethod + "(" + expression + ", " + encoderDecoder + ")";
             }
             return arrayMethod + "(" + expression + ", " + encoderDecoder
                     + ", new " + type.isArray().getComponentType().getQualifiedSourceName()
