@@ -26,10 +26,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.codehaus.jackson.node.JsonNodeFactory;
-import org.codehaus.jackson.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.fusesource.restygwt.client.Resource;
 
@@ -66,7 +66,7 @@ public class GreetingServlet extends HttpServlet {
         try {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode nameObject = mapper.readValue(req.getInputStream(), ObjectNode.class);
-            String name = nameObject.get("name").getTextValue();
+            String name = nameObject.get("name").asText();
 
             String greeting = "Hello " + name;
             ObjectNode resultObject = new ObjectNode(JsonNodeFactory.instance);
