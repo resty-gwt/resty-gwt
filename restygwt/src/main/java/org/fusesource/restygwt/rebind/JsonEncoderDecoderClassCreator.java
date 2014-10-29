@@ -102,7 +102,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             throw new UnableToCompleteException();
         }
 
-        if (sourceClazz.isAbstract()) {
+		if (sourceClazz.isEnum() == null && sourceClazz.isAbstract()) {
             if (typeInfo == null) {
                 getLogger().log(ERROR, "Abstract classes must be annotated with JsonTypeInfo");
                 throw new UnableToCompleteException();
