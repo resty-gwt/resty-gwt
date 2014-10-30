@@ -251,6 +251,9 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
 
     public interface PropertyCodec extends JsonEncoderDecoder<CredentialsWithProperty> {
     }
+    
+    public interface CredentialsWithJacksonAnnotationsInsideCodec extends JsonEncoderDecoder<CredentialsWithJacksonAnnotationsInside> {
+    }
 
     public interface SubPropertyCodec extends JsonEncoderDecoder<SubCredentialsWithProperty> {
     }
@@ -285,6 +288,20 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         assertEquals("email-direct", subRoundTrip.email);
         assertEquals("password-direct", subRoundTrip.password);
         assertEquals("login-direct", subRoundTrip.login);
+    }
+    
+    
+    public void testJacksonAnnotationInsideProperty() {
+    	CredentialsWithJacksonAnnotationsInsideCodec codec = GWT.create(CredentialsWithJacksonAnnotationsInsideCodec.class);
+    	CredentialsWithJacksonAnnotationsInside base = new CredentialsWithJacksonAnnotationsInside();
+        base.setEmail("email-super");
+        base.setPassword("password-super");
+        JSONValue baseJson = codec.encode(base);
+        CredentialsWithJacksonAnnotationsInside baseRoundTrip = codec.decode(baseJson);
+        assertEquals("email-super", baseRoundTrip.email);
+        assertEquals("password-super", baseRoundTrip.password);
+        assertEquals(baseRoundTrip.getClass(), CredentialsWithJacksonAnnotationsInside.class);
+
     }
 
     static class B {

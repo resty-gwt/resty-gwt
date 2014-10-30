@@ -18,11 +18,74 @@
 
 package org.fusesource.restygwt.rebind;
 
-import com.google.gwt.core.client.*;
+import static org.fusesource.restygwt.rebind.util.AnnotationUtils.getAnnotation;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.OPTIONS;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+
+import org.fusesource.restygwt.client.AbstractAsyncCallback;
+import org.fusesource.restygwt.client.AbstractRequestCallback;
+import org.fusesource.restygwt.client.Attribute;
+import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.Dispatcher;
+import org.fusesource.restygwt.client.FormPostContent;
+import org.fusesource.restygwt.client.JSONP;
+import org.fusesource.restygwt.client.Json;
+import org.fusesource.restygwt.client.Json.Style;
+import org.fusesource.restygwt.client.JsonCallback;
+import org.fusesource.restygwt.client.JsonpMethod;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.Options;
+import org.fusesource.restygwt.client.OverlayCallback;
+import org.fusesource.restygwt.client.Resource;
+import org.fusesource.restygwt.client.ResponseFormatException;
+import org.fusesource.restygwt.client.RestService;
+import org.fusesource.restygwt.client.RestServiceProxy;
+import org.fusesource.restygwt.client.ServiceRoots;
+import org.fusesource.restygwt.client.TextCallback;
+import org.fusesource.restygwt.client.XmlCallback;
+
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayBoolean;
+import com.google.gwt.core.client.JsArrayInteger;
+import com.google.gwt.core.client.JsArrayNumber;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
-import com.google.gwt.core.ext.typeinfo.*;
+import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JGenericType;
+import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JParameter;
+import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
+import com.google.gwt.core.ext.typeinfo.JType;
+import com.google.gwt.core.ext.typeinfo.JTypeParameter;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONArray;
@@ -33,16 +96,6 @@ import com.google.gwt.jsonp.client.JsonpRequest;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.xml.client.Document;
-import org.fusesource.restygwt.client.*;
-import org.fusesource.restygwt.client.Json.Style;
-
-import javax.ws.rs.*;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-import java.util.regex.Pattern;
-
 /**
  *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
@@ -177,12 +230,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 		this.REST_SERVICE_TYPE = find(RestService.class, getLogger(), context);
 		
         String path = null;
-        Path pathAnnotation = source.getAnnotation(Path.class);
+        Path pathAnnotation = getAnnotation(source, Path.class);
         if (pathAnnotation != null) {
             path = pathAnnotation.value();
         }
 
-        RemoteServiceRelativePath relativePath = source.getAnnotation(RemoteServiceRelativePath.class);
+        RemoteServiceRelativePath relativePath = getAnnotation(source, RemoteServiceRelativePath.class);
         if (relativePath != null) {
             path = relativePath.value();
         }
@@ -196,7 +249,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         }
         i(-1).p("}");
 
-        Options options = source.getAnnotation(Options.class);
+        Options options = getAnnotation(source, Options.class);
         
         p("public " + RESOURCE_CLASS + " getResource() {").i(1);
         {
@@ -283,7 +336,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             throw new UnableToCompleteException();
     	}
     	
-        Path pathAnnotation = method.getAnnotation(Path.class);
+        Path pathAnnotation = getAnnotation(method, Path.class);
         if (pathAnnotation == null) {
         	getLogger().log(ERROR, "Invalid subresource locator method. Method must have @Path annotation: " + method.getReadableDeclaration());
             throw new UnableToCompleteException();
@@ -291,7 +344,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         String pathExpression = wrap(pathAnnotation.value());
 
         for (JParameter arg : method.getParameters()) {
-            PathParam paramPath = arg.getAnnotation(PathParam.class);
+            PathParam paramPath = getAnnotation(arg, PathParam.class);
             if (paramPath != null) {
                 pathExpression = pathExpression(pathExpression, arg, paramPath);
             }
@@ -338,11 +391,11 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             returnRequest = true;
         }
 
-        Json jsonAnnotation = source.getAnnotation(Json.class);
+        Json jsonAnnotation = getAnnotation(source, Json.class);
         final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
 
-        Options classOptions = source.getAnnotation(Options.class);
-        Options options = method.getAnnotation(Options.class);
+        Options classOptions = getAnnotation(source, Options.class);
+        Options options = getAnnotation(method, Options.class);
 
         p(method.getReadableDeclaration(false, false, false, false, true) + " {").i(1);
         {
@@ -370,7 +423,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             JClassType resultType = getCallbackTypeGenericClass(callbackType);
 
             String pathExpression = null;
-            Path pathAnnotation = method.getAnnotation(Path.class);
+            Path pathAnnotation = getAnnotation(method, Path.class);
             if (pathAnnotation != null) {
                 pathExpression = wrap(pathAnnotation.value());
             }
@@ -381,7 +434,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             HashMap<String, JParameter> headerParams = new HashMap<String, JParameter>();
 
             for (JParameter arg : args) {
-                PathParam paramPath = arg.getAnnotation(PathParam.class);
+                PathParam paramPath = getAnnotation(arg, PathParam.class);
                 if (paramPath != null) {
                     if (pathExpression == null) {
                         getLogger().log(ERROR, "Invalid rest method.  Invalid @PathParam annotation. Method is missing the @Path annotation: " + method.getReadableDeclaration());
@@ -389,26 +442,26 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                     }
                     pathExpression = pathExpression(pathExpression, arg, paramPath);
                     //.replaceAll(Pattern.quote("{" + paramPath.value() + "}"), "\"+com.google.gwt.http.client.URL.encodePathSegment(" + toStringExpression(arg) + ")+\"");
-                    if (arg.getAnnotation(Attribute.class) != null) {
+                    if (getAnnotation(arg, Attribute.class) != null) {
                         // allow part of the arg-object participate in as PathParam and the object goes over the wire
                         contentArg = arg;
                     }
                     continue;
                 }
 
-                QueryParam queryParam = arg.getAnnotation(QueryParam.class);
+                QueryParam queryParam = getAnnotation(arg, QueryParam.class);
                 if (queryParam != null) {
                     queryParams.put(queryParam.value(), arg);
                     continue;
                 }
 
-                FormParam formParam = arg.getAnnotation(FormParam.class);
+                FormParam formParam = getAnnotation(arg, FormParam.class);
                 if (formParam != null) {
                     formParams.put(formParam.value(), arg);
                     continue;
                 }
 
-                HeaderParam headerParam = arg.getAnnotation(HeaderParam.class);
+                HeaderParam headerParam = getAnnotation(arg, HeaderParam.class);
                 if (headerParam != null) {
                     headerParams.put(headerParam.value(), arg);
                     continue;
@@ -459,7 +512,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             p("." + restMethod + "();");
 
             // Handle JSONP specific configuration...
-            JSONP jsonpAnnotation = method.getAnnotation(JSONP.class);
+            JSONP jsonpAnnotation = getAnnotation(method, JSONP.class);
 
             final boolean isJsonp = restMethod.equals(METHOD_JSONP) && jsonpAnnotation!=null;
             if( isJsonp ) {
@@ -577,7 +630,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                         }
                     }
 
-                    jsonAnnotation = contentArg.getAnnotation(Json.class);
+                    jsonAnnotation = getAnnotation(contentArg, Json.class);
                     Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
 
                     // example:
@@ -637,7 +690,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                                     if(resultType.isAssignableTo(locator.LIST_TYPE)){
                                         p("result = new " + JSON_ARRAY_CLASS + "(result.getJavaScriptObject());");
                                     }
-                                    jsonAnnotation = method.getAnnotation(Json.class);
+                                    jsonAnnotation = getAnnotation(method, Json.class);
                                     Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
                                     p("return " + locator.decodeExpression(resultType, "result", style) + ";");
                                 }
@@ -665,7 +718,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                             else {
                                 p("try {").i(1);
                                 {
-                                    jsonAnnotation = method.getAnnotation(Json.class);
+                                    jsonAnnotation = getAnnotation(method, Json.class);
                                     Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
                                     p("return " + locator.decodeExpression(resultType, JSON_PARSER_CLASS + ".parse(__method.getResponse().getText())", style) + ";");
                                 }
@@ -694,15 +747,15 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     }
 
     private <T extends Annotation> T findAnnotationOnMethodOrEnclosingType(final JMethod method, final Class<T> annotationType) {
-        T annotation = method.getAnnotation(annotationType);
+        T annotation = getAnnotation(method, annotationType);
         if (annotation == null) {
-            annotation = method.getEnclosingType().getAnnotation(annotationType);
+            annotation = getAnnotation(method.getEnclosingType(), annotationType);
         }
         return annotation;
     }
 
     protected String toStringExpression(JParameter arg) {
-        Attribute attribute = arg.getAnnotation(Attribute.class);
+        Attribute attribute = getAnnotation(arg, Attribute.class);
         if(attribute != null){
             return "(" + arg.getName() + "." + attribute.value() + "+ \"\")";
         }
@@ -731,7 +784,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             return String.format("(%s != null ? %s.toString() : null)", expr, expr);
         }
 
-        Json jsonAnnotation = argument.getAnnotation(Json.class);
+        Json jsonAnnotation = getAnnotation(argument, Json.class);
         final Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
 
         return locator.encodeExpression(type, expr, style) + ".toString()";
@@ -778,7 +831,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         if (class_type.getQualifiedBinaryName().startsWith("java.lang.")) {
             result.append("             return " + String.format("%s != null ? %s.toString() : null;\n", expr, expr));
         }
-        Json jsonAnnotation = argument.getAnnotation(Json.class);
+        Json jsonAnnotation = getAnnotation(argument, Json.class);
         final Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
         result.append("             return " + locator.encodeExpression(class_type, expr, style) + ".toString();\n");
         result.append("         }\n");
@@ -854,19 +907,19 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
     private String getRestMethod(JMethod method) throws UnableToCompleteException {
         String restMethod = null;
-        if (method.getAnnotation(DELETE.class) != null) {
+        if (getAnnotation(method, DELETE.class) != null) {
             restMethod = METHOD_DELETE;
-        } else if (method.getAnnotation(GET.class) != null) {
+        } else if (getAnnotation(method, GET.class) != null) {
             restMethod = METHOD_GET;
-        } else if (method.getAnnotation(HEAD.class) != null) {
+        } else if (getAnnotation(method, HEAD.class) != null) {
             restMethod = METHOD_HEAD;
-        } else if (method.getAnnotation(OPTIONS.class) != null) {
+        } else if (getAnnotation(method, OPTIONS.class) != null) {
             restMethod = METHOD_OPTIONS;
-        } else if (method.getAnnotation(POST.class) != null) {
+        } else if (getAnnotation(method, POST.class) != null) {
             restMethod = METHOD_POST;
-        } else if (method.getAnnotation(PUT.class) != null) {
+        } else if (getAnnotation(method, PUT.class) != null) {
             restMethod = METHOD_PUT;
-        } else if (method.getAnnotation(JSONP.class) != null) {
+        } else if (getAnnotation(method, JSONP.class) != null) {
             restMethod = METHOD_JSONP;
         } else {
             restMethod = method.getName();

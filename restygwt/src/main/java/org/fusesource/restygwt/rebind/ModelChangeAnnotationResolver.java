@@ -30,6 +30,7 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import static org.fusesource.restygwt.rebind.util.AnnotationUtils.*;
 
 /**
  * Implementation for an annotationparser which is responsible to put
@@ -45,14 +46,14 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
     @Override
     public Map<String, String[]> resolveAnnotation(TreeLogger logger, JClassType source, JMethod method,
             final String restMethod) throws UnableToCompleteException {
-        ModelChange classAnnot = source.getAnnotation(ModelChange.class);
+        ModelChange classAnnot = getAnnotation(source, ModelChange.class);
         String[] serviceDomains = null;
-        ModelChange methodAnnot = method.getAnnotation(ModelChange.class);
+        ModelChange methodAnnot = getAnnotation(method, ModelChange.class);
         final Map<String, String[]> ret = new java.util.HashMap<String, String[]>();
 
-        if(null != source.getAnnotation(Domain.class)) {
+        if(null != getAnnotation(source, Domain.class)) {
             serviceDomains = getAnnotationsAsStringArray(
-                source.getAnnotation(Domain.class).value());
+            		getAnnotation(source, Domain.class).value());
 
             // cachedomain annotations are resolved in any case
             logger.log(TreeLogger.TRACE, "found ``Domain`` annotation with " + serviceDomains.length

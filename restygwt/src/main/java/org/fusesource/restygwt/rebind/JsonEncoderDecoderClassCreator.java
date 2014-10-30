@@ -18,7 +18,6 @@
 
 package org.fusesource.restygwt.rebind;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,6 +28,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.fusesource.restygwt.client.Json;
+import org.fusesource.restygwt.client.Json.Style;
+import static org.fusesource.restygwt.rebind.util.AnnotationUtils.*;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -38,9 +41,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.fusesource.restygwt.client.Json;
-import org.fusesource.restygwt.client.Json.Style;
-
 import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -91,7 +91,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     @Override
     public void generate() throws UnableToCompleteException {
-        final JsonTypeInfo typeInfo = findAnnotation(source, JsonTypeInfo.class);
+        final JsonTypeInfo typeInfo = getAnnotation(source, JsonTypeInfo.class);
         final boolean isLeaf = isLeaf(source);
 
         final List<Subtype> possibleTypes = getPossibleTypes(typeInfo, isLeaf);
@@ -108,7 +108,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                 throw new UnableToCompleteException();
             }
         }
-        Json jsonAnnotation = source.getAnnotation(Json.class);
+        Json jsonAnnotation = getAnnotation(source, Json.class);
         final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
         final String railsWrapperName = jsonAnnotation != null && jsonAnnotation.name().length() > 0 ? jsonAnnotation.name() : sourceClazz.getName().toLowerCase();
         locator = new JsonEncoderDecoderInstanceLocator(context, getLogger());
@@ -127,22 +127,13 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	return composerFactory;
     }
 
-    public static <T extends Annotation> T findAnnotation(JClassType clazz, Class<T> annotation) {
-	if (clazz == null)
-	    return null;
-	else if (clazz.isAnnotationPresent(annotation))
-	    return clazz.getAnnotation(annotation);
-	else
-	    return findAnnotation(clazz.getSuperclass(), annotation);
-    }
-
     private List<Subtype> getPossibleTypes(final JsonTypeInfo typeInfo, final boolean isLeaf) throws UnableToCompleteException
     {
         if (typeInfo == null)
             return Lists.newArrayList(new Subtype(null, source));
         Collection<Type> subTypes = findJsonSubTypes(source);
         if(subTypes.isEmpty()) {
-            JsonSubTypes foundAnnotation = findAnnotation(source, JsonSubTypes.class);
+            JsonSubTypes foundAnnotation = getAnnotation(source, JsonSubTypes.class);
             if(foundAnnotation != null) {
                 Type[] value = foundAnnotation.value();
                 subTypes = Arrays.asList(value);
@@ -156,7 +147,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         if (clazz == null)
             return Collections.emptyList();
         else if (clazz.isAnnotationPresent(JsonSubTypes.class)) {
-            JsonSubTypes annotation = clazz.getAnnotation(JsonSubTypes.class);
+            JsonSubTypes annotation = getAnnotation(clazz, JsonSubTypes.class);
             Set<Type> result = new HashSet<JsonSubTypes.Type>();
             Type[] value = annotation.value();
             for (Type type : value) {
@@ -264,8 +255,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         final String getterName = getGetterName(field);
 
                         boolean ignoreField = false;
-                        if(possibleType.clazz.getAnnotation(JsonIgnoreProperties.class) != null) {
-                            for(String s : possibleType.clazz.getAnnotation(JsonIgnoreProperties.class).value()) {
+                        if(getAnnotation(possibleType.clazz, JsonIgnoreProperties.class) != null) {
+                            for(String s : getAnnotation(possibleType.clazz, JsonIgnoreProperties.class).value()) {
                                 if(s.equals(field.getName())) {
                                     ignoreField = true;
                                     break;
@@ -287,8 +278,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                 // JSNI
                                 if (getterName != null || field.isDefaultAccess() || field.isProtected() || field.isPublic()) {
 
-                                    Json jsonAnnotation = field.getAnnotation(Json.class);
-                                    JsonProperty jsonPropertyAnnotation = field.getAnnotation(JsonProperty.class);
+                                    Json jsonAnnotation = getAnnotation(field, Json.class);
+                                    JsonProperty jsonPropertyAnnotation = getAnnotation(field, JsonProperty.class);
 
                                     String name = field.getName();
                                     String jsonName = name;
@@ -472,7 +463,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                             branch("Processing field: " + field.getName(), new Branch<Void>() {
                                 @Override
                                 public Void execute() throws UnableToCompleteException {
-                                    Json jsonAnnotation = field.getAnnotation(Json.class);
+                                    Json jsonAnnotation = getAnnotation(field, Json.class);
                                     Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
                                     String jsonName = field.getName();
                                     if (jsonAnnotation != null && jsonAnnotation.name().length() > 0) {
@@ -498,8 +489,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     for (final JField field : getFields(possibleType.clazz)) {
 
                         boolean ignoreField = false;
-                        if(possibleType.clazz.getAnnotation(JsonIgnoreProperties.class) != null) {
-                            for(String s : possibleType.clazz.getAnnotation(JsonIgnoreProperties.class).value()) {
+                        if(getAnnotation(possibleType.clazz, JsonIgnoreProperties.class) != null) {
+                            for(String s : getAnnotation(possibleType.clazz, JsonIgnoreProperties.class).value()) {
                                 if(s.equals(field.getName())) {
                                     ignoreField = true;
                                     break;
@@ -530,9 +521,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                 // or JSNI
                                 if (setterName != null || field.isDefaultAccess() || field.isProtected() || field.isPublic()) {
 
-                                    Json jsonAnnotation = field.getAnnotation(Json.class);
+                                    Json jsonAnnotation = getAnnotation(field, Json.class);
                                     Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
-                                    JsonProperty jsonPropertyAnnotation = field.getAnnotation(JsonProperty.class);
+                                    JsonProperty jsonPropertyAnnotation = getAnnotation(field, JsonProperty.class);
 
                                     String name = field.getName();
                                     String jsonName = name;
@@ -683,7 +674,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private List<JField> getOrderedFields(List<JField> fields, JConstructor creator) throws UnableToCompleteException {
 	List<JField> orderedFields = new ArrayList<JField>();
 	for (JParameter param : creator.getParameters()) {
-	    JsonProperty prop = param.getAnnotation(JsonProperty.class);
+	    JsonProperty prop = getAnnotation(param, JsonProperty.class);
 	    if (prop != null) {
 		for (JField field : fields) {
 		    if (field.getName().equals(prop.value())) {
@@ -701,7 +692,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     private JConstructor findCreator(JClassType sourceClazz) {
 	for (JConstructor constructor : sourceClazz.getConstructors()) {
-	    if (constructor.getAnnotation(JsonCreator.class) != null) {
+	    if (getAnnotation(constructor, JsonCreator.class) != null) {
 		return constructor;
 	    }
 	}
@@ -787,7 +778,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	}
 	JMethod m = type.findMethod(fieldName, args);
 	if (null != m) {
-        if(m.getAnnotation(JsonIgnore.class) != null)
+        if(getAnnotation(m, JsonIgnore.class) != null)
             return false;
         if(isSetter)
             return true;
@@ -827,13 +818,13 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             if( m.getName().startsWith("set") &&
                     m.getParameterTypes().length == 1 &&
                     m.getReturnType() == JPrimitiveType.VOID &&
-                    m.getAnnotation(JsonIgnore.class) == null){
+                    		getAnnotation(m, JsonIgnore.class) == null){
                 setters.put( m.getName().replaceFirst("^set", ""), m.getParameterTypes()[0] );
             }
             else if( m.getName().startsWith("get") &&
                     m.getParameterTypes().length == 0 &&
                     m.getReturnType() != JPrimitiveType.VOID &&
-                    m.getAnnotation(JsonIgnore.class) == null){
+                    		getAnnotation(m, JsonIgnore.class) == null){
                 getters.put( m.getName().replaceFirst("^get", ""), m );
             }
         }
@@ -851,13 +842,13 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                 // is getter annotated, if yes use this annotation for the field
                 JsonProperty propName = null;
                 if ( entry.getValue().isAnnotationPresent(JsonProperty.class) ) {
-                    propName = entry.getValue().getAnnotation(JsonProperty.class);
+                    propName = getAnnotation(entry.getValue(), JsonProperty.class);
                 }
                 // is setter annotated, if yes use this annotation for the field
                 JMethod m = type.findMethod("s" + entry.getValue().getName().substring(1),
                         new JType[]{ entry.getValue().getReturnType() });
                 if ( m != null && m.isAnnotationPresent(JsonProperty.class) ) {
-                    propName = m.getAnnotation(JsonProperty.class);
+                    propName = getAnnotation(m, JsonProperty.class);
                 }
                 // if have a field and an annotation from the getter/setter then use that annotation 
                 if ( propName != null && found && !f.getName().equals(propName.value())) {
@@ -869,7 +860,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                 if ( ! found && !( f != null && f.isAnnotationPresent( JsonIgnore.class ) ) ){
                     DummyJField dummy = new DummyJField( name, entry.getValue().getReturnType() );
                     if ( entry.getValue().isAnnotationPresent(JsonProperty.class) ) {
-                        dummy.setAnnotation( entry.getValue().getAnnotation(JsonProperty.class) );
+                        dummy.setAnnotation( getAnnotation(entry.getValue(), JsonProperty.class) );
                     }
                     allFields.add( dummy );
                 }
