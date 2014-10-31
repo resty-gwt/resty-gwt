@@ -125,7 +125,9 @@ public class Method {
     }
 
     private void doSetTimeout() {
-        if (Defaults.getRequestTimeout() > -1) {
+        // Use default timeout only if it was not already set through the @Options(timeout =) annotation.
+        // See https://github.com/resty-gwt/resty-gwt/issues/206
+        if (builder.getTimeoutMillis() == 0 && Defaults.getRequestTimeout() > -1) {
             builder.setTimeoutMillis(Defaults.getRequestTimeout());
         }
     }
