@@ -324,7 +324,9 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             if (value == null || value.isNull() != null) {
                 return null;
             }
+            
             String format = Defaults.getDateFormat();
+            
             if (format == null) {
                 JSONNumber num = value.isNumber();
                 if (num == null) {
@@ -332,11 +334,21 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
                 }
                 return new Date((long) num.doubleValue());
             }
+            
             JSONString str = value.isString();
             if (str == null) {
                 throw new DecodingException("Expected a json string, but was given: " + value);
             }
-            return DateTimeFormat.getFormat(format).parse(str.stringValue());
+            
+            if (Defaults.getTimeZone() == null || Defaults.dateFormatHasTimeZone()) {
+                return DateTimeFormat.getFormat(format).parse(str.stringValue());
+            } else {
+                // We need to provide time zone information to the GWT date parser.
+                // Unfortunately, DateTimeFormat has no overload specifying a TimeZone,
+                // so the only way is to extend the format string.
+                return DateTimeFormat.getFormat(format + " v").parse(
+                        str.stringValue() + " " + Defaults.getTimeZone().getID());
+            }
         }
 
         @Override
@@ -344,11 +356,18 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             if (value == null) {
                 return getNullType();
             }
+            
             String format = Defaults.getDateFormat();
+            
             if (format == null) {
                 return new JSONNumber(value.getTime());
             }
-            return new JSONString(DateTimeFormat.getFormat(format).format(value));
+            
+            if (Defaults.getTimeZone() == null || Defaults.dateFormatHasTimeZone()) {
+                return new JSONString(DateTimeFormat.getFormat(format).format(value));
+            } else {
+                return new JSONString(DateTimeFormat.getFormat(format).format(value, Defaults.getTimeZone()));
+            }
         }
     };
 
