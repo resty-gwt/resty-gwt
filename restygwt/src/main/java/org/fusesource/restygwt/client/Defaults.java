@@ -43,6 +43,7 @@ public class Defaults {
     private static int requestTimeout = -1;
     private static boolean byteArraysToBase64 = false;
 
+    private static ExceptionMapper exceptionMapper = new ExceptionMapper();
 
     public static String getServiceRoot() {
         return serviceRoot;
@@ -127,5 +128,21 @@ public class Defaults {
      */
     public static Dispatcher getDispatcher() {
         return dispatcher;
+    }
+
+    /**
+     * Gets the default ExceptionMapper
+     * @return
+     */
+    public static ExceptionMapper getExceptionMapper() {
+        return exceptionMapper;
+    }
+
+    /**
+     * Sets the default ExceptionMapper
+     * @param exceptionMapper the new ExceptionMapper to be used by all requests
+     */
+    public static void setExceptionMapper(ExceptionMapper exceptionMapper) {
+        Defaults.exceptionMapper = exceptionMapper;
     }
 }
