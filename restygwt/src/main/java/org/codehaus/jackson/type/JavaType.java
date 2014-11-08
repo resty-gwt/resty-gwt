@@ -25,7 +25,7 @@ import java.lang.reflect.Modifier;
  * and as keys for deserializers.
  *<p>
  * Instances can (only) be constructed by
- * {@link org.codehaus.jackson.map.type.TypeFactory}.
+ * link org.codehaus.jackson.map.type.TypeFactory.
  */
 public abstract class JavaType
 {

@@ -26,7 +26,7 @@ import org.fusesource.restygwt.client.MethodCallback;
  * @see org.fusesource.restygwt.client.REST
  * @see org.fusesource.restygwt.client.DirectRestService
  *
- * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</<a>
+ * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</a>
  */
 public interface CallbackAware {
     void setCallback(MethodCallback callback);

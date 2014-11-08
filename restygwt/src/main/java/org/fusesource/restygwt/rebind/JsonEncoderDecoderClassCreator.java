@@ -65,7 +65,7 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
  *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  *
- *         Updates: added getter & setter support, enhanced generics support
+ *         Updates: added getter + setter support, enhanced generics support
  * @author <a href="http://www.acuedo.com">Dave Finch</a>
  *
  *         added polymorphic support

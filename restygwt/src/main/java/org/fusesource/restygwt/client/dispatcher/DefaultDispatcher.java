@@ -33,13 +33,13 @@ import com.google.gwt.logging.client.LogConfiguration;
  * Some valuable ideas came from:
  * http://turbomanage.wordpress.com/2010/07/12/caching
  * -batching-dispatcher-for-gwt-dispatch/
- * <p/>
+ *
  * Thanks David!
- * <p/>
+ *
  * Especially: - Waiting if a particular request is already on the way
  * (otherwise you end up having many requests on the same source.
  *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class DefaultDispatcher implements Dispatcher {

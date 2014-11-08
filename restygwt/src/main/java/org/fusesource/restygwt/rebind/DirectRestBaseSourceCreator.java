@@ -25,7 +25,7 @@ import com.google.gwt.core.ext.typeinfo.JTypeParameter;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
 /**
- * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</<a>
+ * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</a>
  */
 public abstract class DirectRestBaseSourceCreator extends BaseSourceCreator {
     public DirectRestBaseSourceCreator(TreeLogger logger, GeneratorContext context, JClassType source, String suffix) {

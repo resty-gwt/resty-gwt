@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 /**
  * An utility class that gets a String representation of an annotation.
  *
- * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</<a>
+ * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</a>
  */
 public class AnnotationCopyUtil {
     public static String getAnnotationAsString(Annotation annotation) {

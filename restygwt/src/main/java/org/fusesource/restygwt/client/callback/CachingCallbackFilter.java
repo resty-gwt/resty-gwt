@@ -137,7 +137,7 @@ public class CachingCallbackFilter implements CallbackFilter {
      * of a service to invalidate them later on more fine grained. this method resolves a
      * possible ``domain`` to allow grouping.
      *
-     * @return
+     * @return array of names of cache domains
      */
     protected String[] getCacheDomains(final Method method) {
         if (null == method.getData().get(Domain.CACHE_DOMAIN_KEY)) return null;

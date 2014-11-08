@@ -31,7 +31,7 @@ import com.google.gwt.core.ext.TreeLogger;
  * with this class it will be possible to take part of the generation process of restserviceimpl
  * classes. by default there are no additional resolvers registered, you can add some if wanted.
  *
- * @see http://code.google.com/p/google-web-toolkit/wiki/MultiValuedConfigProperties
+ * @see <a href='http://code.google.com/p/google-web-toolkit/wiki/MultiValuedConfigProperties'>MultiValuedConfigProperties</a>
  * @author abalke
  *
  */
@@ -112,8 +112,6 @@ public class BindingDefaults {
 
     /**
      * access all annotationresolvers that are registered
-     *
-     * @return
      */
     public static void addAnnotationResolver(AnnotationResolver ar) {
         if (_annotationResolversRequested != null) {

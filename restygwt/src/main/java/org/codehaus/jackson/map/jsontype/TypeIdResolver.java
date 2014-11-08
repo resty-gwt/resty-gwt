@@ -24,12 +24,16 @@ import org.codehaus.jackson.type.JavaType;
 /**
  * Interface that defines standard API for converting types
  * to type identifiers and vice versa. Used by type resolvers
- * ({@link org.codehaus.jackson.map.TypeSerializer},
- * {@link org.codehaus.jackson.map.TypeDeserializer}) for converting
+ * (link com.fasterxml.jackson.databind.jsontype.TypeSerializer,
+ * link com.fasterxml.jackson.databind.jsontype.TypeDeserializer) for converting
  * between type and matching id; id is stored in JSON and needed for
  * creating instances of proper subtypes when deserializing values.
- * 
- * @since 1.5
+ *<p>
+ * NOTE: it is <b>strongly</b> recommended that developers always extend
+ * abstract base class link com.fasterxml.jackson.databind.jsontype.impl.TypeIdResolverBase
+ * instead of directly implementing this interface; this helps prevent
+ * breakage in case new methds need to be added in this interface (something
+ * we try to avoid doing; but which may be necessary in some cases).
  */
 public interface TypeIdResolver
 {

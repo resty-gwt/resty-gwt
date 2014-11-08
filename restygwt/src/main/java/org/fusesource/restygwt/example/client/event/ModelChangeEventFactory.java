@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * are located outside the ``client`` package, we need
  * such an additional client-config.
  *
- * @author <a href="mailto:andi.balke@gmail.com">andi</<a>
+ * @author <a href="mailto:andi.balke@gmail.com">andi</a>
  */
 public class ModelChangeEventFactory {
 
@@ -39,7 +39,6 @@ public class ModelChangeEventFactory {
 
     /**
      * factory method from the annotated domain name to a real event object
-     * according to definitions in {@link #STRING_TO_EVENT_MAPPING}
      *
      * @param domainName
      * @return

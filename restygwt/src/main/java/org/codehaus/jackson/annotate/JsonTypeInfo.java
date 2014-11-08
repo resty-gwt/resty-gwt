@@ -40,7 +40,7 @@ import java.lang.annotation.Target;
  *  \@JsonSubTypes({com.myemp.Impl1.class, com.myempl.Impl2.class})
  *</pre>
  * Alternatively you can also define fully customized type handling by using
- * {@link org.codehaus.jackson.map.annotate.JsonTypeResolver} annotation.
+ * link org.codehaus.jackson.map.annotate.JsonTypeResolver annotation.
  *<p>
  * NOTE: originally this annotation was only available to use with types (classes),
  * but starting with 1.7, it is also allowed for properties (fields, methods,
@@ -54,7 +54,7 @@ import java.lang.annotation.Target;
  * per-property way to force type information to be included for type of
  * container itself.
  * 
- * @see org.codehaus.jackson.map.annotate.JsonTypeResolver
+ * see org.codehaus.jackson.map.annotate.JsonTypeResolver
  * @since 1.5 (but available to fields, methods and constructor params since 1.7)
  * 
  * @author tatu

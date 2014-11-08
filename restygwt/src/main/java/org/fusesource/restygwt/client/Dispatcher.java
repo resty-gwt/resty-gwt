@@ -27,7 +27,7 @@ import com.google.gwt.http.client.RequestException;
  * Do the dispatch.
  * Check out default implementation DispatcherDefault.
  *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  *
  */

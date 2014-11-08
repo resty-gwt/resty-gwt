@@ -38,7 +38,7 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
  * This class transports information about ModelChangeEvents to be triggered,
  * when some servicemethods have been called.
  *
- * @author <a href="mailto:andi.balke@gmail.com">andi</<a>
+ * @author <a href="mailto:andi.balke@gmail.com">andi</a>
  */
 public class ModelChangeAnnotationResolver implements AnnotationResolver {
 

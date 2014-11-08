@@ -30,7 +30,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  *
- * @author <a href="http://blog.mkristian.tk>Kristian</a>
+ * @author <a href="http://blog.mkristian.tk">Kristian</a>
  */
 public abstract class AbstractAsyncCallback<T> implements AsyncCallback<JavaScriptObject> {
 
