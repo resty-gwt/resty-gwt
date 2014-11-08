@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
  *    then calls creator
  *   </li>
  * <li>Constructor/factory method where <b>every argument</b> is annotated with
- *   either {@link JsonProperty} or {@link JacksonInject}, to indicate name
+ *   either {@link JsonProperty} or @link JacksonInject, to indicate name
  *   of property to bind to
  *  </li>
  * </ul>

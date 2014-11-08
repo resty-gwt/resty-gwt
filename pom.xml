@@ -166,7 +166,6 @@
         <version>2.7</version>
 
         <configuration>
-          <failOnError>false</failOnError>
           <charset>UTF-8</charset>
           <docencoding>UTF-8</docencoding>
           <version>false</version>

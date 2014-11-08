@@ -11,10 +11,10 @@ import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 
 /**
  * Annotation that can be used to plug a custom type identifier handler
- * ({@link TypeIdResolver})
+ * (link TypeIdResolver)
  * to be used by
- * {@link com.fasterxml.jackson.databind.jsontype.TypeSerializer}s
- * and {@link com.fasterxml.jackson.databind.jsontype.TypeDeserializer}s
+ * link com.fasterxml.jackson.databind.jsontype.TypeSerializers
+ * and link com.fasterxml.jackson.databind.jsontype.TypeDeserializers
  * for converting between java types and type id included in JSON content.
  * In simplest cases this can be a simple class with static mapping between
  * type names and matching classes.

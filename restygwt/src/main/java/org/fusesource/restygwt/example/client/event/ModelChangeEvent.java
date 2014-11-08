@@ -27,7 +27,7 @@ import com.google.gwt.event.shared.GwtEvent;
  *
  * taken from http://stackoverflow.com/questions/2951621/gwt-custom-events/2967359#2967359
  *
- * @author <a href="mailto:andi.balke@gmail.com">andi</<a>
+ * @author <a href="mailto:andi.balke@gmail.com">andi</a>
  *
  */
 public class ModelChangeEvent extends GwtEvent<ModelChangedEventHandler> {

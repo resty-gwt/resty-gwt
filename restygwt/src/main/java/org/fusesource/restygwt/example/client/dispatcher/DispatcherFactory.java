@@ -39,8 +39,9 @@ import org.fusesource.restygwt.client.dispatcher.XSRFTokenDispatcherFilter;
 
 /**
  * this factory can be used to create a Dispatcher which can be used as dispatcher Option on
- * the RestService interface.<br />
- * <code><pre>
+ * the RestService interface.
+ *
+ * <pre><code>
  * public class RestfulRetryingDispatcherSingleton implements Dispatcher{
  *
  *   public static Dispatcher INSTANCE = new DispatcherFactory().restfulCachingDispatcher();
@@ -54,7 +55,7 @@ import org.fusesource.restygwt.client.dispatcher.XSRFTokenDispatcherFilter;
  *     return null;   // dummy
  *   }
  * }
- * </pre></code>
+ * </code></pre>
  *
  * @author kristian
  *

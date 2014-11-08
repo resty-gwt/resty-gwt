@@ -18,7 +18,7 @@
 package org.fusesource.restygwt.client;
 
 /**
- * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</<a>
+ * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</a>
  */
 public interface DirectRestService {
 }

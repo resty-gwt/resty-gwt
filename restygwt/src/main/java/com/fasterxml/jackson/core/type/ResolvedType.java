@@ -7,7 +7,7 @@ package com.fasterxml.jackson.core.type;
  * Note that this is an intermediate type, and all concrete instances
  * MUST be of type <code>JavaType</code> from "databind" bundle -- this
  * abstraction is only needed so that types can be passed through
- * {@link com.fasterxml.jackson.core.JsonParser#readValueAs} methods.
+ * link com.fasterxml.jackson.core.JsonParser#readValueAs methods.
  * 
  * @since 2.0
  */

@@ -115,7 +115,7 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
     private static final String DEFAULT_SCOPE = "";
 
     /**
-     * key <> value hashmap for holding cache values. nothing special here.
+     * key-value hashmap for holding cache values. nothing special here.
      * 
      * invalidated values will be dropped by timer
      */

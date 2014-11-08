@@ -35,19 +35,19 @@ import com.google.gwt.logging.client.LogConfiguration;
 /**
  * Some valuable ideas came from:
  * http://turbomanage.wordpress.com/2010/07/12/caching-batching-dispatcher-for-gwt-dispatch/
- * <p/>
+ *
  * Thanks David!
- * <p/>
+ *
  * Especially: - Waiting if a particular request is already on the way
  * (otherwise you end up having many requests on the same source.
  *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class DefaultFilterawareDispatcher implements FilterawareDispatcher {
 
     public static DefaultFilterawareDispatcher INSTANCE;
-    
+ 
     /**
      * list of dispatcherfilters to be performed when an request is done
      */
@@ -57,9 +57,7 @@ public class DefaultFilterawareDispatcher implements FilterawareDispatcher {
     /**
      * get one instance of this class
      *
-     * @param cacheStorage the one and only {@link QueueableCacheStorage} for this instance
-     * @param cf CallbackFactory to be able to use {@link DefaultFilterawareRequestCallback}
-     * @return
+     * @return the DefaultFilterawareDispatcher singleton
      */
     public static DefaultFilterawareDispatcher singleton() {
         if (null != INSTANCE) return INSTANCE;

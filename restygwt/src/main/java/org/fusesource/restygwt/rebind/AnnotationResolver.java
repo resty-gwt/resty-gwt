@@ -41,7 +41,7 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
  * of a {@link RestService} until we reach the final {@link MethodCallback}. There
  * we can act those informations, e.g. configure caching, send update events, ...
  *
- * @author <a href="mailto:andi.balke@gmail.com">andi</<a>
+ * @author <a href="mailto:andi.balke@gmail.com">andi</a>
  */
 public interface AnnotationResolver {
 

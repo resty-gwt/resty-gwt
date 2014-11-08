@@ -23,7 +23,7 @@ import java.util.Iterator;
  * An iterator that returns the first time, the first value, and after it always the returns the next value.
  * Useful for scenarios that have an <code>if (first) { first = true; ... }</code> inside a loop approach.
  *
- * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</<a>
+ * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</a>
  * @param <T>
  */
 public class OnceFirstIterator<T> implements Iterator<T> {

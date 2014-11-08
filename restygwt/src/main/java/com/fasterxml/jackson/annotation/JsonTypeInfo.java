@@ -86,7 +86,8 @@ public @interface JsonTypeInfo
          * leading dot ('.') must be used to indicate that partial class name is used.
          * For example, for supertype "com.foobar.Base", and concrete type
          * "com.foo.Impl", only ".Impl" would be included; and for "com.foo.impl.Impl2"
-         * only ".impl.Impl2" would be included.<br />
+         * only ".impl.Impl2" would be included.
+         *
          * <b>NOTE</b>: leading dot ('.') MUST be used to denote partial (minimal) name;
          * if it is missing, value is assumed to be fully-qualified name. Fully-qualified
          * name is used in cases where subtypes are not in same package (or sub-package
@@ -179,9 +180,9 @@ public @interface JsonTypeInfo
          * using some other mechanism (like default POJO property serialization, or
          * custom serializer).
          *<p>
-         * Note that this behavior is quite similar to that of using {@link JsonTypeId};
+         * Note that this behavior is quite similar to that of using link JsonTypeId;
          * except that here <code>TypeSerializer</code> is basically suppressed;
-         * whereas with {@link JsonTypeId}, output of regular property is suppressed.
+         * whereas with link JsonTypeId, output of regular property is suppressed.
          * This mostly matters with respect to output order; this choice is the only
          * way to ensure specific placement of type id during serialization.
          * 

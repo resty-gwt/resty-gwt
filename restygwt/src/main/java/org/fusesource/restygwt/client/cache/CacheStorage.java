@@ -46,8 +46,7 @@ public interface CacheStorage<T> {
      * delete by ident/scope. e.g. to invalidate later on by domain class
      *
      * @param key
-     * @param scope
-     * @param response
+     * @param scopes
      */
     public void remove(final CacheKey key, final String... scopes);
 

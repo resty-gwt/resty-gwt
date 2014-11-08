@@ -10,7 +10,7 @@ import com.google.gwt.http.client.Response;
  * This default implementation does exactly what {@link org.fusesource.restygwt.client.AbstractRequestCallback} used
  * to do.
  *
- * See <link href="https://github.com/resty-gwt/resty-gwt/issues/209">Issue 209</link>
+ * See <a href="https://github.com/resty-gwt/resty-gwt/issues/209">Issue 209</a>
  * @author Constantino Cronemberger - ccronembeger@yahoo.com.br
  */
 public class ExceptionMapper {
