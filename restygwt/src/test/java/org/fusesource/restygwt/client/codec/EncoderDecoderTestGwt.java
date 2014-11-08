@@ -1178,12 +1178,16 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
     }
     
     @JsonTypeInfo(use = Id.CLASS, include = As.PROPERTY, property = "@class")
-    @JsonSubTypes({ @Type(DefaultImplementationOfSubTypeInterface.class) })
+    @JsonSubTypes({ @Type(DefaultImplementationOfSubTypeInterface.class),
+		@Type(SecondImplementationOfSubTypeInterface.class)})
     interface JsonSubTypesWithAnInterface {
         String getValue();
     }
     
-    static class DefaultImplementationOfSubTypeInterface implements JsonSubTypesWithAnInterface {
+    static abstract class AbstractSubType implements JsonSubTypesWithAnInterface {
+    }
+
+    static class DefaultImplementationOfSubTypeInterface extends AbstractSubType {
 
         private String value;
 
@@ -1191,6 +1195,16 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         public DefaultImplementationOfSubTypeInterface(@JsonProperty("value") String value) {
             this.value = value;
         }
+
+        @Override
+        public String getValue() {
+            return value;
+        }
+    }
+
+    static class SecondImplementationOfSubTypeInterface extends AbstractSubType {
+
+        public String value;
 
         @Override
         public String getValue() {
@@ -1206,10 +1220,13 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         JsonSubTypesWithAnInterface o1 = new DefaultImplementationOfSubTypeInterface(value);
 
         JSONValue json = codec.encode(o1);
+        assertEquals(json.isObject().get("@class").isString().stringValue(),
+                DefaultImplementationOfSubTypeInterface.class.getName().replace("$","."));
         JsonSubTypesWithAnInterface o2 = codec.decode(json);
         assertEquals(json.toString(), codec.encode(o2).toString());
         assertEquals(value, o1.getValue());
         assertEquals(o1.getValue(), o2.getValue());
+        assertEquals(o2.getClass(), DefaultImplementationOfSubTypeInterface.class);
     }
     
 
