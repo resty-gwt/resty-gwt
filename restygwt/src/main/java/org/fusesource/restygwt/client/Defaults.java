@@ -22,6 +22,7 @@ package org.fusesource.restygwt.client;
 import org.fusesource.restygwt.client.dispatcher.DefaultDispatcher;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.shared.TimeZone;
 
 /**
  * Provides ability to set the default date format and service root (defaults to
@@ -37,6 +38,8 @@ public class Defaults {
 
     private static String serviceRoot = GWT.getModuleBaseURL();
     private static String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    private static boolean dateFormatHasTimeZone = true;
+    private static TimeZone timeZone = null;
     private static boolean ignoreJsonNulls = false;
     // patch TNY: timeout ms,
     // if >-1, used in Method class to set timeout
@@ -62,17 +65,72 @@ public class Defaults {
         Defaults.serviceRoot = serviceRoot;
     }
     
+    /**
+     * Gets the format used when encoding and decoding Dates. Defaults to
+     * {@code "yyyy-MM-dd'T'HH:mm:ss.SSSZ"}. If the date format is set to
+     * {@code null}, dates will be encoded and decoded as timestamps
+     * (the number of milliseconds since the Unix epoch, 1970-01-01). 
+     * 
+     * @return the date format string
+     * @see com.google.gwt.i18n.shared.DateTimeFormat DateTimeFormat
+     */
     public static String getDateFormat() {
         return dateFormat;
     }
 
     /**
-     * Sets the format used when encoding and decoding Dates.
+     * Sets the format used when encoding and decoding Dates. If the date
+     * format is set to {@code null}, dates will be encoded and decoded as
+     * timestamps (the number of milliseconds since the Unix epoch,
+     * 1970-01-01). 
      *
-     * @param dateFormat
+     * @param dateFormat the date format string
+     * @see com.google.gwt.i18n.shared.DateTimeFormat DateTimeFormat
      */
     public static void setDateFormat(String dateFormat) {
         Defaults.dateFormat = dateFormat;
+        dateFormatHasTimeZone = false;
+        
+        if (dateFormat != null) {
+            for (int i = 0; i < dateFormat.length(); i++) {
+                char ch = dateFormat.charAt(i);
+
+                if (ch == 'Z' || ch == 'z' || ch == 'V' || ch == 'v') {
+                    dateFormatHasTimeZone = true;
+                    break;
+                }
+            }
+        }
+    }
+    
+    /* package */ static boolean dateFormatHasTimeZone() {
+        return dateFormatHasTimeZone;
+    }
+    
+    /**
+     * Gets the timezone used when encoding and decoding Dates.
+     * <p>
+     * The timezone is only taken into consideration if the date format string
+     * does not contain a timezone field. If the timezone is set to
+     * {@code null}, the browser's default (local) timezone will be used.
+     * 
+     * @return the date format timezone (null for local timezone)
+     */
+    public static TimeZone getTimeZone() {
+        return timeZone;
+    }
+
+    /**
+     * Gets the timezone used when encoding and decoding Dates.
+     * <p>
+     * The timezone is only taken into consideration if the date format string
+     * does not contain a timezone field. If the timezone is set to null, the
+     * browser's default (local) timezone will be used.
+     * 
+     * @param timeZone the new timezone (use null for local timezone)
+     */
+    public static void setDateFormat(TimeZone timeZone) {
+        Defaults.timeZone = timeZone;
     }
 
     /**
