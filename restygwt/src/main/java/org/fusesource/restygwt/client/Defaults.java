@@ -129,7 +129,7 @@ public class Defaults {
      * 
      * @param timeZone the new timezone (use null for local timezone)
      */
-    public static void setDateFormat(TimeZone timeZone) {
+    public static void setTimeZone(TimeZone timeZone) {
         Defaults.timeZone = timeZone;
     }
 
