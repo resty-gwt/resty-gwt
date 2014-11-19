@@ -14,7 +14,6 @@ import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.callback.CallbackAware;
 import org.fusesource.restygwt.rebind.util.OnceFirstIterator;
 
-import static com.google.gwt.user.rebind.ClassSourceFileComposerFactory.JavaSourceCategory;
 import static org.fusesource.restygwt.rebind.DirectRestServiceInterfaceClassCreator.DIRECT_REST_SERVICE_SUFFIX;
 
 public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
@@ -27,7 +26,7 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
 
     @Override
     protected ClassSourceFileComposerFactory createComposerFactory() throws UnableToCompleteException {
-        return createClassSourceComposerFactory( JavaSourceCategory.CLASS,
+        return createClassSourceComposerFactory(JavaSourceCategory.CLASS,
                 null,
                 new String[]{
                         source.getParameterizedQualifiedSourceName(),

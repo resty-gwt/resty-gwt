@@ -32,7 +32,7 @@ public abstract class DirectRestBaseSourceCreator extends BaseSourceCreator {
         super(logger, context, source, suffix);
     }
 
-    protected ClassSourceFileComposerFactory createClassSourceComposerFactory(ClassSourceFileComposerFactory.JavaSourceCategory createWhat,
+    protected ClassSourceFileComposerFactory createClassSourceComposerFactory(JavaSourceCategory createWhat,
                                                                             String [] annotationDeclarations,
                                                                             String [] extendedInterfaces) {
         String genericTypeParameters = createClassDeclarationGenericType();
@@ -42,7 +42,7 @@ public abstract class DirectRestBaseSourceCreator extends BaseSourceCreator {
                 shortName + genericTypeParameters
         );
 
-        if (createWhat == ClassSourceFileComposerFactory.JavaSourceCategory.INTERFACE) {
+        if (createWhat == JavaSourceCategory.INTERFACE) {
             composerFactory.makeInterface();
         }
 

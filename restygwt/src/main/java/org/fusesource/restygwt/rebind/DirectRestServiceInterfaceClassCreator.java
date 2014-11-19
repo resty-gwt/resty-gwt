@@ -30,7 +30,6 @@ import org.fusesource.restygwt.rebind.util.OnceFirstIterator;
 
 import java.lang.annotation.Annotation;
 
-import static com.google.gwt.user.rebind.ClassSourceFileComposerFactory.JavaSourceCategory;
 import static org.fusesource.restygwt.rebind.DirectRestServiceClassCreator.isVoidMethod;
 
 /**
