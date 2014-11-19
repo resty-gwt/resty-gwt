@@ -91,7 +91,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     @Override
     public void generate() throws UnableToCompleteException {
-        final JsonTypeInfo typeInfo = getAnnotation(source, JsonTypeInfo.class);
+        final JsonTypeInfo typeInfo = getClassAnnotation(source, JsonTypeInfo.class);
         final boolean isLeaf = isLeaf(source);
 
         final List<Subtype> possibleTypes = getPossibleTypes(typeInfo, isLeaf);
@@ -143,29 +143,24 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         return v.visit(typeInfo.use());
     }
 
+    /**
+     * This method does NOT return the subtypes of the given class, but all the subtypes associated with the
+     * {@link com.fasterxml.jackson.annotation.JsonSubTypes} annotation, even if this annotation is assigned to
+     * a parent class or an interface.
+     */
     private Collection<Type> findJsonSubTypes(JClassType clazz) {
         if (clazz == null)
             return Collections.emptyList();
-        else if (clazz.isAnnotationPresent(JsonSubTypes.class)) {
-            JsonSubTypes annotation = getAnnotation(clazz, JsonSubTypes.class);
+        else {
+            JsonSubTypes annotation = getClassAnnotation(clazz, JsonSubTypes.class);
+            if (annotation == null) {
+                return Collections.emptyList();
+            }
             Set<Type> result = new HashSet<JsonSubTypes.Type>();
             Type[] value = annotation.value();
-            for (Type type : value) {
-                result.add(type);
-                Class<?> subclazz = type.value();
-                String newSubClassName = subclazz.getName().replaceAll("\\$", ".");
-                JClassType subJClazz = context.getTypeOracle().findType(newSubClassName);
-                if(!isSame(clazz, subclazz)) {
-                    result.addAll(findJsonSubTypes(subJClazz));
-                }
-            }
+            Collections.addAll(result, value);
             return result;
-        } else
-            return Collections.emptyList();
         }
-
-    private boolean isSame(JClassType clazz, Class<?> subclazz) {
-        return (clazz.getPackage().getName()+"."+clazz.getName()).equals(subclazz.getName());
     }
 
     protected void generateSingleton(String shortName)
