@@ -190,7 +190,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
    			builder.append(">");
    			parameters = builder.toString();
      	}
-    	
+
         ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName + parameters);
         composerFactory.addImplementedInterface(source.getParameterizedQualifiedSourceName());
         composerFactory.addImplementedInterface(RestServiceProxy.class.getName());
@@ -228,7 +228,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         this.QUERY_PARAM_LIST_TYPES.add(find(List.class, getLogger(), context));
         this.QUERY_PARAM_LIST_TYPES.add(find(Set.class, getLogger(), context));
 		this.REST_SERVICE_TYPE = find(RestService.class, getLogger(), context);
-		
+
         String path = null;
         Path pathAnnotation = getAnnotation(source, Path.class);
         if (pathAnnotation != null) {
@@ -250,23 +250,23 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         i(-1).p("}");
 
         Options options = getAnnotation(source, Options.class);
-        
+
         p("public " + RESOURCE_CLASS + " getResource() {").i(1);
         {
             p("if (this.resource == null) {").i(1);
-            
+
             if (options != null && options.serviceRootKey() != null && !options.serviceRootKey().isEmpty()) {
             	p("String serviceRoot = " + SERVICE_ROOTS_CLASS + ".get(\"" + options.serviceRootKey() + "\");");
             } else {
             	p("String serviceRoot = " + DEFAULTS_CLASS + ".getServiceRoot();");
             }
-            
+
             if (path == null) {
                 p("this.resource = new " + RESOURCE_CLASS + "(serviceRoot);");
             } else {
                 p("this.resource = new " + RESOURCE_CLASS + "(serviceRoot).resolve("+quote(path)+");");
             }
-            
+
             i(-1).p("}");
             p("return this.resource;");
         }
@@ -327,7 +327,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         }
         return false;
     }
-	
+
     private void writeSubresourceLocatorImpl(JMethod method) throws UnableToCompleteException
     {
     	JClassType iface = method.getReturnType().isInterface();
@@ -335,7 +335,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     		getLogger().log(ERROR, "Invalid subresource locator method. Method must have return type of an interface that extends RestService: " + method.getReadableDeclaration());
             throw new UnableToCompleteException();
     	}
-    	
+
         Path pathAnnotation = getAnnotation(method, Path.class);
         if (pathAnnotation == null) {
         	getLogger().log(ERROR, "Invalid subresource locator method. Method must have @Path annotation: " + method.getReadableDeclaration());
@@ -379,11 +379,11 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                "\"+(" + expr + "== null? null : ((\"\" + " + expr +").startsWith(\"http\") ? " + expr +
                " : com.google.gwt.http.client.URL.encodePathSegment(" + expr + ")))+\"");
     }
-    
+
     private void writeMethodImpl(JMethod method) throws UnableToCompleteException {
         boolean returnRequest = false;
         if (method.getReturnType() != JPrimitiveType.VOID) {
-            if (!method.getReturnType().getQualifiedSourceName().equals(Request.class.getName()) && 
+            if (!method.getReturnType().getQualifiedSourceName().equals(Request.class.getName()) &&
                 !method.getReturnType().getQualifiedSourceName().equals(JsonpRequest.class.getName())) {
                 getLogger().log(ERROR, "Invalid rest method. Method must have void, Request or JsonpRequest return types: " + method.getReadableDeclaration());
                 throw new UnableToCompleteException();
@@ -738,7 +738,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                     p(callbackArg.getName() + ".onFailure(__method,__e);");
                     if (returnRequest) {
                         p("return null;");
-                    }                    
+                    }
                 }
                 i(-1).p("}");
             }
@@ -816,24 +816,21 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         final String expr = "baseIterator.next()";
         if (class_type.isPrimitive() != null) {
             result.append("             return \"\"+ expr;\n");
-        }
-        if (STRING_TYPE == class_type) {
+        } else if (STRING_TYPE == class_type) {
             result.append("             return expr;\n");
-        }
-        if (class_type.isClass() != null &&
+        } else if (class_type.isClass() != null &&
             isOverlayArrayType(class_type.isClass())) {
             result.append("             return (new " + JSON_ARRAY_CLASS + "(" + expr + ")).toString();\n");
-        }
-        if (class_type.isClass() != null &&
+        } else if (class_type.isClass() != null &&
             OVERLAY_VALUE_TYPE.isAssignableFrom(class_type.isClass())) {
             result.append("             return (new " + JSON_OBJECT_CLASS + "(" + expr + ")).toString();\n");
-        }
-        if (class_type.getQualifiedBinaryName().startsWith("java.lang.")) {
+        } else if (class_type.getQualifiedBinaryName().startsWith("java.lang.")) {
             result.append("             return " + String.format("%s != null ? %s.toString() : null;\n", expr, expr));
+        } else {
+            Json jsonAnnotation = getAnnotation(argument, Json.class);
+            final Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
+            result.append("             return " + locator.encodeExpression(class_type, expr, style) + ".toString();\n");
         }
-        Json jsonAnnotation = getAnnotation(argument, Json.class);
-        final Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
-        result.append("             return " + locator.encodeExpression(class_type, expr, style) + ".toString();\n");
         result.append("         }\n");
         result.append("         @Override\n");
         result.append("         public void remove() {\n");
@@ -978,9 +975,9 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
         return l;
     }
-    
+
     private String returnRequest(boolean returnRequest, boolean isJsonp) {
         String type = isJsonp ? JsonpRequest.class.getName() : Request.class.getName();
         return returnRequest ? "return ("+type+")" : "";
-    }    
+    }
 }
