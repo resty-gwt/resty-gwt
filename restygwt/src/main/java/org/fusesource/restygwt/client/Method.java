@@ -64,7 +64,10 @@ public class Method {
         public MethodRequestBuilder(String method, String url) {
 
             super(method, url);
-
+            //without null value being explicitly set gwt would generate "undefined" as a default value,
+            //so if request does not have a body, Internet Explorer would send string "undefined" in the body of POST, PUT and DELETE requests,
+            //which may cause the request to fall on server with "No operation matching request path"
+            setRequestData(null);
             setHeader("X-HTTP-Method-Override", method);
         }
     }
