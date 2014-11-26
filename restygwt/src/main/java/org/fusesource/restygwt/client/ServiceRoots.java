@@ -15,8 +15,9 @@ public class ServiceRoots {
 	public static void add(String key, String url) {
 		if(url != null && !url.endsWith("/")) {
 			url += "/";
-			serviceRoots.put(key, url);
 		}
+		
+		serviceRoots.put(key, url);
 	}
 	
 	public static String get(String key) {
