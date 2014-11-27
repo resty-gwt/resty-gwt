@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import javax.validation.constraints.AssertTrue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
@@ -62,7 +61,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.user.server.Base64Utils;
+import javax.xml.bind.annotation.XmlTransient;
 
 public class EncoderDecoderTestGwt extends GWTTestCase {
 
@@ -725,6 +724,9 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         
         @JsonIgnore
         String noAge;
+		
+		@XmlTransient
+        int noAgeJax;
         
         @JsonIgnore
         private String lastName;
@@ -769,6 +771,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         CCCCodec cccc = GWT.create(CCCCodec.class);
         CCC ccc = new CCC();
         ccc.age = 20;
+		ccc.noAgeJax = 12;
         ccc.name = "me and the corner";
         ccc.firstName = "chaos";
         ccc.lastName = "club";
@@ -854,6 +857,9 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         @JsonIgnore
         private int myAge = 123;
 
+		@XmlTransient
+        private int myAgeJax = 123;
+		
         int getAge(){
             return myAge;
         }
