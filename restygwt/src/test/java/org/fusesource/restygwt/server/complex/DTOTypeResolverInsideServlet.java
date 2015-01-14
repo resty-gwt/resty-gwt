@@ -19,6 +19,7 @@
 package org.fusesource.restygwt.server.complex;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -27,11 +28,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.AbstractDTO;
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolverInside.AbstractCustomDto;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolverInside.DTOCustom1;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolverInside.DTOCustom2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 
 public class DTOTypeResolverInsideServlet extends HttpServlet
@@ -46,6 +47,12 @@ public class DTOTypeResolverInsideServlet extends HttpServlet
 	{
 		return null;
 	}
+	
+	private static class AbstractCustomDtoList extends ArrayList<AbstractCustomDto> {
+		public AbstractCustomDtoList(List<AbstractCustomDto> abstractAccountTransactionDTOs) {
+			this.addAll(abstractAccountTransactionDTOs);
+		}
+	}	
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
@@ -66,8 +73,12 @@ public class DTOTypeResolverInsideServlet extends HttpServlet
 		ObjectMapper om = new ObjectMapper();
 		try
 		{
-			ObjectWriter writer = om.writer().withType(om.constructType(getClass().getMethod("prototype").getGenericReturnType()));
-			writer.writeValue(resp.getOutputStream(), Lists.newArrayList(one, two, three));
+//			ObjectWriter writer = om.writer().withType(om.constructType(getClass().getMethod("prototype").getGenericReturnType()));
+			
+			AbstractCustomDtoList list = new AbstractCustomDtoList(Lists.newArrayList(one, two, three));
+//			writer.writeValue(resp.getOutputStream(), list);
+			System.out.println(om.writeValueAsString(list));
+			om.writeValue(resp.getOutputStream(), list);
 		}
 		catch (Exception e)
 		{

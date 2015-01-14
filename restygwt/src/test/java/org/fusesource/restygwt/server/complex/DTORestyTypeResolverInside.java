@@ -18,54 +18,27 @@
 
 package org.fusesource.restygwt.server.complex;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolverInside.DTOCustom1;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolverInside.DTOCustom2;
+import org.fusesource.restygwt.rebind.RestyJsonTypeIdResolver;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
-import com.fasterxml.jackson.databind.type.SimpleType;
 
-public class DTOTypeResolverInside implements TypeIdResolver
-{
-
+public class DTORestyTypeResolverInside implements RestyJsonTypeIdResolver {
+	
 	@Override
-	public void init(JavaType baseType) {
+	public Map<String, Class<?>> getIdClassMap() {
+		Map<String, Class<?>> map = new HashMap<String, Class<?>>();
+		map.put("dto1", DTOCustom1.class);
+		map.put("dto2", DTOCustom2.class);
+		return map;
 	}
 
 	@Override
-	public String idFromBaseType() {
-		return null;
-	}
-
-	@Override
-	public String idFromValue(Object value) {
-		if(value instanceof DTOCustom1)
-			return "dto1";
-		else if (value instanceof DTOCustom2)
-			return "dto2";
-		else
-			throw new IllegalArgumentException("Unknown type: " + value);
-
-	}
-
-	@Override
-	public String idFromValueAndType(Object value, Class<?> suggestedType) {
-		return idFromValue(value);
-	}
-
-	@Override
-	public JavaType typeFromId(String id) {
-		if("dto1".equals(id))
-			return SimpleType.construct(DTOCustom1.class);
-		else if("dto2".equals(id))
-			return SimpleType.construct(DTOCustom2.class);
-		else
-			throw new IllegalArgumentException("Unknown id: " + id);
-	}
-
-	@Override
-	public Id getMechanism() {
-		return Id.NAME;
+	public Class<? extends TypeIdResolver> getTypeIdResolverClass() {
+		return DTOTypeResolverInside.class;
 	}
 }
