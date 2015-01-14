@@ -43,6 +43,7 @@ import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.codec.InnerClassesEncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.codec.MapInRestServiceEncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver;
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolverInside;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
 
@@ -92,6 +93,7 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(ParameterizedTypeServiceInterfaces.class);
         suite.addTestSuite(SubResourceClientGeneration.class);
         suite.addTestSuite(JsonTypeIdResolver.class);
+        suite.addTestSuite(JsonTypeIdResolverInside.class);
         suite.addTestSuite(JsonCreatorWithSubtypes.class);
         suite.addTestSuite(PathParamTestGwt.class);
         suite.addTestSuite(QueryParamTestGwt.class);
