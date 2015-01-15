@@ -21,10 +21,13 @@ package org.fusesource.restygwt.server.complex;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO1;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO2;
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOCustom1;
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOCustom2;
 import org.fusesource.restygwt.rebind.RestyJsonTypeIdResolver;
+
+import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 
 public class DTORestyTypeResolver implements RestyJsonTypeIdResolver {
     @Override
@@ -32,6 +35,8 @@ public class DTORestyTypeResolver implements RestyJsonTypeIdResolver {
 	Map<String, Class<?>> map = new HashMap<String, Class<?>>();
 	map.put("dto1", DTO1.class);
 	map.put("dto2", DTO2.class);
+	map.put("dtocustom1", DTOCustom1.class);
+	map.put("dtocustom2", DTOCustom2.class);
 	return map;
     }
 

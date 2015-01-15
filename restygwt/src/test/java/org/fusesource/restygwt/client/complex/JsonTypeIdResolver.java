@@ -61,6 +61,30 @@ public class JsonTypeIdResolver extends GWTTestCase
 		@Produces("application/json")
 		public void getSomeDTOs(MethodCallback<List<AbstractDTO>> callback);
 	}
+	
+	@AbstractJacksonAnnotationsInside
+	public static abstract class AbstractCustomDto
+	{
+		public String name;
+	}
+	
+	public static class DTOCustom1 extends AbstractCustomDto
+	{
+		public Integer size;
+	}
+
+	public static class DTOCustom2 extends AbstractCustomDto
+	{
+		public String foo;
+	}
+	
+	@Path("api/jsontypeidinside")
+	public static interface ServiceInterfaceInside extends RestService
+	{
+		@GET
+		@Produces("application/json")
+		public void getSomeDTOs(MethodCallback<List<AbstractCustomDto>> callback);
+	}
 
 	@Override
 	public String getModuleName()
@@ -90,6 +114,35 @@ public class JsonTypeIdResolver extends GWTTestCase
 				assertEquals("Barney Rubble", response.get(1).name);
 
 				assertTrue(response.get(2) instanceof DTO2);
+				assertEquals("BamBam Rubble", response.get(2).name);
+				finishTest();
+			}
+		});
+		delayTestFinish(10000);
+	}
+	
+	@Test
+	public void testTypeIdResolverWithJacksonAnnotationInside()
+	{
+		ServiceInterfaceInside service = GWT.create(ServiceInterfaceInside.class);
+		service.getSomeDTOs(new MethodCallback<List<AbstractCustomDto>>()
+		{
+			@Override
+			public void onFailure(Method method, Throwable exception)
+			{
+				fail(exception.getMessage());
+			}
+
+			@Override
+			public void onSuccess(Method method, List<AbstractCustomDto> response)
+			{
+				assertTrue(response.get(0) instanceof DTOCustom1);
+				assertEquals("Fred Flintstone", response.get(0).name);
+
+				assertTrue(response.get(1) instanceof DTOCustom2);
+				assertEquals("Barney Rubble", response.get(1).name);
+
+				assertTrue(response.get(2) instanceof DTOCustom2);
 				assertEquals("BamBam Rubble", response.get(2).name);
 				finishTest();
 			}

@@ -18,12 +18,15 @@
 
 package org.fusesource.restygwt.server.complex;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
-import com.fasterxml.jackson.databind.type.SimpleType;
-import com.fasterxml.jackson.databind.JavaType;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO1;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO2;
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOCustom1;
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOCustom2;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
+import com.fasterxml.jackson.databind.type.SimpleType;
 
 public class DTOTypeResolver implements TypeIdResolver
 {
@@ -45,6 +48,10 @@ public class DTOTypeResolver implements TypeIdResolver
 			return "dto1";
 		else if (value instanceof DTO2)
 			return "dto2";
+		else if(value instanceof DTOCustom1)
+			return "dtocustom1";
+		else if (value instanceof DTOCustom2)
+			return "dtocustom2";
 		else
 			throw new IllegalArgumentException("Unknown type: " + value);
 	}
@@ -62,6 +69,10 @@ public class DTOTypeResolver implements TypeIdResolver
 			return SimpleType.construct(DTO1.class);
 		else if("dto2".equals(id))
 			return SimpleType.construct(DTO2.class);
+		else if("dtocustom1".equals(id))
+			return SimpleType.construct(DTOCustom1.class);
+		else if("dtocustom2".equals(id))
+			return SimpleType.construct(DTOCustom2.class);
 		else
 			throw new IllegalArgumentException("Unknown id: " + id);
 	}
