@@ -35,8 +35,8 @@ public class AnnotationUtils {
 
         if (classType == null) {
             return null;
-        } else if (classType.isAnnotationPresent(annotationType)) {
-            return classType.getAnnotation(annotationType);
+        } else if (getAnnotation(classType, annotationType) != null) {
+            return getAnnotation(classType, annotationType);
         } else {
             List<JClassType> intefaces = Arrays.asList(classType.getImplementedInterfaces());
 
