@@ -645,6 +645,10 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         }
     }
 
+    static public void clearRestyResolverClassMap() {
+    	sTypeIdResolverMap = null;
+    }
+    
     public static Map<Class<?>, RestyJsonTypeIdResolver> getRestyResolverClassMap(GeneratorContext context, TreeLogger logger) throws UnableToCompleteException {
 	if (sTypeIdResolverMap == null) {
 	    try {

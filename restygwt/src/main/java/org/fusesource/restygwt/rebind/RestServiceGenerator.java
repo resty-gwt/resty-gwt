@@ -35,10 +35,10 @@ public class RestServiceGenerator extends Generator {
         try {
             JClassType restService = find(logger, context, source);
             RestServiceClassCreator generator = new RestServiceClassCreator(logger, context, restService);
-
             return generator.create();
         } finally {
             BaseSourceCreator.clearGeneratedClasses();
+            JsonEncoderDecoderClassCreator.clearRestyResolverClassMap();
         }
     }
 
