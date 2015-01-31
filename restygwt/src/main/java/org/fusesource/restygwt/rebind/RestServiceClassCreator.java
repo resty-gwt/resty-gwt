@@ -56,6 +56,7 @@ import org.fusesource.restygwt.client.FormPostContent;
 import org.fusesource.restygwt.client.JSONP;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
+import org.fusesource.restygwt.client.CUSTOM;
 import org.fusesource.restygwt.client.JsonCallback;
 import org.fusesource.restygwt.client.JsonpMethod;
 import org.fusesource.restygwt.client.Method;
@@ -508,8 +509,11 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                       toStringExpression(entry.getValue().getType(), expr) + ")");
                 }
             }
-            // example: .get()
-            p("." + restMethod + "();");
+			// example: .get()
+			if (REST_METHODS.contains(restMethod))
+				p("." + restMethod + "();");
+			else
+				p(".custom(\"" + restMethod.toUpperCase() + "\");");
 
             // Handle JSONP specific configuration...
             JSONP jsonpAnnotation = getAnnotation(method, JSONP.class);
@@ -903,6 +907,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     }
 
     private String getRestMethod(JMethod method) throws UnableToCompleteException {
+    	Annotation restMethodAnot = null;
         String restMethod = null;
         if (getAnnotation(method, DELETE.class) != null) {
             restMethod = METHOD_DELETE;
@@ -918,7 +923,9 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             restMethod = METHOD_PUT;
         } else if (getAnnotation(method, JSONP.class) != null) {
             restMethod = METHOD_JSONP;
-        } else {
+        } else if ((restMethodAnot=getAnnotation(method, CUSTOM.class)) != null) {
+            restMethod = ((CUSTOM)restMethodAnot).value();
+        }else {
             restMethod = method.getName();
             if (!REST_METHODS.contains(restMethod)) {
                 getLogger().log(ERROR, "Invalid rest method. It must either have a lower case rest method name or have a javax rs method annotation: " + method.getReadableDeclaration());
