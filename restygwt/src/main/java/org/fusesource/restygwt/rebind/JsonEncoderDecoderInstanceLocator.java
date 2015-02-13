@@ -372,13 +372,32 @@ public class JsonEncoderDecoderInstanceLocator {
     }
 
     protected JClassType[] getTypes(JType type) throws UnableToCompleteException {
+        JClassType[] types = getTypesHelper(type);
+        if (types == null) {
+            JClassType superType = type.isClassOrInterface();
+            while (types == null) {
+                superType = superType.getSuperclass();
+                if (superType == null) {
+                    break;
+                }
+                types = getTypesHelper(superType);
+            }
+            if (types == null) {
+                error("Collection types must be parameterized: " + type);
+            }
+        }
+        return types;
+    }
+
+    protected JClassType[] getTypesHelper(JType type) {
         JParameterizedType parameterizedType = type.isParameterized();
         if (parameterizedType == null || parameterizedType.getTypeArgs() == null) {
-            error("Collection types must be parameterized.");
+            return null;
         }
         JClassType[] types = parameterizedType.getTypeArgs();
         return types;
     }
+
     boolean isCollectionType(JClassType clazz) {
         return clazz != null
                 && (clazz.isAssignableTo(SET_TYPE) || clazz.isAssignableTo(LIST_TYPE) || clazz.isAssignableTo(MAP_TYPE) || clazz.isAssignableTo(COLLECTION_TYPE));
