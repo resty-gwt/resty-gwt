@@ -115,7 +115,7 @@ public class AnnotationCopyUtil {
     }
 
     private static String readStringValue(Object value) {
-        return "\"" + value.toString().replace("\"", "\\\"") + "\"";
+        return "\"" + value.toString().replace("\"", "\\\"").replace("\n", "\\n") + "\"";
     }
 
     private static String readClassValue(Class value) {
