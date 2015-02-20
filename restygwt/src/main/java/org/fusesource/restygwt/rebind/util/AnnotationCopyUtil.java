@@ -79,7 +79,7 @@ public class AnnotationCopyUtil {
             return "null";
         } else if (value.getClass().isArray()) {
             return readArrayValue(value);
-        } else if (value.getClass().isAnnotation()) {
+        } else if (value instanceof Annotation) {
             return getAnnotationAsString((Annotation) value);
         } else if (value instanceof Boolean) {
             return readBooleanValue((Boolean) value);
@@ -87,7 +87,7 @@ public class AnnotationCopyUtil {
             return readClassValue((Class) value);
         }
 
-        return null;
+        throw new RuntimeException("Unsupported value for encodeAnnotationValue: " + value);
     }
 
     private static String readBooleanValue(Boolean value) {
