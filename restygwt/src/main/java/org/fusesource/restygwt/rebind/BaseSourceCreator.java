@@ -86,7 +86,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
 			for(JClassType type : ptype.getTypeArgs())
 			{
 				builder.append("__");
-				builder.append(type.getParameterizedQualifiedSourceName().replace('.', '_'));
+				builder.append(type.getParameterizedQualifiedSourceName().replace('.', '_').replace("<", "__").replace(">", "__"));
 			}
 			this.shortName = getName( source ) + builder.toString() + suffix;
         }
