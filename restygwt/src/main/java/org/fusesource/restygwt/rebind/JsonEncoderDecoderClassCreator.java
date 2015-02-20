@@ -96,6 +96,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         final boolean isLeaf = isLeaf(source);
 
         final List<Subtype> possibleTypes = getPossibleTypes(typeInfo, isLeaf);
+        Collections.sort(possibleTypes);
 
         final JClassType sourceClazz = source.isClass() == null ? source.isInterface() : source.isClass();
         if (sourceClazz == null) {
@@ -909,13 +910,18 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         return !(source.getSubtypes() != null && source.getSubtypes().length > 0);
     }
 
-    public static class Subtype {
+    public static class Subtype implements Comparable<Subtype> {
     final String tag;
     final JClassType clazz;
 
     public Subtype(String tag, JClassType clazz) {
         this.tag = tag;
         this.clazz = clazz;
+    }
+
+    @Override
+    public int compareTo(Subtype o) {
+        return tag.compareTo(o.tag);
     }
     }
 
