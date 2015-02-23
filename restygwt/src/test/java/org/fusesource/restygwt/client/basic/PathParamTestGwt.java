@@ -60,6 +60,9 @@ public class PathParamTestGwt extends GWTTestCase {
         @Path("/get/{id}")
         void get(@PathParam(value = "id") String i, MethodCallback<Echo> callback);
 
+        @GET @Path("/get/{id : \\d+}")
+        void getRegex(@PathParam(value = "id") Integer i, MethodCallback<Echo> callback);
+
         @GET @Path("{url}")
         void absolute(@PathParam(value = "url") String u, MethodCallback<Echo> callback);
     }
@@ -129,6 +132,11 @@ public class PathParamTestGwt extends GWTTestCase {
         service.get(123, echoMethodCallback("/get/123"));
         delayTestFinish(10000);
 
+    }
+
+    public void testGetWithIntRegex() {
+        service.getRegex(123, echoMethodCallback("/get/123"));
+        delayTestFinish(10000);
     }
 
     public void testAbsolute() {
