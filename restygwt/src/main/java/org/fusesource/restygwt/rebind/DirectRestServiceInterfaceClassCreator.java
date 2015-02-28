@@ -26,6 +26,7 @@ import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.rebind.util.AnnotationCopyUtil;
+import org.fusesource.restygwt.rebind.util.AnnotationUtils;
 import org.fusesource.restygwt.rebind.util.OnceFirstIterator;
 
 import java.lang.annotation.Annotation;
@@ -44,8 +45,9 @@ public class DirectRestServiceInterfaceClassCreator extends DirectRestBaseSource
 
     @Override
     protected ClassSourceFileComposerFactory createComposerFactory() throws UnableToCompleteException {
+        Annotation[] annotations = AnnotationUtils.getAnnotationsInTypeHierarchy(source);
         return createClassSourceComposerFactory(JavaSourceCategory.INTERFACE,
-                getAnnotationsAsStringArray(source.getAnnotations()),
+                getAnnotationsAsStringArray(annotations),
                 new String[]{
                         RestService.class.getCanonicalName()
                 }
