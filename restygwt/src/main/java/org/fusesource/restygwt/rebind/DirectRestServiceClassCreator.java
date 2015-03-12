@@ -45,8 +45,8 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
     }
 
     private void createRestyServiceField() {
-        p("private " + source.getName() + DIRECT_REST_SERVICE_SUFFIX + " service = com.google.gwt.core.client.GWT.create(" +
-                source.getName() + DIRECT_REST_SERVICE_SUFFIX + ".class);");
+        String sourceName = getName(source) + DIRECT_REST_SERVICE_SUFFIX;
+        p("private " + sourceName + " service = com.google.gwt.core.client.GWT.create(" + sourceName + ".class);");
     }
 
     private void createDelegateRestServiceProxyMethods() {
