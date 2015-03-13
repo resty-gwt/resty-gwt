@@ -98,7 +98,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         this.name = packageName + "." + shortName;
     }
 
-    private String getName( JClassType source ){
+    protected String getName( JClassType source ){
         if( source.getEnclosingType() != null ){
             return getName( source.getEnclosingType() ) + "_" + source.getSimpleSourceName();
         }
