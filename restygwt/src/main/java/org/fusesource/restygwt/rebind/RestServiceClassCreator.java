@@ -375,7 +375,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
     private String pathExpression(String pathExpression, JParameter arg, PathParam paramPath) {
         String expr = toStringExpression(arg);
-        return pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"),
+        return pathExpression.replaceAll(Pattern.quote("{" + paramPath.value()) + "(\\s*:\\s*(.)+)?\\}",
                "\"+(" + expr + "== null? null : ((\"\" + " + expr +").startsWith(\"http\") ? " + expr +
                " : com.google.gwt.http.client.URL.encodePathSegment(" + expr + ")))+\"");
     }
