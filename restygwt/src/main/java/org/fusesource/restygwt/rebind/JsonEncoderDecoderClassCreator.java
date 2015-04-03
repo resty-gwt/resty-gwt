@@ -153,16 +153,14 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private Collection<Type> findJsonSubTypes(JClassType clazz) {
         if (clazz == null)
             return Collections.emptyList();
-        else {
-            JsonSubTypes annotation = getClassAnnotation(clazz, JsonSubTypes.class);
-            if (annotation == null) {
-                return Collections.emptyList();
-            }
-            Set<Type> result = new HashSet<JsonSubTypes.Type>();
-            Type[] value = annotation.value();
-            Collections.addAll(result, value);
-            return result;
+        JsonSubTypes annotation = getClassAnnotation(clazz, JsonSubTypes.class);
+        if (annotation == null) {
+            return Collections.emptyList();
         }
+        Set<Type> result = new HashSet<JsonSubTypes.Type>();
+        Type[] value = annotation.value();
+        Collections.addAll(result, value);
+        return result;
     }
 
     protected void generateSingleton(String shortName)
@@ -219,7 +217,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     generateEnumEncodeMethodBody(possibleType, typeInfo);
                 } else {
 
-                    // Try to find a constuctor that is annotated as creator
+                    // Try to find a constructor that is annotated as creator
                     final JConstructor creator = findCreator(possibleType.clazz);
 
                     List<JField> orderedFields = creator == null ? null : getOrderedFields(getFields(possibleType.clazz), creator);

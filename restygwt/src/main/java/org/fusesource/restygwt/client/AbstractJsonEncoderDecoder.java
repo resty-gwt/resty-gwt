@@ -342,13 +342,12 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             
             if (Defaults.getTimeZone() == null || Defaults.dateFormatHasTimeZone()) {
                 return DateTimeFormat.getFormat(format).parse(str.stringValue());
-            } else {
-                // We need to provide time zone information to the GWT date parser.
-                // Unfortunately, DateTimeFormat has no overload specifying a TimeZone,
-                // so the only way is to extend the format string.
-                return DateTimeFormat.getFormat(format + " v").parse(
-                        str.stringValue() + " " + Defaults.getTimeZone().getID());
             }
+            // We need to provide time zone information to the GWT date parser.
+            // Unfortunately, DateTimeFormat has no overload specifying a TimeZone,
+            // so the only way is to extend the format string.
+            return DateTimeFormat.getFormat(format + " v").parse(
+                    str.stringValue() + " " + Defaults.getTimeZone().getID());
         }
 
         @Override
@@ -365,9 +364,8 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             
             if (Defaults.getTimeZone() == null || Defaults.dateFormatHasTimeZone()) {
                 return new JSONString(DateTimeFormat.getFormat(format).format(value));
-            } else {
-                return new JSONString(DateTimeFormat.getFormat(format).format(value, Defaults.getTimeZone()));
             }
+            return new JSONString(DateTimeFormat.getFormat(format).format(value, Defaults.getTimeZone()));
         }
     };
 
@@ -529,15 +527,13 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         if (value.isString() != null) {
            return Base64Codec.decode(value.isString().stringValue());
         }
-        else {
-            JSONArray array = asArray(value);
-            int size = array.size();
-            byte template[] = new byte[size];
-            for (int i = 0; i < size; i++) {
-                template[i] = encoder.decode(array.get(i));
-            }
-            return template;
+        JSONArray array = asArray(value);
+        int size = array.size();
+        byte template[] = new byte[size];
+        for (int i = 0; i < size; i++) {
+            template[i] = encoder.decode(array.get(i));
         }
+        return template;
     }
 
     static public char[] toArray(JSONValue value, AbstractJsonEncoderDecoder<Character> encoder, char[] template) {
@@ -895,14 +891,12 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         if (Defaults.isByteArraysToBase64()) {
            return new JSONString(Base64Codec.encode(value));
         }
-        else {
-            JSONArray rc = new JSONArray();
-            int i = 0;
-            for (byte t : value) {
-                rc.set(i++, new JSONNumber(t));
-            }
-            return rc;
+        JSONArray rc = new JSONArray();
+        int i = 0;
+        for (byte t : value) {
+            rc.set(i++, new JSONNumber(t));
         }
+        return rc;
     }
 
     static private JSONNull getNullType() {
