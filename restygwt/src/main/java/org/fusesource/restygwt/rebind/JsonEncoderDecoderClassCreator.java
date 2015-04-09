@@ -151,17 +151,30 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
      * a parent class or an interface.
      */
     private Collection<Type> findJsonSubTypes(JClassType clazz) {
-        if (clazz == null)
+        return findJsonSubTypes(clazz, new HashSet<JsonSubTypes.Type>());
+    }
+    
+    private Collection<Type> findJsonSubTypes(JClassType clazz, Set<Type> types) {
+        if (clazz == null) {
             return Collections.emptyList();
-        else {
+            
+        } else {
             JsonSubTypes annotation = getClassAnnotation(clazz, JsonSubTypes.class);
+            
             if (annotation == null) {
                 return Collections.emptyList();
             }
-            Set<Type> result = new HashSet<JsonSubTypes.Type>();
-            Type[] value = annotation.value();
-            Collections.addAll(result, value);
-            return result;
+
+            for (Type type : annotation.value()) {
+                if (types.add(type)) {
+                    Class<?> subclazz = type.value();
+                    String newSubClassName = subclazz.getName().replaceAll("\\$", ".");
+                    JClassType subJClazz = context.getTypeOracle().findType(newSubClassName);
+                    findJsonSubTypes(subJClazz, types);
+                }
+            }
+
+            return types;
         }
     }
 
