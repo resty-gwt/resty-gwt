@@ -40,7 +40,7 @@ public class ConfiguredServiceTestGwt extends GWTTestCase {
     }
 
     public void testConfiguredWithoutExpectDirect_notNull() {
-        ConfiguredWithoutExpectService service = GWT.create(ConfiguredWithoutExpectDirectService.class);
+        ConfiguredWithoutExpectDirectService service = GWT.create(ConfiguredWithoutExpectDirectService.class);
         assertNotNull(service);
     }
 }
