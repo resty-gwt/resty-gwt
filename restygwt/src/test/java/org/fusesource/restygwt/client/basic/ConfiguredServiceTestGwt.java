@@ -16,6 +16,16 @@
 
 package org.fusesource.restygwt.client.basic;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodAccessHelperDispatcher;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.REST;
+import org.fusesource.restygwt.client.RestServiceProxy;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 
@@ -42,5 +52,32 @@ public class ConfiguredServiceTestGwt extends GWTTestCase {
     public void testConfiguredWithoutExpectDirect_notNull() {
         ConfiguredWithoutExpectDirectService service = GWT.create(ConfiguredWithoutExpectDirectService.class);
         assertNotNull(service);
+    }
+
+    public void testConfiguredDirect_notNullAndRightExpect() {
+        ConfiguredDirectService service = GWT.create(ConfiguredDirectService.class);
+        assertNotNull(service);
+
+        ((RestServiceProxy) service).setDispatcher(new MethodAccessHelperDispatcher() {
+            @Override
+            protected void expect(Set<Integer> actualStatuses, boolean anyStatus) {
+                assertEquals(false, anyStatus);
+
+                HashSet<Integer> expectedStatuses = new HashSet<Integer>();
+                Collections.addAll(expectedStatuses, 200, 204);
+
+                assertEquals(expectedStatuses, actualStatuses);
+            }
+        });
+        REST.withCallback(new MethodCallback<ExampleDto>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+            }
+
+            @Override
+            public void onSuccess(Method method, ExampleDto response) {
+            }
+        }).call(service).getExampleDto();
+
     }
 }
