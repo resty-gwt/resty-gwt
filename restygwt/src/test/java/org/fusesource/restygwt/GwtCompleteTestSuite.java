@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 
 import org.fusesource.restygwt.client.basic.CacheCallbackTestGwt;
 import org.fusesource.restygwt.client.basic.CachingTestGwt;
+import org.fusesource.restygwt.client.basic.ConfiguredServiceTestGwt;
 import org.fusesource.restygwt.client.basic.DirectRestServiceTestGwt;
 import org.fusesource.restygwt.client.basic.FailingTestGwt;
 import org.fusesource.restygwt.client.basic.FlakyTestGwt;
@@ -97,6 +98,7 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(QueryParamTestGwt.class);
         suite.addTestSuite(FormParamTestGwt.class);
         suite.addTestSuite(DirectRestServiceTestGwt.class);
+        suite.addTestSuite(ConfiguredServiceTestGwt.class);
         
         //TODO not sure what a jsonp servlet looks like, i.e. the one used by the test just
         // produces error on the javascript callback
