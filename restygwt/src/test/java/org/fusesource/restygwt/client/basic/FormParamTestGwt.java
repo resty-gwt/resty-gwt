@@ -61,6 +61,9 @@ public class FormParamTestGwt extends GWTTestCase {
         void listParams(@FormParam(value = "dtoList") List<ExampleDto> exampleDtoList, MethodCallback<Echo> callback);
 
         @POST
+        void listStringParams(@FormParam(value = "stringList") List<String> exampleStringList, MethodCallback<Echo> callback);
+
+        @POST
         void arrayParams(@FormParam(value = "dtoArray") ExampleDto[] exampleDtoArray, MethodCallback<Echo> callback);
 
         @POST
@@ -73,13 +76,13 @@ public class FormParamTestGwt extends GWTTestCase {
     }
 
     class EchoMethodCallback implements MethodCallback<Echo> {
-        
+
         private final String id;
 
-        EchoMethodCallback(String id){
+        EchoMethodCallback(String id) {
             this.id = id;
         }
-        
+
         @Override
         public void onSuccess(Method method, Echo response) {
             GWT.log("method was called: " + response.params.get("id"));
@@ -97,10 +100,10 @@ public class FormParamTestGwt extends GWTTestCase {
             fail();
         }
     }
-    
+
     @Override
     protected void gwtSetUp() throws Exception {
-        super.gwtSetUp();        
+        super.gwtSetUp();
         service = GWT.create(FormParamTestRestService.class);
         Resource resource = new Resource(GWT.getModuleBaseURL() + "echo");
         ((RestServiceProxy) service).setResource(resource);
@@ -117,7 +120,7 @@ public class FormParamTestGwt extends GWTTestCase {
     }
 
     public void testGetWithNull() {
-        service.get(null, new MethodCallback<Echo>(){
+        service.get(null, new MethodCallback<Echo>() {
             @Override
             public void onFailure(Method method, Throwable exception) {
                 fail();
@@ -161,7 +164,7 @@ public class FormParamTestGwt extends GWTTestCase {
 
     public void testPostWithDtoList() {
         final ObjectEncoderDecoder objectEncoderDecoder = new ObjectEncoderDecoder();
-        final List<ExampleDto> dtoList = Collections.singletonList( createDtoObject() );
+        final List<ExampleDto> dtoList = Collections.singletonList(createDtoObject());
 
         service.listParams(dtoList, new MethodCallback<Echo>() {
             @Override
@@ -184,6 +187,38 @@ public class FormParamTestGwt extends GWTTestCase {
                     assertEquals(createDtoObjectAsList(), decoded_elem_list);
                 } else {
                     assertEquals(createDtoObjectAsList(), Arrays.asList(decoded_object));
+                }
+
+                finishTest();
+            }
+        });
+    }
+
+    public void testPostWithStringList() {
+        final ObjectEncoderDecoder objectEncoderDecoder = new ObjectEncoderDecoder();
+        final List<String> stringList = Arrays.asList("test");
+
+        service.listStringParams(stringList, new MethodCallback<Echo>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+            }
+
+            @Override
+            public void onSuccess(Method method, Echo response) {
+                assertEquals(1, response.params.size());
+
+                JSONValue jsonValue = AbstractJsonEncoderDecoder.JSON_VALUE.decode(response.params.get("stringList"));
+                final Object decoded_object = objectEncoderDecoder.decode(jsonValue);
+                if (decoded_object instanceof Collection) {
+                    final Collection<String> decoded_list = (Collection<String>) decoded_object;
+                    final List decoded_elem_list = new ArrayList();
+                    for (final String json_elem : decoded_list) {
+                        decoded_elem_list.add(objectEncoderDecoder.decode(json_elem));
+                    }
+                    assertEquals(stringList, decoded_elem_list);
+                } else {
+                    assertEquals(stringList, Arrays.asList(decoded_object));
                 }
 
                 finishTest();
@@ -274,7 +309,7 @@ public class FormParamTestGwt extends GWTTestCase {
     public HashMap map(Object... keyValues) {
         HashMap result = new HashMap();
 
-        for (int i = 0; i < keyValues.length; i += 2 ) {
+        for (int i = 0; i < keyValues.length; i += 2) {
             result.put(keyValues[i], keyValues[i + 1]);
         }
 
