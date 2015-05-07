@@ -451,8 +451,13 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         }
                         p("object = toObjectFromWrapper(value, \"" + possibleType.tag + "\");");
                     } else if (!isLeaf) {
-                        p("if(sourceName.equals(\"" + possibleType.tag + "\"))");
-                        p("{");
+                        if (classType.equals(possibleType.clazz)) {
+                            p("if(sourceName == null || sourceName.equals(\"" + possibleType.tag + "\"))");
+                            p("{");
+                        } else {
+                            p("if(sourceName != null && sourceName.equals(\"" + possibleType.tag + "\"))");
+                            p("{");
+                        }
                     }
                 }
 
