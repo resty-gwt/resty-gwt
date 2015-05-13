@@ -309,27 +309,17 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                     Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
                                     String expression = locator.encodeExpression(field.getType(), fieldExpr, style);
 
-                                    p("{").i(1);
-                                    {
-                                        if (null != field.getType().isEnum()) {
-                                            p("if(" + fieldExpr + " == null) {").i(1);
-                                            p("rc.put(" + wrap(jsonName) + ", " + JSON_NULL_CLASS + ".getInstance());");
-                                            i(-1).p("} else {").i(1);
-                                        }
-
-                                        p(JSON_VALUE_CLASS + " v=" + expression + ";");
-                                        p("if( v!=null ) {").i(1);
-                                        {
-                                            p("rc.put(" + wrap(jsonName) + ", v);");
-                                        }
-                                        i(-1).p("}");
-
-                                        if (null != field.getType().isEnum()) {
-                                            i(-1).p("}");
-                                        }
-
+                                    
+                                    if (null != field.getType().isEnum()) {
+                                    	p("if(isNotNullAndCheckDefaults(" + fieldExpr+ ", rc, "+ wrap(jsonName) + ")) {").i(1);
                                     }
-                                    i(-1).p("}");
+                                        
+                                    p("isNotNullValuePut(" + expression + ", rc, "+ wrap(jsonName) + ");");
+
+                                    if (null != field.getType().isEnum()) {
+                                    	i(-1).p("}");
+                                    }
+                                    
 
                                 } else {
                                     getLogger().log(DEBUG, "private field gets ignored: " + field.getEnclosingType().getQualifiedSourceName() + "." + field.getName());
