@@ -905,6 +905,11 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         }
     }
 
+    static protected void isNotNullValuePut(Object object, JSONObject value, String jsonName) {
+    	if(object != null)
+    		value.put(jsonName, value);
+    }
+    
     static protected boolean isNotNullAndCheckDefaults(Object object, JSONObject value, String jsonName) {
     	if(object != null)
     		return true;
