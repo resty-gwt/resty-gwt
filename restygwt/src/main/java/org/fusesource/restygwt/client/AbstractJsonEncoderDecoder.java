@@ -905,6 +905,17 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         }
     }
 
+    static protected boolean isNotNullAndCheckDefaults(Object object, JSONObject value, String jsonName) {
+    	if(object != null)
+    		return true;
+    	else if(Defaults.doesIgnoreJsonNulls())
+    		return false;
+    	else {
+    		value.put(jsonName, JSONNull.getInstance());
+    		return false;
+    	}
+    }
+    
     static private JSONNull getNullType() {
         return (Defaults.doesIgnoreJsonNulls()) ? null : JSONNull.getInstance();
     }

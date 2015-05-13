@@ -312,9 +312,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                     p("{").i(1);
                                     {
                                         if (null != field.getType().isEnum()) {
-                                            p("if(" + fieldExpr + " == null) {").i(1);
-                                            p("rc.put(" + wrap(jsonName) + ", " + JSON_NULL_CLASS + ".getInstance());");
-                                            i(-1).p("} else {").i(1);
+                                            p("if(isNotNullAndCheckDefaults(" + fieldExpr+ ", rc, "+ wrap(jsonName) + ")) {").i(1);
                                         }
 
                                         p(JSON_VALUE_CLASS + " v=" + expression + ";");
