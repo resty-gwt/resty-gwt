@@ -543,17 +543,15 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                     String objectGetter = "object.get(" + wrap(jsonName) + ")";
                                     String expression = locator.decodeExpression(field.getType(), objectGetter, style);
 
-                                    boolean needNullHandling = !locator.hasCustomEncoderDecoder(field.getType());
-
                                     boolean isShort = field.getType().isPrimitive() == JPrimitiveType.SHORT;
                                     String defaultValue = getDefaultValue(field);
 
                                     String methodName = isShort ? "getValueToSetForShort" : "getValueToSet";
                                     
                                     if (setterName != null) {
-                                    	p("rc." + setterName + "("  + methodName + "(" + expression + ", " + defaultValue + "," + needNullHandling + "));");
+                                    	p("rc." + setterName + "("  + methodName + "(" + expression + ", " + defaultValue + "));");
                                     } else {
-                                    	p("rc." + name + "= " +  methodName + "(" + expression + "," + defaultValue + "," + needNullHandling+ ");");
+                                    	p("rc." + name + "= " +  methodName + "(" + expression + "," + defaultValue + ");");
                                     }
                                     
                                 } else {
