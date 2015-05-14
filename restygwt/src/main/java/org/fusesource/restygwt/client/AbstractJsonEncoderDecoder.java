@@ -905,6 +905,20 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         }
     }
 
+    static protected short getValueToSetForShort(Short value, int defaultValue, boolean needsNullHandling){
+    	if(value == null)
+    		return (short)defaultValue;
+    	else 
+    		return value;
+    }
+    
+    static protected <T extends Object> T getValueToSet(T value, T defaultValue, boolean needsNullHandling) {
+    	if(value instanceof JSONNull || value == null)
+    		return defaultValue;
+    	else 
+    		return value;
+    }
+    
     static protected void isNotNullValuePut(JSONValue object, JSONObject value, String jsonName) {
     	if(object != null)
     		value.put(jsonName, object);
