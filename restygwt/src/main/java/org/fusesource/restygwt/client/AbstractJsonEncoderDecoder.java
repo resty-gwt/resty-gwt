@@ -934,8 +934,8 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
     		return false;
     	}
     }
-    
-    static private JSONNull getNullType() {
+
+    static protected JSONNull getNullType() {
         return (Defaults.doesIgnoreJsonNulls()) ? null : JSONNull.getInstance();
     }
 }

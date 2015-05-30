@@ -202,7 +202,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         {
             p("if( value==null ) {").i(1);
             {
-                p("return null;");
+                p("return getNullType();");
             }
             i(-1).p("}");
 
