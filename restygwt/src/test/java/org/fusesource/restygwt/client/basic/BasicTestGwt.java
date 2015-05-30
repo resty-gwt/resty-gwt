@@ -21,8 +21,7 @@ package org.fusesource.restygwt.client.basic;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.junit.client.GWTTestCase;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
+import com.google.gwt.user.client.Timer;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
@@ -89,8 +88,16 @@ public class BasicTestGwt extends GWTTestCase {
 
         request.cancel();
 
+        // after waiting for 10 seconds assume, that the request has been canceled successfully
+        new Timer() {
+            @Override
+            public void run() {
+                finishTest();
+            }
+        }.schedule(10000);
+        
         // wait... we are in async testing...
-        delayTestFinish(10000);
+        delayTestFinish(15000);
     }
 
     @Test
