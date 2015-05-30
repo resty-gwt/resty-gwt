@@ -38,15 +38,18 @@ public class BasicTestGwtServlet extends HttpServlet {
 
     private static final String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.getWriter().print(DUMMY_RESPONSE);
+    }
 
     @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
-
-
-            response.getWriter().print(DUMMY_RESPONSE);
-
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (request.getRequestURI().endsWith("/api/store")) {
+            response.getWriter().print("");
+        } else {
+            throw new IllegalArgumentException("Invalid servlet path called by service: " + request.getRequestURI());
+        }
     }
 
 }

@@ -44,10 +44,8 @@ public class BasicTestGwt extends GWTTestCase {
     }
 
     public void testDefaultFunction() {
-
         //configure RESTY
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
-
 
         ExampleService service = GWT.create(ExampleService.class);
         ((RestServiceProxy) service).setResource(resource);
@@ -56,36 +54,28 @@ public class BasicTestGwt extends GWTTestCase {
 
             @Override
             public void onSuccess(Method method, ExampleDto response) {
-
                 assertEquals(response.name, "myName");
                 finishTest();
-
             }
 
             @Override
             public void onFailure(Method method, Throwable exception) {
                 fail();
-
             }
         });
 
         // wait... we are in async testing...
         delayTestFinish(10000);
-
     }
-    
+
     @Test
     public void testCancelRequest() {
-
-        //configure RESTY
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
-
 
         ExampleService service = GWT.create(ExampleService.class);
         ((RestServiceProxy) service).setResource(resource);
 
         Request request = service.getExampleDtoCancelable(new MethodCallback<ExampleDto>() {
-
             @Override
             public void onSuccess(Method method, ExampleDto response) {
                 fail();
@@ -98,8 +88,34 @@ public class BasicTestGwt extends GWTTestCase {
         });
 
         request.cancel();
-        
+
         // wait... we are in async testing...
         delayTestFinish(10000);
     }
+
+    @Test
+    public void testNullObjectPost() {
+        //configure RESTY
+        Resource resource = new Resource(GWT.getModuleBaseURL() + "api");
+
+        ExampleService service = GWT.create(ExampleService.class);
+        ((RestServiceProxy) service).setResource(resource);
+
+        service.storeDto(null, new MethodCallback<Void>() {
+            @Override
+            public void onSuccess(Method method, Void response) {
+                // Nothing awaited because its a test for send null objects
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+            }
+        });
+
+        // wait... we are in async testing...
+        delayTestFinish(10000);
+    }
+
 }
