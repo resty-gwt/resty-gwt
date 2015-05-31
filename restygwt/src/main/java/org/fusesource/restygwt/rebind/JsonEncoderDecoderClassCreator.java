@@ -253,6 +253,16 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                 p(JSON_ARRAY_CLASS + " rrc = new " + JSON_ARRAY_CLASS + "();");
                                 p("rrc.set(0, org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.encode(\"" + possibleType.tag + "\"));");
                                 p("rrc.set(1, rc);");
+                                break;
+                            case EXISTING_PROPERTY:
+                                getLogger().log(WARN, classType + " comes with not implemented type info 'as' " + JsonTypeInfo.As.EXISTING_PROPERTY );
+                                // not implemented
+                                break;
+                            case EXTERNAL_PROPERTY:
+                                getLogger().log(WARN, classType + " comes with not implemented type info 'as' " + JsonTypeInfo.As.EXTERNAL_PROPERTY );
+                                // not implemented
+                                break;
+                            default:
                         }
                     }
 
