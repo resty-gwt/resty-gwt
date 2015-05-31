@@ -157,25 +157,23 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private Collection<Type> findJsonSubTypes(JClassType clazz, Set<Type> types) {
         if (clazz == null) {
             return Collections.emptyList();
-            
-        } else {
-            JsonSubTypes annotation = getClassAnnotation(clazz, JsonSubTypes.class);
-            
-            if (annotation == null) {
-                return Collections.emptyList();
-            }
-
-            for (Type type : annotation.value()) {
-                if (types.add(type)) {
-                    Class<?> subclazz = type.value();
-                    String newSubClassName = subclazz.getName().replaceAll("\\$", ".");
-                    JClassType subJClazz = context.getTypeOracle().findType(newSubClassName);
-                    findJsonSubTypes(subJClazz, types);
-                }
-            }
-
-            return types;
         }
+        JsonSubTypes annotation = getClassAnnotation(clazz, JsonSubTypes.class);
+            
+        if (annotation == null) {
+            return Collections.emptyList();
+        }
+
+        for (Type type : annotation.value()) {
+            if (types.add(type)) {
+                Class<?> subclazz = type.value();
+                String newSubClassName = subclazz.getName().replaceAll("\\$", ".");
+                JClassType subJClazz = context.getTypeOracle().findType(newSubClassName);
+                findJsonSubTypes(subJClazz, types);
+            }
+        }
+
+        return types;
     }
 
     protected void generateSingleton(String shortName)
@@ -232,7 +230,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     generateEnumEncodeMethodBody(possibleType, typeInfo);
                 } else {
 
-                    // Try to find a constuctor that is annotated as creator
+                    // Try to find a constructor that is annotated as creator
                     final JConstructor creator = findCreator(possibleType.clazz);
 
                     List<JField> orderedFields = creator == null ? null : getOrderedFields(getFields(possibleType.clazz), creator);

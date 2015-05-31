@@ -122,7 +122,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
       return name;
     }
     
-    protected PrintWriter writer() throws UnableToCompleteException {
+    protected PrintWriter writer() {
         HashSet<String> classes = getGeneratedClasses();
         if (classes.contains(name)) {
             return null;
