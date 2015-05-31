@@ -24,6 +24,7 @@ import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOCustom1;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOCustom2;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.databind.DatabindContext;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 import com.fasterxml.jackson.databind.type.SimpleType;
@@ -82,4 +83,9 @@ public class DTOTypeResolver implements TypeIdResolver
 	{
 		return Id.NAME;
 	}
+
+    @Override
+    public JavaType typeFromId(DatabindContext context, String id) {
+        return typeFromId(id);
+    }
 }
