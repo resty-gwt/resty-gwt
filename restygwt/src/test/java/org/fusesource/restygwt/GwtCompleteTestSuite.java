@@ -22,6 +22,7 @@ package org.fusesource.restygwt;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import org.fusesource.restygwt.client.basic.BasicTestGwt;
 import org.fusesource.restygwt.client.basic.CacheCallbackTestGwt;
 import org.fusesource.restygwt.client.basic.CachingTestGwt;
 import org.fusesource.restygwt.client.basic.ConfiguredServiceTestGwt;
@@ -74,6 +75,7 @@ public class GwtCompleteTestSuite extends TestCase {
     public static Test suite() {
         GWTTestSuite suite = new GWTTestSuite("all GwtTestCases but AnnotationResolver" );
 
+        suite.addTestSuite(BasicTestGwt.class);
         // keep the cache-callback at the beginning to get it pass
         // TODO why ? and what goes wrong when at located at the end ?
         suite.addTestSuite(CacheCallbackTestGwt.class);
