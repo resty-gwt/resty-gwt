@@ -79,6 +79,7 @@ import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.typeinfo.HasAnnotations;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JGenericType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -229,16 +230,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         this.QUERY_PARAM_LIST_TYPES.add(find(Set.class, getLogger(), context));
 		this.REST_SERVICE_TYPE = find(RestService.class, getLogger(), context);
 
-        String path = null;
-        Path pathAnnotation = getAnnotation(source, Path.class);
-        if (pathAnnotation != null) {
-            path = pathAnnotation.value();
-        }
-
-        RemoteServiceRelativePath relativePath = getAnnotation(source, RemoteServiceRelativePath.class);
-        if (relativePath != null) {
-            path = relativePath.value();
-        }
+        String path = getPathFromSource(source);
 
         p("private " + RESOURCE_CLASS + " resource = null;");
         p();
@@ -300,6 +292,22 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         	else
                 writeMethodImpl(method, options);
         }
+    }
+
+    private static String getPathFromSource(HasAnnotations annotatedType) {
+        String path = null;
+
+        Path pathAnnotation = getAnnotation(annotatedType, Path.class);
+        if (pathAnnotation != null) {
+            path = pathAnnotation.value();
+        }
+
+        RemoteServiceRelativePath relativePath = getAnnotation(annotatedType, RemoteServiceRelativePath.class);
+        if (relativePath != null) {
+            path = relativePath.value();
+        }
+
+        return path;
     }
 
     private String quote(String path) {
