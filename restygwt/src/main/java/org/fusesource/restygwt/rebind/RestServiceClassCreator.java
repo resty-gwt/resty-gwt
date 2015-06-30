@@ -388,6 +388,35 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                " : com.google.gwt.http.client.URL.encodePathSegment(" + expr + ")))+\"");
     }
 
+    void writeOptions(Options options, Options classOptions) {
+        // configure the dispatcher
+        if (options != null && options.dispatcher() != Dispatcher.class) {
+            // use the dispatcher configured for the method.
+            p("__method.setDispatcher(" + options.dispatcher().getName() + ".INSTANCE);");
+        } else {
+            // use the default dispatcher configured for the service..
+            p("__method.setDispatcher(this.dispatcher);");
+        }
+
+        // configure the expected statuses..
+        if (options != null && options.expect().length != 0) {
+            // Using method level defined expected status
+            p("__method.expect(" + join(options.expect(), ", ") + ");");
+        } else if (classOptions != null && classOptions.expect().length != 0) {
+            // Using class level defined expected status
+            p("__method.expect(" + join(classOptions.expect(), ", ") + ");");
+        }
+
+        // configure the timeout
+        if (options != null && options.timeout() >= 0) {
+            // Using method level defined value
+            p("__method.timeout(" + options.timeout() + ");");
+        } else if (classOptions != null && classOptions.timeout() >= 0) {
+            // Using class level defined value
+            p("__method.timeout(" + classOptions.timeout() + ");");
+        }
+    }
+
     private void writeMethodImpl(JMethod method, Options classOptions) throws UnableToCompleteException {
         boolean returnRequest = false;
         if (method.getReturnType() != JPrimitiveType.VOID) {
@@ -541,32 +570,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 }
             }
 
-            // configure the dispatcher
-            if( options!=null && options.dispatcher()!=Dispatcher.class ) {
-                // use the dispatcher configured for the method.
-                p("__method.setDispatcher("+options.dispatcher().getName()+".INSTANCE);");
-            } else {
-                // use the default dispatcher configured for the service..
-                p("__method.setDispatcher(this.dispatcher);");
-            }
-
-            // configure the expected statuses..
-            if( options!=null && options.expect().length!=0 ) {
-                // Using method level defined expected status
-                p("__method.expect("+join(options.expect(), ", ")+");");
-            } else if( classOptions!=null && classOptions.expect().length!=0 ) {
-                // Using class level defined expected status
-                p("__method.expect("+join(classOptions.expect(), ", ")+");");
-            }
-
-            // configure the timeout
-            if( options!=null && options.timeout() >= 0 ) {
-                // Using method level defined value
-                p("__method.timeout("+options.timeout()+");");
-            } else if( classOptions!=null && classOptions.timeout() >= 0 ) {
-                // Using class level defined value
-                p("__method.timeout("+classOptions.timeout()+");");
-            }
+            writeOptions(options, classOptions);
 
             if(jsonpAnnotation == null) {
                 Produces producesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Produces.class);
