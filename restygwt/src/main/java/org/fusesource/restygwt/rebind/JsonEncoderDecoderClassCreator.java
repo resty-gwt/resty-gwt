@@ -829,6 +829,20 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 					getAnnotation(m, XmlTransient.class) == null) {
                 getters.put( m.getName().replaceFirst("^get", ""), m );
             }
+            else if( m.getName().startsWith("is") &&
+                    m.getParameterTypes().length == 0 &&
+                    m.getReturnType() == JPrimitiveType.BOOLEAN &&
+                    getAnnotation(m, JsonIgnore.class) == null && 
+                    getAnnotation(m, XmlTransient.class) == null) {
+                getters.put( m.getName().replaceFirst("^is", ""), m );
+            }
+            else if( m.getName().startsWith("has") &&
+                    m.getParameterTypes().length == 0 &&
+                    m.getReturnType() == JPrimitiveType.BOOLEAN &&
+                    getAnnotation(m, JsonIgnore.class) == null && 
+                    getAnnotation(m, XmlTransient.class) == null) {
+            getters.put( m.getName().replaceFirst("^has", ""), m );
+            }
         }
         for( Map.Entry<String, JMethod> entry: getters.entrySet() ){
             if ( setters.containsKey( entry.getKey() ) && setters.get( entry.getKey() ).equals( entry.getValue().getReturnType() ) ) {
