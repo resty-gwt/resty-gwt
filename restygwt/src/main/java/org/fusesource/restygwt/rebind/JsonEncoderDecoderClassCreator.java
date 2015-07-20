@@ -730,13 +730,16 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	}
 	JClassType type = field.getEnclosingType();
 	if (field.getType().equals(JPrimitiveType.BOOLEAN) || field.getType().equals(booleanType)) {
+	    if ( field instanceof DummyJField ) {
+	        return ((DummyJField )field).getGetterMethod().getName();
+	    }
 	    fieldName = "is" + upperCaseFirstChar(field.getName());
 	    if (exists(type, field, fieldName, false)) {
-		return fieldName;
+	        return fieldName;
 	    }
 	    fieldName = "has" + upperCaseFirstChar(field.getName());
 	    if (exists(type, field, fieldName, false)) {
-		return fieldName;
+	        return fieldName;
 	    }
 	}
 	fieldName = "get" + upperCaseFirstChar(field.getName());
@@ -765,7 +768,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
      */
     private boolean exists(JClassType type, JField field, String fieldName, boolean isSetter) {
         if ( field instanceof DummyJField ){
-            return true;
+               return true; 
         }
 
 	JType[] args = null;
@@ -814,6 +817,13 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         List<JField> allFields = getFields(new ArrayList<JField>(), type);
         Map<String, JMethod> getters = new HashMap<String, JMethod>();
         Map<String, JType> setters = new HashMap<String, JType>();
+
+        JType booleanType = null;
+        try {
+            booleanType = find(Boolean.class, getLogger(), context);
+        } catch (UnableToCompleteException e) {
+            // do nothing
+        }
         for( JMethod m: type.getInheritableMethods() ){
             if( m.getName().startsWith("set") &&
                     m.getParameterTypes().length == 1 &&
@@ -831,17 +841,17 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             }
             else if( m.getName().startsWith("is") &&
                     m.getParameterTypes().length == 0 &&
-                    m.getReturnType() == JPrimitiveType.BOOLEAN &&
+                    ( m.getReturnType() == JPrimitiveType.BOOLEAN || m.getReturnType().equals(booleanType) ) &&
                     getAnnotation(m, JsonIgnore.class) == null && 
                     getAnnotation(m, XmlTransient.class) == null) {
                 getters.put( m.getName().replaceFirst("^is", ""), m );
             }
             else if( m.getName().startsWith("has") &&
                     m.getParameterTypes().length == 0 &&
-                    m.getReturnType() == JPrimitiveType.BOOLEAN &&
+                    ( m.getReturnType() == JPrimitiveType.BOOLEAN || m.getReturnType().equals(booleanType) ) &&
                     getAnnotation(m, JsonIgnore.class) == null && 
                     getAnnotation(m, XmlTransient.class) == null) {
-            getters.put( m.getName().replaceFirst("^has", ""), m );
+                getters.put( m.getName().replaceFirst("^has", ""), m );
             }
         }
         for( Map.Entry<String, JMethod> entry: getters.entrySet() ){
@@ -869,12 +879,12 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                 // if have a field and an annotation from the getter/setter then use that annotation 
                 if ( propName != null && found && !f.getName().equals(propName.value())) {
                     allFields.remove(f);
-                    DummyJField dummy = new DummyJField( name, entry.getValue().getReturnType() );
+                    DummyJField dummy = new DummyJField( name, entry.getValue().getReturnType(), entry.getValue() );
                     dummy.setAnnotation( propName );
                     allFields.add(dummy);
                 }
                 if ( ! found && !( f != null && f.isAnnotationPresent( JsonIgnore.class ) ) ){
-                    DummyJField dummy = new DummyJField( name, entry.getValue().getReturnType() );
+                    DummyJField dummy = new DummyJField( name, entry.getValue().getReturnType(), entry.getValue() );
                     if ( entry.getValue().isAnnotationPresent(JsonProperty.class) ) {
                         dummy.setAnnotation( getAnnotation(entry.getValue(), JsonProperty.class) );
                     }
