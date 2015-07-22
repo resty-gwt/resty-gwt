@@ -490,7 +490,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 acceptTypeBuiltIn = "CONTENT_TYPE_XML";
             }
 
-            p("final " + METHOD_CLASS + " __method =");
+            // Handle JSONP specific configuration...
+            JSONP jsonpAnnotation = getAnnotation(method, JSONP.class);
+
+            final boolean isJsonp = restMethod.equals(METHOD_JSONP) && jsonpAnnotation != null;
+
+            p("final " + (isJsonp ? JSONP_METHOD_CLASS : METHOD_CLASS) + " __method =");
 
             p("getResource()");
             if (pathExpression != null) {
@@ -510,20 +515,16 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             // example: .get()
             p("." + restMethod + "();");
 
-            // Handle JSONP specific configuration...
-            JSONP jsonpAnnotation = getAnnotation(method, JSONP.class);
-
-            final boolean isJsonp = restMethod.equals(METHOD_JSONP) && jsonpAnnotation!=null;
             if( isJsonp ) {
                 if (returnRequest && !method.getReturnType().getQualifiedSourceName().equals(JsonpRequest.class.getName())) {
                     getLogger().log(ERROR, "Invalid rest method. JSONP method must have void or JsonpRequest return types: " + method.getReadableDeclaration());
                     throw new UnableToCompleteException();
                 }
                 if( jsonpAnnotation.callbackParam().length() > 0 ) {
-                    p("(("+JSONP_METHOD_CLASS+")__method).callbackParam("+wrap(jsonpAnnotation.callbackParam())+");");
+                    p("__method.callbackParam("+wrap(jsonpAnnotation.callbackParam())+");");
                 }
                 if( jsonpAnnotation.failureCallbackParam().length() > 0 ) {
-                    p("(("+JSONP_METHOD_CLASS+")__method).failureCallbackParam("+wrap(jsonpAnnotation.failureCallbackParam())+");");
+                    p("__method.failureCallbackParam("+wrap(jsonpAnnotation.failureCallbackParam())+");");
                 }
             } else {
                 if (returnRequest && !method.getReturnType().getQualifiedSourceName().equals(Request.class.getName())) {
@@ -675,7 +676,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 // TODO: shouldn't we also have a cach in here?
                 p(returnRequest(returnRequest,isJsonp) + "__method.send(" + callbackArg.getName() + ");");
             } else if ( isJsonp ){
-                    p(returnRequest(returnRequest,isJsonp) + "((" + JSONP_METHOD_CLASS + ")__method).send(new " + ABSTRACT_ASYNC_CALLBACK_CLASS + "<" + resultType.getParameterizedQualifiedSourceName() + ">((" + JSONP_METHOD_CLASS + ")__method, "
+                    p(returnRequest(returnRequest,isJsonp) + "__method.send(new " + ABSTRACT_ASYNC_CALLBACK_CLASS + "<" + resultType.getParameterizedQualifiedSourceName() + ">(__method, "
                                     + callbackArg.getName() + ") {").i(1);
                     {
                         p("protected " + resultType.getParameterizedQualifiedSourceName() + " parseResult(" + JSON_VALUE_CLASS + " result) throws Exception {").i(1);
