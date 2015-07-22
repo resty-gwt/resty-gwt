@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 the original author or authors.
+ * Copyright (C) 2009-2015 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -298,7 +298,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         	if(iface != null && REST_SERVICE_TYPE.isAssignableFrom(iface))
         		writeSubresourceLocatorImpl(method);
         	else
-            	writeMethodImpl(method);
+                writeMethodImpl(method, options);
         }
     }
 
@@ -380,7 +380,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                " : com.google.gwt.http.client.URL.encodePathSegment(" + expr + ")))+\"");
     }
 
-    private void writeMethodImpl(JMethod method) throws UnableToCompleteException {
+    private void writeMethodImpl(JMethod method, Options classOptions) throws UnableToCompleteException {
         boolean returnRequest = false;
         if (method.getReturnType() != JPrimitiveType.VOID) {
             if (!method.getReturnType().getQualifiedSourceName().equals(Request.class.getName()) &&
@@ -394,7 +394,6 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         Json jsonAnnotation = getAnnotation(source, Json.class);
         final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
 
-        Options classOptions = getAnnotation(source, Options.class);
         Options options = getAnnotation(method, Options.class);
 
         p(method.getReadableDeclaration(false, false, false, false, true) + " {").i(1);
