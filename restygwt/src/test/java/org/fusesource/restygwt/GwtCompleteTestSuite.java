@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 the original author or authors.
+ * Copyright (C) 2009-2015 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -18,7 +18,6 @@
 
 package org.fusesource.restygwt;
 
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 
@@ -32,6 +31,7 @@ import org.fusesource.restygwt.client.basic.FlakyTestGwt;
 import org.fusesource.restygwt.client.basic.FormParamTestGwt;
 import org.fusesource.restygwt.client.basic.GenericsTestGwt;
 import org.fusesource.restygwt.client.basic.JsonCreatorWithSubtypes;
+import org.fusesource.restygwt.client.basic.JsonpTestGwt;
 import org.fusesource.restygwt.client.basic.ParameterizedTypeDTO;
 import org.fusesource.restygwt.client.basic.ParameterizedTypeServiceInterfaces;
 import org.fusesource.restygwt.client.basic.PathParamTestGwt;
@@ -47,7 +47,6 @@ import org.fusesource.restygwt.client.codec.MapInRestServiceEncoderDecoderTestGw
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
-
 
 /**
  *
@@ -68,12 +67,11 @@ import com.google.gwt.junit.tools.GWTTestSuite;
  */
 public class GwtCompleteTestSuite extends TestCase {
 
-
     /**
      * @return the suite of that module
      */
     public static Test suite() {
-        GWTTestSuite suite = new GWTTestSuite("all GwtTestCases but AnnotationResolver" );
+        GWTTestSuite suite = new GWTTestSuite("all GwtTestCases but AnnotationResolver");
 
         suite.addTestSuite(BasicTestGwt.class);
         // keep the cache-callback at the beginning to get it pass
@@ -82,13 +80,13 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(InnerClassesEncoderDecoderTestGwt.class);
         suite.addTestSuite(MapInRestServiceEncoderDecoderTestGwt.class);
         suite.addTestSuite(EncoderDecoderTestGwt.class);
-        
+
         suite.addTestSuite(FlakyTestGwt.class);
         suite.addTestSuite(TimeoutTestGwt.class);
         suite.addTestSuite(CachingTestGwt.class);
         suite.addTestSuite(ResourceTestGwt.class);
         suite.addTestSuite(ResourcePassesHeadersTestGwt.class);
-        suite.addTestSuite(VolatileQueueableCacheStorageTestGwt.class);       
+        suite.addTestSuite(VolatileQueueableCacheStorageTestGwt.class);
         suite.addTestSuite(FailingTestGwt.class);
         suite.addTestSuite(GenericsTestGwt.class);
         suite.addTestSuite(ParameterizedTypeDTO.class);
@@ -101,10 +99,9 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(FormParamTestGwt.class);
         suite.addTestSuite(DirectRestServiceTestGwt.class);
         suite.addTestSuite(ConfiguredServiceTestGwt.class);
-        
-        //TODO not sure what a jsonp servlet looks like, i.e. the one used by the test just
-        // produces error on the javascript callback
-        //suite.addTestSuite(JsonpTestGwt.class);
+
+        suite.addTestSuite(JsonpTestGwt.class);
+
         return suite;
     }
 }
