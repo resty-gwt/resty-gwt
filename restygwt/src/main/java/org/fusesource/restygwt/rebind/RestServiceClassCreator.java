@@ -688,7 +688,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                                 p("try {").i(1);
                                 {
                                     if(resultType.isAssignableTo(locator.LIST_TYPE)){
-                                        p("result = new " + JSON_ARRAY_CLASS + "(result.getJavaScriptObject());");
+                                        p("result = new " + JSON_ARRAY_CLASS + "(((" + JSON_OBJECT_CLASS + ")result).getJavaScriptObject());");
                                     }
                                     jsonAnnotation = getAnnotation(method, Json.class);
                                     Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
