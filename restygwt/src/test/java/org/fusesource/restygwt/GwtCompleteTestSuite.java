@@ -30,6 +30,7 @@ import org.fusesource.restygwt.client.basic.FailingTestGwt;
 import org.fusesource.restygwt.client.basic.FlakyTestGwt;
 import org.fusesource.restygwt.client.basic.FormParamTestGwt;
 import org.fusesource.restygwt.client.basic.GenericsTestGwt;
+import org.fusesource.restygwt.client.basic.JsonCreatorWithBoolean;
 import org.fusesource.restygwt.client.basic.JsonCreatorWithSubtypes;
 import org.fusesource.restygwt.client.basic.JsonpTestGwt;
 import org.fusesource.restygwt.client.basic.ParameterizedTypeDTO;
@@ -93,7 +94,10 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(ParameterizedTypeServiceInterfaces.class);
         suite.addTestSuite(SubResourceClientGeneration.class);
         suite.addTestSuite(JsonTypeIdResolver.class);
+
+        suite.addTestSuite(JsonCreatorWithBoolean.class);
         suite.addTestSuite(JsonCreatorWithSubtypes.class);
+
         suite.addTestSuite(PathParamTestGwt.class);
         suite.addTestSuite(QueryParamTestGwt.class);
         suite.addTestSuite(FormParamTestGwt.class);
