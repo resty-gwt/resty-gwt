@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 the original author or authors.
+ * Copyright (C) 2009-2015 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -298,7 +298,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         	if(iface != null && REST_SERVICE_TYPE.isAssignableFrom(iface))
         		writeSubresourceLocatorImpl(method);
         	else
-            	writeMethodImpl(method);
+                writeMethodImpl(method, options);
         }
     }
 
@@ -380,7 +380,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                " : com.google.gwt.http.client.URL.encodePathSegment(" + expr + ")))+\"");
     }
 
-    private void writeMethodImpl(JMethod method) throws UnableToCompleteException {
+    private void writeMethodImpl(JMethod method, Options classOptions) throws UnableToCompleteException {
         boolean returnRequest = false;
         if (method.getReturnType() != JPrimitiveType.VOID) {
             if (!method.getReturnType().getQualifiedSourceName().equals(Request.class.getName()) &&
@@ -394,7 +394,6 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         Json jsonAnnotation = getAnnotation(source, Json.class);
         final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
 
-        Options classOptions = getAnnotation(source, Options.class);
         Options options = getAnnotation(method, Options.class);
 
         p(method.getReadableDeclaration(false, false, false, false, true) + " {").i(1);
@@ -491,7 +490,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 acceptTypeBuiltIn = "CONTENT_TYPE_XML";
             }
 
-            p("final " + METHOD_CLASS + " __method =");
+            // Handle JSONP specific configuration...
+            JSONP jsonpAnnotation = getAnnotation(method, JSONP.class);
+
+            final boolean isJsonp = restMethod.equals(METHOD_JSONP) && jsonpAnnotation != null;
+
+            p("final " + (isJsonp ? JSONP_METHOD_CLASS : METHOD_CLASS) + " __method =");
 
             p("getResource()");
             if (pathExpression != null) {
@@ -511,20 +515,16 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             // example: .get()
             p("." + restMethod + "();");
 
-            // Handle JSONP specific configuration...
-            JSONP jsonpAnnotation = getAnnotation(method, JSONP.class);
-
-            final boolean isJsonp = restMethod.equals(METHOD_JSONP) && jsonpAnnotation!=null;
             if( isJsonp ) {
                 if (returnRequest && !method.getReturnType().getQualifiedSourceName().equals(JsonpRequest.class.getName())) {
                     getLogger().log(ERROR, "Invalid rest method. JSONP method must have void or JsonpRequest return types: " + method.getReadableDeclaration());
                     throw new UnableToCompleteException();
                 }
                 if( jsonpAnnotation.callbackParam().length() > 0 ) {
-                    p("(("+JSONP_METHOD_CLASS+")__method).callbackParam("+wrap(jsonpAnnotation.callbackParam())+");");
+                    p("__method.callbackParam("+wrap(jsonpAnnotation.callbackParam())+");");
                 }
                 if( jsonpAnnotation.failureCallbackParam().length() > 0 ) {
-                    p("(("+JSONP_METHOD_CLASS+")__method).failureCallbackParam("+wrap(jsonpAnnotation.failureCallbackParam())+");");
+                    p("__method.failureCallbackParam("+wrap(jsonpAnnotation.failureCallbackParam())+");");
                 }
             } else {
                 if (returnRequest && !method.getReturnType().getQualifiedSourceName().equals(Request.class.getName())) {
@@ -676,7 +676,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 // TODO: shouldn't we also have a cach in here?
                 p(returnRequest(returnRequest,isJsonp) + "__method.send(" + callbackArg.getName() + ");");
             } else if ( isJsonp ){
-                    p(returnRequest(returnRequest,isJsonp) + "((" + JSONP_METHOD_CLASS + ")__method).send(new " + ABSTRACT_ASYNC_CALLBACK_CLASS + "<" + resultType.getParameterizedQualifiedSourceName() + ">((" + JSONP_METHOD_CLASS + ")__method, "
+                    p(returnRequest(returnRequest,isJsonp) + "__method.send(new " + ABSTRACT_ASYNC_CALLBACK_CLASS + "<" + resultType.getParameterizedQualifiedSourceName() + ">(__method, "
                                     + callbackArg.getName() + ") {").i(1);
                     {
                         p("protected " + resultType.getParameterizedQualifiedSourceName() + " parseResult(" + JSON_VALUE_CLASS + " result) throws Exception {").i(1);
@@ -688,7 +688,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                                 p("try {").i(1);
                                 {
                                     if(resultType.isAssignableTo(locator.LIST_TYPE)){
-                                        p("result = new " + JSON_ARRAY_CLASS + "(result.getJavaScriptObject());");
+                                        p("result = new " + JSON_ARRAY_CLASS + "(((" + JSON_OBJECT_CLASS + ")result).getJavaScriptObject());");
                                     }
                                     jsonAnnotation = getAnnotation(method, Json.class);
                                     Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;

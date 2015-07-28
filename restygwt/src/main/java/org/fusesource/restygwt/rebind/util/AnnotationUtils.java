@@ -20,7 +20,7 @@ public class AnnotationUtils {
             T ann = classType.getAnnotation(annotationType);
             if (ann == null) {
                 for (Annotation metaAnn : classType.getAnnotations()) {
-                    //only return a custom annotation if it contains the JacksonAnnotationsInside annotation
+                    // only return a custom annotation if it contains the JacksonAnnotationsInside annotation
                     if (metaAnn.annotationType().getAnnotation(JacksonAnnotationsInside.class) != null) {
                         ann = metaAnn.annotationType().getAnnotation(annotationType);
                         if (ann != null) {
@@ -45,7 +45,7 @@ public class AnnotationUtils {
         } else {
             List<JClassType> intefaces = Arrays.asList(classType.getImplementedInterfaces());
 
-            for (JClassType itf: intefaces) {
+            for (JClassType itf : intefaces) {
                 annotation = getClassAnnotation(itf, annotationType);
                 if (annotation != null) {
                     return annotation;
@@ -61,7 +61,7 @@ public class AnnotationUtils {
      * <br>
      * Works like {@link JClassType#findAnnotationInTypeHierarchy(Class)} but returns all annotations in the type hierarchy.
      * 
-     * @author Ralf Sommer <ralf.sommer.dev@gmail.com>
+     * @author Ralf Sommer {@literal <ralf.sommer.dev@gmail.com>}
      * 
      * @param classType
      * @return annotations

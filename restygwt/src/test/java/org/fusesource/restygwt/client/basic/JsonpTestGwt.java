@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 the original author or authors.
+ * Copyright (C) 2009-2015 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -18,74 +18,74 @@
 
 package org.fusesource.restygwt.client.basic;
 
+import java.util.List;
+
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
-import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.jsonp.client.JsonpRequest;
+import com.google.gwt.junit.DoNotRunWith;
+import com.google.gwt.junit.Platform;
 import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.user.client.Timer;
 
 /**
  *
- *
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author Ralf Sommer {@literal <ralf.sommer.dev@gmail.com>}
  *
  */
 public class JsonpTestGwt extends GWTTestCase {
 
-    private static final String URI_PATH = "ui/jsonp-service";
-
     @Override
     public String getModuleName() {
-        return "org.fusesource.restygwt.BasicTestGwt";
+        return "org.fusesource.restygwt.JsonpTestGwt";
+    }
+
+    JsonpService service;
+
+    @Override
+    protected void gwtSetUp() throws Exception {
+        // configure RESTY
+        Resource resource = new Resource(GWT.getModuleBaseURL() + "jsonp");
+
+        service = GWT.create(JsonpService.class);
+        ((RestServiceProxy) service).setResource(resource);
     }
 
     public void testDefaultFunction() {
-
-        //configure RESTY
-        Resource resource = new Resource(GWT.getModuleBaseURL() + URI_PATH);
-
-
-        JsonpService service = GWT.create(JsonpService.class);
-        ((RestServiceProxy) service).setResource(resource);
+        // wait... we are in async testing...
+        delayTestFinish(5000);
 
         service.someJsonp(new MethodCallback<ExampleDto>() {
-
             @Override
             public void onSuccess(Method method, ExampleDto response) {
-
                 assertEquals(response.name, "myName");
                 finishTest();
-
             }
 
             @Override
             public void onFailure(Method method, Throwable exception) {
                 fail();
-
             }
         });
+    }
 
-        // wait... we are in async testing...
+    /**
+     * HtmlUnit execute synchronously. Should be async.
+     * <p>
+     * Run manually with -Dgwt.args="-prod -runStyle Manual:1" works as expected
+     * 
+     * @see <a href="https://github.com/gwtproject/gwt/blob/138c60c7625a9403f34bd9616cea483fbdbeb2f0/user/test/com/google/gwt/jsonp/client/JsonpRequestTest.java#L191">GWT JsonpRequestTest.java</a>
+     */
+    @DoNotRunWith(Platform.HtmlUnitBug)
+    public void testCancel() {
         delayTestFinish(10000);
 
-    }
-    
-    @Test
-    public void testCancel() {
-
-        //configure RESTY
-        Resource resource = new Resource(GWT.getModuleBaseURL() + URI_PATH);
-
-
-        JsonpService service = GWT.create(JsonpService.class);
-        ((RestServiceProxy) service).setResource(resource);
-
-        JsonpRequest<?> request = service.someCancelableJsonp(new MethodCallback<ExampleDto>() {
-
+        JsonpRequest<ExampleDto> request = service.someCancelableJsonp(new MethodCallback<ExampleDto>() {
             @Override
             public void onSuccess(Method method, ExampleDto response) {
                 fail();
@@ -94,45 +94,54 @@ public class JsonpTestGwt extends GWTTestCase {
             @Override
             public void onFailure(Method method, Throwable exception) {
                 fail();
-
             }
         });
-        
+
         request.cancel();
 
-        // wait... we are in async testing...
-        delayTestFinish(10000);
+        // after waiting for 5 seconds assume, that the request has been canceled successfully
+        new Timer() {
+            @Override
+            public void run() {
+                finishTest();
+            }
+        }.schedule(5000);
     }
 
-//    public void testListFunction() {
-//
-//        //configure RESTY
-//        Resource resource = new Resource(GWT.getModuleBaseURL() + URI_PATH);
-//
-//
-//        JsonpService service = GWT.create(JsonpService.class);
-//        ((RestServiceProxy) service).setResource(resource);
-//
-//        service.someJsonpWithList(new MethodCallback<List<ExampleDto>>() {
-//
-//            @Override
-//            public void onSuccess(Method method, List<ExampleDto> response) {
-//
-//                assertEquals(response.get(0).name, "myName");
-//                finishTest();
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Method method, Throwable exception) {
-//                fail();
-//
-//            }
-//        });
-//
-//        // wait... we are in async testing...
-//        delayTestFinish(10000);
-//
-//    }
+    public void testNullResult() {
+        delayTestFinish(5000);
+
+        service.someOtherJsonp(new MethodCallback<ExampleDto>() {
+            @Override
+            public void onSuccess(Method method, ExampleDto response) {
+                assertNull(response);
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+            }
+        });
+    }
+
+    public void testListFunction() {
+        // wait... we are in async testing...
+        delayTestFinish(5000);
+
+        service.someJsonpWithList(new MethodCallback<List<ExampleDto>>() {
+            @Override
+            public void onSuccess(Method method, List<ExampleDto> response) {
+                assertEquals(response.get(0).name, "myName");
+                assertEquals(response.get(1).name, "myName2");
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+            }
+        });
+    }
 
 }
