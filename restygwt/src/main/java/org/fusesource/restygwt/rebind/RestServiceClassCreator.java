@@ -76,7 +76,10 @@ import com.google.gwt.core.client.JsArrayBoolean;
 import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.PropertyOracle;
+import com.google.gwt.core.ext.SelectionProperty;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.HasAnnotations;
@@ -97,6 +100,7 @@ import com.google.gwt.jsonp.client.JsonpRequest;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.xml.client.Document;
+
 /**
  *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
@@ -108,6 +112,8 @@ import com.google.gwt.xml.client.Document;
 public class RestServiceClassCreator extends BaseSourceCreator {
 
     private static final String REST_SERVICE_PROXY_SUFFIX = "_Generated_RestServiceProxy_";
+
+    private static final String PLAIN_TEXT_AUTODETECTION_CONFIGURATION_PROPERTY_NAME = "restygwt.autodetect.plaintText";
 
     private static final String METHOD_CLASS = Method.class.getName();
     private static final String RESOURCE_CLASS = Resource.class.getName();
@@ -166,6 +172,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private JClassType REST_SERVICE_TYPE;
     private JsonEncoderDecoderInstanceLocator locator;
 
+    private boolean autodetectTypeForStrings;
+
     public RestServiceClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) {
         super(logger, context, source, REST_SERVICE_PROXY_SUFFIX);
     }
@@ -205,6 +213,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             getLogger().log(ERROR, "Type is not an interface.");
             throw new UnableToCompleteException();
         }
+
+        autodetectTypeForStrings = shouldAutodetectPlainTextForStrings(getLogger(), context.getPropertyOracle());
 
         locator = new JsonEncoderDecoderInstanceLocator(context, getLogger());
 
@@ -292,6 +302,20 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         	else
                 writeMethodImpl(method, options);
         }
+    }
+
+    /**
+     * Returns {@code true} if plain text autodetection for strings should be used.
+     */
+    static boolean shouldAutodetectPlainTextForStrings(TreeLogger logger, PropertyOracle propertyOracle) {
+        try {
+            SelectionProperty prop = propertyOracle.getSelectionProperty(logger, PLAIN_TEXT_AUTODETECTION_CONFIGURATION_PROPERTY_NAME);
+            String propVal = prop.getCurrentValue();
+            return Boolean.parseBoolean(propVal);
+        } catch (BadPropertyValueException e) {
+            // use default "false"
+        }
+        return false;
     }
 
     private static String getPathFromSource(HasAnnotations annotatedType) {
@@ -572,22 +596,28 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
             writeOptions(options, classOptions);
 
-            if(jsonpAnnotation == null) {
+            if (jsonpAnnotation == null) {
+                final String acceptHeader;
                 Produces producesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Produces.class);
                 if (producesAnnotation != null) {
-                    p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, "+wrap(producesAnnotation.value()[0])+");");
+                    // Do not use autodetection, if accept type already set
+                    if (acceptTypeBuiltIn == null && autodetectTypeForStrings && producesAnnotation.value()[0].startsWith("text/")) {
+                        acceptTypeBuiltIn = "CONTENT_TYPE_TEXT";
+                    }
+                    acceptHeader = wrap(producesAnnotation.value()[0]);
                 } else {
-                    // set the default accept header....
+                    // set the default accept header value ...
                     if (acceptTypeBuiltIn != null) {
-                        p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + "." + acceptTypeBuiltIn + ");");
+                        acceptHeader = RESOURCE_CLASS + "." + acceptTypeBuiltIn;
                     } else {
-                        p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + ".CONTENT_TYPE_JSON);");
+                        acceptHeader = RESOURCE_CLASS + ".CONTENT_TYPE_JSON";
                     }
                 }
+                p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + acceptHeader + ");");
 
                 Consumes consumesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Consumes.class);
                 if (consumesAnnotation != null) {
-                    p("__method.header(" + RESOURCE_CLASS + ".HEADER_CONTENT_TYPE, "+wrap(consumesAnnotation.value()[0])+");");
+                    p("__method.header(" + RESOURCE_CLASS + ".HEADER_CONTENT_TYPE, " + wrap(consumesAnnotation.value()[0]) + ");");
                 }
 
                 // and set the explicit headers now (could override the accept header)
