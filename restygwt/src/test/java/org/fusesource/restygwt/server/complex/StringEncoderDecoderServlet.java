@@ -20,9 +20,11 @@ package org.fusesource.restygwt.server.complex;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.ws.rs.Path;
 
 import org.fusesource.restygwt.client.complex.StringEncoderDecoderTestGwt;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
+import org.jboss.resteasy.spi.BadRequestException;
 import org.jboss.resteasy.spi.Registry;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
@@ -30,6 +32,7 @@ public class StringEncoderDecoderServlet extends HttpServletDispatcher {
 
     private static final long serialVersionUID = 1L;
 
+    @Path("/strings")
     public static class StringsImpl implements StringEncoderDecoderTestGwt.Strings {
         @Override
         public String getAsJson() {
@@ -39,6 +42,20 @@ public class StringEncoderDecoderServlet extends HttpServletDispatcher {
         @Override
         public String getAsPlainText() {
             return "String as plain text";
+        }
+
+        @Override
+        public void setAsJson(String text) {
+            if(!"\"Json String?\"".equals(text)) {
+                throw new BadRequestException("Wrong Format");
+            }
+        }
+
+        @Override
+        public void setAsPlainText(String text) {
+            if(!"Plain text String?".equals(text)) {
+                throw new BadRequestException("Wrong Format");
+            }
         }
     }
 

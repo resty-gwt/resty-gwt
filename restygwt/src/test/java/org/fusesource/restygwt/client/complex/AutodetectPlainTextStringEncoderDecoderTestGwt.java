@@ -53,4 +53,23 @@ public class AutodetectPlainTextStringEncoderDecoderTestGwt extends StringEncode
         });
     }
 
+    @Override
+    public void testSendJsonString() {
+        StringsAsync strings = GWT.create(StringsAsync.class);
+
+        delayTestFinish(10000);
+
+        strings.setAsJson("\"Json String?\"", new MethodCallback<Void>() {
+            @Override
+            public void onSuccess(Method method, Void response) {
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+            }
+        });
+    }
+
 }

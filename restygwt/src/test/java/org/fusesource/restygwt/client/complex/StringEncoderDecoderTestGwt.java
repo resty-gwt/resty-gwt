@@ -18,7 +18,9 @@
 
 package org.fusesource.restygwt.client.complex;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -48,6 +50,14 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
         @GET
         @Produces(MediaType.TEXT_PLAIN)
         String getAsPlainText();
+
+        @POST
+        @Path("set/json")
+        void setAsJson(String text);
+
+        @POST
+        @Path("set/text")
+        void setAsPlainText(String text);
     }
 
     @Path("/strings")
@@ -63,6 +73,16 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
         @GET
         @Produces(MediaType.TEXT_PLAIN)
         void getAsPlainText(TextCallback callback);
+
+        @POST
+        @Path("set/json")
+        @Consumes(MediaType.APPLICATION_JSON)
+        void setAsJson(String text, MethodCallback<Void> callback);
+
+        @POST
+        @Path("set/text")
+        @Consumes(MediaType.TEXT_PLAIN)
+        void setAsPlainText(String text, MethodCallback<Void> callback);
     }
 
     public void testJsonString() {
@@ -80,6 +100,31 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
             @Override
             public void onFailure(Method method, Throwable exception) {
                 fail(exception.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Test method only success through "onFailure" with restygwt <= 2.0.3 or plain text autodetection set to false (default)
+     */
+    public void testSendJsonString() {
+        StringsAsync strings = GWT.create(StringsAsync.class);
+
+        delayTestFinish(10000);
+
+        strings.setAsJson("\"Json String?\"", new MethodCallback<Void>() {
+            @Override
+            public void onSuccess(Method method, Void response) {
+                fail();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                if(400 == method.getResponse().getStatusCode() && "Wrong Format".equals(exception.getMessage())) {
+                    finishTest();
+                } else {
+                    fail();
+                }
             }
         });
     }
@@ -125,6 +170,24 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
                 }
 
                 fail(exception.getMessage());
+            }
+        });
+    }
+
+    public void testSendPlainTextString() {
+        StringsAsync strings = GWT.create(StringsAsync.class);
+
+        delayTestFinish(10000);
+
+        strings.setAsPlainText("Plain text String?", new MethodCallback<Void>() {
+            @Override
+            public void onSuccess(Method method, Void response) {
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
             }
         });
     }
