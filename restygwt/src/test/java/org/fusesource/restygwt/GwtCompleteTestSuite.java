@@ -45,7 +45,9 @@ import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorageTestGwt
 import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.codec.InnerClassesEncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.codec.MapInRestServiceEncoderDecoderTestGwt;
+import org.fusesource.restygwt.client.complex.AutodetectPlainTextStringEncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver;
+import org.fusesource.restygwt.client.complex.StringEncoderDecoderTestGwt;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
 
@@ -105,6 +107,9 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(ConfiguredServiceTestGwt.class);
 
         suite.addTestSuite(JsonpTestGwt.class);
+
+        suite.addTestSuite(StringEncoderDecoderTestGwt.class);
+        suite.addTestSuite(AutodetectPlainTextStringEncoderDecoderTestGwt.class);
 
         return suite;
     }
