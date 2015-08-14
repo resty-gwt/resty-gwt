@@ -46,6 +46,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 import org.fusesource.restygwt.client.AbstractAsyncCallback;
 import org.fusesource.restygwt.client.AbstractRequestCallback;
@@ -95,6 +96,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.jsonp.client.JsonpRequest;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -125,6 +127,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private static final String JSON_ARRAY_CLASS = JSONArray.class.getName();
     private static final String JSON_OBJECT_CLASS = JSONObject.class.getName();
     private static final String JSON_VALUE_CLASS = JSONValue.class.getName();
+    private static final String JSON_STRING_CLASS = JSONString.class.getName();
     private static final String REQUEST_EXCEPTION_CLASS = RequestException.class.getName();
     private static final String RESPONSE_FORMAT_EXCEPTION_CLASS = ResponseFormatException.class.getName();
     private static final String JSONP_METHOD_CLASS = JsonpMethod.class.getName();
@@ -528,8 +531,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 }
 
                 if (!formParams.isEmpty()) {
-                    getLogger().log(ERROR, "You can not have both @FormParam parameters and a content parameter: " +
-                                                method.getReadableDeclaration());
+                    getLogger().log(ERROR, "You can not have both @FormParam parameters and a content parameter: " + method.getReadableDeclaration());
                     throw new UnableToCompleteException();
                 }
 
@@ -596,8 +598,10 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
             writeOptions(options, classOptions);
 
-            if (jsonpAnnotation == null) {
-                final String acceptHeader;
+            String contentTypeHeaderValue = null;
+
+            if(jsonpAnnotation == null) {
+                final String acceptHeader; 
                 Produces producesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Produces.class);
                 if (producesAnnotation != null) {
                     // Do not use autodetection, if accept type already set
@@ -617,8 +621,9 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
                 Consumes consumesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Consumes.class);
                 if (consumesAnnotation != null) {
-                    p("__method.header(" + RESOURCE_CLASS + ".HEADER_CONTENT_TYPE, " + wrap(consumesAnnotation.value()[0]) + ");");
-                }
+                    contentTypeHeaderValue = consumesAnnotation.value()[0];
+                    p("__method.header(" + RESOURCE_CLASS + ".HEADER_CONTENT_TYPE, " + wrap(contentTypeHeaderValue) + ");");
+               }
 
                 // and set the explicit headers now (could override the accept header)
                 for (Map.Entry<String, JParameter> entry : headerParams.entrySet()) {
@@ -651,7 +656,11 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
             if (contentArg != null) {
                 if (contentArg.getType() == STRING_TYPE) {
-                    p("__method.text(" + contentArg.getName() + ");");
+                    if (autodetectTypeForStrings && MediaType.APPLICATION_JSON.equals(contentTypeHeaderValue)) {
+                        p("__method.json(new " + JSON_STRING_CLASS + "(" + contentArg.getName() + "));");
+                    } else {
+                        p("__method.text(" + contentArg.getName() + ");");
+                    }
                 } else if (contentArg.getType() == JSON_VALUE_TYPE) {
                     p("__method.json(" + contentArg.getName() + ");");
                 } else if (contentArg.getType().isClass() != null &&
