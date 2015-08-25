@@ -68,7 +68,9 @@ public class Method {
             //so if request does not have a body, Internet Explorer would send string "undefined" in the body of POST, PUT and DELETE requests,
             //which may cause the request to fall on server with "No operation matching request path"
             setRequestData(null);
-            setHeader("X-HTTP-Method-Override", method);
+            if(Defaults.isAddXHttpMethodOverrideHeader()){
+            	setHeader("X-HTTP-Method-Override", method);
+            }
         }
     }
 

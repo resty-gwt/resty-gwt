@@ -41,6 +41,7 @@ public class Defaults {
     private static boolean dateFormatHasTimeZone = true;
     private static TimeZone timeZone = null;
     private static boolean ignoreJsonNulls = false;
+    private static boolean addXHttpMethodOverrideHeader = true;
     // patch TNY: timeout ms,
     // if >-1, used in Method class to set timeout
     private static int requestTimeout = -1;
@@ -203,4 +204,20 @@ public class Defaults {
     public static void setExceptionMapper(ExceptionMapper exceptionMapper) {
         Defaults.exceptionMapper = exceptionMapper;
     }
+
+    /**
+     * If true, the 'X-HTTP-Method-Override' header is set on each request.
+     * @return
+     */
+	public static boolean isAddXHttpMethodOverrideHeader() {
+		return addXHttpMethodOverrideHeader;
+	}
+
+	/**
+	 * If true, the 'X-HTTP-Method-Override' header is set on each request. Default is true.
+	 * @param addXHttpMethodOverrideHeader
+	 */
+	public static void setAddXHttpMethodOverrideHeader(boolean addXHttpMethodOverrideHeader) {
+		Defaults.addXHttpMethodOverrideHeader = addXHttpMethodOverrideHeader;
+	}
 }
