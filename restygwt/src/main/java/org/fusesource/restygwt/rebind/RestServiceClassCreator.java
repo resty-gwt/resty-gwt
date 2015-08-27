@@ -115,7 +115,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
     private static final String REST_SERVICE_PROXY_SUFFIX = "_Generated_RestServiceProxy_";
 
-    private static final String PLAIN_TEXT_AUTODETECTION_CONFIGURATION_PROPERTY_NAME = "restygwt.autodetect.plaintText";
+    private static final String PLAIN_TEXT_AUTODETECTION_CONFIGURATION_PROPERTY_NAME = "restygwt.autodetect.plainText";
 
     private static final String METHOD_CLASS = Method.class.getName();
     private static final String RESOURCE_CLASS = Resource.class.getName();

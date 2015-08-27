@@ -53,12 +53,12 @@
   <!--
     Declare a property to determine whether autodetection of text/* with @Consumes and @Produces annotations should be used.
   -->
-  <define-property name="restygwt.autodetect.plaintText" values="true,false" />
+  <define-property name="restygwt.autodetect.plainText" values="true,false" />
   
   <!--
     Default no autodetection for text/*, for backward compatibility.
   -->
-  <set-property name="restygwt.autodetect.plaintText" value="false" />
+  <set-property name="restygwt.autodetect.plainText" value="false" />
 
   <source path="client"/>
   <source path="example/client"/>
