@@ -58,6 +58,7 @@ import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt.WithEnum.Cycle
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
@@ -717,6 +718,40 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         		"{me<me@example.com>={me=[me<me@example.com>]}}",
                 roundtrip.toString());
     }
+    
+    /**
+     * Jersey encode arrays with one object as object and not as array.
+     */
+    @SuppressWarnings("unchecked")
+    public void testArrayAndCollectionWithOneElementAsObject() {
+
+        JSONValue json = JSONParser.parseStrict("{\"ages\":[1,2,3,4], " +
+        "\"emailArray\":{\"name\":\"me\", \"email\":\"me@example.com\"}, " +
+        "\"emailList\":{\"name\":\"me\", \"email\":\"me@example.com\"}, " +
+        "\"emailSet\":{\"name\":\"me\", \"email\":\"me@example.com\"}, " +
+		"\"emailListArray\":[[{\"name\":\"me\", \"email\":\"me@example.com\"}]], " +
+        "\"emailSetArray\":[[{\"name\":\"me\", \"email\":\"me@example.com\"}]], " +
+		"\"personalEmailList\":{\"me\":[{\"name\":\"me\", \"email\":\"me@example.com\"}]}, " +
+		"\"personalEmailSet\":{\"me\":[{\"name\":\"me\", \"email\":\"me@example.com\"}]}" +
+		", \"personalEmailListArray\":{\"me\":[[{\"name\":\"me\", \"email\":\"me@example.com\"}]]}" +
+		", \"personalEmailSetArray\":{\"me\":[[{\"name\":\"me\", \"email\":\"me@example.com\"}]]}" +
+        ", \"personalEmailSetList\":[{\"me\":[{\"name\":\"me\", \"email\":\"me@example.com\"}]}]" +
+        ", \"personalEmailListSet\":[{\"me\":[{\"name\":\"me\", \"email\":\"me@example.com\"}]}]" + 
+        ", \"personalEmailSetMap\":{\"{\\\"name\\\":\\\"me\\\", \\\"email\\\":\\\"me@example.com\\\"}\":" +
+        "{\"me\":[{\"name\":\"me\", \"email\":\"me@example.com\"}]}}" +
+		"}");
+        
+        AbstractJsonEncoderDecoder<WithArraysAndCollections> encoder = GWT.create(WithArraysAndCollectionsCodec.class);
+        
+        WithArraysAndCollections result = encoder.decode(json);
+        
+        assertEquals("[1, 2, 3, 4],[me<me@example.com>],[me<me@example.com>],{me=[me<me@example.com>]},null," +
+        		"[me<me@example.com>],{me=[me<me@example.com>]},[[me<me@example.com>]],[[me<me@example.com>]]," +
+        		"[me]=>[[me<me@example.com>]],[me]=>[[me<me@example.com>]],[{me=[me<me@example.com>]}],[{me=[me<me@example.com>]}]," +
+        		"{me<me@example.com>={me=[me<me@example.com>]}}",
+                result.toString());
+    }
+    
 
     static class CCC {
         
