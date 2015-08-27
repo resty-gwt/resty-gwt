@@ -422,13 +422,15 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
     static JSONArray asArray(JSONValue value) {
         JSONArray array = value.isArray();
         if (array == null) {
+        	//Jersey render arrays with one object as object and not as array.
         	JSONObject object = value.isObject();
         	if(object == null){
         		throw new DecodingException("Expected a json array, but was given: " + value);
         	}
+        	//Found a object and return it as array.
         	array = new JSONArray();
         	array.set(0, object);
-        }
+        }        
         return array;
     }
 
