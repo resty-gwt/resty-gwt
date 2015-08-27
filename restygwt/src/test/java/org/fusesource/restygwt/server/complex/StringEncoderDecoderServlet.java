@@ -21,13 +21,15 @@ package org.fusesource.restygwt.server.complex;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.ws.rs.Path;
-
 import org.fusesource.restygwt.client.complex.StringEncoderDecoderTestGwt;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 import org.jboss.resteasy.spi.BadRequestException;
 import org.jboss.resteasy.spi.Registry;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
+/**
+ * Servlet to check restygwts autodetection of text for @Produces and Json/text for @Consumes
+ */
 public class StringEncoderDecoderServlet extends HttpServletDispatcher {
 
     private static final long serialVersionUID = 1L;
@@ -44,16 +46,22 @@ public class StringEncoderDecoderServlet extends HttpServletDispatcher {
             return "String as plain text";
         }
 
+        /**
+         * Method to test POST with {@code @Consumes(MediaType.APPLICATION_JSON)}.
+         * 
+         * @throws BadRequestException
+         *             For restygwt <= 2.0.3 or plain text autodetection set to {@code false} because it sends every String as plain text
+         */
         @Override
         public void setAsJson(String text) {
-            if(!"\"Json String?\"".equals(text)) {
+            if (!"\"Json String?\"".equals(text)) {
                 throw new BadRequestException("Wrong Format");
             }
         }
 
         @Override
         public void setAsPlainText(String text) {
-            if(!"Plain text String?".equals(text)) {
+            if (!"Plain text String?".equals(text)) {
                 throw new BadRequestException("Wrong Format");
             }
         }

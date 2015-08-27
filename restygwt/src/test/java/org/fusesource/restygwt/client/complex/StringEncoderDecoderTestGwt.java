@@ -52,11 +52,11 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
         String getAsPlainText();
 
         @POST
-        @Path("set/json")
+        @Consumes(MediaType.APPLICATION_JSON)
         void setAsJson(String text);
 
         @POST
-        @Path("set/text")
+        @Consumes(MediaType.TEXT_PLAIN)
         void setAsPlainText(String text);
     }
 
@@ -75,12 +75,10 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
         void getAsPlainText(TextCallback callback);
 
         @POST
-        @Path("set/json")
         @Consumes(MediaType.APPLICATION_JSON)
         void setAsJson(String text, MethodCallback<Void> callback);
 
         @POST
-        @Path("set/text")
         @Consumes(MediaType.TEXT_PLAIN)
         void setAsPlainText(String text, MethodCallback<Void> callback);
     }
@@ -120,7 +118,7 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
 
             @Override
             public void onFailure(Method method, Throwable exception) {
-                if(400 == method.getResponse().getStatusCode() && "Wrong Format".equals(exception.getMessage())) {
+                if (400 == method.getResponse().getStatusCode() && "Wrong Format".equals(exception.getMessage())) {
                     finishTest();
                 } else {
                     fail();
