@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 the original author or authors.
+ * Copyright (C) 2009-2015 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -221,8 +221,12 @@ public class Method {
         }
         return this.logger;
     }
-    
+
     public Object send(final TextCallback callback) {
+        return send((MethodCallback<String>) callback);
+    }
+
+    public Object send(final MethodCallback<String> callback) {
         defaultAcceptType(Resource.CONTENT_TYPE_TEXT);
         try {
             return send(new AbstractRequestCallback<String>(this, callback) {
