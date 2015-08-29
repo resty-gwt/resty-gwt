@@ -56,6 +56,8 @@ public class DirectRestServiceInterfaceClassCreator extends DirectRestBaseSource
 
     @Override
     protected void generate() throws UnableToCompleteException {
+        super.generate();
+
         for (JMethod method : source.getInheritableMethods()) {
             p(getAnnotationsAsString(method.getAnnotations()));
             p("void " + method.getName() + "(" + getMethodParameters(method) + getMethodCallback(method) + ");");
@@ -81,7 +83,12 @@ public class DirectRestServiceInterfaceClassCreator extends DirectRestBaseSource
         if (isVoidMethod(method)) {
             return "org.fusesource.restygwt.client.MethodCallback<java.lang.Void> callback";
         }
-        return "org.fusesource.restygwt.client.MethodCallback<" + method.getReturnType().getParameterizedQualifiedSourceName() + "> callback";
+        final String returnType = method.getReturnType().getParameterizedQualifiedSourceName();
+        if (isOverlayMethod(method)) {
+            return "org.fusesource.restygwt.client.OverlayCallback<" + returnType + "> callback";
+        } else {
+            return "org.fusesource.restygwt.client.MethodCallback<" + returnType + "> callback";
+        }
     }
 
     private String getAnnotationsAsString(Annotation[] annotations) {

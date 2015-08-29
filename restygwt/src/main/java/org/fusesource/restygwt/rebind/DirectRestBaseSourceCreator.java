@@ -17,19 +17,25 @@
  */
 package org.fusesource.restygwt.rebind;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JGenericType;
-import com.google.gwt.core.ext.typeinfo.JTypeParameter;
+import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.typeinfo.*;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
 /**
  * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</a>
  */
 public abstract class DirectRestBaseSourceCreator extends BaseSourceCreator {
+    private JClassType OVERLAY_VALUE_TYPE;
+
     public DirectRestBaseSourceCreator(TreeLogger logger, GeneratorContext context, JClassType source, String suffix) {
         super(logger, context, source, suffix);
+    }
+
+    @Override protected void generate() throws UnableToCompleteException {
+        this.OVERLAY_VALUE_TYPE = find(JavaScriptObject.class, getLogger(), context);
     }
 
     protected ClassSourceFileComposerFactory createClassSourceComposerFactory(JavaSourceCategory createWhat,
@@ -84,4 +90,8 @@ public abstract class DirectRestBaseSourceCreator extends BaseSourceCreator {
         return parameters;
     }
 
+    protected boolean isOverlayMethod(JMethod method) {
+        final JClassType aClass = method.getReturnType().isClass();
+        return aClass != null && OVERLAY_VALUE_TYPE.isAssignableFrom(aClass);
+    }
 }
