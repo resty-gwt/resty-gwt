@@ -807,6 +807,18 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     }
 
     /**
+     * Get {@link JsonProperty} from getter or setter. Annotation from setter is preferred to getter.
+     *
+     * @param getter
+     * @param setter
+     * @return
+     */
+    private JsonProperty getJsonPropertyFromGetterSetter(JMethod getter, JMethod setter) {
+        JsonProperty setterProp = getAnnotation(setter, JsonProperty.class);
+        return (null != setterProp)?setterProp:getAnnotation(getter, JsonProperty.class);
+    }
+
+    /**
      * Inspects the supplied type and all super classes up to but excluding
      * Object and returns a list of all fields found in these classes.
      *
@@ -854,7 +866,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                 getters.put( m.getName().replaceFirst("^has", ""), m );
             }
         }
-        for( Map.Entry<String, JMethod> entry: getters.entrySet() ){
+        for (Map.Entry<String, JMethod> entry : getters.entrySet()) {
             final JMethod getter = entry.getValue();
             final JMethod setter = setters.get(entry.getKey());
 
@@ -868,15 +880,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     }
                 }
                 JField f = type.findField( name );
-                // is getter annotated, if yes use this annotation for the field
-                JsonProperty propName = null;
-                if ( getter.isAnnotationPresent(JsonProperty.class) ) {
-                    propName = getAnnotation(getter, JsonProperty.class);
-                }
-                // is setter annotated, if yes use this annotation for the field
-                if ( setter.isAnnotationPresent(JsonProperty.class) ) {
-                    propName = getAnnotation(m, JsonProperty.class);
-                }
+                JsonProperty propName = getJsonPropertyFromGetterSetter(getter, setter);
+
                 // if have a field and an annotation from the getter/setter then use that annotation 
                 if ( propName != null && found && !f.getName().equals(propName.value())) {
                     allFields.remove(f);
