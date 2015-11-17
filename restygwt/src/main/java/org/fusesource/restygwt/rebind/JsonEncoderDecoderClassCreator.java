@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -874,8 +875,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                 String name = entry.getKey().substring(0, 1).toLowerCase() + entry.getKey().substring(1);
                 JField f = null;
                 boolean found = false;
-                for( JField field : allFields ){
-                    if( field.getName().equals( name ) ){
+                for (JField field : allFields) {
+                    if (field.getName().equals(name)) {
                         f = field;
                         found = true;
                         break;
@@ -900,14 +901,29 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                 }
             }
         }
+
+        // remove fields annotated with JsonIgnore
+        for (Iterator<JField> iter = allFields.iterator(); iter.hasNext();) {
+            final JField field = iter.next();
+            if (null != getAnnotation(field, JsonIgnore.class)) {
+                iter.remove();
+            }
+        }
+
         return allFields;
     }
 
+    /**
+     * Returns a list of all fields (non {@code transient} and not annotated with {@link XmlTransient}) in the supplied type and all super classes.
+     * 
+     * @param allFields
+     * @param type
+     * @return
+     */
     private List<JField> getFields(List<JField> allFields, JClassType type) {
         JField[] fields = type.getFields();
         for (JField field : fields) {
-			if (!field.isTransient() && !field.isAnnotationPresent(JsonIgnore.class) &&
-					!field.isAnnotationPresent(XmlTransient.class)) {
+            if (!field.isTransient() && !field.isAnnotationPresent(XmlTransient.class)) {
                 allFields.add(field);
             }
         }
