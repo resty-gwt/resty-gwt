@@ -855,7 +855,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             }
         }
         for( Map.Entry<String, JMethod> entry: getters.entrySet() ){
-            if ( setters.containsKey( entry.getKey() ) && setters.get( entry.getKey() ).equals( entry.getValue().getReturnType() ) ) {
+            final JMethod getter = entry.getValue();
+
+            if ( setters.containsKey( entry.getKey() ) && setters.get( entry.getKey() ).equals( getter.getReturnType() ) ) {
                 String name = entry.getKey().substring(0, 1).toLowerCase() + entry.getKey().substring(1);
                 boolean found = false;
                 for( JField f : allFields ){
@@ -867,26 +869,26 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                 JField f = type.findField( name );
                 // is getter annotated, if yes use this annotation for the field
                 JsonProperty propName = null;
-                if ( entry.getValue().isAnnotationPresent(JsonProperty.class) ) {
-                    propName = getAnnotation(entry.getValue(), JsonProperty.class);
+                if ( getter.isAnnotationPresent(JsonProperty.class) ) {
+                    propName = getAnnotation(getter, JsonProperty.class);
                 }
                 // is setter annotated, if yes use this annotation for the field
-                JMethod m = type.findMethod("s" + entry.getValue().getName().substring(1),
-                        new JType[]{ entry.getValue().getReturnType() });
+                JMethod m = type.findMethod("s" + getter.getName().substring(1),
+                        new JType[]{ getter.getReturnType() });
                 if ( m != null && m.isAnnotationPresent(JsonProperty.class) ) {
                     propName = getAnnotation(m, JsonProperty.class);
                 }
                 // if have a field and an annotation from the getter/setter then use that annotation 
                 if ( propName != null && found && !f.getName().equals(propName.value())) {
                     allFields.remove(f);
-                    DummyJField dummy = new DummyJField( name, entry.getValue().getReturnType(), entry.getValue() );
+                    DummyJField dummy = new DummyJField( name, getter.getReturnType(), getter );
                     dummy.setAnnotation( propName );
                     allFields.add(dummy);
                 }
                 if ( ! found && !( f != null && f.isAnnotationPresent( JsonIgnore.class ) ) ){
-                    DummyJField dummy = new DummyJField( name, entry.getValue().getReturnType(), entry.getValue() );
-                    if ( entry.getValue().isAnnotationPresent(JsonProperty.class) ) {
-                        dummy.setAnnotation( getAnnotation(entry.getValue(), JsonProperty.class) );
+                    DummyJField dummy = new DummyJField( name, getter.getReturnType(), getter );
+                    if ( getter.isAnnotationPresent(JsonProperty.class) ) {
+                        dummy.setAnnotation( getAnnotation(getter, JsonProperty.class) );
                     }
                     allFields.add( dummy );
                 }
