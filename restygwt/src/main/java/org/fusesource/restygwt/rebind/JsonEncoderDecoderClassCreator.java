@@ -816,7 +816,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private List<JField> getFields(JClassType type) {
         List<JField> allFields = getFields(new ArrayList<JField>(), type);
         Map<String, JMethod> getters = new HashMap<String, JMethod>();
-        Map<String, JType> setters = new HashMap<String, JType>();
+        Map<String, JMethod> setters = new HashMap<String, JMethod>();
 
         JType booleanType = null;
         try {
@@ -830,7 +830,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     m.getReturnType() == JPrimitiveType.VOID &&
 					getAnnotation(m, JsonIgnore.class) == null && 
 					getAnnotation(m, XmlTransient.class) == null) {
-                setters.put( m.getName().replaceFirst("^set", ""), m.getParameterTypes()[0] );
+                setters.put( m.getName().replaceFirst("^set", ""), m );
             }
             else if( m.getName().startsWith("get") &&
                     m.getParameterTypes().length == 0 &&
@@ -856,8 +856,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         }
         for( Map.Entry<String, JMethod> entry: getters.entrySet() ){
             final JMethod getter = entry.getValue();
+            final JMethod setter = setters.get(entry.getKey());
 
-            if ( setters.containsKey( entry.getKey() ) && setters.get( entry.getKey() ).equals( getter.getReturnType() ) ) {
+            if (null != setter && setter.getParameterTypes()[0].equals(getter.getReturnType())) {
                 String name = entry.getKey().substring(0, 1).toLowerCase() + entry.getKey().substring(1);
                 boolean found = false;
                 for( JField f : allFields ){
@@ -873,9 +874,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     propName = getAnnotation(getter, JsonProperty.class);
                 }
                 // is setter annotated, if yes use this annotation for the field
-                JMethod m = type.findMethod("s" + getter.getName().substring(1),
-                        new JType[]{ getter.getReturnType() });
-                if ( m != null && m.isAnnotationPresent(JsonProperty.class) ) {
+                if ( setter.isAnnotationPresent(JsonProperty.class) ) {
                     propName = getAnnotation(m, JsonProperty.class);
                 }
                 // if have a field and an annotation from the getter/setter then use that annotation 
