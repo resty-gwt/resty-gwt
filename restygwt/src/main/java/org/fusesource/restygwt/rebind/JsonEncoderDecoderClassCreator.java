@@ -872,14 +872,16 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
             if (null != setter && setter.getParameterTypes()[0].equals(getter.getReturnType())) {
                 String name = entry.getKey().substring(0, 1).toLowerCase() + entry.getKey().substring(1);
+                JField f = null;
                 boolean found = false;
-                for( JField f : allFields ){
-                    if( f.getName().equals( name ) ){
+                for( JField field : allFields ){
+                    if( field.getName().equals( name ) ){
+                        f = field;
                         found = true;
                         break;
                     }
                 }
-                JField f = type.findField( name );
+
                 JsonProperty propName = getJsonPropertyFromGetterSetter(getter, setter);
 
                 // if have a field and an annotation from the getter/setter then use that annotation 
