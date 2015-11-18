@@ -841,30 +841,30 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             if( m.getName().startsWith("set") &&
                     m.getParameterTypes().length == 1 &&
                     m.getReturnType() == JPrimitiveType.VOID &&
-					getAnnotation(m, JsonIgnore.class) == null && 
-					getAnnotation(m, XmlTransient.class) == null) {
-                setters.put( m.getName().replaceFirst("^set", ""), m );
+                    getAnnotation(m, JsonIgnore.class) == null &&
+                    getAnnotation(m, XmlTransient.class) == null) {
+                setters.put( m.getName().substring("set".length()), m );
             }
             else if( m.getName().startsWith("get") &&
                     m.getParameterTypes().length == 0 &&
                     m.getReturnType() != JPrimitiveType.VOID &&
-					getAnnotation(m, JsonIgnore.class) == null && 
-					getAnnotation(m, XmlTransient.class) == null) {
-                getters.put( m.getName().replaceFirst("^get", ""), m );
+                    getAnnotation(m, JsonIgnore.class) == null &&
+                    getAnnotation(m, XmlTransient.class) == null) {
+                getters.put( m.getName().substring("get".length()), m );
             }
             else if( m.getName().startsWith("is") &&
                     m.getParameterTypes().length == 0 &&
                     ( m.getReturnType() == JPrimitiveType.BOOLEAN || m.getReturnType().equals(booleanType) ) &&
-                    getAnnotation(m, JsonIgnore.class) == null && 
+                    getAnnotation(m, JsonIgnore.class) == null &&
                     getAnnotation(m, XmlTransient.class) == null) {
-                getters.put( m.getName().replaceFirst("^is", ""), m );
+                getters.put( m.getName().substring("is".length()), m );
             }
             else if( m.getName().startsWith("has") &&
                     m.getParameterTypes().length == 0 &&
                     ( m.getReturnType() == JPrimitiveType.BOOLEAN || m.getReturnType().equals(booleanType) ) &&
-                    getAnnotation(m, JsonIgnore.class) == null && 
+                    getAnnotation(m, JsonIgnore.class) == null &&
                     getAnnotation(m, XmlTransient.class) == null) {
-                getters.put( m.getName().replaceFirst("^has", ""), m );
+                getters.put( m.getName().substring("has".length()), m );
             }
         }
         for (Map.Entry<String, JMethod> entry : getters.entrySet()) {
