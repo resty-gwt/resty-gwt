@@ -92,6 +92,10 @@ public class Resource {
     public Method options() {
         return new Method(this, "OPTIONS").headers(headers);
     }
+    
+    public Method custom(final String customMethod){
+        return new Method(this, customMethod).headers(headers);
+    }
 
     public JsonpMethod jsonp() {
         return new JsonpMethod(this);
