@@ -34,14 +34,9 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.OPTIONS;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -149,6 +144,9 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private static final String METHOD_GET = "get";
     private static final String METHOD_DELETE = "delete";
 
+    /**
+     * Set of allowed request methods.
+     */
     private static final HashSet<String> REST_METHODS = new HashSet<String>(8);
     static {
         REST_METHODS.add(METHOD_DELETE);
@@ -956,21 +954,46 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         });
     }
 
-    private String getRestMethod(JMethod method) throws UnableToCompleteException {
+    /**
+     * Returns the rest method.
+     * <p />
+     * Iterates over the annotations and look for an annotation that is annotated with HttpMethod.
+     * 
+     * @param method
+     * @return
+     * @throws UnableToCompleteException
+     *             <ul>
+     *             <li>If more than one annotation that is annotated with HttpMethod is present,</li>
+     *             <li>an invalid jax-rs method annotation is found or</li>
+     *             <li>no annotation was found and the method name does not match a valid jax-rs method</li>
+     *             </ul>
+     *             Valid means it is in the set {@link #REST_METHODS}
+     */
+    String getRestMethod(JMethod method) throws UnableToCompleteException {
         String restMethod = null;
-        if (getAnnotation(method, DELETE.class) != null) {
-            restMethod = METHOD_DELETE;
-        } else if (getAnnotation(method, GET.class) != null) {
-            restMethod = METHOD_GET;
-        } else if (getAnnotation(method, HEAD.class) != null) {
-            restMethod = METHOD_HEAD;
-        } else if (getAnnotation(method, OPTIONS.class) != null) {
-            restMethod = METHOD_OPTIONS;
-        } else if (getAnnotation(method, POST.class) != null) {
-            restMethod = METHOD_POST;
-        } else if (getAnnotation(method, PUT.class) != null) {
-            restMethod = METHOD_PUT;
-        } else if (getAnnotation(method, JSONP.class) != null) {
+
+        final Annotation[] annotations = method.getAnnotations();
+        for (Annotation annotation : annotations) {
+            HttpMethod httpMethod = annotation.annotationType().getAnnotation(HttpMethod.class);
+            // Check is HttpMethod
+            if (null != httpMethod) {
+                if (null != restMethod) {
+                    // Error, see description of HttpMethod
+                    getLogger().log(ERROR, "Invalid method. It is an error for a method to be annotated with more than one annotation that is annotated with HttpMethod: " + method.getReadableDeclaration());
+                    throw new UnableToCompleteException();
+                }
+                restMethod = httpMethod.value();
+            }
+        }
+
+        if (null != restMethod) {
+            // Allow custom methods later?
+            restMethod = restMethod.toLowerCase();
+            if (!REST_METHODS.contains(restMethod)) {
+                getLogger().log(ERROR, "Invalid rest method. It must have a javax rs method annotation: " + method.getReadableDeclaration());
+                throw new UnableToCompleteException();
+            }
+        } else if (null != getAnnotation(method, JSONP.class)) {
             restMethod = METHOD_JSONP;
         } else {
             restMethod = method.getName();
@@ -979,6 +1002,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 throw new UnableToCompleteException();
             }
         }
+
         return restMethod;
     }
 
