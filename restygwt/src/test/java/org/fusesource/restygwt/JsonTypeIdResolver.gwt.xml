@@ -24,9 +24,12 @@
     <inherits name='org.fusesource.restygwt.RestyGWT'/>
     
     <extend-configuration-property name="org.fusesource.restygwt.jsontypeidresolver" value="org.fusesource.restygwt.server.complex.DTORestyTypeResolver"/>
+    <extend-configuration-property name="org.fusesource.restygwt.jsontypeidresolver" value="org.fusesource.restygwt.server.complex.InterfaceAndImplementationRestyTypeResolver"/>
   
     <servlet path='/api/jsontypeid' class='org.fusesource.restygwt.server.complex.DTOTypeResolverServlet' />
 	<servlet path='/api/jsontypeidinside' class='org.fusesource.restygwt.server.complex.DTOTypeResolverInsideServlet' />
+	<servlet path='/api/interfaceandimpl/interface' class='org.fusesource.restygwt.server.complex.DTOInterfaceServlet' />
+	<servlet path='/api/interfaceandimpl/implementation' class='org.fusesource.restygwt.server.complex.DTOImplementationServlet' />
 	
     <source path='client'/>
     <source path='example/client'/>

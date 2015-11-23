@@ -132,7 +132,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     private List<Subtype> getPossibleTypes(final JsonTypeInfo typeInfo, final boolean isLeaf) throws UnableToCompleteException
     {
-        if (typeInfo == null)
+        if (typeInfo == null || (isLeaf && !source.isAbstract()))
             return Lists.newArrayList(new Subtype(null, source));
         Collection<Type> subTypes = findJsonSubTypes(source);
         if(subTypes.isEmpty()) {
