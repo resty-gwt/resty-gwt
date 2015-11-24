@@ -1279,8 +1279,6 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         JSONValue json = codec.encode(o1);
         JSONValue objectClass = json.isObject().get("@class");
         assertNotNull(objectClass);
-        assertEquals(objectClass.isString().stringValue(),
-                DefaultImplementationOfSubTypeInterface.class.getName().replace("$","."));
         DefaultImplementationOfSubTypeInterface o2 = codec.decode(json);
         assertEquals(json.toString(), codec.encode(o2).toString());
         assertEquals(value, o1.getValue());
