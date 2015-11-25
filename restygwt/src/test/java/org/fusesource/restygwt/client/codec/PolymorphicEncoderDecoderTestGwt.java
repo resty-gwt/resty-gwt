@@ -169,7 +169,7 @@ public class PolymorphicEncoderDecoderTestGwt extends GWTTestCase {
 
         JSONValue json = codec.encode(o1);
 
-        assertEquals("{\"@class\":\"org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt.SubForJsonProperty\", \"otherField\":\"other-field-value\", \"myField\":\"my-field-value\"}", json.toString());
+        assertEquals("{\"@class\":\"org.fusesource.restygwt.client.codec.PolymorphicEncoderDecoderTestGwt.SubForJsonProperty\", \"otherField\":\"other-field-value\", \"myField\":\"my-field-value\"}", json.toString());
     }
 
     // ######################################################################################
