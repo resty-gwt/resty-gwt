@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 the original author or authors.
+ * Copyright (C) 2009-2015 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -25,30 +25,32 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Simple servlet that answer jsonp test requests.
  *
- * Super simple servlet that simply does nothing to check if
- * timeout management is okay.
- *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author Ralf Sommer {@literal <ralf.sommer.dev@gmail.com>}
  *
  */
-public class BasicTestGwtServlet extends HttpServlet {
+public class JsonpTestGwtServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 7682753843344322868L;
+    private static final long serialVersionUID = 4308269541594795760L;
 
     private static final String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.getWriter().print(DUMMY_RESPONSE);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (request.getRequestURI().endsWith("/api/store")) {
-            response.getWriter().print("");
+        response.setContentType("application/javascript");
+        String responseFunction = request.getParameter("callback");
+        if (null != responseFunction) {
+            if (request.getRequestURI().endsWith("/list")) {
+                response.getWriter().print(responseFunction + "([" + DUMMY_RESPONSE + ",{\"name\":\"myName2\"}" + "]);");
+            } else {
+                response.getWriter().print(responseFunction + "(" + DUMMY_RESPONSE + ");");
+            }
         } else {
-            throw new IllegalArgumentException("Invalid servlet path called by service: " + request.getRequestURI());
+            responseFunction = request.getParameter("null");
+            if (null != responseFunction) {
+                response.getWriter().print(responseFunction + "();");
+            }
         }
     }
 

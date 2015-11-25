@@ -7,17 +7,20 @@ import java.util.Map;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JEnumConstant;
 import com.google.gwt.core.ext.typeinfo.JField;
+import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JType;
 
 class DummyJField implements JField {
 
     private final JType type;
     private final String name;
+    private final JMethod getterMethod;
     private Map<Class<? extends Annotation>, Annotation> annotations = new HashMap<Class<? extends Annotation>, Annotation>();
     
-    DummyJField( String name, JType type){
+    DummyJField( String name, JType type, JMethod getterMethod){
         this.name = name;
         this.type = type;
+        this.getterMethod = getterMethod;
     }
     
     @SuppressWarnings("unchecked")
@@ -113,6 +116,11 @@ class DummyJField implements JField {
 
     public <T extends Annotation> void setAnnotation(T annotation) {
         annotations.put( annotation.annotationType(), annotation ); 
+    }
+
+    public JMethod getGetterMethod()
+    {
+        return getterMethod;
     }
     
 }

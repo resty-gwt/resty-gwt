@@ -62,6 +62,10 @@ public class MockedTest extends TestCase {
                 callback.onSuccess(null, exampleDto);
                 return null;
             }
+            @Override
+            public void storeDto(ExampleDto exampleDto, MethodCallback<Void> callback) {
+                callback.onSuccess(null, null);
+            }
         };
 
         /** test*/
@@ -78,6 +82,5 @@ public class MockedTest extends TestCase {
         });
 
     }
-
 
 }

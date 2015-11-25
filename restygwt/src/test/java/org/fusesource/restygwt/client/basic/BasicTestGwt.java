@@ -21,8 +21,7 @@ package org.fusesource.restygwt.client.basic;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.junit.client.GWTTestCase;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
+import com.google.gwt.user.client.Timer;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
@@ -44,10 +43,8 @@ public class BasicTestGwt extends GWTTestCase {
     }
 
     public void testDefaultFunction() {
-
         //configure RESTY
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
-
 
         ExampleService service = GWT.create(ExampleService.class);
         ((RestServiceProxy) service).setResource(resource);
@@ -56,36 +53,28 @@ public class BasicTestGwt extends GWTTestCase {
 
             @Override
             public void onSuccess(Method method, ExampleDto response) {
-
                 assertEquals(response.name, "myName");
                 finishTest();
-
             }
 
             @Override
             public void onFailure(Method method, Throwable exception) {
                 fail();
-
             }
         });
 
         // wait... we are in async testing...
         delayTestFinish(10000);
-
     }
-    
+
     @Test
     public void testCancelRequest() {
-
-        //configure RESTY
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
-
 
         ExampleService service = GWT.create(ExampleService.class);
         ((RestServiceProxy) service).setResource(resource);
 
         Request request = service.getExampleDtoCancelable(new MethodCallback<ExampleDto>() {
-
             @Override
             public void onSuccess(Method method, ExampleDto response) {
                 fail();
@@ -98,8 +87,42 @@ public class BasicTestGwt extends GWTTestCase {
         });
 
         request.cancel();
+
+        // after waiting for 10 seconds assume, that the request has been canceled successfully
+        new Timer() {
+            @Override
+            public void run() {
+                finishTest();
+            }
+        }.schedule(10000);
         
+        // wait... we are in async testing...
+        delayTestFinish(15000);
+    }
+
+    @Test
+    public void testNullObjectPost() {
+        //configure RESTY
+        Resource resource = new Resource(GWT.getModuleBaseURL() + "api");
+
+        ExampleService service = GWT.create(ExampleService.class);
+        ((RestServiceProxy) service).setResource(resource);
+
+        service.storeDto(null, new MethodCallback<Void>() {
+            @Override
+            public void onSuccess(Method method, Void response) {
+                // Nothing awaited because its a test for send null objects
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+            }
+        });
+
         // wait... we are in async testing...
         delayTestFinish(10000);
     }
+
 }

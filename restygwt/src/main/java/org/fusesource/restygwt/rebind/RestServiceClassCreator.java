@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 the original author or authors.
+ * Copyright (C) 2009-2015 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -34,18 +34,14 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.OPTIONS;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 import org.fusesource.restygwt.client.AbstractAsyncCallback;
 import org.fusesource.restygwt.client.AbstractRequestCallback;
@@ -76,9 +72,13 @@ import com.google.gwt.core.client.JsArrayBoolean;
 import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.PropertyOracle;
+import com.google.gwt.core.ext.SelectionProperty;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.typeinfo.HasAnnotations;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JGenericType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -91,11 +91,13 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.jsonp.client.JsonpRequest;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.xml.client.Document;
+
 /**
  *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
@@ -108,6 +110,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
     private static final String REST_SERVICE_PROXY_SUFFIX = "_Generated_RestServiceProxy_";
 
+    private static final String PLAIN_TEXT_AUTODETECTION_CONFIGURATION_PROPERTY_NAME = "restygwt.autodetect.plainText";
+
     private static final String METHOD_CLASS = Method.class.getName();
     private static final String RESOURCE_CLASS = Resource.class.getName();
     private static final String DISPATCHER_CLASS = Dispatcher.class.getName();
@@ -118,6 +122,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private static final String JSON_ARRAY_CLASS = JSONArray.class.getName();
     private static final String JSON_OBJECT_CLASS = JSONObject.class.getName();
     private static final String JSON_VALUE_CLASS = JSONValue.class.getName();
+    private static final String JSON_STRING_CLASS = JSONString.class.getName();
     private static final String REQUEST_EXCEPTION_CLASS = RequestException.class.getName();
     private static final String RESPONSE_FORMAT_EXCEPTION_CLASS = ResponseFormatException.class.getName();
     private static final String JSONP_METHOD_CLASS = JsonpMethod.class.getName();
@@ -139,6 +144,9 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private static final String METHOD_GET = "get";
     private static final String METHOD_DELETE = "delete";
 
+    /**
+     * Set of allowed request methods.
+     */
     private static final HashSet<String> REST_METHODS = new HashSet<String>(8);
     static {
         REST_METHODS.add(METHOD_DELETE);
@@ -164,6 +172,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private Set<JClassType> QUERY_PARAM_LIST_TYPES;
     private JClassType REST_SERVICE_TYPE;
     private JsonEncoderDecoderInstanceLocator locator;
+
+    private boolean autodetectTypeForStrings;
 
     public RestServiceClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) {
         super(logger, context, source, REST_SERVICE_PROXY_SUFFIX);
@@ -205,6 +215,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             throw new UnableToCompleteException();
         }
 
+        autodetectTypeForStrings = shouldAutodetectPlainTextForStrings(getLogger(), context.getPropertyOracle());
+
         locator = new JsonEncoderDecoderInstanceLocator(context, getLogger());
 
         this.XML_CALLBACK_TYPE = find(XmlCallback.class, getLogger(), context);
@@ -229,16 +241,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         this.QUERY_PARAM_LIST_TYPES.add(find(Set.class, getLogger(), context));
 		this.REST_SERVICE_TYPE = find(RestService.class, getLogger(), context);
 
-        String path = null;
-        Path pathAnnotation = getAnnotation(source, Path.class);
-        if (pathAnnotation != null) {
-            path = pathAnnotation.value();
-        }
-
-        RemoteServiceRelativePath relativePath = getAnnotation(source, RemoteServiceRelativePath.class);
-        if (relativePath != null) {
-            path = relativePath.value();
-        }
+        String path = getPathFromSource(source);
 
         p("private " + RESOURCE_CLASS + " resource = null;");
         p();
@@ -298,8 +301,38 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         	if(iface != null && REST_SERVICE_TYPE.isAssignableFrom(iface))
         		writeSubresourceLocatorImpl(method);
         	else
-            	writeMethodImpl(method);
+                writeMethodImpl(method, options);
         }
+    }
+
+    /**
+     * Returns {@code true} if plain text autodetection for strings should be used.
+     */
+    static boolean shouldAutodetectPlainTextForStrings(TreeLogger logger, PropertyOracle propertyOracle) {
+        try {
+            SelectionProperty prop = propertyOracle.getSelectionProperty(logger, PLAIN_TEXT_AUTODETECTION_CONFIGURATION_PROPERTY_NAME);
+            String propVal = prop.getCurrentValue();
+            return Boolean.parseBoolean(propVal);
+        } catch (BadPropertyValueException e) {
+            // use default "false"
+        }
+        return false;
+    }
+
+    private static String getPathFromSource(HasAnnotations annotatedType) {
+        String path = null;
+
+        Path pathAnnotation = getAnnotation(annotatedType, Path.class);
+        if (pathAnnotation != null) {
+            path = pathAnnotation.value();
+        }
+
+        RemoteServiceRelativePath relativePath = getAnnotation(annotatedType, RemoteServiceRelativePath.class);
+        if (relativePath != null) {
+            path = relativePath.value();
+        }
+
+        return path;
     }
 
     private String quote(String path) {
@@ -380,7 +413,36 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                " : com.google.gwt.http.client.URL.encodePathSegment(" + expr + ")))+\"");
     }
 
-    private void writeMethodImpl(JMethod method) throws UnableToCompleteException {
+    void writeOptions(Options options, Options classOptions) {
+        // configure the dispatcher
+        if (options != null && options.dispatcher() != Dispatcher.class) {
+            // use the dispatcher configured for the method.
+            p("__method.setDispatcher(" + options.dispatcher().getName() + ".INSTANCE);");
+        } else {
+            // use the default dispatcher configured for the service..
+            p("__method.setDispatcher(this.dispatcher);");
+        }
+
+        // configure the expected statuses..
+        if (options != null && options.expect().length != 0) {
+            // Using method level defined expected status
+            p("__method.expect(" + join(options.expect(), ", ") + ");");
+        } else if (classOptions != null && classOptions.expect().length != 0) {
+            // Using class level defined expected status
+            p("__method.expect(" + join(classOptions.expect(), ", ") + ");");
+        }
+
+        // configure the timeout
+        if (options != null && options.timeout() >= 0) {
+            // Using method level defined value
+            p("__method.timeout(" + options.timeout() + ");");
+        } else if (classOptions != null && classOptions.timeout() >= 0) {
+            // Using class level defined value
+            p("__method.timeout(" + classOptions.timeout() + ");");
+        }
+    }
+
+    private void writeMethodImpl(JMethod method, Options classOptions) throws UnableToCompleteException {
         boolean returnRequest = false;
         if (method.getReturnType() != JPrimitiveType.VOID) {
             if (!method.getReturnType().getQualifiedSourceName().equals(Request.class.getName()) &&
@@ -394,7 +456,6 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         Json jsonAnnotation = getAnnotation(source, Json.class);
         final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
 
-        Options classOptions = getAnnotation(source, Options.class);
         Options options = getAnnotation(method, Options.class);
 
         p(method.getReadableDeclaration(false, false, false, false, true) + " {").i(1);
@@ -468,8 +529,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 }
 
                 if (!formParams.isEmpty()) {
-                    getLogger().log(ERROR, "You can not have both @FormParam parameters and a content parameter: " +
-                                                method.getReadableDeclaration());
+                    getLogger().log(ERROR, "You can not have both @FormParam parameters and a content parameter: " + method.getReadableDeclaration());
                     throw new UnableToCompleteException();
                 }
 
@@ -491,7 +551,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 acceptTypeBuiltIn = "CONTENT_TYPE_XML";
             }
 
-            p("final " + METHOD_CLASS + " __method =");
+            // Handle JSONP specific configuration...
+            JSONP jsonpAnnotation = getAnnotation(method, JSONP.class);
+
+            final boolean isJsonp = restMethod.equals(METHOD_JSONP) && jsonpAnnotation != null;
+
+            p("final " + (isJsonp ? JSONP_METHOD_CLASS : METHOD_CLASS) + " __method =");
 
             p("getResource()");
             if (pathExpression != null) {
@@ -511,20 +576,16 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             // example: .get()
             p("." + restMethod + "();");
 
-            // Handle JSONP specific configuration...
-            JSONP jsonpAnnotation = getAnnotation(method, JSONP.class);
-
-            final boolean isJsonp = restMethod.equals(METHOD_JSONP) && jsonpAnnotation!=null;
             if( isJsonp ) {
                 if (returnRequest && !method.getReturnType().getQualifiedSourceName().equals(JsonpRequest.class.getName())) {
                     getLogger().log(ERROR, "Invalid rest method. JSONP method must have void or JsonpRequest return types: " + method.getReadableDeclaration());
                     throw new UnableToCompleteException();
                 }
                 if( jsonpAnnotation.callbackParam().length() > 0 ) {
-                    p("(("+JSONP_METHOD_CLASS+")__method).callbackParam("+wrap(jsonpAnnotation.callbackParam())+");");
+                    p("__method.callbackParam("+wrap(jsonpAnnotation.callbackParam())+");");
                 }
                 if( jsonpAnnotation.failureCallbackParam().length() > 0 ) {
-                    p("(("+JSONP_METHOD_CLASS+")__method).failureCallbackParam("+wrap(jsonpAnnotation.failureCallbackParam())+");");
+                    p("__method.failureCallbackParam("+wrap(jsonpAnnotation.failureCallbackParam())+");");
                 }
             } else {
                 if (returnRequest && !method.getReturnType().getQualifiedSourceName().equals(Request.class.getName())) {
@@ -533,50 +594,34 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 }
             }
 
-            // configure the dispatcher
-            if( options!=null && options.dispatcher()!=Dispatcher.class ) {
-                // use the dispatcher configured for the method.
-                p("__method.setDispatcher("+options.dispatcher().getName()+".INSTANCE);");
-            } else {
-                // use the default dispatcher configured for the service..
-                p("__method.setDispatcher(this.dispatcher);");
-            }
+            writeOptions(options, classOptions);
 
-            // configure the expected statuses..
-            if( options!=null && options.expect().length!=0 ) {
-                // Using method level defined expected status
-                p("__method.expect("+join(options.expect(), ", ")+");");
-            } else if( classOptions!=null && classOptions.expect().length!=0 ) {
-                // Using class level defined expected status
-                p("__method.expect("+join(classOptions.expect(), ", ")+");");
-            }
-
-            // configure the timeout
-            if( options!=null && options.timeout() >= 0 ) {
-                // Using method level defined value
-                p("__method.timeout("+options.timeout()+");");
-            } else if( classOptions!=null && classOptions.timeout() >= 0 ) {
-                // Using class level defined value
-                p("__method.timeout("+classOptions.timeout()+");");
-            }
+            String contentTypeHeaderValue = null;
 
             if(jsonpAnnotation == null) {
+                final String acceptHeader; 
                 Produces producesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Produces.class);
                 if (producesAnnotation != null) {
-                    p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, "+wrap(producesAnnotation.value()[0])+");");
+                    // Do not use autodetection, if accept type already set
+                    if (acceptTypeBuiltIn == null && autodetectTypeForStrings && producesAnnotation.value()[0].startsWith("text/")) {
+                        acceptTypeBuiltIn = "CONTENT_TYPE_TEXT";
+                    }
+                    acceptHeader = wrap(producesAnnotation.value()[0]);
                 } else {
-                    // set the default accept header....
+                    // set the default accept header value ...
                     if (acceptTypeBuiltIn != null) {
-                        p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + "." + acceptTypeBuiltIn + ");");
+                        acceptHeader = RESOURCE_CLASS + "." + acceptTypeBuiltIn;
                     } else {
-                        p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + RESOURCE_CLASS + ".CONTENT_TYPE_JSON);");
+                        acceptHeader = RESOURCE_CLASS + ".CONTENT_TYPE_JSON";
                     }
                 }
+                p("__method.header(" + RESOURCE_CLASS + ".HEADER_ACCEPT, " + acceptHeader + ");");
 
                 Consumes consumesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Consumes.class);
                 if (consumesAnnotation != null) {
-                    p("__method.header(" + RESOURCE_CLASS + ".HEADER_CONTENT_TYPE, "+wrap(consumesAnnotation.value()[0])+");");
-                }
+                    contentTypeHeaderValue = consumesAnnotation.value()[0];
+                    p("__method.header(" + RESOURCE_CLASS + ".HEADER_CONTENT_TYPE, " + wrap(contentTypeHeaderValue) + ");");
+               }
 
                 // and set the explicit headers now (could override the accept header)
                 for (Map.Entry<String, JParameter> entry : headerParams.entrySet()) {
@@ -609,7 +654,11 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
             if (contentArg != null) {
                 if (contentArg.getType() == STRING_TYPE) {
-                    p("__method.text(" + contentArg.getName() + ");");
+                    if (autodetectTypeForStrings && MediaType.APPLICATION_JSON.equals(contentTypeHeaderValue)) {
+                        p("__method.json(new " + JSON_STRING_CLASS + "(" + contentArg.getName() + "));");
+                    } else {
+                        p("__method.text(" + contentArg.getName() + ");");
+                    }
                 } else if (contentArg.getType() == JSON_VALUE_TYPE) {
                     p("__method.json(" + contentArg.getName() + ");");
                 } else if (contentArg.getType().isClass() != null &&
@@ -676,7 +725,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 // TODO: shouldn't we also have a cach in here?
                 p(returnRequest(returnRequest,isJsonp) + "__method.send(" + callbackArg.getName() + ");");
             } else if ( isJsonp ){
-                    p(returnRequest(returnRequest,isJsonp) + "((" + JSONP_METHOD_CLASS + ")__method).send(new " + ABSTRACT_ASYNC_CALLBACK_CLASS + "<" + resultType.getParameterizedQualifiedSourceName() + ">((" + JSONP_METHOD_CLASS + ")__method, "
+                    p(returnRequest(returnRequest,isJsonp) + "__method.send(new " + ABSTRACT_ASYNC_CALLBACK_CLASS + "<" + resultType.getParameterizedQualifiedSourceName() + ">(__method, "
                                     + callbackArg.getName() + ") {").i(1);
                     {
                         p("protected " + resultType.getParameterizedQualifiedSourceName() + " parseResult(" + JSON_VALUE_CLASS + " result) throws Exception {").i(1);
@@ -688,7 +737,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                                 p("try {").i(1);
                                 {
                                     if(resultType.isAssignableTo(locator.LIST_TYPE)){
-                                        p("result = new " + JSON_ARRAY_CLASS + "(result.getJavaScriptObject());");
+                                        p("result = new " + JSON_ARRAY_CLASS + "(((" + JSON_OBJECT_CLASS + ")result).getJavaScriptObject());");
                                     }
                                     jsonAnnotation = getAnnotation(method, Json.class);
                                     Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
@@ -905,21 +954,46 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         });
     }
 
-    private String getRestMethod(JMethod method) throws UnableToCompleteException {
+    /**
+     * Returns the rest method.
+     * <p />
+     * Iterates over the annotations and look for an annotation that is annotated with HttpMethod.
+     * 
+     * @param method
+     * @return
+     * @throws UnableToCompleteException
+     *             <ul>
+     *             <li>If more than one annotation that is annotated with HttpMethod is present,</li>
+     *             <li>an invalid jax-rs method annotation is found or</li>
+     *             <li>no annotation was found and the method name does not match a valid jax-rs method</li>
+     *             </ul>
+     *             Valid means it is in the set {@link #REST_METHODS}
+     */
+    String getRestMethod(JMethod method) throws UnableToCompleteException {
         String restMethod = null;
-        if (getAnnotation(method, DELETE.class) != null) {
-            restMethod = METHOD_DELETE;
-        } else if (getAnnotation(method, GET.class) != null) {
-            restMethod = METHOD_GET;
-        } else if (getAnnotation(method, HEAD.class) != null) {
-            restMethod = METHOD_HEAD;
-        } else if (getAnnotation(method, OPTIONS.class) != null) {
-            restMethod = METHOD_OPTIONS;
-        } else if (getAnnotation(method, POST.class) != null) {
-            restMethod = METHOD_POST;
-        } else if (getAnnotation(method, PUT.class) != null) {
-            restMethod = METHOD_PUT;
-        } else if (getAnnotation(method, JSONP.class) != null) {
+
+        final Annotation[] annotations = method.getAnnotations();
+        for (Annotation annotation : annotations) {
+            HttpMethod httpMethod = annotation.annotationType().getAnnotation(HttpMethod.class);
+            // Check is HttpMethod
+            if (null != httpMethod) {
+                if (null != restMethod) {
+                    // Error, see description of HttpMethod
+                    getLogger().log(ERROR, "Invalid method. It is an error for a method to be annotated with more than one annotation that is annotated with HttpMethod: " + method.getReadableDeclaration());
+                    throw new UnableToCompleteException();
+                }
+                restMethod = httpMethod.value();
+            }
+        }
+
+        if (null != restMethod) {
+            // Allow custom methods later?
+            restMethod = restMethod.toLowerCase();
+            if (!REST_METHODS.contains(restMethod)) {
+                getLogger().log(ERROR, "Invalid rest method. It must have a javax rs method annotation: " + method.getReadableDeclaration());
+                throw new UnableToCompleteException();
+            }
+        } else if (null != getAnnotation(method, JSONP.class)) {
             restMethod = METHOD_JSONP;
         } else {
             restMethod = method.getName();
@@ -928,6 +1002,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 throw new UnableToCompleteException();
             }
         }
+
         return restMethod;
     }
 

@@ -18,10 +18,7 @@
 
 package org.fusesource.restygwt.server.complex;
 
-import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO1;
-import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO2;
-import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOCustom1;
-import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOCustom2;
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOImplementation;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.databind.DatabindContext;
@@ -29,7 +26,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 import com.fasterxml.jackson.databind.type.SimpleType;
 
-public class DTOTypeResolver implements TypeIdResolver
+public class InterfaceAndImplementationTypeResolver implements TypeIdResolver
 {
 	@Override
 	public void init(JavaType baseType)
@@ -45,14 +42,8 @@ public class DTOTypeResolver implements TypeIdResolver
 	@Override
 	public String idFromValue(Object value)
 	{
-		if(value instanceof DTO1)
-			return "dto1";
-		else if (value instanceof DTO2)
-			return "dto2";
-		else if(value instanceof DTOCustom1)
-			return "dtocustom1";
-		else if (value instanceof DTOCustom2)
-			return "dtocustom2";
+		if (value instanceof DTOImplementation)
+			return "implementation";
 		else
 			throw new IllegalArgumentException("Unknown type: " + value);
 	}
@@ -66,14 +57,8 @@ public class DTOTypeResolver implements TypeIdResolver
 	@Override
 	public JavaType typeFromId(String id)
 	{
-		if("dto1".equals(id))
-			return SimpleType.construct(DTO1.class);
-		else if("dto2".equals(id))
-			return SimpleType.construct(DTO2.class);
-		else if("dtocustom1".equals(id))
-			return SimpleType.construct(DTOCustom1.class);
-		else if("dtocustom2".equals(id))
-			return SimpleType.construct(DTOCustom2.class);
+		if("implementation".equals(id))
+			return SimpleType.construct(DTOImplementation.class);
 		else
 			throw new IllegalArgumentException("Unknown id: " + id);
 	}

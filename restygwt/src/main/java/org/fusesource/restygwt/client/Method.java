@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 the original author or authors.
+ * Copyright (C) 2009-2015 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -68,7 +68,9 @@ public class Method {
             //so if request does not have a body, Internet Explorer would send string "undefined" in the body of POST, PUT and DELETE requests,
             //which may cause the request to fall on server with "No operation matching request path"
             setRequestData(null);
-            setHeader("X-HTTP-Method-Override", method);
+            if(Defaults.isAddXHttpMethodOverrideHeader()){
+            	setHeader("X-HTTP-Method-Override", method);
+            }
         }
     }
 
@@ -219,8 +221,12 @@ public class Method {
         }
         return this.logger;
     }
-    
+
     public Object send(final TextCallback callback) {
+        return send((MethodCallback<String>) callback);
+    }
+
+    public Object send(final MethodCallback<String> callback) {
         defaultAcceptType(Resource.CONTENT_TYPE_TEXT);
         try {
             return send(new AbstractRequestCallback<String>(this, callback) {

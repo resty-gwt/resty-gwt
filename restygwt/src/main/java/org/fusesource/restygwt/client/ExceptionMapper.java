@@ -30,6 +30,6 @@ public class ExceptionMapper {
      * @return the exception to be passed to the callback
      */
     public Throwable createFailedStatusException(Method method, Response response) {
-        return new FailedStatusCodeException(response.getStatusText(), response.getStatusCode());
+        return new FailedResponseException(response);
     }
 }

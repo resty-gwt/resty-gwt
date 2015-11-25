@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -131,7 +132,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     private List<Subtype> getPossibleTypes(final JsonTypeInfo typeInfo, final boolean isLeaf) throws UnableToCompleteException
     {
-        if (typeInfo == null)
+        if (typeInfo == null || (isLeaf && !source.isAbstract()))
             return Lists.newArrayList(new Subtype(null, source));
         Collection<Type> subTypes = findJsonSubTypes(source);
         if(subTypes.isEmpty()) {
@@ -157,25 +158,23 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private Collection<Type> findJsonSubTypes(JClassType clazz, Set<Type> types) {
         if (clazz == null) {
             return Collections.emptyList();
-            
-        } else {
-            JsonSubTypes annotation = getClassAnnotation(clazz, JsonSubTypes.class);
-            
-            if (annotation == null) {
-                return Collections.emptyList();
-            }
-
-            for (Type type : annotation.value()) {
-                if (types.add(type)) {
-                    Class<?> subclazz = type.value();
-                    String newSubClassName = subclazz.getName().replaceAll("\\$", ".");
-                    JClassType subJClazz = context.getTypeOracle().findType(newSubClassName);
-                    findJsonSubTypes(subJClazz, types);
-                }
-            }
-
-            return types;
         }
+        JsonSubTypes annotation = getClassAnnotation(clazz, JsonSubTypes.class);
+            
+        if (annotation == null) {
+            return Collections.emptyList();
+        }
+
+        for (Type type : annotation.value()) {
+            if (types.add(type)) {
+                Class<?> subclazz = type.value();
+                String newSubClassName = subclazz.getName().replaceAll("\\$", ".");
+                JClassType subJClazz = context.getTypeOracle().findType(newSubClassName);
+                findJsonSubTypes(subJClazz, types);
+            }
+        }
+
+        return types;
     }
 
     protected void generateSingleton(String shortName)
@@ -202,7 +201,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         {
             p("if( value==null ) {").i(1);
             {
-                p("return null;");
+                p("return getNullType();");
             }
             i(-1).p("}");
 
@@ -232,7 +231,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     generateEnumEncodeMethodBody(possibleType, typeInfo);
                 } else {
 
-                    // Try to find a constuctor that is annotated as creator
+                    // Try to find a constructor that is annotated as creator
                     final JConstructor creator = findCreator(possibleType.clazz);
 
                     List<JField> orderedFields = creator == null ? null : getOrderedFields(getFields(possibleType.clazz), creator);
@@ -255,6 +254,16 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                 p(JSON_ARRAY_CLASS + " rrc = new " + JSON_ARRAY_CLASS + "();");
                                 p("rrc.set(0, org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.encode(\"" + possibleType.tag + "\"));");
                                 p("rrc.set(1, rc);");
+                                break;
+                            case EXISTING_PROPERTY:
+                                getLogger().log(WARN, classType + " comes with not implemented type info 'as' " + JsonTypeInfo.As.EXISTING_PROPERTY );
+                                // not implemented
+                                break;
+                            case EXTERNAL_PROPERTY:
+                                getLogger().log(WARN, classType + " comes with not implemented type info 'as' " + JsonTypeInfo.As.EXTERNAL_PROPERTY );
+                                // not implemented
+                                break;
+                            default:
                         }
                     }
 
@@ -722,13 +731,16 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	}
 	JClassType type = field.getEnclosingType();
 	if (field.getType().equals(JPrimitiveType.BOOLEAN) || field.getType().equals(booleanType)) {
+	    if ( field instanceof DummyJField ) {
+	        return ((DummyJField )field).getGetterMethod().getName();
+	    }
 	    fieldName = "is" + upperCaseFirstChar(field.getName());
 	    if (exists(type, field, fieldName, false)) {
-		return fieldName;
+	        return fieldName;
 	    }
 	    fieldName = "has" + upperCaseFirstChar(field.getName());
 	    if (exists(type, field, fieldName, false)) {
-		return fieldName;
+	        return fieldName;
 	    }
 	}
 	fieldName = "get" + upperCaseFirstChar(field.getName());
@@ -757,7 +769,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
      */
     private boolean exists(JClassType type, JField field, String fieldName, boolean isSetter) {
         if ( field instanceof DummyJField ){
-            return true;
+               return true; 
         }
 
 	JType[] args = null;
@@ -796,6 +808,18 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     }
 
     /**
+     * Get {@link JsonProperty} from getter or setter. Annotation from setter is preferred to getter.
+     *
+     * @param getter
+     * @param setter
+     * @return
+     */
+    private JsonProperty getJsonPropertyFromGetterSetter(JMethod getter, JMethod setter) {
+        JsonProperty setterProp = getAnnotation(setter, JsonProperty.class);
+        return (null != setterProp)?setterProp:getAnnotation(getter, JsonProperty.class);
+    }
+
+    /**
      * Inspects the supplied type and all super classes up to but excluding
      * Object and returns a list of all fields found in these classes.
      *
@@ -805,69 +829,104 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private List<JField> getFields(JClassType type) {
         List<JField> allFields = getFields(new ArrayList<JField>(), type);
         Map<String, JMethod> getters = new HashMap<String, JMethod>();
-        Map<String, JType> setters = new HashMap<String, JType>();
+        Map<String, JMethod> setters = new HashMap<String, JMethod>();
+
+        JType booleanType = null;
+        try {
+            booleanType = find(Boolean.class, getLogger(), context);
+        } catch (UnableToCompleteException e) {
+            // do nothing
+        }
         for( JMethod m: type.getInheritableMethods() ){
             if( m.getName().startsWith("set") &&
                     m.getParameterTypes().length == 1 &&
                     m.getReturnType() == JPrimitiveType.VOID &&
-					getAnnotation(m, JsonIgnore.class) == null && 
-					getAnnotation(m, XmlTransient.class) == null) {
-                setters.put( m.getName().replaceFirst("^set", ""), m.getParameterTypes()[0] );
+                    getAnnotation(m, JsonIgnore.class) == null &&
+                    getAnnotation(m, XmlTransient.class) == null) {
+                setters.put( m.getName().substring("set".length()), m );
             }
             else if( m.getName().startsWith("get") &&
                     m.getParameterTypes().length == 0 &&
                     m.getReturnType() != JPrimitiveType.VOID &&
-					getAnnotation(m, JsonIgnore.class) == null && 
-					getAnnotation(m, XmlTransient.class) == null) {
-                getters.put( m.getName().replaceFirst("^get", ""), m );
+                    getAnnotation(m, JsonIgnore.class) == null &&
+                    getAnnotation(m, XmlTransient.class) == null) {
+                getters.put( m.getName().substring("get".length()), m );
+            }
+            else if( m.getName().startsWith("is") &&
+                    m.getParameterTypes().length == 0 &&
+                    ( m.getReturnType() == JPrimitiveType.BOOLEAN || m.getReturnType().equals(booleanType) ) &&
+                    getAnnotation(m, JsonIgnore.class) == null &&
+                    getAnnotation(m, XmlTransient.class) == null) {
+                getters.put( m.getName().substring("is".length()), m );
+            }
+            else if( m.getName().startsWith("has") &&
+                    m.getParameterTypes().length == 0 &&
+                    ( m.getReturnType() == JPrimitiveType.BOOLEAN || m.getReturnType().equals(booleanType) ) &&
+                    getAnnotation(m, JsonIgnore.class) == null &&
+                    getAnnotation(m, XmlTransient.class) == null) {
+                getters.put( m.getName().substring("has".length()), m );
             }
         }
-        for( Map.Entry<String, JMethod> entry: getters.entrySet() ){
-            if ( setters.containsKey( entry.getKey() ) && setters.get( entry.getKey() ).equals( entry.getValue().getReturnType() ) ) {
+        for (Map.Entry<String, JMethod> entry : getters.entrySet()) {
+            final JMethod getter = entry.getValue();
+            final JMethod setter = setters.get(entry.getKey());
+
+            if (null != setter && setter.getParameterTypes()[0].equals(getter.getReturnType())) {
                 String name = entry.getKey().substring(0, 1).toLowerCase() + entry.getKey().substring(1);
-                boolean found = false;
-                for( JField f : allFields ){
-                    if( f.getName().equals( name ) ){
-                        found = true;
+                JField f = null;
+                for (JField field : allFields) {
+                    if (field.getName().equals(name)) {
+                        f = field;
                         break;
                     }
                 }
-                JField f = type.findField( name );
-                // is getter annotated, if yes use this annotation for the field
-                JsonProperty propName = null;
-                if ( entry.getValue().isAnnotationPresent(JsonProperty.class) ) {
-                    propName = getAnnotation(entry.getValue(), JsonProperty.class);
+
+                if (f != null && null != getAnnotation(f, JsonIgnore.class)) {
+                    continue;
                 }
-                // is setter annotated, if yes use this annotation for the field
-                JMethod m = type.findMethod("s" + entry.getValue().getName().substring(1),
-                        new JType[]{ entry.getValue().getReturnType() });
-                if ( m != null && m.isAnnotationPresent(JsonProperty.class) ) {
-                    propName = getAnnotation(m, JsonProperty.class);
-                }
-                // if have a field and an annotation from the getter/setter then use that annotation 
-                if ( propName != null && found && !f.getName().equals(propName.value())) {
-                    allFields.remove(f);
-                    DummyJField dummy = new DummyJField( name, entry.getValue().getReturnType() );
-                    dummy.setAnnotation( propName );
-                    allFields.add(dummy);
-                }
-                if ( ! found && !( f != null && f.isAnnotationPresent( JsonIgnore.class ) ) ){
-                    DummyJField dummy = new DummyJField( name, entry.getValue().getReturnType() );
-                    if ( entry.getValue().isAnnotationPresent(JsonProperty.class) ) {
-                        dummy.setAnnotation( getAnnotation(entry.getValue(), JsonProperty.class) );
+
+                JsonProperty propName = getJsonPropertyFromGetterSetter(getter, setter);
+
+                // if have a field and an annotation from the getter/setter then use that annotation
+                if (f != null) {
+                    if (propName != null && !f.getName().equals(propName.value())) {
+                        allFields.remove(f);
+                        DummyJField dummy = new DummyJField(name, getter.getReturnType(), getter);
+                        dummy.setAnnotation(propName);
+                        allFields.add(dummy);
                     }
-                    allFields.add( dummy );
+                } else {
+                    DummyJField dummy = new DummyJField(name, getter.getReturnType(), getter);
+                    if (getter.isAnnotationPresent(JsonProperty.class)) {
+                        dummy.setAnnotation(getAnnotation(getter, JsonProperty.class));
+                    }
+                    allFields.add(dummy);
                 }
             }
         }
+
+        // remove fields annotated with JsonIgnore
+        for (Iterator<JField> iter = allFields.iterator(); iter.hasNext();) {
+            final JField field = iter.next();
+            if (null != getAnnotation(field, JsonIgnore.class)) {
+                iter.remove();
+            }
+        }
+
         return allFields;
     }
 
+    /**
+     * Returns a list of all fields (non {@code transient} and not annotated with {@link XmlTransient}) in the supplied type and all super classes.
+     * 
+     * @param allFields
+     * @param type
+     * @return
+     */
     private List<JField> getFields(List<JField> allFields, JClassType type) {
         JField[] fields = type.getFields();
         for (JField field : fields) {
-			if (!field.isTransient() && !field.isAnnotationPresent(JsonIgnore.class) &&
-					!field.isAnnotationPresent(XmlTransient.class)) {
+            if (!field.isTransient() && !field.isAnnotationPresent(XmlTransient.class)) {
                 allFields.add(field);
             }
         }
