@@ -31,7 +31,7 @@ public class PolymorphicEncoderDecoderTestGwt extends GWTTestCase {
 
     @Override
     public String getModuleName() {
-        return "org.fusesource.restygwt.EncoderDecoderTestGwt";
+        return "org.fusesource.restygwt.PolymorphicEncoderDecoderTestGwt";
     }
 
     @JsonSubTypes({ @Type(A.class), @Type(B.class) })
