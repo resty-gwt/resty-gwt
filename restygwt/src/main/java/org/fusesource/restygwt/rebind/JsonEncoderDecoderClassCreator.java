@@ -78,6 +78,8 @@ import javax.xml.bind.annotation.XmlTransient;
 public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private static final String JSON_ENCODER_SUFFIX = "_Generated_JsonEncoderDecoder_";
 
+    private static final String USE_JAVA_BEANS_SPEC_NAMING_CONVENTION_CONFIGURATION_PROPERTY_NAME = "restygwt.conventions.useJavaBeansSpecNaming";
+
     private String JSON_ENCODER_DECODER_CLASS = JsonEncoderDecoderInstanceLocator.JSON_ENCODER_DECODER_CLASS;
     protected static final String JSON_VALUE_CLASS = JSONValue.class.getName();
     private static final String JSON_OBJECT_CLASS = JSONObject.class.getName();
@@ -87,8 +89,12 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     protected JsonEncoderDecoderInstanceLocator locator;
 
+    protected boolean javaBeansNamingConventionEnabled;
+
     public JsonEncoderDecoderClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) {
         super(logger, context, source, JSON_ENCODER_SUFFIX);
+
+        javaBeansNamingConventionEnabled = false;
     }
 
     @Override
@@ -706,13 +712,12 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
      *         setter can't be found.
      */
     private String getSetterName(JField field) {
-	String fieldName = field.getName();
-	fieldName = "set" + upperCaseFirstChar(fieldName);
-	JClassType type = field.getEnclosingType();
-	if (exists(type, field, fieldName, true)) {
-	    return fieldName;
-	}
-    return null;
+        String fieldName = "set" + getMiddleNameForPrefixingAsAccessorMutator(field.getName());
+        JClassType type = field.getEnclosingType();
+        if (exists(type, field, fieldName, true)) {
+            return fieldName;
+        }
+        return null;
     }
 
     /**
@@ -722,32 +727,40 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
      *         getter can't be found.
      */
     private String getGetterName(JField field) {
-	String fieldName = field.getName();
-	JType booleanType = null;
-	try {
-	    booleanType = find(Boolean.class, getLogger(), context);
-	} catch (UnableToCompleteException e) {
-	    // do nothing
-	}
-	JClassType type = field.getEnclosingType();
-	if (field.getType().equals(JPrimitiveType.BOOLEAN) || field.getType().equals(booleanType)) {
-	    if ( field instanceof DummyJField ) {
-	        return ((DummyJField )field).getGetterMethod().getName();
-	    }
-	    fieldName = "is" + upperCaseFirstChar(field.getName());
-	    if (exists(type, field, fieldName, false)) {
-	        return fieldName;
-	    }
-	    fieldName = "has" + upperCaseFirstChar(field.getName());
-	    if (exists(type, field, fieldName, false)) {
-	        return fieldName;
-	    }
-	}
-	fieldName = "get" + upperCaseFirstChar(field.getName());
-	if (exists(type, field, fieldName, false)) {
-	    return fieldName;
-	}
-    return null;
+        final String methodBaseName = getMiddleNameForPrefixingAsAccessorMutator(field.getName());
+        String fieldName = null;
+        JType booleanType = null;
+        try {
+            booleanType = find(Boolean.class, getLogger(), context);
+        } catch (UnableToCompleteException e) {
+            // do nothing
+        }
+        JClassType type = field.getEnclosingType();
+        if (field.getType().equals(JPrimitiveType.BOOLEAN) || field.getType().equals(booleanType)) {
+            if (field instanceof DummyJField) {
+                return ((DummyJField) field).getGetterMethod().getName();
+            }
+            fieldName = "is" + methodBaseName;
+            if (exists(type, field, fieldName, false)) {
+                return fieldName;
+            }
+            fieldName = "has" + methodBaseName;
+            if (exists(type, field, fieldName, false)) {
+                return fieldName;
+            }
+        }
+        fieldName = "get" + methodBaseName;
+        if (exists(type, field, fieldName, false)) {
+            return fieldName;
+        }
+        return null;
+    }
+
+    private String getMiddleNameForPrefixingAsAccessorMutator(String fieldName) {
+        if (javaBeansNamingConventionEnabled) {
+            return getMiddleNameForPrefixingAsAccessorMutatorJavaBeansSpecCompliance(fieldName);
+        }
+        return upperCaseFirstChar(fieldName);
     }
 
     /**
@@ -764,10 +777,10 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     }
 
     private String upperCaseFirstChar(String in) {
-	if (in.length() == 1) {
-	    return in.toUpperCase();
-	}
-    return in.substring(0, 1).toUpperCase() + in.substring(1);
+        if (in.length() == 1) {
+            return in.toUpperCase();
+        }
+        return in.substring(0, 1).toUpperCase() + in.substring(1);
     }
 
     /**
