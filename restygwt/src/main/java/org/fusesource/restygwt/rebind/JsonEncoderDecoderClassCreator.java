@@ -96,6 +96,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         final boolean isLeaf = isLeaf(source);
 
         final List<Subtype> possibleTypes = getPossibleTypes(typeInfo, isLeaf);
+        Collections.sort(possibleTypes);
 
         final JClassType sourceClazz = source.isClass() == null ? source.isInterface() : source.isClass();
         if (sourceClazz == null) {
@@ -150,17 +151,30 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
      * a parent class or an interface.
      */
     private Collection<Type> findJsonSubTypes(JClassType clazz) {
-        if (clazz == null)
+        return findJsonSubTypes(clazz, new HashSet<JsonSubTypes.Type>());
+    }
+    
+    private Collection<Type> findJsonSubTypes(JClassType clazz, Set<Type> types) {
+        if (clazz == null) {
             return Collections.emptyList();
-        else {
+            
+        } else {
             JsonSubTypes annotation = getClassAnnotation(clazz, JsonSubTypes.class);
+            
             if (annotation == null) {
                 return Collections.emptyList();
             }
-            Set<Type> result = new HashSet<JsonSubTypes.Type>();
-            Type[] value = annotation.value();
-            Collections.addAll(result, value);
-            return result;
+
+            for (Type type : annotation.value()) {
+                if (types.add(type)) {
+                    Class<?> subclazz = type.value();
+                    String newSubClassName = subclazz.getName().replaceAll("\\$", ".");
+                    JClassType subJClazz = context.getTypeOracle().findType(newSubClassName);
+                    findJsonSubTypes(subJClazz, types);
+                }
+            }
+
+            return types;
         }
     }
 
@@ -295,27 +309,17 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                     Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
                                     String expression = locator.encodeExpression(field.getType(), fieldExpr, style);
 
-                                    p("{").i(1);
-                                    {
-                                        if (null != field.getType().isEnum()) {
-                                            p("if(" + fieldExpr + " == null) {").i(1);
-                                            p("rc.put(" + wrap(jsonName) + ", " + JSON_NULL_CLASS + ".getInstance());");
-                                            i(-1).p("} else {").i(1);
-                                        }
-
-                                        p(JSON_VALUE_CLASS + " v=" + expression + ";");
-                                        p("if( v!=null ) {").i(1);
-                                        {
-                                            p("rc.put(" + wrap(jsonName) + ", v);");
-                                        }
-                                        i(-1).p("}");
-
-                                        if (null != field.getType().isEnum()) {
-                                            i(-1).p("}");
-                                        }
-
+                                    
+                                    if (null != field.getType().isEnum()) {
+                                    	p("if(isNotNullAndCheckDefaults(" + fieldExpr+ ", rc, "+ wrap(jsonName) + ")) {").i(1);
                                     }
-                                    i(-1).p("}");
+                                        
+                                    p("isNotNullValuePut(" + expression + ", rc, "+ wrap(jsonName) + ");");
+
+                                    if (null != field.getType().isEnum()) {
+                                    	i(-1).p("}");
+                                    }
+                                    
 
                                 } else {
                                     getLogger().log(DEBUG, "private field gets ignored: " + field.getEnclosingType().getQualifiedSourceName() + "." + field.getName());
@@ -437,8 +441,13 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         }
                         p("object = toObjectFromWrapper(value, \"" + possibleType.tag + "\");");
                     } else if (!isLeaf) {
-                        p("if(sourceName.equals(\"" + possibleType.tag + "\"))");
-                        p("{");
+                        if (classType.equals(possibleType.clazz)) {
+                            p("if(sourceName == null || sourceName.equals(\"" + possibleType.tag + "\"))");
+                            p("{");
+                        } else {
+                            p("if(sourceName != null && sourceName.equals(\"" + possibleType.tag + "\"))");
+                            p("{");
+                        }
                     }
                 }
 
@@ -534,28 +543,17 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                     String objectGetter = "object.get(" + wrap(jsonName) + ")";
                                     String expression = locator.decodeExpression(field.getType(), objectGetter, style);
 
-                                    boolean needNullHandling = !locator.hasCustomEncoderDecoder(field.getType());
+                                    boolean isShort = field.getType().isPrimitive() == JPrimitiveType.SHORT;
+                                    String defaultValue = getDefaultValue(field);
 
-                                    String cast = field.getType().isPrimitive() == JPrimitiveType.SHORT ? "(short) " : "";
-
-                                    if (needNullHandling) {
-                                        p("if(" + objectGetter + " != null) {").i(1);
-                                        p("if(" + objectGetter + " instanceof " + JSON_NULL_CLASS + ") {").i(1);
-                                        String defaultValue = getDefaultValue(field);
-
-                                        assignFieldValue(name, defaultValue, cast, setterName);
-                                        i(-1);
-                                        p("} else {").i(1);
+                                    String methodName = isShort ? "getValueToSetForShort" : "getValueToSet";
+                                    
+                                    if (setterName != null) {
+                                    	p("rc." + setterName + "("  + methodName + "(" + expression + ", " + defaultValue + "));");
+                                    } else {
+                                    	p("rc." + name + "= " +  methodName + "(" + expression + "," + defaultValue + ");");
                                     }
-
-                                    assignFieldValue(name, expression, cast, setterName);
-
-                                    if (needNullHandling) {
-                                        i(-1);
-                                        p("}").i(-1);
-                                        p("}");
-                                    }
-
+                                    
                                 } else {
                                     getLogger().log(DEBUG, "private field gets ignored: " + field.getEnclosingType().getQualifiedSourceName() + "." + field.getName());
                                 }
@@ -591,14 +589,6 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     private String getDefaultValue(JField field) {
         return field.getType().isPrimitive() == null ? "null" : field.getType().isPrimitive().getUninitializedFieldExpression() + "";
-    }
-
-    private void assignFieldValue(String name, String expression, String cast, String setterName) {
-        if (setterName != null) {
-            p("rc." + setterName + "(" + cast + expression + ");");
-        } else {
-            p("rc." + name + "=" + cast + expression + ";");
-        }
     }
 
     protected void generateEnumDecodeMethod(JClassType classType, String jsonValueClass)
@@ -909,13 +899,18 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         return !(source.getSubtypes() != null && source.getSubtypes().length > 0);
     }
 
-    public static class Subtype {
+    public static class Subtype implements Comparable<Subtype> {
     final String tag;
     final JClassType clazz;
 
     public Subtype(String tag, JClassType clazz) {
         this.tag = tag;
         this.clazz = clazz;
+    }
+
+    @Override
+    public int compareTo(Subtype o) {
+        return tag.compareTo(o.tag);
     }
     }
 

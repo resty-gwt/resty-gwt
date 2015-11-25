@@ -30,6 +30,8 @@ import org.junit.Test;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 
+import java.util.List;
+
 public class ParameterizedTypeDTO extends GWTTestCase
 {
 	public static class DTO<X>
@@ -48,6 +50,11 @@ public class ParameterizedTypeDTO extends GWTTestCase
 	{
 		@GET
 		@Produces("application/json")
+		@Path("thingList")
+		void getThingList(MethodCallback<DTO<List<Thing>>> callback);
+		
+		@GET
+		@Produces("application/json")
 		@Path("thing")
 		void getThing(MethodCallback<DTO<Thing>> callback);
 
@@ -61,6 +68,30 @@ public class ParameterizedTypeDTO extends GWTTestCase
 	public String getModuleName()
 	{
 		return "org.fusesource.restygwt.ParameterizedTypeDTO";
+	}
+
+	@Test
+	public void testThingList()
+	{
+		DTOService service = GWT.create(DTOService.class);
+		service.getThingList(new MethodCallback<DTO<List<Thing>>>()
+		{
+			@Override
+			public void onFailure(Method method, Throwable exception)
+			{
+				fail(exception.getMessage());
+			}
+
+			@Override
+			public void onSuccess(Method method, DTO<List<Thing>> response)
+			{
+				assertEquals(12, response.size);
+				assertEquals(1, response.value.size());
+				assertEquals("Fred Flintstone", response.value.get(0).name);
+				finishTest();
+			}
+		});
+		delayTestFinish(10000);
 	}
 
 	@Test

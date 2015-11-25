@@ -19,6 +19,8 @@
 package org.fusesource.restygwt.server.complex;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -68,6 +70,20 @@ public class ParameterizedTypeDTOServlet
 			Thing thing = new Thing();
 			thing.name = "Fred Flintstone";
 			dto.value = thing;
+			return dto;
+		}
+	}
+
+	public static class ThingListServlet extends JacksonServlet
+	{
+		@Override
+		protected DTO<List<Thing>> getThing()
+		{
+			DTO<List<Thing>> dto = new DTO<List<Thing>>();
+			dto.size = 12;
+			Thing thing = new Thing();
+			thing.name = "Fred Flintstone";
+			dto.value = Arrays.asList(thing);
 			return dto;
 		}
 	}

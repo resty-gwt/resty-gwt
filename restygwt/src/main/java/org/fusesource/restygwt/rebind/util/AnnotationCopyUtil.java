@@ -53,10 +53,13 @@ public class AnnotationCopyUtil {
         for (Method method : annotation.annotationType().getDeclaredMethods()) {
             Object value = readAnnotationAttribute(annotation, method);
 
-            result.append( comma.next() )
-                  .append(method.getName())
-                  .append( " = " )
-                  .append( encodeAnnotationValue(value) );
+            String encodedValue = encodeAnnotationValue(value);
+            if(encodedValue != null) {
+                result.append( comma.next() )
+                      .append( method.getName() )
+                      .append( " = " )
+                      .append( encodedValue );
+            }
         }
 
         result.append(")");
@@ -70,24 +73,37 @@ public class AnnotationCopyUtil {
         }
     }
 
+    /**
+     * Returns the string representation of {@code value} or {@code null}, if the element should not be added.
+     * 
+     * @param value
+     * @return 
+     * @throws IllegalArgumentException Wrong value type
+     */
     private static String encodeAnnotationValue(Object value) {
-        if (value instanceof String) {
-            return readStringValue(value);
-        } else if (value instanceof Number) {
-            return readNumberValue(value);
-        } else if (value == null) {
-            return "null";
-        } else if (value.getClass().isArray()) {
-            return readArrayValue(value);
-        } else if (value.getClass().isAnnotation()) {
-            return getAnnotationAsString((Annotation) value);
-        } else if (value instanceof Boolean) {
-            return readBooleanValue((Boolean) value);
-        } else if (value instanceof Class) {
-            return readClassValue((Class) value);
+        // Values of annotation elements must not be "null"
+        if(null != value) {
+            if (value instanceof String) {
+                return readStringValue(value);
+            } else if (value instanceof Number) {
+                return readNumberValue(value);
+            } else if (value.getClass().isArray()) {
+                // workaround for ClassCastException: [Ljava.lang.Object; cannot be cast to [I
+                // ignore empty arrays, because it becomes Object[]
+                if(Array.getLength(value) > 0) {
+                    return readArrayValue(value);
+                }
+                return null;
+            } else if (value instanceof Annotation) {
+                return getAnnotationAsString((Annotation) value);
+            } else if (value instanceof Boolean) {
+                return readBooleanValue((Boolean) value);
+            } else if (value instanceof Class) {
+                return readClassValue((Class) value);
+            }
         }
 
-        return null;
+        throw new IllegalArgumentException("Unsupported value for encodeAnnotationValue: " + value);
     }
 
     private static String readBooleanValue(Boolean value) {
@@ -115,7 +131,7 @@ public class AnnotationCopyUtil {
     }
 
     private static String readStringValue(Object value) {
-        return "\"" + value.toString().replace("\"", "\\\"") + "\"";
+        return "\"" + value.toString().replace("\"", "\\\"").replace("\n", "\\n") + "\"";
     }
 
     private static String readClassValue(Class value) {

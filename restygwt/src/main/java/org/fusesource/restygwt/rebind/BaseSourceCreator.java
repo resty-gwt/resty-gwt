@@ -77,8 +77,8 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         this.logger = logger;
         this.context = context;
         this.source = source;
-        this.packageName = source.getPackage().getName();
-
+        this.packageName = getOpenPackageName( source.getPackage().getName() );
+        
         if(source instanceof JParameterizedType)
         {
     		JParameterizedType ptype = (JParameterizedType)source;
@@ -86,7 +86,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
 			for(JClassType type : ptype.getTypeArgs())
 			{
 				builder.append("__");
-				builder.append(type.getParameterizedQualifiedSourceName().replace('.', '_'));
+				builder.append(type.getParameterizedQualifiedSourceName().replace('.', '_').replace("<", "__").replace(">", "__"));
 			}
 			this.shortName = getName( source ) + builder.toString() + suffix;
         }
@@ -98,13 +98,31 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         this.name = packageName + "." + shortName;
     }
 
-    private String getName( JClassType source ){
+    protected String getName( JClassType source ){
         if( source.getEnclosingType() != null ){
             return getName( source.getEnclosingType() ) + "_" + source.getSimpleSourceName();
         }
         return source.getSimpleSourceName();
     }
-    protected PrintWriter writer() {
+    
+    /**
+     * Some packages are protected such that any type we generate in that package can't subsequently be loaded
+     * because of a {@link SecurityException}, for example <code>java.</code> and <code>javax.</code> packages. 
+     * <p>
+     * To workaround this issue we add a prefix onto such packages so that the generated code can be loaded
+     * later. The prefix added is <code>open.</code>
+     * 
+     * @param name
+     * @return
+     */
+    private String getOpenPackageName(String name) {
+      if (name.startsWith("java.") || name.startsWith("javax.")) {
+        name = "open."+name;
+      }
+      return name;
+    }
+    
+    protected PrintWriter writer() throws UnableToCompleteException {
         HashSet<String> classes = getGeneratedClasses();
         if (classes.contains(name)) {
             return null;

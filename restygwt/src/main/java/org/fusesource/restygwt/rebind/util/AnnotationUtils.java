@@ -2,7 +2,12 @@ package org.fusesource.restygwt.rebind.util;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
 import com.google.gwt.core.ext.typeinfo.HasAnnotations;
@@ -50,5 +55,47 @@ public class AnnotationUtils {
             return getClassAnnotation(classType.getSuperclass(), annotationType);
         }
     }
-}
 
+    /**
+     * Get all annotations from superclasses and superinterfaces.<br>
+     * <br>
+     * Works like {@link JClassType#findAnnotationInTypeHierarchy(Class)} but returns all annotations in the type hierarchy.
+     * 
+     * @author Ralf Sommer <ralf.sommer.dev@gmail.com>
+     * 
+     * @param classType
+     * @return annotations
+     */
+    public static Annotation[] getAnnotationsInTypeHierarchy(JClassType classType) {
+        Set<Annotation> resultAnnotations = new HashSet<Annotation>();
+
+        // Cache to avoid loops
+        Set<JClassType> alreadyCheckedTypes = new HashSet<JClassType>();
+
+        // Work queue
+        Queue<JClassType> typeQueue = new LinkedList<JClassType>();
+
+        for (JClassType current = classType; current != null; current = typeQueue.poll()) {
+            if (!alreadyCheckedTypes.add(current)) {
+                continue;
+            }
+
+            // Get the annotations only from current, no inherited
+            Annotation[] annotations = current.getDeclaredAnnotations();
+            for (Annotation annotation : annotations) {
+                resultAnnotations.add(annotation);
+            }
+
+            if (current.getSuperclass() != null) {
+                // Add the superclass to the queue
+                typeQueue.add(current.getSuperclass());
+            }
+
+            // Add the Superinterfaces to the queue
+            Collections.addAll(typeQueue, current.getImplementedInterfaces());
+        }
+
+        return resultAnnotations.toArray(new Annotation[resultAnnotations.size()]);
+    }
+
+}

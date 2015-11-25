@@ -375,7 +375,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
     private String pathExpression(String pathExpression, JParameter arg, PathParam paramPath) {
         String expr = toStringExpression(arg);
-        return pathExpression.replaceAll(Pattern.quote("{" + paramPath.value() + "}"),
+        return pathExpression.replaceAll(Pattern.quote("{" + paramPath.value()) + "(\\s*:\\s*(.)+)?\\}",
                "\"+(" + expr + "== null? null : ((\"\" + " + expr +").startsWith(\"http\") ? " + expr +
                " : com.google.gwt.http.client.URL.encodePathSegment(" + expr + ")))+\"");
     }
@@ -814,23 +814,26 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         result.append("         @Override\n");
         result.append("         public String next() {\n");
         final String expr = "baseIterator.next()";
+        String returnExpr;
         if (class_type.isPrimitive() != null) {
-            result.append("             return \"\"+ expr;\n");
+            returnExpr = "\"\"+" + expr;
         } else if (STRING_TYPE == class_type) {
-            result.append("             return expr;\n");
+            returnExpr = expr;
         } else if (class_type.isClass() != null &&
             isOverlayArrayType(class_type.isClass())) {
-            result.append("             return (new " + JSON_ARRAY_CLASS + "(" + expr + ")).toString();\n");
+            returnExpr = "(new " + JSON_ARRAY_CLASS + "(" + expr + ")).toString()";
         } else if (class_type.isClass() != null &&
             OVERLAY_VALUE_TYPE.isAssignableFrom(class_type.isClass())) {
-            result.append("             return (new " + JSON_OBJECT_CLASS + "(" + expr + ")).toString();\n");
+            returnExpr = "(new " + JSON_OBJECT_CLASS + "(" + expr + ")).toString()";
         } else if (class_type.getQualifiedBinaryName().startsWith("java.lang.")) {
-            result.append("             return " + String.format("%s != null ? %s.toString() : null;\n", expr, expr));
+            result.append("             Object obj = " + expr + ";");
+            returnExpr = "obj != null ? obj.toString() : null";
         } else {
             Json jsonAnnotation = getAnnotation(argument, Json.class);
             final Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
-            result.append("             return " + locator.encodeExpression(class_type, expr, style) + ".toString();\n");
+            returnExpr = locator.encodeExpression(class_type, expr, style) + ".toString()";
         }
+        result.append("             return " + returnExpr + ";\n");
         result.append("         }\n");
         result.append("         @Override\n");
         result.append("         public void remove() {\n");

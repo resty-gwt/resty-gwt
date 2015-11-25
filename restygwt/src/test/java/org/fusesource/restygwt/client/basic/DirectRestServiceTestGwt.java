@@ -24,6 +24,9 @@ import org.fusesource.restygwt.client.*;
 
 import java.util.List;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+
 /**
  * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</<a>
  */
@@ -31,6 +34,11 @@ public class DirectRestServiceTestGwt extends GWTTestCase {
     @Override
     public String getModuleName() {
         return "org.fusesource.restygwt.DirectRestServiceTestGwt";
+    }
+
+    static interface InnerDirectRestService extends DirectRestService {
+        @GET @Path("/something")
+        void getSomething();
     }
 
     public void testCallingMethodsDirectlyShouldFail() {
@@ -85,4 +93,10 @@ public class DirectRestServiceTestGwt extends GWTTestCase {
             }
         }).call(directExampleService).storeDto(new ExampleDto());
     }
+
+    public void testInnerInterface() {
+        InnerDirectRestService innerDirectService = GWT.create(InnerDirectRestService.class);
+        assertNotNull(innerDirectService);
+    }
+
 }
