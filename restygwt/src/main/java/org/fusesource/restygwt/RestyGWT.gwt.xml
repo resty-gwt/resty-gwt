@@ -54,11 +54,23 @@
     Declare a property to determine whether autodetection of text/* with @Consumes and @Produces annotations should be used.
   -->
   <define-property name="restygwt.autodetect.plainText" values="true,false" />
-  
+
+  <!--
+    Declare a property to determine whether the detection for Accessor and Mutator should follow the naming convention from JavaBeans API specification.
+  -->
+  <define-property name="restygwt.conventions.useJavaBeansSpecNaming" values="true,false" />
+
+
   <!--
     Default no autodetection for text/*, for backward compatibility.
   -->
   <set-property name="restygwt.autodetect.plainText" value="false" />
+
+  <!--
+    Use JavaBeans naming convention by default.
+  -->
+  <set-property name="restygwt.conventions.useJavaBeansSpecNaming" value="true" />
+
 
   <source path="client"/>
   <source path="example/client"/>
