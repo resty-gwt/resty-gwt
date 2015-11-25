@@ -1,5 +1,6 @@
 package org.fusesource.restygwt.rebind;
 
+import java.beans.Introspector;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,6 +19,8 @@ import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
+
+import static org.fusesource.restygwt.rebind.JsonEncoderDecoderClassCreator.getMiddleNameForPrefixingAsAccessorMutatorJavaBeansSpecCompliance;
 
 @RunWith(JUnit4.class)
 public class JsonEncoderDecoderClassCreatorTestCase extends TestCase
@@ -89,4 +92,32 @@ public class JsonEncoderDecoderClassCreatorTestCase extends TestCase
         assertEquals(v.hasEnteredGetPossibleTypesForClass, classMethodVisited);
         assertEquals(v.hasEnteredGetPossibleTypesForOther, otherMethodVisited);
     }
+
+    @Test
+    public void testNamingConventions() {
+        String name = "a";
+        assertEquals("A", getMiddleNameForPrefixingAsAccessorMutatorJavaBeansSpecCompliance(name));
+        assertEquals(name, Introspector.decapitalize(getMiddleNameForPrefixingAsAccessorMutatorJavaBeansSpecCompliance(name)));
+
+        name = "foo";
+        assertEquals("Foo", getMiddleNameForPrefixingAsAccessorMutatorJavaBeansSpecCompliance(name));
+        assertEquals(name, Introspector.decapitalize(getMiddleNameForPrefixingAsAccessorMutatorJavaBeansSpecCompliance(name)));
+
+        name = "URL";
+        assertEquals("URL", getMiddleNameForPrefixingAsAccessorMutatorJavaBeansSpecCompliance(name));
+        assertEquals(name, Introspector.decapitalize(getMiddleNameForPrefixingAsAccessorMutatorJavaBeansSpecCompliance(name)));
+
+        name = "xValue";
+        assertEquals("xValue", getMiddleNameForPrefixingAsAccessorMutatorJavaBeansSpecCompliance(name));
+        assertEquals(name, Introspector.decapitalize(getMiddleNameForPrefixingAsAccessorMutatorJavaBeansSpecCompliance(name)));
+
+        name = "myValue";
+        assertEquals("MyValue", getMiddleNameForPrefixingAsAccessorMutatorJavaBeansSpecCompliance(name));
+        assertEquals(name, Introspector.decapitalize(getMiddleNameForPrefixingAsAccessorMutatorJavaBeansSpecCompliance(name)));
+
+        name = "MYTestValue";
+        assertEquals("MYTestValue", getMiddleNameForPrefixingAsAccessorMutatorJavaBeansSpecCompliance(name));
+        assertEquals(name, Introspector.decapitalize(getMiddleNameForPrefixingAsAccessorMutatorJavaBeansSpecCompliance(name)));
+    }
+
 }
