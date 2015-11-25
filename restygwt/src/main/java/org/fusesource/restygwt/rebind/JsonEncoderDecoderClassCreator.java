@@ -94,7 +94,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     public JsonEncoderDecoderClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) {
         super(logger, context, source, JSON_ENCODER_SUFFIX);
 
-        javaBeansNamingConventionEnabled = false;
+        // true, if the naming convention from JavaBeans API specification should be used
+        javaBeansNamingConventionEnabled = getBooleanProperty(getLogger(), context.getPropertyOracle(), USE_JAVA_BEANS_SPEC_NAMING_CONVENTION_CONFIGURATION_PROPERTY_NAME, true);
     }
 
     @Override
