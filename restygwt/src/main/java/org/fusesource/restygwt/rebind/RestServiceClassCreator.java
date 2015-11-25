@@ -72,10 +72,7 @@ import com.google.gwt.core.client.JsArrayBoolean;
 import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.core.client.JsArrayString;
-import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.GeneratorContext;
-import com.google.gwt.core.ext.PropertyOracle;
-import com.google.gwt.core.ext.SelectionProperty;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.HasAnnotations;
@@ -215,7 +212,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             throw new UnableToCompleteException();
         }
 
-        autodetectTypeForStrings = shouldAutodetectPlainTextForStrings(getLogger(), context.getPropertyOracle());
+        // true, if plain text autodetection for strings should be used
+        autodetectTypeForStrings = getBooleanProperty(getLogger(), context.getPropertyOracle(), PLAIN_TEXT_AUTODETECTION_CONFIGURATION_PROPERTY_NAME, false);
 
         locator = new JsonEncoderDecoderInstanceLocator(context, getLogger());
 
@@ -303,20 +301,6 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         	else
                 writeMethodImpl(method, options);
         }
-    }
-
-    /**
-     * Returns {@code true} if plain text autodetection for strings should be used.
-     */
-    static boolean shouldAutodetectPlainTextForStrings(TreeLogger logger, PropertyOracle propertyOracle) {
-        try {
-            SelectionProperty prop = propertyOracle.getSelectionProperty(logger, PLAIN_TEXT_AUTODETECTION_CONFIGURATION_PROPERTY_NAME);
-            String propVal = prop.getCurrentValue();
-            return Boolean.parseBoolean(propVal);
-        } catch (BadPropertyValueException e) {
-            // use default "false"
-        }
-        return false;
     }
 
     private static String getPathFromSource(HasAnnotations annotatedType) {
