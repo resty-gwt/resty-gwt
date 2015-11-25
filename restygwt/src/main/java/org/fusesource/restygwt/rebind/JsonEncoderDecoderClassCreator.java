@@ -750,6 +750,19 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     return null;
     }
 
+    /**
+     * Get the middle part of the method name in compliance with the naming convention in the JavaBeans API specification.
+     * 
+     * @param fieldName
+     * @return
+     */
+    static String getMiddleNameForPrefixingAsAccessorMutatorJavaBeansSpecCompliance(String fieldName) {
+        if (fieldName.length() > 1 && Character.isUpperCase(fieldName.charAt(1))) {
+            return fieldName;
+        }
+        return fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+    }
+
     private String upperCaseFirstChar(String in) {
 	if (in.length() == 1) {
 	    return in.toUpperCase();
