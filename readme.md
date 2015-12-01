@@ -1,4 +1,4 @@
-![RestyGWT](http://restygwt.fusesource.org/images/restygwt-logo.png)
+![RestyGWT](http://resty-gwt.github.io/images/restygwt-logo.png)
 ==============
 
 * [![Build Status](https://secure.travis-ci.org/resty-gwt/resty-gwt.png)](http://travis-ci.org/resty-gwt/resty-gwt)
