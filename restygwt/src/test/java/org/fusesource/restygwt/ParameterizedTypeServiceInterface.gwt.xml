@@ -25,6 +25,10 @@
     
     <servlet path='/api/ptype/int' class='org.fusesource.restygwt.server.complex.ParameterizedTypeServlet$IntServlet' />
     <servlet path='/api/ptype/thing' class='org.fusesource.restygwt.server.complex.ParameterizedTypeServlet$ThingServlet' />
+    <servlet path='/api/concrete/echo' class='org.fusesource.restygwt.server.complex.ParameterizedTypeServlet$EchoNameServlet' />
+    
+    <extend-configuration-property name='org.fusesource.restygwt.jsontypeidresolver'
+    	value='org.fusesource.restygwt.server.complex.InterfaceAndImplementationRestyTypeResolver' />
 
     <source path='client'/>
     <source path='example/client'/>

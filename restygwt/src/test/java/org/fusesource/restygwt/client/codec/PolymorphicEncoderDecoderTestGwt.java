@@ -100,6 +100,8 @@ public class PolymorphicEncoderDecoderTestGwt extends GWTTestCase {
         JSONValue json = codec.encode(o1);
         JSONValue objectClass = json.isObject().get("@class");
         assertNotNull(objectClass);
+        assertEquals(DefaultImplementationOfSubTypeInterface.class.getName().replace("$","."),
+        		objectClass.isString().stringValue());
         DefaultImplementationOfSubTypeInterface o2 = codec.decode(json);
         assertEquals(json.toString(), codec.encode(o2).toString());
         assertEquals(value, o1.getValue());

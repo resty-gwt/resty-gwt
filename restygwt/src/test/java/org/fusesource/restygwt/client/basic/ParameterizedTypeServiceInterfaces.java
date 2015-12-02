@@ -19,12 +19,15 @@
 package org.fusesource.restygwt.client.basic;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOImplementation;
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOInterface;
 import org.junit.Test;
 
 import com.google.gwt.core.client.GWT;
@@ -70,6 +73,15 @@ public class ParameterizedTypeServiceInterfaces extends GWTTestCase
 		@Path("int")
 		public A<Integer> getIntInterface();
 	}
+	
+	public static interface GenericService<T extends DTOInterface> extends RestService {
+		@POST
+		@Path("echo")
+		void echoName(T dto, MethodCallback<String> callback);
+	}
+	
+	@Path("/api/concrete")
+	public static interface ConcreteService extends GenericService<DTOImplementation> { }
 
 	@Test
 	public void testSimpleType()
@@ -160,4 +172,29 @@ public class ParameterizedTypeServiceInterfaces extends GWTTestCase
 		});
 		delayTestFinish(10000);
 	}
+	
+	@Test
+	public void testGenericService()
+	{
+		final DTOImplementation dto = new DTOImplementation();
+		dto.setName("impl name");
+		ConcreteService service = GWT.create(ConcreteService.class);
+		service.echoName(dto, new MethodCallback<String>()
+		{
+			@Override
+			public void onFailure(Method method, Throwable exception)
+			{
+				fail(exception.getMessage());
+			}
+
+			@Override
+			public void onSuccess(Method method, String response)
+			{
+				assertEquals(dto.getName(), response);;
+				finishTest();
+			}
+		});
+		delayTestFinish(10000);
+	}
+	
 }
