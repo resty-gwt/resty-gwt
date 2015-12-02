@@ -18,21 +18,30 @@
 
 package org.fusesource.restygwt.server.complex;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fusesource.restygwt.client.basic.ParameterizedTypeServiceInterfaces;
 import org.fusesource.restygwt.client.basic.ParameterizedTypeServiceInterfaces.Thing;
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOInterface;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 
 @SuppressWarnings("serial")
 public class ParameterizedTypeServlet
 {
-	public static abstract class JacksonServlet extends HttpServlet
+	/**
+	 * Ignores input and outputs a value.
+	 */
+	public static abstract class JacksonOutputServlet extends HttpServlet
 	{
 		@Override
 		protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
@@ -45,7 +54,7 @@ public class ParameterizedTypeServlet
 		protected abstract Object getThing();
 	}
 	
-	public static class IntServlet extends JacksonServlet
+	public static class IntServlet extends JacksonOutputServlet
 	{
 		@Override
 		protected Integer getThing()
@@ -55,7 +64,7 @@ public class ParameterizedTypeServlet
 		
 	}
 	
-	public static class ThingServlet extends JacksonServlet
+	public static class ThingServlet extends JacksonOutputServlet
 	{
 		@Override
 		protected ParameterizedTypeServiceInterfaces.Thing getThing()
@@ -64,6 +73,20 @@ public class ParameterizedTypeServlet
 			thing.name = "Fred Flintstone";
 			thing.shoeSize = 12;
 			return thing;
+		}
+	}
+	
+	
+	public static class EchoNameServlet extends HttpServlet
+	{
+		@Override
+		protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+		{
+			ObjectMapper mapper = new ObjectMapper();
+			ObjectReader reader = mapper.reader(DTOInterface.class);
+			DTOInterface dto = reader.readValue(req.getInputStream());
+			resp.setContentType("application/json");
+			mapper.writeValue(resp.getOutputStream(), dto.getName());
 		}
 	}
 }

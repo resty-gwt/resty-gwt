@@ -82,7 +82,7 @@ public class PossibleTypesVisitor extends JsonTypeInfoIdVisitor<List<Subtype>, U
     {
         final List<Subtype> possibleTypes = Lists.newArrayList();
 
-        final JsonTypeIdResolver typeResolver = getAnnotation(classType, JsonTypeIdResolver.class);
+        final JsonTypeIdResolver typeResolver = getClassAnnotation(classType, JsonTypeIdResolver.class);
         if (typeResolver != null) {
             Class<? extends TypeIdResolver> resolverClass = typeResolver.value();
             RestyJsonTypeIdResolver restyResolver;
