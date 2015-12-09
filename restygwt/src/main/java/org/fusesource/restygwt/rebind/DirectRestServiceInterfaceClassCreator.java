@@ -23,6 +23,7 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
+import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.rebind.util.AnnotationCopyUtil;
@@ -80,6 +81,9 @@ public class DirectRestServiceInterfaceClassCreator extends DirectRestBaseSource
     private String getMethodCallback(JMethod method) {
         if (isVoidMethod(method)) {
             return "org.fusesource.restygwt.client.MethodCallback<java.lang.Void> callback";
+        } else if (method.getReturnType().isPrimitive() != null) {
+        	JPrimitiveType primitiveType = method.getReturnType().isPrimitive();
+        	return "org.fusesource.restygwt.client.MethodCallback<" + primitiveType.getQualifiedBoxedSourceName() + "> callback";
         }
         return "org.fusesource.restygwt.client.MethodCallback<" + method.getReturnType().getParameterizedQualifiedSourceName() + "> callback";
     }
