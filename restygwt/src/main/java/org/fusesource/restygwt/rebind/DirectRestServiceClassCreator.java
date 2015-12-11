@@ -122,10 +122,10 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
     }
 
     private void generateReturnNull(JMethod method) {
-    	if (isVoidMethod(method)) {
-    		// check void first since JPrimitiveType will consider void to be a primitive
-    		return;
-    	} else if (method.getReturnType().isPrimitive() != null) {
+        if (isVoidMethod(method)) {
+        	// check void first since JPrimitiveType will consider void to be a primitive
+        	return;
+        } else if (method.getReturnType().isPrimitive() != null) {
         	JPrimitiveType primitiveType = method.getReturnType().isPrimitive();
         	p("return " + primitiveType.getUninitializedFieldExpression() + ";");
     	} else {
@@ -136,7 +136,7 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
     private static boolean isVoidMethod(JMethod method) {
         return VOID_QUALIFIED_NAME.equals(method.getReturnType().getQualifiedBinaryName());
     }
-    
+
     private void createCallbackField() {
         p("private " + MethodCallback.class.getCanonicalName() + " callback;");
     }

@@ -40,7 +40,7 @@ public class DirectRestServiceTestGwt extends GWTTestCase {
         @GET @Path("/something")
         void getSomething();
     }
-    
+
     public void testCallingMethodsDirectlyShouldFail() {
         delayTestFinish(10000);
         DirectExampleService directExampleService = GWT.create(DirectExampleService.class);
@@ -98,9 +98,9 @@ public class DirectRestServiceTestGwt extends GWTTestCase {
         InnerDirectRestService innerDirectService = GWT.create(InnerDirectRestService.class);
         assertNotNull(innerDirectService);
     }
-    
+
     public void testPrimitiveDirectRestService() {
-    	PrimitiveDirectRestService primitiveDirectService = GWT.create(PrimitiveDirectRestService.class);
+        PrimitiveDirectRestService primitiveDirectService = GWT.create(PrimitiveDirectRestService.class);
         assertNotNull(primitiveDirectService);
     }
 
