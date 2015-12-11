@@ -38,8 +38,7 @@ public abstract class AbstractNestedRequestCallback implements RequestCallback {
         this.method.request = request;
         this.method.response = response;
         if (response == null) {
-            requestCallback.onError(request, 
-                    new FailedStatusCodeException("TIMEOUT", 999));
+            requestCallback.onError(request, Defaults.getExceptionMapper().createNoResponseException());
         } else if (isFailedStatus(response)) {
             doError(request, response);
         } else {
@@ -47,12 +46,10 @@ public abstract class AbstractNestedRequestCallback implements RequestCallback {
         }
     }
 
-    protected void doError(Request request, Response response){
-        requestCallback.onError(request, 
-                    new FailedStatusCodeException(response.getStatusText(), 
-                            response.getStatusCode()));
+    protected void doError(Request request, Response response) {
+        requestCallback.onError(request, Defaults.getExceptionMapper().createFailedStatusException(method, response));
     }
-    
+
     protected abstract void doReceive(Request request, Response response);
 
     @Override
@@ -64,4 +61,5 @@ public abstract class AbstractNestedRequestCallback implements RequestCallback {
     protected boolean isFailedStatus(Response response) {
         return !this.method.isExpected(response.getStatusCode());
     }
+
 }
