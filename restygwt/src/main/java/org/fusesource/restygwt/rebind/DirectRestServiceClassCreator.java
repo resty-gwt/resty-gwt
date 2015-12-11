@@ -123,8 +123,7 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
 
     private void generateReturnNull(JMethod method) {
     	if (isVoidMethod(method)) {
-    		// check void first since JPrimitiveType will consider void to be
-    		// a primitive
+    		// check void first since JPrimitiveType will consider void to be a primitive
     		return;
     	} else if (method.getReturnType().isPrimitive() != null) {
         	JPrimitiveType primitiveType = method.getReturnType().isPrimitive();
@@ -134,7 +133,7 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
         }
     }
 
-    public static boolean isVoidMethod(JMethod method) {
+    private static boolean isVoidMethod(JMethod method) {
         return VOID_QUALIFIED_NAME.equals(method.getReturnType().getQualifiedBinaryName());
     }
     

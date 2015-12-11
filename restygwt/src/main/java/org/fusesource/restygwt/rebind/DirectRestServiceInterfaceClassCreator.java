@@ -17,6 +17,13 @@
  */
 package org.fusesource.restygwt.rebind;
 
+import java.lang.annotation.Annotation;
+
+import org.fusesource.restygwt.client.RestService;
+import org.fusesource.restygwt.rebind.util.AnnotationCopyUtil;
+import org.fusesource.restygwt.rebind.util.AnnotationUtils;
+import org.fusesource.restygwt.rebind.util.OnceFirstIterator;
+
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -25,14 +32,6 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
-import org.fusesource.restygwt.client.RestService;
-import org.fusesource.restygwt.rebind.util.AnnotationCopyUtil;
-import org.fusesource.restygwt.rebind.util.AnnotationUtils;
-import org.fusesource.restygwt.rebind.util.OnceFirstIterator;
-
-import java.lang.annotation.Annotation;
-
-import static org.fusesource.restygwt.rebind.DirectRestServiceClassCreator.isVoidMethod;
 
 /**
  * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</a>
@@ -79,9 +78,7 @@ public class DirectRestServiceInterfaceClassCreator extends DirectRestBaseSource
     }
 
     private String getMethodCallback(JMethod method) {
-        if (isVoidMethod(method)) {
-            return "org.fusesource.restygwt.client.MethodCallback<java.lang.Void> callback";
-        } else if (method.getReturnType().isPrimitive() != null) {
+        if (method.getReturnType().isPrimitive() != null) {
         	JPrimitiveType primitiveType = method.getReturnType().isPrimitive();
         	return "org.fusesource.restygwt.client.MethodCallback<" + primitiveType.getQualifiedBoxedSourceName() + "> callback";
         }
