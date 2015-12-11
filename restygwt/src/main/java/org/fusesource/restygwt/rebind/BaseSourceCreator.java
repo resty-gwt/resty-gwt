@@ -21,7 +21,10 @@ package org.fusesource.restygwt.rebind;
 import java.io.PrintWriter;
 import java.util.HashSet;
 
+import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.PropertyOracle;
+import com.google.gwt.core.ext.SelectionProperty;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -216,6 +219,20 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         generate();
         sourceWriter.commit(getLogger());
         return name;
+    }
+
+    /**
+     * Returns the boolean value of the property or the default value.
+     */
+    protected static boolean getBooleanProperty(TreeLogger logger, PropertyOracle propertyOracle, String propertyName, boolean defaultValue) {
+        try {
+            SelectionProperty prop = propertyOracle.getSelectionProperty(logger, propertyName);
+            String propVal = prop.getCurrentValue();
+            return Boolean.parseBoolean(propVal);
+        } catch (BadPropertyValueException e) {
+            // return the default value
+        }
+        return defaultValue;
     }
 
     abstract protected ClassSourceFileComposerFactory createComposerFactory() throws UnableToCompleteException;

@@ -1213,4 +1213,39 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         assertEquals(value.toString(), codec.encode(codec.decode(value)).toString());
     }
 
+    public class BeanNamingConvention {
+        private Integer xValue;
+        private Integer myValue;
+
+        public Integer getxValue() {
+            return xValue;
+        }
+
+        public void setxValue(Integer xValue) {
+            this.xValue = xValue;
+        }
+
+        public Integer getMyValue() {
+            return myValue;
+        }
+
+        public void setMyValue(Integer myValue) {
+            this.myValue = myValue;
+        }
+    }
+
+    static interface BeanNamingConventionCodec extends JsonEncoderDecoder<BeanNamingConvention> {
+    }
+
+    public void testBeanNamingConvention() {
+        BeanNamingConventionCodec codec = GWT.create(BeanNamingConventionCodec.class);
+
+        BeanNamingConvention bean = new BeanNamingConvention();
+        bean.setxValue(1);
+        bean.setMyValue(3);
+        JSONValue json = codec.encode(bean);
+
+        assertEquals("{\"xValue\":1, \"myValue\":3}", json.toString());
+    }
+
 }
