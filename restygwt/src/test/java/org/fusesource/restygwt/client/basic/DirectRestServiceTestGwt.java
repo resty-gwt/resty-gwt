@@ -99,4 +99,9 @@ public class DirectRestServiceTestGwt extends GWTTestCase {
         assertNotNull(innerDirectService);
     }
 
+    public void testPrimitiveDirectRestService() {
+        PrimitiveDirectRestService primitiveDirectService = GWT.create(PrimitiveDirectRestService.class);
+        assertNotNull(primitiveDirectService);
+    }
+
 }

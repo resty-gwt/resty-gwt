@@ -6,6 +6,7 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
+import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import org.fusesource.restygwt.client.Dispatcher;
 import org.fusesource.restygwt.client.MethodCallback;
@@ -121,13 +122,18 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
     }
 
     private void generateReturnNull(JMethod method) {
-        // FIXME: check for primitives, void.
-        if (!isVoidMethod(method)) {
+        if (isVoidMethod(method)) {
+        	// check void first since JPrimitiveType will consider void to be a primitive
+        	return;
+        } else if (method.getReturnType().isPrimitive() != null) {
+        	JPrimitiveType primitiveType = method.getReturnType().isPrimitive();
+        	p("return " + primitiveType.getUninitializedFieldExpression() + ";");
+    	} else {
             p("return null;");
         }
     }
 
-    public static boolean isVoidMethod(JMethod method) {
+    private static boolean isVoidMethod(JMethod method) {
         return VOID_QUALIFIED_NAME.equals(method.getReturnType().getQualifiedBinaryName());
     }
 
