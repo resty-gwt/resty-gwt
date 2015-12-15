@@ -229,7 +229,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     getLogger().log(DEBUG, "Only assignable classes are allowed: " + possibleType.clazz.getParameterizedQualifiedSourceName() + " is not assignable to: " + classType.getParameterizedQualifiedSourceName());
                     continue;
                 }
-                
+
                 if (!isLeaf) {
                     // Generate a decoder for each possible type
                     p("if(value.getClass().getName().equals(\"" + possibleType.clazz.getQualifiedBinaryName() + "\"))");
