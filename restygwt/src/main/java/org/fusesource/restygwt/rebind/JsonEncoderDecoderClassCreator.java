@@ -31,6 +31,7 @@ import java.util.Set;
 
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
+import org.fusesource.restygwt.rebind.util.AnnotationUtils;
 import static org.fusesource.restygwt.rebind.util.AnnotationUtils.*;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -46,6 +47,7 @@ import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.typeinfo.HasAnnotations;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JConstructor;
 import com.google.gwt.core.ext.typeinfo.JField;
@@ -227,7 +229,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     getLogger().log(DEBUG, "Only assignable classes are allowed: " + possibleType.clazz.getParameterizedQualifiedSourceName() + " is not assignable to: " + classType.getParameterizedQualifiedSourceName());
                     continue;
                 }
-
+                
                 if (!isLeaf) {
                     // Generate a decoder for each possible type
                     p("if(value.getClass().getName().equals(\"" + possibleType.clazz.getQualifiedBinaryName() + "\"))");
@@ -240,8 +242,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
                     // Try to find a constructor that is annotated as creator
                     final JConstructor creator = findCreator(possibleType.clazz);
+                    final List<JField> fields = getFields(possibleType.clazz);
 
-                    List<JField> orderedFields = creator == null ? null : getOrderedFields(getFields(possibleType.clazz), creator);
+                    List<JField> orderedFields = creator == null ? null : getOrderedFields(fields, creator);
 
                     if (typeInfo != null) {
                         switch (typeInfo.include()) {
@@ -276,9 +279,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
                     p(possibleType.clazz.getParameterizedQualifiedSourceName() + " parseValue = (" + possibleType.clazz.getParameterizedQualifiedSourceName() + ")value;");
 
-                    for (final JField field : getFields(possibleType.clazz)) {
+                    for (final JField field : fields) {
 
-                        final String getterName = getGetterName(field);
+                        final String getterName = getGetterName(possibleType.clazz, field);
 
                         boolean ignoreField = false;
                         if(getAnnotation(possibleType.clazz, JsonIgnoreProperties.class) != null) {
@@ -293,7 +296,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         // If can ignore some fields right off the back..
                         // if there is a creator encode only final fields with JsonProperty annotation
                         if (ignoreField || getterName == null && (field.isStatic() || (field.isFinal() && !(creator != null && orderedFields.contains(field))) || field.isTransient()
-								|| field.isAnnotationPresent(JsonIgnore.class) || field.isAnnotationPresent(XmlTransient.class))) {
+								|| isIgnored(field))) {
                             continue;
                         }
 
@@ -529,8 +532,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         final String setterName = getSetterName(field);
 
                         // If can ignore some fields right off the back..
-                        if (setterName == null && (field.isStatic() || field.isFinal() || field.isTransient())
-								|| field.isAnnotationPresent(JsonIgnore.class) || field.isAnnotationPresent(XmlTransient.class)) {
+                        if (setterName == null && (field.isStatic() || field.isFinal() || field.isTransient()) || isIgnored(field)) {
                             continue;
                         }
 
@@ -727,7 +729,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
      * @return the name for the getter for the specified field or null if a
      *         getter can't be found.
      */
-    private String getGetterName(JField field) {
+    private String getGetterName(JClassType type, JField field) {
         final String methodBaseName = getMiddleNameForPrefixingAsAccessorMutator(field.getName());
         String fieldName = null;
         JType booleanType = null;
@@ -736,7 +738,6 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         } catch (UnableToCompleteException e) {
             // do nothing
         }
-        JClassType type = field.getEnclosingType();
         if (field.getType().equals(JPrimitiveType.BOOLEAN) || field.getType().equals(booleanType)) {
             if (field instanceof DummyJField) {
                 return ((DummyJField) field).getGetterMethod().getName();
@@ -783,6 +784,44 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         }
         return in.substring(0, 1).toUpperCase() + in.substring(1);
     }
+    
+    /**
+     * Checks if hasAnnotations should be ignored based on JsonIgnore and XmlTransient
+     *  
+     * @param hasAnnotations
+     * @return true if hasAnnotations should be ignored
+     * @see #isJsonIgnored(HasAnnotations)
+     * @see #isXmlTransient(HasAnnotations)
+     */
+    private boolean isIgnored(HasAnnotations hasAnnotations) {
+        return isJsonIgnored(hasAnnotations) || isXmlTransient(hasAnnotations);
+    }
+    
+    /**
+     * @param hasAnnotations
+     * @return true if hasAnnotations is annotated with @JsonIgnore and its value is true
+     * @see AnnotationUtils#getAnnotation(HasAnnotations, Class)
+     */
+    private boolean isJsonIgnored(HasAnnotations hasAnnotations) {
+        return isJsonIgnored(getAnnotation(hasAnnotations, JsonIgnore.class));
+    }
+    
+    /**
+     * @param jsonIgnore
+     * @return true if jsonIgnore.value() is true
+     */
+    private boolean isJsonIgnored(JsonIgnore jsonIgnore) {
+        return jsonIgnore != null && jsonIgnore.value();
+    }
+    
+    /**
+     * @param hasAnnotations
+     * @return true of hasAnnotations is annotated with XmlTransient
+     * @see AnnotationUtils#getAnnotation(HasAnnotations, Class)
+     */
+    private boolean isXmlTransient(HasAnnotations hasAnnotations) {
+        return getAnnotation(hasAnnotations, XmlTransient.class) != null;
+    }
 
     /**
      * checks whether a getter or setter exists on the specified type or any of
@@ -807,10 +846,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	}
 	JMethod m = type.findMethod(fieldName, args);
 	if (null != m) {
-        if(getAnnotation(m, JsonIgnore.class) != null)
-			return false;
-		if (getAnnotation(m, XmlTransient.class) != null)
-			return false;
+	    if (isIgnored(m))
+	        return false;
         if(isSetter)
             return true;
         JClassType returnType = m.getReturnType().isClassOrInterface();
@@ -868,29 +905,25 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             if( m.getName().startsWith("set") &&
                     m.getParameterTypes().length == 1 &&
                     m.getReturnType() == JPrimitiveType.VOID &&
-                    getAnnotation(m, JsonIgnore.class) == null &&
-                    getAnnotation(m, XmlTransient.class) == null) {
+                    !isIgnored(m)) {
                 setters.put( m.getName().substring("set".length()), m );
             }
             else if( m.getName().startsWith("get") &&
                     m.getParameterTypes().length == 0 &&
                     m.getReturnType() != JPrimitiveType.VOID &&
-                    getAnnotation(m, JsonIgnore.class) == null &&
-                    getAnnotation(m, XmlTransient.class) == null) {
+                    !isIgnored(m)) {
                 getters.put( m.getName().substring("get".length()), m );
             }
             else if( m.getName().startsWith("is") &&
                     m.getParameterTypes().length == 0 &&
                     ( m.getReturnType() == JPrimitiveType.BOOLEAN || m.getReturnType().equals(booleanType) ) &&
-                    getAnnotation(m, JsonIgnore.class) == null &&
-                    getAnnotation(m, XmlTransient.class) == null) {
+                    !isIgnored(m)) {
                 getters.put( m.getName().substring("is".length()), m );
             }
             else if( m.getName().startsWith("has") &&
                     m.getParameterTypes().length == 0 &&
                     ( m.getReturnType() == JPrimitiveType.BOOLEAN || m.getReturnType().equals(booleanType) ) &&
-                    getAnnotation(m, JsonIgnore.class) == null &&
-                    getAnnotation(m, XmlTransient.class) == null) {
+                    !isIgnored(m)) {
                 getters.put( m.getName().substring("has".length()), m );
             }
         }
@@ -908,7 +941,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     }
                 }
 
-                if (f != null && null != getAnnotation(f, JsonIgnore.class)) {
+                if (f != null && isJsonIgnored(f)) {
                     continue;
                 }
 
@@ -935,7 +968,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         // remove fields annotated with JsonIgnore
         for (Iterator<JField> iter = allFields.iterator(); iter.hasNext();) {
             final JField field = iter.next();
-            if (null != getAnnotation(field, JsonIgnore.class)) {
+            if (isJsonIgnored(field)) {
                 iter.remove();
             }
         }
@@ -953,7 +986,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private List<JField> getFields(List<JField> allFields, JClassType type) {
         JField[] fields = type.getFields();
         for (JField field : fields) {
-            if (!field.isTransient() && !field.isAnnotationPresent(XmlTransient.class)) {
+            if (!field.isTransient() && !isXmlTransient(field)) {
                 allFields.add(field);
             }
         }
