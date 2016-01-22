@@ -230,7 +230,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     continue;
                 }
 
-                if (!isLeaf && possibleTypes.size() > 1) {
+                if (!isLeaf) {
                     // Generate a decoder for each possible type
                     p("if(value.getClass().getName().equals(\"" + possibleType.clazz.getQualifiedBinaryName() + "\"))");
                     p("{");
@@ -355,12 +355,12 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         p("return rc;");
                     }
                 }
-                if (!isLeaf && possibleTypes.size() > 1) {
+                if (!isLeaf) {
                     p("}");
                 }
             }
 
-            if (!isLeaf && possibleTypes.size() > 1) {
+            if (!isLeaf) {
                 // Shouldn't get called
                 p("return null;");
             }
