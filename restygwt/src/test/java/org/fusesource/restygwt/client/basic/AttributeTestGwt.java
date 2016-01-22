@@ -13,10 +13,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 /**
- *
  * @author Thomas Cybulski
  */
-public class AttributeTest extends GWTTestCase {
+public class AttributeTestGwt extends GWTTestCase {
 
 	private AttributeTestRestService service;
 
@@ -24,7 +23,6 @@ public class AttributeTest extends GWTTestCase {
 	public String getModuleName() {
 		return "org.fusesource.restygwt.AttributeTestGwt";
 	}
-
 
 	interface AttributeTestRestService extends RestService {
 
