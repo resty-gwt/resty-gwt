@@ -1247,3 +1247,5 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
 
         assertEquals("{\"xValue\":1, \"myValue\":3}", json.toString());
     }
+
+}
