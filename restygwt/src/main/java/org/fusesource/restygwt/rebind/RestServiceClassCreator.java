@@ -390,7 +390,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         i(-1).p("}");
     }
 
-    private String pathExpression(String pathExpression, JParameter arg, PathParam paramPath) {
+    private String pathExpression(String pathExpression, JParameter arg, PathParam paramPath) throws UnableToCompleteException {
         String expr = toStringExpression(arg);
         return pathExpression.replaceAll(Pattern.quote("{" + paramPath.value()) + "(\\s*:\\s*(.)+)?\\}",
                "\"+(" + expr + "== null? null : ((\"\" + " + expr +").startsWith(\"http\") ? " + expr +
