@@ -36,5 +36,9 @@ public interface DirectExampleService extends DirectRestService {
 
     @POST @Path("/store")
     void storeDto(ExampleDto exampleDto);
+
+    @GET @Path("/string")
+    String getString();
+
 }
 

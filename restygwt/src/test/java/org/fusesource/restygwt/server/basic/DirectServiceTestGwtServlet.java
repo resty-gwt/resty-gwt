@@ -32,6 +32,7 @@ public class DirectServiceTestGwtServlet extends HttpServlet {
 
     String EMPTY_RESPONSE = "";
     String THREE_ELEMENT_LIST = "[{name:'1'},{name:'2'},{name:'3'}]";
+    String STRING_RESPONSE = "a string";
 
     @Override
     protected void doGet(HttpServletRequest request,
@@ -39,6 +40,8 @@ public class DirectServiceTestGwtServlet extends HttpServlet {
 
         if (request.getRequestURI().endsWith("/api/list")) {
             response.getWriter().print(THREE_ELEMENT_LIST);
+        } else if (request.getRequestURI().endsWith("/api/string")) {
+        	response.getWriter().print(STRING_RESPONSE);
         } else {
             throw new IllegalArgumentException("Invalid servlet path called by service: " + request.getRequestURI());
         }
