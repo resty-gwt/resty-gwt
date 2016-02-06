@@ -382,7 +382,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         JSONString string = value.isString();
         if (string != null) {
             try {
-            	new BigDecimal(value.toString());
+            	return new BigDecimal(value.toString());
             } catch (NumberFormatException e) {
             }
         }
