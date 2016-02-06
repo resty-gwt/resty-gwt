@@ -374,11 +374,20 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
     // /////////////////////////////////////////////////////////////////
 
     static public BigDecimal toBigDecimal(JSONValue value) {
-        JSONNumber number = value.isNumber();
-        if (number == null) {
-            throw new DecodingException("Expected a json number, but was given: " + value);
+    	JSONNumber number = value.isNumber();
+    	if (number != null) {
+    		return new BigDecimal(number.toString());
+    	}
+        
+        JSONString string = value.isString();
+        if (string != null) {
+            try {
+            	new BigDecimal(value.toString());
+            } catch (NumberFormatException e) {
+            }
         }
-        return new BigDecimal(value.toString());
+        
+        throw new DecodingException("Expected a json number, but was given: " + value);
     }
 
     static public double toDouble(JSONValue value) {
