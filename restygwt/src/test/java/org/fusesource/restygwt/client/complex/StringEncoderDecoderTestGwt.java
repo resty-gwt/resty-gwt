@@ -75,7 +75,7 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
         void getAsPlainText(TextCallback callback);
 
         @POST
-        @Consumes(MediaType.APPLICATION_JSON)
+        @Consumes(MediaType.APPLICATION_JSON + ", application/vnd.fusesource+json")
         void setAsJson(String text, MethodCallback<Void> callback);
 
         @POST
@@ -163,7 +163,7 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
             @Override
             public void onFailure(Method method, Throwable exception) {
                 if (exception.getCause() instanceof JSONException) {
-                    // Only for backward compatbility test
+                    // Only for backward compatibility test
                     finishTest();
                 }
 
