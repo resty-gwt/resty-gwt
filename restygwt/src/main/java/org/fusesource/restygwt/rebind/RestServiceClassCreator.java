@@ -603,6 +603,10 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 Consumes consumesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Consumes.class);
                 if (consumesAnnotation != null) {
                     contentTypeHeaderValue = consumesAnnotation.value()[0];
+                    int split = contentTypeHeaderValue.indexOf(',');
+                    if (split > 0) {
+                        contentTypeHeaderValue = contentTypeHeaderValue.substring(0, split).trim();
+                    }
                     p("__method.header(" + RESOURCE_CLASS + ".HEADER_CONTENT_TYPE, " + wrap(contentTypeHeaderValue) + ");");
                }
 
