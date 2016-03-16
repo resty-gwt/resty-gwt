@@ -423,7 +423,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             return;
         }
 
-        p("public " + source.getName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
+        p("public " + source.getParameterizedQualifiedSourceName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
         {
             p("if( value == null || value.isNull()!=null ) {").i(1);
             {
