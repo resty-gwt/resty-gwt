@@ -1248,4 +1248,39 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         assertEquals("{\"xValue\":1, \"myValue\":3}", json.toString());
     }
 
+	static class ClassWithSubclass {
+
+		private String name = "Max";
+
+		String getName() {
+			return name;
+		}
+
+		void setName(String a) {
+			this.name = a;
+		}
+
+	}
+
+	static class SubclassWithoutEncoderDecoder extends ClassWithSubclass {
+
+		String getName() {
+			return super.getName() + " --> subclass";
+		}
+
+	}
+
+	static interface ClassWithSubclassCodec extends JsonEncoderDecoder<ClassWithSubclass> {
+	}
+
+	public void testSubclassCanBeEncodedBySuperclassEncoder() {
+		ClassWithSubclassCodec codec = GWT.create(ClassWithSubclassCodec.class);
+
+		SubclassWithoutEncoderDecoder subclassWithoutEncoderDecoder = new SubclassWithoutEncoderDecoder();
+		JSONValue json = codec.encode(subclassWithoutEncoderDecoder);
+		assertEquals("Max --> subclass", json.isObject().get("name").isString().stringValue());
+		ClassWithSubclass roundTrip = codec.decode(json);
+		assertEquals("Max --> subclass", roundTrip.getName());
+	}
+	
 }
