@@ -795,16 +795,15 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 		if (attribute != null) {
 			if (arg.getType().isClass().getField(attribute.value()) != null && arg.getType().isClass().getField(attribute.value()).isPublic()) {
 				return "(" + arg.getName() + "." + attribute.value() + "+ \"\")";
-			} else {
-				String publicGetter = "get" + attribute.value().substring(0, 1).toUpperCase() + attribute.value().substring(1);
-				for (JMethod jMethod : arg.getType().isClass().getMethods()) {
-					if (jMethod.getName().equals(publicGetter)) {
-						return "(" + arg.getName() + "." + publicGetter + "()" + "+ \"\")";
-					}
-				}
-				getLogger().log(ERROR, "Neither public argument " + attribute.value() + " nor public getter " + publicGetter + " found!");
-				throw new UnableToCompleteException();
 			}
+			String publicGetter = "get" + attribute.value().substring(0, 1).toUpperCase() + attribute.value().substring(1);
+			for (JMethod jMethod : arg.getType().isClass().getMethods()) {
+				if (jMethod.getName().equals(publicGetter)) {
+					return "(" + arg.getName() + "." + publicGetter + "()" + "+ \"\")";
+				}
+			}
+			getLogger().log(ERROR, "Neither public argument " + attribute.value() + " nor public getter " + publicGetter + " found!");
+			throw new UnableToCompleteException();
 		}
 		return toStringExpression(arg.getType(), arg.getName());
 	}
