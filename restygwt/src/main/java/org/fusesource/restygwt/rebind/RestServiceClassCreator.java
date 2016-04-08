@@ -168,7 +168,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private Set<JClassType> OVERLAY_ARRAY_TYPES;
     private Set<JClassType> QUERY_PARAM_LIST_TYPES;
     private JClassType REST_SERVICE_TYPE;
-    private JsonEncoderDecoderInstanceLocator locator;
+    private EncoderDecoderLocator locator;
 
     private boolean autodetectTypeForStrings;
 
@@ -215,7 +215,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         // true, if plain text autodetection for strings should be used
         autodetectTypeForStrings = getBooleanProperty(getLogger(), context.getPropertyOracle(), PLAIN_TEXT_AUTODETECTION_CONFIGURATION_PROPERTY_NAME, false);
 
-        locator = new JsonEncoderDecoderInstanceLocator(context, getLogger());
+        locator = EncoderDecoderLocatorFactory.getEncoderDecoderInstanceLocator(context, getLogger());
 
         this.XML_CALLBACK_TYPE = find(XmlCallback.class, getLogger(), context);
         this.METHOD_CALLBACK_TYPE = find(MethodCallback.class, getLogger(), context);
@@ -723,7 +723,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                             else {
                                 p("try {").i(1);
                                 {
-                                    if(resultType.isAssignableTo(locator.LIST_TYPE)){
+                                    if(resultType.isAssignableTo(locator.getListType())){
                                         p("result = new " + JSON_ARRAY_CLASS + "(((" + JSON_OBJECT_CLASS + ")result).getJavaScriptObject());");
                                     }
                                     jsonAnnotation = getAnnotation(method, Json.class);
