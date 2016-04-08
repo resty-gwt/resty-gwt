@@ -55,7 +55,7 @@ import com.google.gwt.xml.client.Document;
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
-public class JsonEncoderDecoderInstanceLocator {
+public class JsonEncoderDecoderInstanceLocator implements EncoderDecoderLocator {
 
     public static final String JSON_ENCODER_DECODER_CLASS = AbstractJsonEncoderDecoder.class.getName();
     public static final String JSON_NESTED_ENCODER_DECODER_CLASS = AbstractNestedJsonEncoderDecoder.class.getName();
@@ -173,16 +173,28 @@ public class JsonEncoderDecoderInstanceLocator {
         }
     }
 
-    public boolean hasCustomEncoderDecoder(JType type) {
+    /* (non-Javadoc)
+	 * @see org.fusesource.restygwt.rebind.EncoderDecoderLocator#hasCustomEncoderDecoder(com.google.gwt.core.ext.typeinfo.JType)
+	 */
+    @Override
+	public boolean hasCustomEncoderDecoder(JType type) {
         return getCustomEncoderDecoder(type) != null;
     }
 
-    public String encodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
+    /* (non-Javadoc)
+	 * @see org.fusesource.restygwt.rebind.EncoderDecoderLocator#encodeExpression(com.google.gwt.core.ext.typeinfo.JType, java.lang.String, org.fusesource.restygwt.client.Json.Style)
+	 */
+    @Override
+	public String encodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
         return encodeDecodeExpression(type, expression, style, "encode", JSON_ENCODER_DECODER_CLASS + ".toJSON", JSON_ENCODER_DECODER_CLASS + ".toJSON", JSON_ENCODER_DECODER_CLASS
                 + ".toJSON", JSON_ENCODER_DECODER_CLASS + ".toJSON");
     }
 
-    public String decodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
+    /* (non-Javadoc)
+	 * @see org.fusesource.restygwt.rebind.EncoderDecoderLocator#decodeExpression(com.google.gwt.core.ext.typeinfo.JType, java.lang.String, org.fusesource.restygwt.client.Json.Style)
+	 */
+    @Override
+	public String decodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
         return encodeDecodeExpression(type, expression, style, "decode", JSON_ENCODER_DECODER_CLASS + ".toMap", JSON_ENCODER_DECODER_CLASS + ".toSet", JSON_ENCODER_DECODER_CLASS
                 + ".toList", JSON_ENCODER_DECODER_CLASS + ".toArray");
     }
@@ -398,7 +410,7 @@ public class JsonEncoderDecoderInstanceLocator {
         return types;
     }
 
-    boolean isCollectionType(JClassType clazz) {
+    public boolean isCollectionType(JClassType clazz) {
         return clazz != null
                 && (clazz.isAssignableTo(SET_TYPE) || clazz.isAssignableTo(LIST_TYPE) || clazz.isAssignableTo(MAP_TYPE) || clazz.isAssignableTo(COLLECTION_TYPE));
     }
@@ -424,5 +436,10 @@ public class JsonEncoderDecoderInstanceLocator {
     protected void trace(String msg) {
         logger.log(TRACE, msg);
     }
+
+	@Override
+	public JClassType getListType() {
+		return LIST_TYPE;
+	}
 
 }

@@ -26,6 +26,8 @@
   <inherits name='com.google.gwt.jsonp.Jsonp' />
   <inherits name="com.google.gwt.xml.XML" />
   <inherits name='com.google.gwt.logging.LoggingDisabled'/>
+  
+  <inherits name="com.github.nmorel.gwtjackson.GwtJackson" />
 
 
   <replace-with class="org.fusesource.restygwt.emulated.JsonTypeInfo">
@@ -59,7 +61,17 @@
     Declare a property to determine whether the detection for Accessor and Mutator should follow the naming convention from JavaBeans API specification.
   -->
   <define-property name="restygwt.conventions.useJavaBeansSpecNaming" values="true,false" />
-
+ 
+ <!--
+    Declare a property to determine whether to use gwt-jackson as encoder/decoder. https://github.com/nmorel/gwt-jackson 
+  	If set to true
+  	This may influence restygwt.autodetect.plainText , 
+  	                   restygwt.conventions.useJavaBeansSpecNaming , 
+  	                   restygwt.autodetect.plainText , 
+  	                   restygwt.autodetect.plainText 
+  	   properties.
+  -->
+  <define-property name="restygwt.encodeDecode.useGwtJackson" values="true,false" />
 
   <!--
     Default no autodetection for text/*, for backward compatibility.
@@ -71,7 +83,11 @@
   -->
   <set-property name="restygwt.conventions.useJavaBeansSpecNaming" value="true" />
 
-
+ <!-- 
+  	Default use standard resty-gwt encoder/decoder for backward compatibility.
+   -->
+  <set-property name="restygwt.encodeDecode.useGwtJackson" value="false" />
+  
   <source path="client"/>
   <source path="example/client"/>
   <super-source path="supersrc"/>

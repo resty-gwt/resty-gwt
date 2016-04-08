@@ -105,6 +105,23 @@
       <version>${resteasy.version}</version>
       <scope>test</scope>
     </dependency>
+    
+    <dependency>
+	  <groupId>com.github.nmorel.gwtjackson</groupId>
+	  <artifactId>gwt-jackson</artifactId>
+	  <version>0.12.0</version>
+	  <!-- 
+	  <scope>provided</scope>
+	 -->
+	</dependency>
+	<!-- 
+    <dependency>
+	  <groupId>com.github.nmorel.gwtjackson</groupId>
+	  <artifactId>gwt-jackson</artifactId>
+	  <version>0.12.0</version>
+  	  <classifier>sources</classifier>
+	</dependency>
+	 -->
   </dependencies>
 
   <build>
