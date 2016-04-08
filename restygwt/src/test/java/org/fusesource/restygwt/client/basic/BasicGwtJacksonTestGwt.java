@@ -39,7 +39,6 @@ public class BasicGwtJacksonTestGwt extends GWTTestCase {
         return "org.fusesource.restygwt.BasicGwtJacksonTestGwt";
     }
     
-
     public void testDefaultFunction() {
         //configure RESTY
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
@@ -65,6 +64,4 @@ public class BasicGwtJacksonTestGwt extends GWTTestCase {
         delayTestFinish(10000);
     }
 
- 
-    
 }
