@@ -18,6 +18,8 @@
 
 package org.fusesource.restygwt.client.basic;
 
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
 
@@ -37,13 +39,32 @@ public class BasicGwtJacksonTestGwt extends GWTTestCase {
         return "org.fusesource.restygwt.BasicGwtJacksonTestGwt";
     }
     
+
     public void testDefaultFunction() {
         //configure RESTY
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
 
         ExampleService service = GWT.create(ExampleService.class);
         ((RestServiceProxy) service).setResource(resource);
+
+        service.getExampleDto(new MethodCallback<ExampleDto>() {
+
+            @Override
+            public void onSuccess(Method method, ExampleDto response) {
+                assertEquals(response.name, "myName");
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+            }
+        });
+
+        // wait... we are in async testing...
+        delayTestFinish(10000);
     }
 
+ 
     
 }

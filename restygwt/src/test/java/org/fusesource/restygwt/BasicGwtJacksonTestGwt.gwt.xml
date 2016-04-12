@@ -19,17 +19,16 @@
 -->
 
 <module>
-
     <inherits name='com.google.gwt.user.User' />
     <inherits name='com.google.gwt.logging.Logging'/>
     <inherits name='org.fusesource.restygwt.BasicTestGwt'/>
     <inherits name="com.github.nmorel.gwtjackson.GwtJackson" />
      	
     <set-property name="restygwt.encodeDecode.useGwtJackson" value="true" />
-    <!-- 
+
     <servlet path='/api/*' class='org.fusesource.restygwt.server.basic.BasicTestGwtServlet' />
     <servlet path='/ui/*' class='org.fusesource.restygwt.server.basic.BasicTestGwtServlet' />
-	 -->
+    
     <source path='client'/>
     <source path='example/client'/>
 </module>
