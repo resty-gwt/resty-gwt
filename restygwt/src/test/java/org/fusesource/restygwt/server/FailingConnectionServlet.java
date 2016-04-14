@@ -25,8 +25,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mortbay.jetty.HttpStatus;
-
 /**
  * Servlet component of the FailingConnectionTestGwt.
  * <p>
@@ -52,8 +50,8 @@ public class FailingConnectionServlet extends HttpServlet {
         log.fine("GET: failingMODE");
 
         log.fine("respond code: " + 
-                (HttpStatus.ORDINAL_500_Internal_Server_Error  + currentNumberOfServerFailures) + 
+                (500 + currentNumberOfServerFailures) + 
                 " with purpose");
-        response.setStatus(HttpStatus.ORDINAL_500_Internal_Server_Error + currentNumberOfServerFailures++);
+        response.setStatus(500 + currentNumberOfServerFailures++);
     }
 }
