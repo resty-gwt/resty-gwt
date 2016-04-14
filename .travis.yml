@@ -7,7 +7,12 @@ jdk:
   - oraclejdk7
   - oraclejdk8
 
-script: mvn install
+env:
+  # - GWT_VERSION=2.8.0-beta1
+  - GWT_VERSION=2.7.0
+  - GWT_VERSION=2.5.1
+  
+script: mvn install -Dgwt.version=$GWT_VERSION
 matrix:
   include:
     - jdk: openjdk7
