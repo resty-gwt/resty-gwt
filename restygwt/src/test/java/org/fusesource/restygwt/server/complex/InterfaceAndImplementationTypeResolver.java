@@ -73,4 +73,9 @@ public class InterfaceAndImplementationTypeResolver implements TypeIdResolver
     public JavaType typeFromId(DatabindContext context, String id) {
         return typeFromId(id);
     }
+
+    @Override
+    public String getDescForKnownTypeIds() {
+	return null;
+    }
 }

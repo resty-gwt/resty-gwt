@@ -29,8 +29,6 @@
 
     <source path='client'/>
 
-    <!-- seen at http://code.google.com/p/google-web-toolkit/source/browse/trunk/user/src/com/google/gwt/junit/JUnit.gwt.xml?r=5779 -->
-    <inherits name="com.google.gwt.benchmarks.Benchmarks"/>
     <replace-with class="com.google.gwt.core.client.impl.StackTraceCreator.CollectorEmulated">
         <when-type-is class="com.google.gwt.core.client.impl.StackTraceCreator.Collector" />
         <none>
