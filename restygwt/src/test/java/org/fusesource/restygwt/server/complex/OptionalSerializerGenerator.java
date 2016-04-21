@@ -6,6 +6,7 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import org.fusesource.restygwt.client.Json;
+import org.fusesource.restygwt.rebind.EncoderDecoderLocatorFactory;
 import org.fusesource.restygwt.rebind.JsonEncoderDecoderClassCreator;
 import org.fusesource.restygwt.rebind.JsonEncoderDecoderInstanceLocator;
 
@@ -29,7 +30,7 @@ public class OptionalSerializerGenerator extends JsonEncoderDecoderClassCreator 
 
     @Override
     public void generate() throws UnableToCompleteException {
-        locator = new JsonEncoderDecoderInstanceLocator(context, getLogger());
+        locator = EncoderDecoderLocatorFactory.getEncoderDecoderInstanceLocator(context, getLogger());
         generateSingleton(shortName);
         typeArg = getTypeArg();
         generateEncodeMethod();
