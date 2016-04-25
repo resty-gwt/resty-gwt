@@ -80,16 +80,16 @@ import javax.xml.bind.annotation.XmlTransient;
 public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private static final String JSON_ENCODER_SUFFIX = "_Generated_JsonEncoderDecoder_";
 
-    private static final String USE_JAVA_BEANS_SPEC_NAMING_CONVENTION_CONFIGURATION_PROPERTY_NAME = "restygwt.conventions.useJavaBeansSpecNaming";
+    public static final String USE_JAVA_BEANS_SPEC_NAMING_CONVENTION_CONFIGURATION_PROPERTY_NAME = "restygwt.conventions.useJavaBeansSpecNaming";
 
-    private String JSON_ENCODER_DECODER_CLASS = JsonEncoderDecoderInstanceLocator.JSON_ENCODER_DECODER_CLASS;
+    public String JSON_ENCODER_DECODER_CLASS = JsonEncoderDecoderInstanceLocator.JSON_ENCODER_DECODER_CLASS;
     protected static final String JSON_VALUE_CLASS = JSONValue.class.getName();
     private static final String JSON_OBJECT_CLASS = JSONObject.class.getName();
     private static final String JSON_ARRAY_CLASS = JSONArray.class.getName();
     private static final String JSON_NULL_CLASS = JSONNull.class.getName();
     protected static final String JSON_STRING_CLASS = JSONString.class.getName();
 
-    protected JsonEncoderDecoderInstanceLocator locator;
+    protected EncoderDecoderLocator locator;
 
     protected boolean javaBeansNamingConventionEnabled;
 
@@ -123,7 +123,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         Json jsonAnnotation = getAnnotation(source, Json.class);
         final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
         final String railsWrapperName = jsonAnnotation != null && jsonAnnotation.name().length() > 0 ? jsonAnnotation.name() : sourceClazz.getName().toLowerCase();
-        locator = new JsonEncoderDecoderInstanceLocator(context, getLogger());
+        locator = EncoderDecoderLocatorFactory.getEncoderDecoderInstanceLocator(context, getLogger());
 
         generateSingleton(shortName);
 
@@ -199,7 +199,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             String railsWrapperName,
             List<Subtype> possibleTypes,
             boolean isLeaf,
-            final JsonEncoderDecoderInstanceLocator locator) throws UnableToCompleteException
+            final EncoderDecoderLocator locator) throws UnableToCompleteException
     {
         if (null != classType.isEnum()) {
             generateEnumEncodeMethod(classType, JSON_VALUE_CLASS);
@@ -230,7 +230,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     continue;
                 }
 
-                if (!isLeaf) {
+                if (!isLeaf && possibleTypes.size() > 1) {
                     // Generate a decoder for each possible type
                     p("if(value.getClass().getName().equals(\"" + possibleType.clazz.getQualifiedBinaryName() + "\"))");
                     p("{");
@@ -355,12 +355,12 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         p("return rc;");
                     }
                 }
-                if (!isLeaf) {
+                if (!isLeaf && possibleTypes.size() > 1) {
                     p("}");
                 }
             }
 
-            if (!isLeaf) {
+            if (!isLeaf && possibleTypes.size() > 1) {
                 // Shouldn't get called
                 p("return null;");
             }
@@ -416,14 +416,14 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             String railsWrapperName,
             List<Subtype> possibleTypes,
             boolean isLeaf,
-            final JsonEncoderDecoderInstanceLocator locator) throws UnableToCompleteException
+            final EncoderDecoderLocator locator) throws UnableToCompleteException
     {
         if (null != classType.isEnum()) {
             generateEnumDecodeMethod(classType, JSON_VALUE_CLASS);
             return;
         }
 
-        p("public " + source.getName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
+        p("public " + source.getParameterizedQualifiedSourceName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
         {
             p("if( value == null || value.isNull()!=null ) {").i(1);
             {

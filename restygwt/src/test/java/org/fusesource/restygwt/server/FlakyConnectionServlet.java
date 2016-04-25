@@ -25,8 +25,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mortbay.jetty.HttpStatus;
-
 /**
  * Servlet component of the FlakyConnectionTestGwt.
  * <p>
@@ -55,9 +53,9 @@ public class FlakyConnectionServlet extends HttpServlet {
         log.fine("GET: flakyMODE");
 
         if (currentNumberOfServerFailures < NUMBER_OF_SERVER_FAILURES_TO_SIMULATE) {
-            log.fine("respond code: " + HttpStatus.ORDINAL_500_Internal_Server_Error + " with purpose");
+            log.fine("respond code: " + 500 + " with purpose");
             ++currentNumberOfServerFailures;
-            response.setStatus(HttpStatus.ORDINAL_500_Internal_Server_Error);
+            response.setStatus(500);
         } else {
             log.fine("response: " + DUMMY_RESPONSE);
             response.getWriter().print(DUMMY_RESPONSE);

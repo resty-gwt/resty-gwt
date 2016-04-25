@@ -168,7 +168,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private Set<JClassType> OVERLAY_ARRAY_TYPES;
     private Set<JClassType> QUERY_PARAM_LIST_TYPES;
     private JClassType REST_SERVICE_TYPE;
-    private JsonEncoderDecoderInstanceLocator locator;
+    private EncoderDecoderLocator locator;
 
     private boolean autodetectTypeForStrings;
 
@@ -215,7 +215,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         // true, if plain text autodetection for strings should be used
         autodetectTypeForStrings = getBooleanProperty(getLogger(), context.getPropertyOracle(), PLAIN_TEXT_AUTODETECTION_CONFIGURATION_PROPERTY_NAME, false);
 
-        locator = new JsonEncoderDecoderInstanceLocator(context, getLogger());
+        locator = EncoderDecoderLocatorFactory.getEncoderDecoderInstanceLocator(context, getLogger());
 
         this.XML_CALLBACK_TYPE = find(XmlCallback.class, getLogger(), context);
         this.METHOD_CALLBACK_TYPE = find(MethodCallback.class, getLogger(), context);
@@ -390,7 +390,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         i(-1).p("}");
     }
 
-    private String pathExpression(String pathExpression, JParameter arg, PathParam paramPath) {
+    private String pathExpression(String pathExpression, JParameter arg, PathParam paramPath) throws UnableToCompleteException {
         String expr = toStringExpression(arg);
         return pathExpression.replaceAll(Pattern.quote("{" + paramPath.value()) + "(\\s*:\\s*(.)+)?\\}",
                 "\"+(" + expr + "== null? null : com.google.gwt.http.client.URL.encodePathSegment(" + expr + "))+\"");
@@ -723,7 +723,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                             else {
                                 p("try {").i(1);
                                 {
-                                    if(resultType.isAssignableTo(locator.LIST_TYPE)){
+                                    if(resultType.isAssignableTo(locator.getListType())){
                                         p("result = new " + JSON_ARRAY_CLASS + "(((" + JSON_OBJECT_CLASS + ")result).getJavaScriptObject());");
                                     }
                                     jsonAnnotation = getAnnotation(method, Json.class);
@@ -790,13 +790,23 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         return annotation;
     }
 
-    protected String toStringExpression(JParameter arg) {
-        Attribute attribute = getAnnotation(arg, Attribute.class);
-        if(attribute != null){
-            return "(" + arg.getName() + "." + attribute.value() + "+ \"\")";
-        }
-        return toStringExpression(arg.getType(), arg.getName());
-    }
+	protected String toStringExpression(JParameter arg) throws UnableToCompleteException {
+		Attribute attribute = getAnnotation(arg, Attribute.class);
+		if (attribute != null) {
+			if (arg.getType().isClass().getField(attribute.value()) != null && arg.getType().isClass().getField(attribute.value()).isPublic()) {
+				return "(" + arg.getName() + "." + attribute.value() + "+ \"\")";
+			}
+			String publicGetter = "get" + attribute.value().substring(0, 1).toUpperCase() + attribute.value().substring(1);
+			for (JMethod jMethod : arg.getType().isClass().getMethods()) {
+				if (jMethod.getName().equals(publicGetter)) {
+					return "(" + arg.getName() + "." + publicGetter + "()" + "+ \"\")";
+				}
+			}
+			getLogger().log(ERROR, "Neither public argument " + attribute.value() + " nor public getter " + publicGetter + " found!");
+			throw new UnableToCompleteException();
+		}
+		return toStringExpression(arg.getType(), arg.getName());
+	}
 
     protected String toFormStringExpression(JParameter argument, Style classStyle) throws UnableToCompleteException {
         JType type = argument.getType();
