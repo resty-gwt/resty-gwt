@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2015 the original author or authors.
+ * Copyright (C) 2009-2016 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -21,7 +21,7 @@ package org.fusesource.restygwt.server.complex;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.ws.rs.Path;
-import org.fusesource.restygwt.client.complex.StringEncoderDecoderTestGwt;
+import org.fusesource.restygwt.client.complex.string.StringEncoderDecoderTestGwt;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 import org.jboss.resteasy.spi.BadRequestException;
 import org.jboss.resteasy.spi.Registry;
@@ -76,7 +76,7 @@ public class StringEncoderDecoderServlet extends HttpServletDispatcher {
 
         final Registry registry = (Registry) config.getServletContext().getAttribute(Registry.class.getName());
         registry.addPerRequestResource(StringsImpl.class, "/org.fusesource.restygwt.StringEncoderDecoderTestGwt.JUnit");
-        registry.addPerRequestResource(StringsImpl.class, "/org.fusesource.restygwt.AutodetectPlainTextStringEncoderDecoderTestGwt.JUnit");
+        registry.addPerRequestResource(StringsImpl.class, "/org.fusesource.restygwt.StringEncoderDecoderAutodetectPlainTextTestGwt.JUnit");
     }
 
 }

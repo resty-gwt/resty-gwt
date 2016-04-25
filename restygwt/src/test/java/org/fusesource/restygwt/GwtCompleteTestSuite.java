@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2015 the original author or authors.
+ * Copyright (C) 2009-2016 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -47,9 +47,9 @@ import org.fusesource.restygwt.client.codec.InnerClassesEncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.codec.JsonIgnoreEncoderTestGwt;
 import org.fusesource.restygwt.client.codec.MapInRestServiceEncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.codec.PolymorphicEncoderDecoderTestGwt;
-import org.fusesource.restygwt.client.complex.AutodetectPlainTextStringEncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver;
-import org.fusesource.restygwt.client.complex.StringEncoderDecoderTestGwt;
+import org.fusesource.restygwt.client.complex.string.StringEncoderDecoderAutodetectPlainTextTestGwt;
+import org.fusesource.restygwt.client.complex.string.StringEncoderDecoderTestGwt;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
 
@@ -113,7 +113,7 @@ public class GwtCompleteTestSuite extends TestCase {
         suite.addTestSuite(JsonpTestGwt.class);
 
         suite.addTestSuite(StringEncoderDecoderTestGwt.class);
-        suite.addTestSuite(AutodetectPlainTextStringEncoderDecoderTestGwt.class);
+        suite.addTestSuite(StringEncoderDecoderAutodetectPlainTextTestGwt.class);
 
         return suite;
     }

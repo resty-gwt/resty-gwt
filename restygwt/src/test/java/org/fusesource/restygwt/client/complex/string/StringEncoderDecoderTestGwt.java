@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2015 the original author or authors.
+ * Copyright (C) 2009-2016 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client.complex;
+package org.fusesource.restygwt.client.complex.string;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
