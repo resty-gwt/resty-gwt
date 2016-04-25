@@ -12,6 +12,7 @@ import org.fusesource.restygwt.client.Dispatcher;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
+import org.fusesource.restygwt.client.TextCallback;
 import org.fusesource.restygwt.client.callback.CallbackAware;
 import org.fusesource.restygwt.rebind.util.OnceFirstIterator;
 
@@ -20,6 +21,8 @@ import static org.fusesource.restygwt.rebind.DirectRestServiceInterfaceClassCrea
 public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
     public static final String DIRECT_REST_IMPL_SUFFIX = DIRECT_REST_SERVICE_SUFFIX + "Impl";
     public static final String VOID_QUALIFIED_NAME = "void";
+    private static final String STRING_QUALIFIED_NAME = String.class.getName();
+    private static final String TEXT_CALLBACK_QUALIFIED_NAME = TextCallback.class.getName();
 
     public DirectRestServiceClassCreator(TreeLogger logger, GeneratorContext context, JClassType source) {
         super(logger, context, source, DIRECT_REST_IMPL_SUFFIX);
@@ -97,7 +100,7 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
     }
 
     private void generateCallVerifyCallback(JMethod method) {
-        p("verifyCallback(\"" + method.getName() + "\");");
+        p("verifyCallback(\"" + method.getName() + "\", \"" + method.getReturnType().getQualifiedSourceName() + "\");");
     }
 
     private void generateCallServiceMethod(JMethod method) {
@@ -113,8 +116,11 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
                     .append(parameter.getName());
         }
 
-        stringBuilder.append(comma.next())
-                .append("this.callback");
+        stringBuilder.append(comma.next());
+        if (STRING_QUALIFIED_NAME.equals(method.getReturnType().getQualifiedSourceName())) {
+            stringBuilder.append('(').append(TEXT_CALLBACK_QUALIFIED_NAME).append(')');
+        }
+        stringBuilder.append("this.callback");
 
         stringBuilder.append(");");
 
@@ -147,12 +153,14 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
     }
 
     private void createVerifyCallbackMethod() {
-        p( "public void verifyCallback(String methodName) {").i(1)
+        p( "public void verifyCallback(String methodName, String returnType) {").i(1)
            .p("if (this.callback == null) {").i(1)
                .p("throw new IllegalArgumentException(" +
                        "\"You need to call this service with REST.withCallback(new MethodCallback<..>(){..}).call(service).\" + " +
                        "methodName + " +
                        "\"(..) and not try to access the service directly\");").i(-1)
+           .p("} else if (\"" + STRING_QUALIFIED_NAME + "\".equals(returnType) && !(this.callback instanceof org.fusesource.restygwt.client.TextCallback)) {").i(1)
+               .p("throw new IllegalArgumentException(\"Methods that return a String must use a TextCallback\");").i(-1)
            .p("}").i(-1)
         .p("}");
     }
