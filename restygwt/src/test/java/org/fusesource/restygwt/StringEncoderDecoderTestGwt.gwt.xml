@@ -23,6 +23,8 @@
     <inherits name='com.google.gwt.logging.Logging'/>
     <inherits name='org.fusesource.restygwt.RestyGWT'/>
 
+    <set-property name="restygwt.autodetect.plainText" value="false" />
+
     <servlet path='/strings/*' class='org.fusesource.restygwt.server.complex.StringEncoderDecoderServlet' />
 
     <source path='client'/>
