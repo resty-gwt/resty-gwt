@@ -45,7 +45,7 @@ public interface StringRestService extends RestService {
     void getAsPlainText(TextCallback callback);
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON + ", application/vnd.fusesource+json")
     void setAsJson(String text, MethodCallback<Void> callback);
 
     @POST
