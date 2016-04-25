@@ -21,7 +21,8 @@ package org.fusesource.restygwt.server.complex;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.ws.rs.Path;
-import org.fusesource.restygwt.client.complex.string.StringEncoderDecoderTestGwt;
+
+import org.fusesource.restygwt.client.complex.string.service.StringService;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 import org.jboss.resteasy.spi.BadRequestException;
 import org.jboss.resteasy.spi.Registry;
@@ -35,7 +36,7 @@ public class StringEncoderDecoderServlet extends HttpServletDispatcher {
     private static final long serialVersionUID = 1L;
 
     @Path("/strings")
-    public static class StringsImpl implements StringEncoderDecoderTestGwt.Strings {
+    public static class StringsImpl implements StringService {
         @Override
         public String getAsJson() {
             return "String as Json";

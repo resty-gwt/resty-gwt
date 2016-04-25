@@ -18,17 +18,10 @@
 
 package org.fusesource.restygwt.client.complex.string;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.TextCallback;
+import org.fusesource.restygwt.client.complex.string.service.StringRestService;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONException;
@@ -41,50 +34,8 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
         return "org.fusesource.restygwt.StringEncoderDecoderTestGwt";
     }
 
-    @Path("/strings")
-    public static interface Strings {
-        @GET
-        @Produces(MediaType.APPLICATION_JSON)
-        String getAsJson();
-
-        @GET
-        @Produces(MediaType.TEXT_PLAIN)
-        String getAsPlainText();
-
-        @POST
-        @Consumes(MediaType.APPLICATION_JSON)
-        void setAsJson(String text);
-
-        @POST
-        @Consumes(MediaType.TEXT_PLAIN)
-        void setAsPlainText(String text);
-    }
-
-    @Path("/strings")
-    public static interface StringsAsync extends RestService {
-        @GET
-        @Produces(MediaType.APPLICATION_JSON)
-        void getAsJson(MethodCallback<String> callback);
-
-        @GET
-        @Produces(MediaType.TEXT_PLAIN)
-        void getAsPlainText(MethodCallback<String> callback);
-
-        @GET
-        @Produces(MediaType.TEXT_PLAIN)
-        void getAsPlainText(TextCallback callback);
-
-        @POST
-        @Consumes(MediaType.APPLICATION_JSON)
-        void setAsJson(String text, MethodCallback<Void> callback);
-
-        @POST
-        @Consumes(MediaType.TEXT_PLAIN)
-        void setAsPlainText(String text, MethodCallback<Void> callback);
-    }
-
     public void testJsonString() {
-        StringsAsync strings = GWT.create(StringsAsync.class);
+        StringRestService strings = GWT.create(StringRestService.class);
 
         delayTestFinish(10000);
 
@@ -106,7 +57,7 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
      * Test method only success through "onFailure" with restygwt <= 2.0.3 or plain text autodetection set to false (default)
      */
     public void testSendJsonString() {
-        StringsAsync strings = GWT.create(StringsAsync.class);
+        StringRestService strings = GWT.create(StringRestService.class);
 
         delayTestFinish(10000);
 
@@ -128,7 +79,7 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
     }
 
     public void testPlainTextStringWithTextCallback() {
-        StringsAsync strings = GWT.create(StringsAsync.class);
+        StringRestService strings = GWT.create(StringRestService.class);
 
         delayTestFinish(10000);
 
@@ -150,7 +101,7 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
      * Test method only success through "onFailure" with restygwt <= 2.0.3 or plain text autodetection set to false (default)
      */
     public void testPlainTextStringWithMethodCallback() {
-        StringsAsync strings = GWT.create(StringsAsync.class);
+        StringRestService strings = GWT.create(StringRestService.class);
 
         delayTestFinish(10000);
 
@@ -173,7 +124,7 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
     }
 
     public void testSendPlainTextString() {
-        StringsAsync strings = GWT.create(StringsAsync.class);
+        StringRestService strings = GWT.create(StringRestService.class);
 
         delayTestFinish(10000);
 

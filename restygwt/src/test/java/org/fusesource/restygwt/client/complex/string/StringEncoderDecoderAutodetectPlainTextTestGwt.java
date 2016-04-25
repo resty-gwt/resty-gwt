@@ -20,6 +20,7 @@ package org.fusesource.restygwt.client.complex.string;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.complex.string.service.StringRestService;
 
 import com.google.gwt.core.client.GWT;
 
@@ -35,7 +36,7 @@ public class StringEncoderDecoderAutodetectPlainTextTestGwt extends StringEncode
      */
     @Override
     public void testPlainTextStringWithMethodCallback() {
-        StringsAsync strings = GWT.create(StringsAsync.class);
+        StringRestService strings = GWT.create(StringRestService.class);
 
         delayTestFinish(10000);
 
@@ -55,7 +56,7 @@ public class StringEncoderDecoderAutodetectPlainTextTestGwt extends StringEncode
 
     @Override
     public void testSendJsonString() {
-        StringsAsync strings = GWT.create(StringsAsync.class);
+        StringRestService strings = GWT.create(StringRestService.class);
 
         delayTestFinish(10000);
 
