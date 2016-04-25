@@ -139,11 +139,13 @@ public class PathParamTestGwt extends GWTTestCase {
         delayTestFinish(10000);
     }
 
+    /**
+     * Ensure that path parameters that are absolute URLs are URL encoded. 
+     */
     public void testAbsolute() {
-
-        service.absolute(GWT.getModuleBaseURL() + "echo/somewhere", echoMethodCallback("/somewhere") );
+        String absoluteUrl = "http://host:port/echo/somewhere";
+        service.absolute(absoluteUrl, echoMethodCallback("/" + absoluteUrl) );
         delayTestFinish(10000);
-
     }
 
 }
