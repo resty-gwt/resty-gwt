@@ -33,6 +33,9 @@ public class StringEncoderDecoderAutodetectPlainTextDirectRestServiceTestGwt ext
         return "org.fusesource.restygwt.StringEncoderDecoderAutodetectPlainTextTestGwt";
     }
 
+    /**
+     * Changed behaviour to only success through "onSuccess".
+     */
     @Override
     public void testPlainTextStringWithTextCallback() {
         StringDirectRestService service = GWT.create(StringDirectRestService.class);
