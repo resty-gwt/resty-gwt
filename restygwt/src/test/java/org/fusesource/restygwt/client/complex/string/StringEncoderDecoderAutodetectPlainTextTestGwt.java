@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2015 the original author or authors.
+ * Copyright (C) 2009-2016 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -16,18 +16,19 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client.complex;
+package org.fusesource.restygwt.client.complex.string;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.complex.string.service.StringRestService;
 
 import com.google.gwt.core.client.GWT;
 
-public class AutodetectPlainTextStringEncoderDecoderTestGwt extends StringEncoderDecoderTestGwt {
+public class StringEncoderDecoderAutodetectPlainTextTestGwt extends StringEncoderDecoderTestGwt {
 
     @Override
     public String getModuleName() {
-        return "org.fusesource.restygwt.AutodetectPlainTextStringEncoderDecoderTestGwt";
+        return "org.fusesource.restygwt.StringEncoderDecoderAutodetectPlainTextTestGwt";
     }
 
     /**
@@ -35,7 +36,7 @@ public class AutodetectPlainTextStringEncoderDecoderTestGwt extends StringEncode
      */
     @Override
     public void testPlainTextStringWithMethodCallback() {
-        StringsAsync strings = GWT.create(StringsAsync.class);
+        StringRestService strings = GWT.create(StringRestService.class);
 
         delayTestFinish(10000);
 
@@ -55,7 +56,7 @@ public class AutodetectPlainTextStringEncoderDecoderTestGwt extends StringEncode
 
     @Override
     public void testSendJsonString() {
-        StringsAsync strings = GWT.create(StringsAsync.class);
+        StringRestService strings = GWT.create(StringRestService.class);
 
         delayTestFinish(10000);
 

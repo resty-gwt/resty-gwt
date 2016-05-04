@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2011 the original author or authors.
+ * Copyright (C) 2009-2016 the original author or authors.
  * See the notice.md file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -16,25 +16,9 @@
  * limitations under the License.
  */
 
-package org.fusesource.restygwt.client.basic;
+package org.fusesource.restygwt.client.complex.string.service;
 
 import org.fusesource.restygwt.client.DirectRestService;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import java.util.List;
-
-/**
- * Example of using the DirectRestService call.
- * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</<a>
- */
-public interface DirectExampleService extends DirectRestService {
-    @GET @Path("/list")
-    List<ExampleDto> getExampleDtos(@QueryParam("id") String id);
-
-    @POST @Path("/store")
-    void storeDto(ExampleDto exampleDto);
+public interface StringDirectRestService extends StringService, DirectRestService {
 }
-
