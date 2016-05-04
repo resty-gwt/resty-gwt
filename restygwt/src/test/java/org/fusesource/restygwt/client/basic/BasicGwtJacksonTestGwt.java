@@ -18,51 +18,17 @@
 
 package org.fusesource.restygwt.client.basic;
 
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.Resource;
-import org.fusesource.restygwt.client.RestServiceProxy;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.junit.client.GWTTestCase;
-
 /**
  *
  *
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
  *
  */
-public class BasicGwtJacksonTestGwt extends GWTTestCase {
+public class BasicGwtJacksonTestGwt extends BasicTestGwt {
 
     @Override
     public String getModuleName() {
         return "org.fusesource.restygwt.BasicGwtJacksonTestGwt";
-    }
-    
-
-    public void testDefaultFunction() {
-        //configure RESTY
-        Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
-
-        ExampleService service = GWT.create(ExampleService.class);
-        ((RestServiceProxy) service).setResource(resource);
-
-        service.getExampleDto(new MethodCallback<ExampleDto>() {
-
-            @Override
-            public void onSuccess(Method method, ExampleDto response) {
-                assertEquals(response.name, "myName");
-                finishTest();
-            }
-
-            @Override
-            public void onFailure(Method method, Throwable exception) {
-                fail();
-            }
-        });
-
-        // wait... we are in async testing...
-        delayTestFinish(10000);
     }
 
 }
