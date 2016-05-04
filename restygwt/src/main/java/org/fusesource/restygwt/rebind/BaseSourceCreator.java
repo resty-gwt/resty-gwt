@@ -40,7 +40,8 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public abstract class BaseSourceCreator extends AbstractSourceCreator {
 
-    public static final TreeLogger.Type ERROR = TreeLogger.ERROR;
+    private static final int MAX_FILE_NAME_LENGTH = 200;
+	public static final TreeLogger.Type ERROR = TreeLogger.ERROR;
     public static final TreeLogger.Type WARN = TreeLogger.WARN;
     public static final TreeLogger.Type INFO = TreeLogger.INFO;
     public static final TreeLogger.Type TRACE = TreeLogger.TRACE;
@@ -105,7 +106,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
     //Many filesystems prevent files with names larger than 256 characters.
     //Lets have class name less than 200 to allow new generators safelly to add more sufixes there if needed
     private String reduceName(String newClassName,String suffix) {
-        if(newClassName.length()<200){
+        if(newClassName.length()<MAX_FILE_NAME_LENGTH){
         	return newClassName;
         }
 //        String sufx = "_Gen_GwtJackEncDec_";
@@ -124,7 +125,18 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         		genericBuff.append("__");
         		genericBuff.append(reduceType(genericType));
         	}
-        	return primaryName+genericBuff.toString()+suffix;
+        	String finalName = primaryName+genericBuff.toString()+suffix;
+        	if(finalName.length()>MAX_FILE_NAME_LENGTH){
+        		//File name is still too long wrapping it out aggressively
+        		String baseName = primaryName+genericBuff.toString();
+        		
+        		int firstPosition = baseName.indexOf("__");
+        		int lastPosition = baseName.lastIndexOf("__");
+        		String middle = baseName.substring(firstPosition,lastPosition);
+        		finalName = baseName.substring(0,firstPosition)+middle.subSequence(0, 4)+"_"+(middle.length()-5)+"_"+middle.substring(middle.length()-9)+baseName.substring(lastPosition)+suffix;
+        		return finalName;
+        	}
+        	return finalName;
         }
         //If there is no generic type lets give an error and force the client to reduce className
 		return newClassName;
