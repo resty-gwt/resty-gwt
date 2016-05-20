@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.fusesource.restygwt.client.Json.Style;
 
+import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONValue;
 
 public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends AbstractJsonEncoderDecoder<E> {
@@ -36,7 +37,7 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
             @Override
             public JSONValue encode(T[] value)
                     throws EncodingException {
-                return toJSON(value, nested);
+                return value != null ? toJSON(value, nested) : JSONNull.getInstance();
             }
 
             @SuppressWarnings("unchecked")
@@ -55,7 +56,7 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
             @Override
             public JSONValue encode(Collection<T> value)
                     throws EncodingException {
-                return toJSON((T[])value.toArray(), nested);
+                return value != null ? toJSON((T[])value.toArray(), nested) : JSONNull.getInstance();
             }
 
             @Override
@@ -73,7 +74,7 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
             @Override
             public JSONValue encode(List<T> value)
                     throws EncodingException {
-                return toJSON((T[])value.toArray(), nested);
+                return value != null ? toJSON((T[])value.toArray(), nested) : JSONNull.getInstance();
             }
 
             @Override
@@ -90,7 +91,7 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
             @Override
             public JSONValue encode(Set<T> value)
                     throws EncodingException {
-                return toJSON(value, nested);
+                return value != null ? toJSON(value, nested) : JSONNull.getInstance();
             }
 
             @Override
@@ -107,7 +108,7 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
             @Override
             public JSONValue encode(Map<String, T> value)
                     throws EncodingException {
-                return toJSON(value, nested, style);
+                return value != null ? toJSON(value, nested, style) : JSONNull.getInstance();
             }
 
             @Override
@@ -125,7 +126,7 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
             @Override
             public JSONValue encode(Map<T, S> value)
                     throws EncodingException {
-                return toJSON(value, nested, second, style);
+                return value != null ? toJSON(value, nested, second, style) : JSONNull.getInstance();
             }
 
             @Override
