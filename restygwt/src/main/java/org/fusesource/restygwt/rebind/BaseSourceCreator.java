@@ -40,7 +40,8 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public abstract class BaseSourceCreator extends AbstractSourceCreator {
 
-    public static final TreeLogger.Type ERROR = TreeLogger.ERROR;
+    private static final int MAX_FILE_NAME_LENGTH = 200;
+	public static final TreeLogger.Type ERROR = TreeLogger.ERROR;
     public static final TreeLogger.Type WARN = TreeLogger.WARN;
     public static final TreeLogger.Type INFO = TreeLogger.INFO;
     public static final TreeLogger.Type TRACE = TreeLogger.TRACE;
@@ -89,17 +90,77 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
 			for(JClassType type : ptype.getTypeArgs())
 			{
 				builder.append("__");
-				builder.append(type.getParameterizedQualifiedSourceName().replace('.', '_').replace("<", "__").replace(">", "__"));
+				builder.append(parametersName2ClassName(type.getParameterizedQualifiedSourceName()));
 			}
-			this.shortName = getName( source ) + builder.toString() + suffix;
+			this.shortName = reduceName(getName( source ) + builder.toString() + suffix,suffix);
         }
         else
         {
-        	this.shortName = getName( source ) + suffix;
+        	this.shortName = reduceName(getName( source ) + suffix,suffix);
         }
 
         this.name = packageName + "." + shortName;
     }
+    
+
+    //Many filesystems prevent files with names larger than 256 characters.
+    //Lets have class name less than 200 to allow new generators safelly to add more sufixes there if needed
+    private String reduceName(String newClassName,String suffix) {
+        if(newClassName.length()<MAX_FILE_NAME_LENGTH){
+        	return newClassName;
+        }
+//        String sufx = "_Gen_GwtJackEncDec_";
+        //Lets first try to reduce the package name of the parametrized types
+        // according to parametersName2ClassName parametrized types
+        //Lets find if there are parametrized types
+        
+        String noSufix  =  newClassName.substring(0,newClassName.length()-suffix.length());
+        if(newClassName.indexOf("__")>0){
+        	//has generic
+        	String primaryName = noSufix.substring(0,noSufix.indexOf("__"));
+        	String genericPart = noSufix.substring(noSufix.indexOf("__")+2);
+        	StringBuffer genericBuff = new StringBuffer();
+        	String[] eachGeneric = genericPart.split("__");
+        	for(String genericType:eachGeneric){
+        		genericBuff.append("__");
+        		genericBuff.append(reduceType(genericType));
+        	}
+        	String finalName = primaryName+genericBuff.toString()+suffix;
+        	if(finalName.length()>MAX_FILE_NAME_LENGTH){
+        		//File name is still too long wrapping it out aggressively
+        		String baseName = primaryName+genericBuff.toString();
+        		
+        		int firstPosition = baseName.indexOf("__");
+        		int lastPosition = baseName.lastIndexOf("__");
+        		String middle = baseName.substring(firstPosition,lastPosition);
+        		finalName = baseName.substring(0,firstPosition)+middle.subSequence(0, 4)+"_"+(middle.length()-5)+"_"+middle.substring(middle.length()-9)+baseName.substring(lastPosition)+suffix;
+        		return finalName;
+        	}
+        	return finalName;
+        }
+        //If there is no generic type lets give an error and force the client to reduce className
+		return newClassName;
+	}
+
+	private String reduceType(String genericType) {
+		if(genericType==null || genericType.indexOf("_")<0){
+			return genericType;
+		}
+		String pack = genericType.substring(0,genericType.lastIndexOf("_"));
+		String finalName = genericType.substring(genericType.lastIndexOf("_")+1);
+		int packSize = pack.length();
+		if(packSize>7){
+			pack = pack.subSequence(0, 2)+Integer.toString((packSize-5))+pack.substring(packSize-3);
+			return pack+"_"+finalName;
+		}
+		return genericType;
+	}
+
+	public static final String parametersName2ClassName(String parametrizedQualifiedSourceName){
+    	return parametrizedQualifiedSourceName.replace('.', '_').replace("<", "__").replace(">", "__");
+    }
+    
+  
 
     protected String getName( JClassType source ){
         if( source.getEnclosingType() != null ){
