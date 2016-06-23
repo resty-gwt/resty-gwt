@@ -711,7 +711,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
 
     // TODO(sbeutel): new map method to handle other key values than String
     static public <KeyType, ValueType> JSONValue toJSON(Map<KeyType, ValueType> value,
-            AbstractJsonEncoderDecoder<KeyType> keyEncoder, AbstractJsonEncoderDecoder<ValueType> valueEncoder,
+            AbstractJsonEncoderDecoder<? super KeyType> keyEncoder, AbstractJsonEncoderDecoder<? super ValueType> valueEncoder,
             Style style) {
         if (value == null) {
             return getNullType();
