@@ -74,6 +74,27 @@ public class DirectRestServiceTestGwt extends GWTTestCase {
         }).call(directExampleService).getExampleDtos("3");
     }
 
+    public void testRegexPathParamCall() {
+        delayTestFinish(10000);
+        DirectExampleService directExampleService = GWT.create(DirectExampleService.class);
+
+        Resource resource = new Resource(GWT.getModuleBaseURL() + "api");
+        ((RestServiceProxy) directExampleService).setResource(resource);
+
+        REST.withCallback(new MethodCallback<Integer>() {
+            @Override
+            public void onSuccess(Method method, Integer response) {
+                assertEquals((Integer) 456, response);
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable e) {
+                fail(e.getMessage());
+            }
+            }).call(directExampleService).getRegexMultiParams(123, 456);
+    }
+
     public void testVoidCall() {
         delayTestFinish(10000);
         DirectExampleService directExampleService = GWT.create(DirectExampleService.class);

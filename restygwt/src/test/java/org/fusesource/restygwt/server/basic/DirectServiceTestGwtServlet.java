@@ -39,6 +39,10 @@ public class DirectServiceTestGwtServlet extends HttpServlet {
 
         if (request.getRequestURI().endsWith("/api/list")) {
             response.getWriter().print(THREE_ELEMENT_LIST);
+        } else if (request.getRequestURI().matches(".+/\\d+")) {
+            String url = request.getRequestURI();
+            String val = url.substring(url.lastIndexOf('/') + 1);
+            response.getWriter().print(val);
         } else {
             throw new IllegalArgumentException("Invalid servlet path called by service: " + request.getRequestURI());
         }
