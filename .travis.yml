@@ -22,5 +22,7 @@ matrix:
     - jdk: oraclejdk8
       script: cd restygwt; mvn verify -Prun-its -Dmaven.test.skip -Dinvoker.test=restygwt-example
     - jdk: oraclejdk8
+      script: cd restygwt; mvn verify -Prun-its -Dmaven.test.skip -Dinvoker.test=restygwt-direct-example
+    - jdk: oraclejdk8
       script: cd restygwt; mvn verify -Prun-its -Dmaven.test.skip -Dinvoker.test=restygwt-jersey-*,restygwt-cxf-jaxson-*
 
