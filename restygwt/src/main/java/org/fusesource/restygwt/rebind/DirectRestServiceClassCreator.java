@@ -1,5 +1,6 @@
 package org.fusesource.restygwt.rebind;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -39,6 +40,8 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
 
     @Override
     protected void generate() throws UnableToCompleteException {
+        super.generate();
+
         createRestyServiceField();
         createDelegateRestServiceProxyMethods();
         createCallbackSupportMethodsAndField();
@@ -113,8 +116,12 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
                     .append(parameter.getName());
         }
 
-        stringBuilder.append(comma.next())
-                .append("this.callback");
+        stringBuilder.append(comma.next());
+        if (isOverlayMethod(method)) {
+            stringBuilder.append("(org.fusesource.restygwt.client.OverlayCallback) this.callback");
+        } else {
+            stringBuilder.append("this.callback");
+        }
 
         stringBuilder.append(");");
 
