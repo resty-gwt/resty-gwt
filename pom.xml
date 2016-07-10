@@ -39,7 +39,7 @@
   <properties>
     <forge-project-id>restygwt</forge-project-id>
     <forge-project-id-uc>RESTYGWT</forge-project-id-uc>
-    <gwt-version>2.4.0</gwt-version>
+    <gwt-version>2.7.0</gwt-version>
   </properties>
 
   <url>http://${forge-project-id}.fusesource.org</url>
