@@ -74,7 +74,7 @@ public class InterfaceAndImplementationTypeResolver implements TypeIdResolver
         return typeFromId(id);
     }
 
-    @Override
+    //@Override
     public String getDescForKnownTypeIds() {
 	return null;
     }
