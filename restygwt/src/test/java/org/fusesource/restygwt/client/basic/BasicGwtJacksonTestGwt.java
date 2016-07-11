@@ -27,7 +27,6 @@ import org.fusesource.restygwt.client.RestServiceProxy;
 /**
  *
  *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
  *
  */
 public class BasicGwtJacksonTestGwt extends BasicTestGwt {

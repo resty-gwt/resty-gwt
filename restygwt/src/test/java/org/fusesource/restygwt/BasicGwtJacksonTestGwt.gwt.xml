@@ -23,10 +23,9 @@
     <inherits name='com.google.gwt.logging.Logging'/>
     <inherits name='org.fusesource.restygwt.BasicTestGwt'/>
     <inherits name="com.github.nmorel.gwtjackson.GwtJackson" />
-     	
-    <inherits name='org.fusesource.restygwt.BasicTestGwt'/>
-
+    
     <set-property name="restygwt.encodeDecode.useGwtJackson" value="true" />
+
     <inherits name='org.fusesource.restygwt.RestyGWT'/>
 
     <source path='client'/>
