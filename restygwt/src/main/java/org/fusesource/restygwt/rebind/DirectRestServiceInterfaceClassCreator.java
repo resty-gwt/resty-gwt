@@ -87,9 +87,8 @@ public class DirectRestServiceInterfaceClassCreator extends DirectRestBaseSource
         final String returnType = method.getReturnType().getParameterizedQualifiedSourceName();
         if (isOverlayMethod(method)) {
             return "org.fusesource.restygwt.client.OverlayCallback<" + returnType + "> callback";
-        } else {
-            return "org.fusesource.restygwt.client.MethodCallback<" + returnType + "> callback";
         }
+        return "org.fusesource.restygwt.client.MethodCallback<" + returnType + "> callback";
     }
 
     private String getAnnotationsAsString(Annotation[] annotations) {

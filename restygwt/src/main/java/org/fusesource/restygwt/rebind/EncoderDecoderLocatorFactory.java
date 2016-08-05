@@ -9,9 +9,6 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 public class EncoderDecoderLocatorFactory {
 
 
-	private static JsonEncoderDecoderInstanceLocator restyGwtInstanceLocator;
-	private static GwtJacksonEncoderDecoderInstanceLocator gwtJacksonInstanceLocator;
-
 	public static final String USE_GWT_JACKSON_ENCODE_DECODER_PROPERTY_NAME = "restygwt.encodeDecode.useGwtJackson";
 
 	public static EncoderDecoderLocator getEncoderDecoderInstanceLocator(GeneratorContext context,
@@ -32,9 +29,8 @@ public class EncoderDecoderLocatorFactory {
 
 		if (useGwtJacksonDecoder) {
 			return getGwtJacksonInstance(context, logger);
-		} else {
-			return restyGwtInstance(context, logger);
 		}
+		return restyGwtInstance(context, logger);
 	}
 
 	private static EncoderDecoderLocator restyGwtInstance(GeneratorContext context, TreeLogger logger)

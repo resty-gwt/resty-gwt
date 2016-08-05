@@ -410,6 +410,7 @@ public class JsonEncoderDecoderInstanceLocator implements EncoderDecoderLocator 
         return types;
     }
 
+    @Override
     public boolean isCollectionType(JClassType clazz) {
         return clazz != null
                 && (clazz.isAssignableTo(SET_TYPE) || clazz.isAssignableTo(LIST_TYPE) || clazz.isAssignableTo(MAP_TYPE) || clazz.isAssignableTo(COLLECTION_TYPE));
