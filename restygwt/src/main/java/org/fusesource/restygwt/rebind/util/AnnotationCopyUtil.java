@@ -20,7 +20,6 @@ package org.fusesource.restygwt.rebind.util;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.util.regex.Pattern;
 
 /**
  * An utility class that gets a String representation of an annotation.

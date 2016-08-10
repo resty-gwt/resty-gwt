@@ -30,7 +30,7 @@ import com.google.gwt.core.ext.typeinfo.JType;
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
-public class GwtJacksonEncoderDecoderInstanceLocator extends JsonEncoderDecoderInstanceLocator implements EncoderDecoderLocator {
+public class GwtJacksonEncoderDecoderInstanceLocator extends JsonEncoderDecoderInstanceLocator {
 
     
     public GwtJacksonEncoderDecoderInstanceLocator(GeneratorContext context, TreeLogger logger)
