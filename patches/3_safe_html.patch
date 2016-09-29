@@ -1,0 +1,459 @@
+diff --git a/restygwt/src/main/java/org/fusesource/restygwt/client/AbstractJsonEncoderDecoder.java b/restygwt/src/main/java/org/fusesource/restygwt/client/AbstractJsonEncoderDecoder.java
+index 883234a1173d21c5d76db3da9da2d789dbbee286..925d67a1abfe88e9d7ce59a3b98e38ee9dfe07d2 100644
+--- a/restygwt/src/main/java/org/fusesource/restygwt/client/AbstractJsonEncoderDecoder.java
++++ b/restygwt/src/main/java/org/fusesource/restygwt/client/AbstractJsonEncoderDecoder.java
+@@ -26,6 +26,8 @@ import com.google.gwt.json.client.JSONNumber;
+ import com.google.gwt.json.client.JSONObject;
+ import com.google.gwt.json.client.JSONString;
+ import com.google.gwt.json.client.JSONValue;
++import com.google.gwt.safehtml.shared.SafeHtml;
++import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+ import com.google.gwt.xml.client.Document;
+ import com.google.gwt.xml.client.XMLParser;
+ 
+@@ -71,6 +73,35 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
+         }
+     };
+ 
++    public static final AbstractJsonEncoderDecoder<SafeHtml> SAFE_HTML =
++            new AbstractJsonEncoderDecoder<SafeHtml>() {
++
++                public SafeHtml decode(JSONValue value) throws DecodingException {
++                    if (value == null || value.isNull() != null) {
++                        SafeHtmlBuilder sh = new SafeHtmlBuilder();
++                        sh.appendEscaped("");
++                        return sh.toSafeHtml();
++                    }
++                    JSONString str = value.isString();
++
++                    if (str == null) {
++                        throw new DecodingException("Expected a json string, but was given: "
++                                + value);
++                    }
++
++                    SafeHtmlBuilder sh = new SafeHtmlBuilder();
++                    sh.appendEscaped(str.stringValue());
++                    return sh.toSafeHtml();
++                }
++
++                @Override
++                public JSONValue encode(SafeHtml value)
++                        throws org.fusesource.restygwt.client.JsonEncoderDecoder.EncodingException {
++                    return (value == null) ? getNullType() : new JSONString(value.asString());
++                }
++            };
++
++
+     public static final AbstractJsonEncoderDecoder<Character> CHAR = new AbstractJsonEncoderDecoder<Character>() {
+ 
+         public Character decode(JSONValue value) throws DecodingException {
+diff --git a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java b/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
+index fc0cac5c09562d7145d56801b98deaf45e2a9873..83fb94debc68cfd694597003bd03932d24fbbb7e 100644
+--- a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
++++ b/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderClassCreator.java
+@@ -469,27 +469,33 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
+         			    String expression = locator.decodeExpression(field.getType(), objectGetter, style);
+     
+         			    p("if(" + objectGetter + " != null) {").i(1);
+-    
+-        				p("if(" + objectGetter + " instanceof com.google.gwt.json.client.JSONNull) {").i(1);
+-                        String defaultValue = field.getType().isPrimitive() == null ? "null": field.getType().isPrimitive().getUninitializedFieldExpression() + "";
+ 
+-        				if (setterName != null) {
+-        				    p("rc." + setterName + "(" + defaultValue + ");");
+-        				} else {
+-        				    p("rc." + name + "=" + defaultValue + ";");
+-        				}
+-    
+-        				i(-1).p("} else {").i(1);
+-        			    
+-        			    if (setterName != null) {
+-        				p("rc." + setterName + "(" + expression + ");");
+-        			    } else {
+-        				p("rc." + name + "=" + expression + ";");
+-        			    }
+-        			    i(-1).p("}");    
+-        			    i(-1).p("}");    
++                            if (!field.getType().equals(locator.SAFE_HTML_TYPE)) {
++                               p("if(" + objectGetter + " instanceof com.google.gwt.json.client.JSONNull) {").i(1);
++                                    String defaultValue = field.getType().isPrimitive() == null ? "null": field.getType().isPrimitive().getUninitializedFieldExpression() + "";
++
++                                    if (setterName != null) {
++                                        p("rc." + setterName + "(" + defaultValue + ");");
++                                    } else {
++                                        p("rc." + name + "=" + defaultValue + ";");
++                                    }
++
++                               i(-1).p("} else {").i(1);
++                            }
++
++                            if (setterName != null) {
++                                p("rc." + setterName + "(" + expression + ");");
++                            } else {
++                                p("rc." + name + "=" + expression + ";");
++                            }
++                        i(-1).p("}");
++
++                        if (!field.getType().equals(locator.SAFE_HTML_TYPE)) {
++                            i(-1).p("}");
++                        }
++
+ 
+-        			} else {
++                    } else {
+         			    error("field must not be private.");
+         			}
+         			return null;
+diff --git a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderInstanceLocator.java b/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderInstanceLocator.java
+index 364371e9dbc14ca58892018586d2315d24f01a81..4472225486c3ea6eb1ddc86827888796cea67558 100644
+--- a/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderInstanceLocator.java
++++ b/restygwt/src/main/java/org/fusesource/restygwt/rebind/JsonEncoderDecoderInstanceLocator.java
+@@ -32,6 +32,7 @@ import java.util.List;
+ import java.util.Map;
+ import java.util.Set;
+ 
++import com.google.gwt.safehtml.shared.SafeHtml;
+ import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
+ import org.fusesource.restygwt.client.Json;
+ import org.fusesource.restygwt.client.Json.Style;
+@@ -63,6 +64,7 @@ public class JsonEncoderDecoderInstanceLocator {
+     public final JClassType MAP_TYPE;
+     public final JClassType SET_TYPE;
+     public final JClassType LIST_TYPE;
++    public final JClassType SAFE_HTML_TYPE;
+ 
+     public final HashMap<JType, String> builtInEncoderDecoders = new HashMap<JType, String>();
+ 
+@@ -80,6 +82,7 @@ public class JsonEncoderDecoderInstanceLocator {
+         this.MAP_TYPE = find(Map.class);
+         this.SET_TYPE = find(Set.class);
+         this.LIST_TYPE = find(List.class);
++        this.SAFE_HTML_TYPE = find(SafeHtml.class);
+ 
+         builtInEncoderDecoders.put(JPrimitiveType.BOOLEAN, JSON_ENCODER_DECODER_CLASS + ".BOOLEAN");
+         builtInEncoderDecoders.put(JPrimitiveType.BYTE, JSON_ENCODER_DECODER_CLASS + ".BYTE");
+@@ -99,6 +102,7 @@ public class JsonEncoderDecoderInstanceLocator {
+         builtInEncoderDecoders.put(find(Double.class), JSON_ENCODER_DECODER_CLASS + ".DOUBLE");
+         builtInEncoderDecoders.put(find(BigDecimal.class), JSON_ENCODER_DECODER_CLASS + ".BIG_DECIMAL");
+         builtInEncoderDecoders.put(find(BigInteger.class), JSON_ENCODER_DECODER_CLASS + ".BIG_INTEGER");
++        builtInEncoderDecoders.put(SAFE_HTML_TYPE, JSON_ENCODER_DECODER_CLASS + ".SAFE_HTML");
+ 
+         builtInEncoderDecoders.put(STRING_TYPE, JSON_ENCODER_DECODER_CLASS + ".STRING");
+         builtInEncoderDecoders.put(DOCUMENT_TYPE, JSON_ENCODER_DECODER_CLASS + ".DOCUMENT");
+@@ -253,4 +257,4 @@ public class JsonEncoderDecoderInstanceLocator {
+         logger.log(TRACE, msg);
+     }
+ 
+-}
++}
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/GwtCompleteTestSuite.java b/restygwt/src/test/java/org/fusesource/restygwt/GwtCompleteTestSuite.java
+index bafc22ea49a367cb389578798868b34ce64a185c..d0cf0fbe65c45cd3d2dfbfaa62024963ac967645 100644
+--- a/restygwt/src/test/java/org/fusesource/restygwt/GwtCompleteTestSuite.java
++++ b/restygwt/src/test/java/org/fusesource/restygwt/GwtCompleteTestSuite.java
+@@ -22,6 +22,7 @@ package org.fusesource.restygwt;
+ import junit.framework.Test;
+ import junit.framework.TestCase;
+ 
++import org.fusesource.restygwt.client.basic.BasicTestGwt;
+ import org.fusesource.restygwt.client.basic.CachingTestGwt;
+ import org.fusesource.restygwt.client.basic.FailingTestGwt;
+ import org.fusesource.restygwt.client.basic.FlakyTestGwt;
+@@ -33,6 +34,8 @@ import org.fusesource.restygwt.client.basic.PathParamTestGwt;
+ import org.fusesource.restygwt.client.basic.QueryParamTestGwt;
+ import org.fusesource.restygwt.client.basic.ResourcePassesHeadersTestGwt;
+ import org.fusesource.restygwt.client.basic.ResourceTestGwt;
++import org.fusesource.restygwt.client.basic.SafeHtmlJsonEncoderDecoderTestGwt;
++import org.fusesource.restygwt.client.basic.SafeHtmlTestGwt;
+ import org.fusesource.restygwt.client.basic.SubResourceClientGeneration;
+ import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
+ import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorageTestGwt;
+@@ -84,6 +87,12 @@ public class GwtCompleteTestSuite extends TestCase {
+         suite.addTestSuite(JsonCreatorWithSubtypes.class);
+         suite.addTestSuite(PathParamTestGwt.class);
+         suite.addTestSuite(QueryParamTestGwt.class);
++        suite.addTestSuite(CachingTestGwt.class);
++        suite.addTestSuite(SafeHtmlTestGwt.class);
++        suite.addTestSuite(BasicTestGwt.class);
++        suite.addTestSuite(ResourceTestGwt.class);
++        suite.addTestSuite(ResourcePassesHeadersTestGwt.class);
++        suite.addTestSuite(SafeHtmlJsonEncoderDecoderTestGwt.class);
+         return suite;
+     }
+ }
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/SafeHtmlJsonEncoderDecoderTestGwt.gwt.xml b/restygwt/src/test/java/org/fusesource/restygwt/SafeHtmlJsonEncoderDecoderTestGwt.gwt.xml
+new file mode 100644
+index 0000000000000000000000000000000000000000..caa21f1a1352b50223b285000f6300c16d5796a3
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/SafeHtmlJsonEncoderDecoderTestGwt.gwt.xml
+@@ -0,0 +1,27 @@
++<!--
++
++    Copyright (C) 2010 the original author or authors.
++
++    Licensed under the Apache License, Version 2.0 (the "License");
++    you may not use this file except in compliance with the License.
++    You may obtain a copy of the License at
++
++        http://www.apache.org/licenses/LICENSE-2.0
++
++    Unless required by applicable law or agreed to in writing, software
++    distributed under the License is distributed on an "AS IS" BASIS,
++    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++    See the License for the specific language governing permissions and
++    limitations under the License.
++
++-->
++
++<module>
++    <inherits name='com.google.gwt.user.User' />
++    <inherits name='com.google.gwt.logging.Logging'/>
++    <inherits name='org.fusesource.restygwt.RestyGWT'/>
++    <servlet path='/api/*' class='org.fusesource.restygwt.server.basic.BasicTestGwtServlet' />
++
++    <source path='client'/>
++    <source path='example/client'/>
++</module>
+\ No newline at end of file
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/basic/SafeHtmlDto.java b/restygwt/src/test/java/org/fusesource/restygwt/client/basic/SafeHtmlDto.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..0e3a9cd566bce34f88285cea946076650c22a4a3
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/client/basic/SafeHtmlDto.java
+@@ -0,0 +1,31 @@
++package org.fusesource.restygwt.client.basic;
++
++import com.google.gwt.safehtml.shared.SafeHtml;
++
++/**
++ *
++ * @author <a href="mailto:tim@elbart.com">Tim Eggert</a>
++ *
++ */
++public class SafeHtmlDto {
++
++    private SafeHtml safeHtml;
++    private String unsafeString;
++
++    public void setSafeHtml(SafeHtml safeHtml) {
++        this.safeHtml = safeHtml;
++    }
++
++    public SafeHtml getSafeHtml() {
++        return safeHtml;
++    }
++
++    public void setUnsafeString(String unsafeString) {
++        this.unsafeString = unsafeString;
++    }
++
++    public String getUnsafeString() {
++        return unsafeString;
++    }
++
++}
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/basic/SafeHtmlDtoService.java b/restygwt/src/test/java/org/fusesource/restygwt/client/basic/SafeHtmlDtoService.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..dd91a3464b196582fa787cfa3a1c2db7db56bbca
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/client/basic/SafeHtmlDtoService.java
+@@ -0,0 +1,31 @@
++/**
++ * Copyright (C) 2011 the original author or authors.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.basic;
++
++import javax.ws.rs.GET;
++
++import org.fusesource.restygwt.client.MethodCallback;
++import org.fusesource.restygwt.client.RestService;
++
++/**
++ * @author <a href="mailto:tim@elbart.com">Tim Eggert</a>
++ *
++ */
++public interface SafeHtmlDtoService extends RestService {
++    @GET
++    public void getSafeHtmlDto(MethodCallback<SafeHtmlDto> callback);
++}
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/basic/SafeHtmlJsonEncoderDecoderTestGwt.java b/restygwt/src/test/java/org/fusesource/restygwt/client/basic/SafeHtmlJsonEncoderDecoderTestGwt.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..3706abe3ace0ae7a303b96dd0aee6f52552b54ee
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/client/basic/SafeHtmlJsonEncoderDecoderTestGwt.java
+@@ -0,0 +1,24 @@
++package org.fusesource.restygwt.client.basic;
++
++import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
++
++import com.google.gwt.json.client.JSONValue;
++import com.google.gwt.junit.client.GWTTestCase;
++import com.google.gwt.safehtml.shared.SafeHtml;
++import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
++
++public class SafeHtmlJsonEncoderDecoderTestGwt extends GWTTestCase {
++
++    @Override
++    public String getModuleName() {
++        return "org.fusesource.restygwt.SafeHtmlJsonEncoderDecoderTestGwt";
++    }
++
++    public void testSafeHtmlEncodingTestGwt() {
++        String s = "test";
++        String tag = "\"";
++        SafeHtml safeHtml = new SafeHtmlBuilder().appendEscaped(s).toSafeHtml();
++        JSONValue result = AbstractJsonEncoderDecoder.SAFE_HTML.encode(safeHtml);
++        assertEquals(tag + s + tag, result.toString());
++    }
++}
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/client/basic/SafeHtmlTestGwt.java b/restygwt/src/test/java/org/fusesource/restygwt/client/basic/SafeHtmlTestGwt.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..bd4f6411afa53b5881eb96985823ef42673616f3
+--- /dev/null
++++ b/restygwt/src/test/java/org/fusesource/restygwt/client/basic/SafeHtmlTestGwt.java
+@@ -0,0 +1,98 @@
++/**
++ * Copyright (C) 2010 the original author or authors.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package org.fusesource.restygwt.client.basic;
++
++import com.google.gwt.core.client.GWT;
++import com.google.gwt.junit.client.GWTTestCase;
++import com.google.gwt.safehtml.shared.SafeHtml;
++
++import org.fusesource.restygwt.client.Method;
++import org.fusesource.restygwt.client.MethodCallback;
++import org.fusesource.restygwt.client.Resource;
++import org.fusesource.restygwt.client.RestServiceProxy;
++
++/**
++ * tests the behaviour of using the {@link SafeHtml} type within
++ * rest DTOs
++ *
++ * @author <a href="mailto:tim@elbart.com">Tim Eggert</<a>
++ */
++public class SafeHtmlTestGwt extends GWTTestCase {
++
++    @Override
++    public String getModuleName() {
++        return "org.fusesource.restygwt.BasicTestGwt";
++    }
++
++    public void testSafeHtmlDtoResponse() {
++
++        //configure RESTY
++        Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getsafehtmldto");
++
++        SafeHtmlDtoService service = GWT.create(SafeHtmlDtoService.class);
++        ((RestServiceProxy) service).setResource(resource);
++
++        service.getSafeHtmlDto(new MethodCallback<SafeHtmlDto>() {
++
++            @Override
++            public void onFailure(Method method, Throwable exception) {
++                fail();
++            }
++
++            @Override
++            public void onSuccess(Method method, SafeHtmlDto response) {
++                assertTrue(response.getSafeHtml() instanceof SafeHtml);
++                assertEquals(response.getSafeHtml().asString(), "&lt;script&gt;alert(123)&lt;/script&gt;");
++                assertFalse(response.getUnsafeString().equals(response.getSafeHtml().asString()));
++
++                finishTest();
++            }
++        });
++
++        // wait... we are in async testing...
++        delayTestFinish(10000);
++    }
++
++    public void testSafeHtmlNullDtoResponse() {
++
++        //configure RESTY
++        Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getsafehtmlnulldto");
++
++        SafeHtmlDtoService service = GWT.create(SafeHtmlDtoService.class);
++        ((RestServiceProxy) service).setResource(resource);
++
++        service.getSafeHtmlDto(new MethodCallback<SafeHtmlDto>() {
++
++            @Override
++            public void onFailure(Method method, Throwable exception) {
++                fail();
++            }
++
++            @Override
++            public void onSuccess(Method method, SafeHtmlDto response) {
++                assertTrue(response.getSafeHtml() instanceof SafeHtml);
++                assertEquals(response.getSafeHtml().asString(), "");
++
++                finishTest();
++            }
++        });
++
++        // wait... we are in async testing...
++        delayTestFinish(10000);
++    }
++
++}
+diff --git a/restygwt/src/test/java/org/fusesource/restygwt/server/basic/BasicTestGwtServlet.java b/restygwt/src/test/java/org/fusesource/restygwt/server/basic/BasicTestGwtServlet.java
+index 3260b73777ecfa5447e01f9f81eed038eb637b20..b8229259096ec4a303a73618b28e885314e344eb 100644
+--- a/restygwt/src/test/java/org/fusesource/restygwt/server/basic/BasicTestGwtServlet.java
++++ b/restygwt/src/test/java/org/fusesource/restygwt/server/basic/BasicTestGwtServlet.java
+@@ -37,16 +37,26 @@ public class BasicTestGwtServlet extends HttpServlet {
+     private static final long serialVersionUID = 7682753843344322868L;
+ 
+     private static final String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
+-
++    String SAFEHTML_RESPONSE_VALUE = "<script>alert(123)</script>";
++    String SAFEHTML_RESPONSE = "{\"safeHtml\":\"" + SAFEHTML_RESPONSE_VALUE + "\","
++                                   + "\"unsafeString\" : \"" + SAFEHTML_RESPONSE_VALUE + "\"}";
++    String SAFEHTML_NULL_RESPONSE = "{\"safeHtml\":null, \"unsafeString\":\"test\"}";
+ 
+     @Override
+     protected void doGet(HttpServletRequest request,
+             HttpServletResponse response) throws IOException {
+ 
++            String responseString = null;
+ 
+-            response.getWriter().print(DUMMY_RESPONSE);
+-
++            if (request.getPathInfo().contains("getendpoint")) {
++               responseString = DUMMY_RESPONSE;
++            } else if (request.getPathInfo().contains("getsafehtmldto")) {
++               responseString = SAFEHTML_RESPONSE;
++            } else if (request.getPathInfo().contains("getsafehtmlnulldto")) {
++               responseString = SAFEHTML_NULL_RESPONSE;
++            }
+ 
++           response.getWriter().print(responseString);
+     }
+ 
+ }
+\ No newline at end of file
