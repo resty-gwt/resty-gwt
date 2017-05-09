@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -163,6 +164,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private JClassType DOCUMENT_TYPE;
     private JClassType METHOD_TYPE;
     private JClassType STRING_TYPE;
+    private JClassType DATE_TYPE;
     private JClassType JSON_VALUE_TYPE;
     private JClassType OVERLAY_VALUE_TYPE;
     private Set<JClassType> OVERLAY_ARRAY_TYPES;
@@ -225,6 +227,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         this.DOCUMENT_TYPE = find(Document.class, getLogger(), context);
         this.METHOD_TYPE = find(Method.class, getLogger(), context);
         this.STRING_TYPE = find(String.class, getLogger(), context);
+        this.DATE_TYPE = find(Date.class, getLogger(), context);
         this.JSON_VALUE_TYPE = find(JSONValue.class, getLogger(), context);
         this.OVERLAY_VALUE_TYPE = find(JavaScriptObject.class, getLogger(), context);
         this.OVERLAY_ARRAY_TYPES = new HashSet<JClassType>();
@@ -582,7 +585,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             String contentTypeHeaderValue = null;
 
             if(jsonpAnnotation == null) {
-                final String acceptHeader; 
+                final String acceptHeader;
                 Produces producesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Produces.class);
                 if (producesAnnotation != null) {
                     // Do not use autodetection, if accept type already set
@@ -889,13 +892,19 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         return result.toString();
     }
 
-    protected String toStringExpression(JType type, String expr) {
+    protected String toStringExpression(JType type, String expr) throws UnableToCompleteException {
         if (type.isPrimitive() != null) {
             return "\"\"+" + expr;
         }
         if (STRING_TYPE == type) {
             return expr;
         }
+
+        if (DATE_TYPE == type) {
+            String encoded = locator.encodeExpression(DATE_TYPE, expr, Style.DEFAULT);
+            return "java.util.Objects.toString(" + encoded + ", null)";
+        }
+
         if (type.isClass() != null &&
             isOverlayArrayType(type.isClass())) {
           return "(new " + JSON_ARRAY_CLASS + "(" + expr + ")).toString()";
@@ -952,7 +961,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
      * Returns the rest method.
      * <p />
      * Iterates over the annotations and look for an annotation that is annotated with HttpMethod.
-     * 
+     *
      * @param method
      * @return
      * @throws UnableToCompleteException
