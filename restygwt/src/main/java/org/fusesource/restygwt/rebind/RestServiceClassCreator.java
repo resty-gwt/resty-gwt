@@ -657,13 +657,10 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                 } else if (contentArg.getType() == DOCUMENT_TYPE) {
                     p("__method.xml(" + contentArg.getName() + ");");
                 } else {
-                    JClassType contentClass = contentArg.getType().isClass();
+                    JClassType contentClass = contentArg.getType().isClassOrInterface();
                     if (contentClass == null) {
-                        contentClass = contentArg.getType().isClassOrInterface();
-                        if (!locator.isCollectionType(contentClass)) {
-                            getLogger().log(ERROR, "Content argument must be a class.");
-                            throw new UnableToCompleteException();
-                        }
+                        getLogger().log(ERROR, "Content argument must be a class.");
+                        throw new UnableToCompleteException();
                     }
 
                     jsonAnnotation = getAnnotation(contentArg, Json.class);
