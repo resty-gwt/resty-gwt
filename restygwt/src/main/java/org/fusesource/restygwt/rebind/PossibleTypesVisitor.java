@@ -149,7 +149,7 @@ public class PossibleTypesVisitor extends JsonTypeInfoIdVisitor<List<Subtype>, U
         final List<Subtype> possibleTypes = Lists.newArrayList();
         List<JClassType> resolvedSubtypes = Lists.newArrayList();
 
-        if (types != null) {
+        if (types != null && !types.isEmpty()) {
             for (JsonSubTypes.Type type : types) {
                 JClassType typeClass = BaseSourceCreator.find(type.value(), logger, context);
                 if (!isLeaf || classType.equals(typeClass))
