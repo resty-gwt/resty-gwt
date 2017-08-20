@@ -21,6 +21,7 @@ package org.fusesource.restygwt.examples.client;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -29,6 +30,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -44,6 +46,11 @@ public interface PizzaService extends RestService {
     @Path("/toppings")
     @Produces( MediaType.APPLICATION_JSON )
     public void listToppings(MethodCallback<List<Topping>> callback);
+
+    @OPTIONS
+    @Path("/crusts")
+    @Produces( MediaType.APPLICATION_JSON )
+    public void getCurstPrices(Crust crust, MethodCallback<Map<Integer, Double>> callback);
 
     @DELETE
     @Path("/ping")

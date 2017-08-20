@@ -21,6 +21,8 @@ package org.fusesource.restygwt.examples.server;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -99,6 +101,31 @@ public class PizzaServlet extends HttpServlet {
 
             resp.setContentType(Resource.CONTENT_TYPE_JSON);
             mapper.writeValue(resp.getOutputStream(), toppings);
+
+        } catch (Throwable e) {
+            e.printStackTrace();
+        } finally {
+            System.out.flush();
+            System.err.flush();
+        }
+    }
+
+    @Override
+    protected  void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("Processing Crust prices");
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            Map<Integer, Double> prices = new HashMap<Integer, Double>();
+            prices.put(28, 1.5);
+            prices.put(32, 2.0);
+
+            StringWriter sw = new StringWriter();
+            mapper.writeValue(sw, prices);
+            System.out.println("Response: " + sw.toString());
+
+            resp.setContentType(Resource.CONTENT_TYPE_JSON);
+            mapper.writeValue(resp.getOutputStream(), prices);
 
         } catch (Throwable e) {
             e.printStackTrace();

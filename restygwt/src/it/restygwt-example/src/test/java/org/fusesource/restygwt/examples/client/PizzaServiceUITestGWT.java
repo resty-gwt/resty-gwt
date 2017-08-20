@@ -24,6 +24,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import com.google.gwt.core.client.GWT;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -116,6 +117,27 @@ public class PizzaServiceUITestGWT extends UITestGWT {
             }
         });
 
+        delayTestFinish(2000);
+    }
+
+    public void testCrustPrices() {
+        Crust crust = new CheesyCrust();
+        // Initialize the pizza service..
+        PizzaService service = GWT.create(PizzaService.class);
+
+        service.getCurstPrices(crust, new MethodCallback<Map<Integer, Double>>(){
+            public void onSuccess(Method method, Map<Integer, Double> response) {
+                System.out.println(response);
+                assertNotNull(response);
+                assertEquals(2, response.size());
+                finishTest();
+            }
+            public void onFailure(Method method, Throwable exception) {
+                exception.printStackTrace();
+                fail(exception.getMessage());
+            }
+
+        });
         delayTestFinish(2000);
     }
 }
