@@ -25,6 +25,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,6 +37,9 @@ public interface DirectExampleService extends DirectRestService {
 
     @GET @Path("/list")
     List<ExampleDto> getExampleDtos(@QueryParam("id") String id);
+
+    @GET @Path("/date")
+    Long getDate(@QueryParam("date") Date date);
 
     @POST @Path("/store")
     void storeDto(ExampleDto exampleDto);

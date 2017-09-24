@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * A servlet that just implements the services required for the direct service test.
@@ -37,7 +38,9 @@ public class DirectServiceTestGwtServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
 
-        if (request.getRequestURI().endsWith("/api/list")) {
+        if (request.getRequestURI().endsWith("/date")) {
+            response.getWriter().print(Long.parseLong(request.getParameter("date")));
+        } else if (request.getRequestURI().endsWith("/api/list")) {
             response.getWriter().print(THREE_ELEMENT_LIST);
         } else if (request.getRequestURI().matches(".+/\\d+")) {
             String url = request.getRequestURI();
