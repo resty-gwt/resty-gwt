@@ -29,6 +29,8 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 import com.fasterxml.jackson.databind.type.SimpleType;
 
+import java.io.IOException;
+
 public class DTOTypeResolver implements TypeIdResolver
 {
 	@Override
@@ -64,8 +66,13 @@ public class DTOTypeResolver implements TypeIdResolver
 	}
 
 	@Override
-	public JavaType typeFromId(String id)
+	public Id getMechanism()
 	{
+		return Id.NAME;
+	}
+
+    @Override
+    public JavaType typeFromId(DatabindContext context, String id) throws IOException {
 		if("dto1".equals(id))
 			return SimpleType.construct(DTO1.class);
 		else if("dto2".equals(id))
@@ -76,17 +83,6 @@ public class DTOTypeResolver implements TypeIdResolver
 			return SimpleType.construct(DTOCustom2.class);
 		else
 			throw new IllegalArgumentException("Unknown id: " + id);
-	}
-
-	@Override
-	public Id getMechanism()
-	{
-		return Id.NAME;
-	}
-
-    @Override
-    public JavaType typeFromId(DatabindContext context, String id) {
-        return typeFromId(id);
     }
 
     //@Override
