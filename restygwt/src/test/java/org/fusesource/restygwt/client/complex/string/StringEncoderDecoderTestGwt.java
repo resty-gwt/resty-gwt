@@ -18,6 +18,7 @@
 
 package org.fusesource.restygwt.client.complex.string;
 
+import org.fusesource.restygwt.client.FailedResponseException;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.TextCallback;
@@ -69,7 +70,8 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
 
             @Override
             public void onFailure(Method method, Throwable exception) {
-                if (400 == method.getResponse().getStatusCode() && "Wrong Format".equals(exception.getMessage())) {
+                if (400 == method.getResponse().getStatusCode() && exception instanceof FailedResponseException &&
+                        "Wrong Format".equals(((FailedResponseException) exception).getResponse().getText())) {
                     finishTest();
                 } else {
                     fail();

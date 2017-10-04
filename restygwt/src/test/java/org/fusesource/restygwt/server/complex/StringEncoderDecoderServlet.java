@@ -49,7 +49,7 @@ public class StringEncoderDecoderServlet extends HttpServletDispatcher {
 
         /**
          * Method to test POST with {@code @Consumes(MediaType.APPLICATION_JSON)}.
-         * 
+         *
          * @throws BadRequestException
          *             For restygwt <= 2.0.3 or plain text autodetection set to {@code false} because it sends every String as plain text
          */
@@ -72,10 +72,10 @@ public class StringEncoderDecoderServlet extends HttpServletDispatcher {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
-        final ResteasyProviderFactory providerFactory = (ResteasyProviderFactory) config.getServletContext().getAttribute(ResteasyProviderFactory.class.getName());
+        ResteasyProviderFactory providerFactory = servletContainerDispatcher.getDispatcher().getProviderFactory();
         providerFactory.registerProvider(JsonStringProvider.class);
 
-        final Registry registry = (Registry) config.getServletContext().getAttribute(Registry.class.getName());
+        Registry registry = servletContainerDispatcher.getDispatcher().getRegistry();
         registry.addPerRequestResource(StringsImpl.class, "/org.fusesource.restygwt.StringEncoderDecoderTestGwt.JUnit");
         registry.addPerRequestResource(StringsImpl.class, "/org.fusesource.restygwt.StringEncoderDecoderAutodetectPlainTextTestGwt.JUnit");
     }
