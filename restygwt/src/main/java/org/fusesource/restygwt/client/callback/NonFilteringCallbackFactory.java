@@ -24,7 +24,7 @@ import com.google.gwt.http.client.RequestCallback;
 
 /**
  * just returns a new callback from builder from given method. 
- * 
+ *
  * @author <a href="blog.mkristian.tk">Kristian</a>
  *
  */

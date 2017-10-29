@@ -32,111 +32,94 @@ import com.google.gwt.junit.client.GWTTestCase;
 
 import java.util.List;
 
-public class ParameterizedTypeDTO extends GWTTestCase
-{
-	public static class DTO<X>
-	{
-		public int size;
-		public X value;
-	}
+public class ParameterizedTypeDTO extends GWTTestCase {
+    public static class DTO<X> {
+        public int size;
+        public X value;
+    }
 
-	public static class Thing
-	{
-		public String name;
-	}
+    public static class Thing {
+        public String name;
+    }
 
-	@Path("/api/pdto")
-	public static interface DTOService extends RestService
-	{
-		@GET
-		@Produces("application/json")
-		@Path("thingList")
-		void getThingList(MethodCallback<DTO<List<Thing>>> callback);
-		
-		@GET
-		@Produces("application/json")
-		@Path("thing")
-		void getThing(MethodCallback<DTO<Thing>> callback);
+    @Path("/api/pdto")
+    public static interface DTOService extends RestService {
+        @GET
+        @Produces("application/json")
+        @Path("thingList")
+        void getThingList(MethodCallback<DTO<List<Thing>>> callback);
 
-		@GET
-		@Produces("application/json")
-		@Path("int")
-		void getInteger(MethodCallback<DTO<Integer>> callback);
-	}
+        @GET
+        @Produces("application/json")
+        @Path("thing")
+        void getThing(MethodCallback<DTO<Thing>> callback);
 
-	@Override
-	public String getModuleName()
-	{
-		return "org.fusesource.restygwt.ParameterizedTypeDTO";
-	}
+        @GET
+        @Produces("application/json")
+        @Path("int")
+        void getInteger(MethodCallback<DTO<Integer>> callback);
+    }
 
-	@Test
-	public void testThingList()
-	{
-		DTOService service = GWT.create(DTOService.class);
-		service.getThingList(new MethodCallback<DTO<List<Thing>>>()
-		{
-			@Override
-			public void onFailure(Method method, Throwable exception)
-			{
-				fail(exception.getMessage());
-			}
+    @Override
+    public String getModuleName() {
+        return "org.fusesource.restygwt.ParameterizedTypeDTO";
+    }
 
-			@Override
-			public void onSuccess(Method method, DTO<List<Thing>> response)
-			{
-				assertEquals(12, response.size);
-				assertEquals(1, response.value.size());
-				assertEquals("Fred Flintstone", response.value.get(0).name);
-				finishTest();
-			}
-		});
-		delayTestFinish(10000);
-	}
+    @Test
+    public void testThingList() {
+        DTOService service = GWT.create(DTOService.class);
+        service.getThingList(new MethodCallback<DTO<List<Thing>>>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail(exception.getMessage());
+            }
 
-	@Test
-	public void testThing()
-	{
-		DTOService service = GWT.create(DTOService.class);
-		service.getThing(new MethodCallback<DTO<Thing>>()
-		{
-			@Override
-			public void onFailure(Method method, Throwable exception)
-			{
-				fail(exception.getMessage());
-			}
+            @Override
+            public void onSuccess(Method method, DTO<List<Thing>> response) {
+                assertEquals(12, response.size);
+                assertEquals(1, response.value.size());
+                assertEquals("Fred Flintstone", response.value.get(0).name);
+                finishTest();
+            }
+        });
+        delayTestFinish(10000);
+    }
 
-			@Override
-			public void onSuccess(Method method, DTO<Thing> response)
-			{
-				assertEquals(12, response.size);
-				assertEquals("Fred Flintstone", response.value.name);
-				finishTest();
-			}
-		});
-		delayTestFinish(10000);
-	}
+    @Test
+    public void testThing() {
+        DTOService service = GWT.create(DTOService.class);
+        service.getThing(new MethodCallback<DTO<Thing>>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail(exception.getMessage());
+            }
 
-	@Test
-	public void testInt()
-	{
-		DTOService service = GWT.create(DTOService.class);
-		service.getInteger(new MethodCallback<DTO<Integer>>()
-		{
-			@Override
-			public void onFailure(Method method, Throwable exception)
-			{
-				fail(exception.getMessage());
-			}
+            @Override
+            public void onSuccess(Method method, DTO<Thing> response) {
+                assertEquals(12, response.size);
+                assertEquals("Fred Flintstone", response.value.name);
+                finishTest();
+            }
+        });
+        delayTestFinish(10000);
+    }
 
-			@Override
-			public void onSuccess(Method method, DTO<Integer> response)
-			{
-				assertEquals(12, response.size);
-				assertEquals(Integer.valueOf(123456), response.value);
-				finishTest();
-			}
-		});
-		delayTestFinish(10000);
-	}
+    @Test
+    public void testInt() {
+        DTOService service = GWT.create(DTOService.class);
+        service.getInteger(new MethodCallback<DTO<Integer>>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail(exception.getMessage());
+            }
+
+            @Override
+            public void onSuccess(Method method, DTO<Integer> response) {
+                assertEquals(12, response.size);
+                assertEquals(Integer.valueOf(123456), response.value);
+                finishTest();
+            }
+        });
+        delayTestFinish(10000);
+    }
 }

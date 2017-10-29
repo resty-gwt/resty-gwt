@@ -47,20 +47,20 @@ public class QueryParamTestGwt extends GWTTestCase {
 
     @Path("/get")
     static interface QueryTestRestService extends RestService {
-        
+
         void get(@QueryParam(value = "id") int id, MethodCallback<Echo> callback);
 
         void get(@QueryParam(value = "id") Integer id, MethodCallback<Echo> callback);
     }
-    
+
     class EchoMethodCallback implements MethodCallback<Echo> {
-        
+
         private final String id;
 
-        EchoMethodCallback(String id){
+        EchoMethodCallback(String id) {
             this.id = id;
         }
-        
+
         @Override
         public void onSuccess(Method method, Echo response) {
 
@@ -76,45 +76,45 @@ public class QueryParamTestGwt extends GWTTestCase {
             fail();
         }
     }
-    
+
     @Override
     protected void gwtSetUp() throws Exception {
-        super.gwtSetUp();        
-        service = GWT.create(QueryTestRestService.class);  
+        super.gwtSetUp();
+        service = GWT.create(QueryTestRestService.class);
         Resource resource = new Resource(GWT.getModuleBaseURL() + "echo");
         ((RestServiceProxy) service).setResource(resource);
     }
 
     public void testGetWithInteger() {
-    
+
         service.get(new Integer(2), new EchoMethodCallback("2"));
 
     }
 
     public void testGetWithNull() {
-    
-        service.get(null, new MethodCallback<Echo>(){
+
+        service.get(null, new MethodCallback<Echo>() {
 
             @Override
             public void onFailure(Method method, Throwable exception) {
-                
+
                 fail();
-                
+
             }
 
             @Override
             public void onSuccess(Method method, Echo response) {
-                
+
                 assertFalse(response.params.containsKey("id"));
                 assertEquals(response.params.size(), 0);
-                
+
             }
         });
 
     }
 
     public void testGetWithInt() {
-    
+
         service.get(123, new EchoMethodCallback("123"));
 
     }
@@ -123,6 +123,6 @@ public class QueryParamTestGwt extends GWTTestCase {
 
         // wait... we are in async testing...
         delayTestFinish(10000);
-        
+
     }
 }

@@ -33,168 +33,143 @@ import org.junit.Test;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 
-public class ParameterizedTypeServiceInterfaces extends GWTTestCase
-{
-	@Override
-	public String getModuleName()
-	{
-		return "org.fusesource.restygwt.ParameterizedTypeServiceInterface";
-	}
+public class ParameterizedTypeServiceInterfaces extends GWTTestCase {
+    @Override
+    public String getModuleName() {
+        return "org.fusesource.restygwt.ParameterizedTypeServiceInterface";
+    }
 
-	public static class Thing
-	{
-		public String name;
-		public int shoeSize;
-	}
+    public static class Thing {
+        public String name;
+        public int shoeSize;
+    }
 
-	public static interface A<X> extends RestService
-	{
-		@GET
-		@Produces("application/json")
-		void getSomething(MethodCallback<X> callback);
-	}
+    public static interface A<X> extends RestService {
+        @GET
+        @Produces("application/json")
+        void getSomething(MethodCallback<X> callback);
+    }
 
-	@Path("/api/ptype/int")
-	public static interface AOfInt extends A<Integer>
-	{
-	}
+    @Path("/api/ptype/int")
+    public static interface AOfInt extends A<Integer> {
+    }
 
-	@Path("/api/ptype/thing")
-	public static interface AOfThing extends A<Thing>
-	{
-	}
+    @Path("/api/ptype/thing")
+    public static interface AOfThing extends A<Thing> {
+    }
 
-	@Path("/api/ptype")
-	public static interface SuperOfThing extends RestService
-	{
-		@Path("thing")
-		public A<Thing> getThingInterface();
+    @Path("/api/ptype")
+    public static interface SuperOfThing extends RestService {
+        @Path("thing")
+        public A<Thing> getThingInterface();
 
-		@Path("int")
-		public A<Integer> getIntInterface();
-	}
-	
-	public static interface GenericService<T extends DTOInterface> extends RestService {
-		@POST
-		@Path("echo")
-		void echoName(T dto, MethodCallback<String> callback);
-	}
-	
-	@Path("/api/concrete")
-	public static interface ConcreteService extends GenericService<DTOImplementation> { }
+        @Path("int")
+        public A<Integer> getIntInterface();
+    }
 
-	@Test
-	public void testSimpleType()
-	{
-		AOfInt inter = GWT.create(AOfInt.class);
-		inter.getSomething(new MethodCallback<Integer>()
-		{
-			@Override
-			public void onFailure(Method method, Throwable exception)
-			{
-				fail(exception.getMessage());
-			}
+    public static interface GenericService<T extends DTOInterface> extends RestService {
+        @POST
+        @Path("echo")
+        void echoName(T dto, MethodCallback<String> callback);
+    }
 
-			@Override
-			public void onSuccess(Method method, Integer response)
-			{
-				assertEquals(Integer.valueOf(123456), response);
-				finishTest();
-			}
-		});
-		delayTestFinish(10000);
-	}
+    @Path("/api/concrete")
+    public static interface ConcreteService extends GenericService<DTOImplementation> {
+    }
 
-	@Test
-	public void testComplexType()
-	{
-		AOfThing inter = GWT.create(AOfThing.class);
-		inter.getSomething(new MethodCallback<Thing>()
-		{
-			@Override
-			public void onFailure(Method method, Throwable exception)
-			{
-				fail(exception.getMessage());
-			}
+    @Test
+    public void testSimpleType() {
+        AOfInt inter = GWT.create(AOfInt.class);
+        inter.getSomething(new MethodCallback<Integer>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail(exception.getMessage());
+            }
 
-			@Override
-			public void onSuccess(Method method, Thing value)
-			{
-				assertEquals("Fred Flintstone", value.name);
-				assertEquals(12, value.shoeSize);
-				finishTest();
-			}
-		});
-		delayTestFinish(10000);
-	}
+            @Override
+            public void onSuccess(Method method, Integer response) {
+                assertEquals(Integer.valueOf(123456), response);
+                finishTest();
+            }
+        });
+        delayTestFinish(10000);
+    }
 
-	@Test
-	public void testSubResource()
-	{
-		SuperOfThing inter = GWT.create(SuperOfThing.class);
-		inter.getThingInterface().getSomething(new MethodCallback<Thing>()
-		{
-			@Override
-			public void onFailure(Method method, Throwable exception)
-			{
-				fail(exception.getMessage());
-			}
+    @Test
+    public void testComplexType() {
+        AOfThing inter = GWT.create(AOfThing.class);
+        inter.getSomething(new MethodCallback<Thing>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail(exception.getMessage());
+            }
 
-			@Override
-			public void onSuccess(Method method, Thing value)
-			{
-				assertEquals("Fred Flintstone", value.name);
-				assertEquals(12, value.shoeSize);
-				finishTest();
-			}
-		});
-		delayTestFinish(10000);
-	}
+            @Override
+            public void onSuccess(Method method, Thing value) {
+                assertEquals("Fred Flintstone", value.name);
+                assertEquals(12, value.shoeSize);
+                finishTest();
+            }
+        });
+        delayTestFinish(10000);
+    }
 
-	@Test
-	public void testSubResource2()
-	{
-		SuperOfThing inter = GWT.create(SuperOfThing.class);
-		inter.getIntInterface().getSomething(new MethodCallback<Integer>()
-		{
-			@Override
-			public void onFailure(Method method, Throwable exception)
-			{
-				fail(exception.getMessage());
-			}
+    @Test
+    public void testSubResource() {
+        SuperOfThing inter = GWT.create(SuperOfThing.class);
+        inter.getThingInterface().getSomething(new MethodCallback<Thing>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail(exception.getMessage());
+            }
 
-			@Override
-			public void onSuccess(Method method, Integer value)
-			{
-				assertEquals(Integer.valueOf(123456), value);
-				finishTest();
-			}
-		});
-		delayTestFinish(10000);
-	}
-	
-	@Test
-	public void testGenericService()
-	{
-		final DTOImplementation dto = new DTOImplementation();
-		dto.setName("impl name");
-		ConcreteService service = GWT.create(ConcreteService.class);
-		service.echoName(dto, new MethodCallback<String>()
-		{
-			@Override
-			public void onFailure(Method method, Throwable exception)
-			{
-				fail(exception.getMessage());
-			}
+            @Override
+            public void onSuccess(Method method, Thing value) {
+                assertEquals("Fred Flintstone", value.name);
+                assertEquals(12, value.shoeSize);
+                finishTest();
+            }
+        });
+        delayTestFinish(10000);
+    }
 
-			@Override
-			public void onSuccess(Method method, String response)
-			{
-				assertEquals(dto.getName(), response);;
-				finishTest();
-			}
-		});
-		delayTestFinish(10000);
-	}
-	
+    @Test
+    public void testSubResource2() {
+        SuperOfThing inter = GWT.create(SuperOfThing.class);
+        inter.getIntInterface().getSomething(new MethodCallback<Integer>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail(exception.getMessage());
+            }
+
+            @Override
+            public void onSuccess(Method method, Integer value) {
+                assertEquals(Integer.valueOf(123456), value);
+                finishTest();
+            }
+        });
+        delayTestFinish(10000);
+    }
+
+    @Test
+    public void testGenericService() {
+        final DTOImplementation dto = new DTOImplementation();
+        dto.setName("impl name");
+        ConcreteService service = GWT.create(ConcreteService.class);
+        service.echoName(dto, new MethodCallback<String>() {
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail(exception.getMessage());
+            }
+
+            @Override
+            public void onSuccess(Method method, String response) {
+                assertEquals(dto.getName(), response);
+                ;
+                finishTest();
+            }
+        });
+        delayTestFinish(10000);
+    }
+
 }

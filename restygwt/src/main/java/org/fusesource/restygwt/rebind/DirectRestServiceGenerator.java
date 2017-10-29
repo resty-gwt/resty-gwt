@@ -8,12 +8,13 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 
 public class DirectRestServiceGenerator extends Generator {
     @Override
-    public String generate(TreeLogger logger, GeneratorContext context, String source) throws UnableToCompleteException {
+    public String generate(TreeLogger logger, GeneratorContext context, String source)
+        throws UnableToCompleteException {
         try {
             JClassType restService = find(logger, context, source);
 
             DirectRestServiceInterfaceClassCreator restyInterfaceCreator =
-                    new DirectRestServiceInterfaceClassCreator(logger, context, restService);
+                new DirectRestServiceInterfaceClassCreator(logger, context, restService);
             restyInterfaceCreator.create();
 
             DirectRestServiceClassCreator generator = new DirectRestServiceClassCreator(logger, context, restService);

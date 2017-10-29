@@ -26,13 +26,14 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class Greeting extends JavaScriptObject {
 
-  protected Greeting() { }
+    protected Greeting() {
+    }
 
-  public final native String getGreeting() /*-{
-    return this.greeting;
-  }-*/;
+    public final native String getGreeting() /*-{
+        return this.greeting;
+    }-*/;
 
-  public final native void setGreeting(String greeting) /*-{
-    this.greeting = greeting;
-  }-*/;
+    public final native void setGreeting(String greeting) /*-{
+        this.greeting = greeting;
+    }-*/;
 }

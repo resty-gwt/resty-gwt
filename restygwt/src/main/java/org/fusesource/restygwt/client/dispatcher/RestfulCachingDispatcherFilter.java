@@ -31,7 +31,8 @@ import com.google.gwt.http.client.RequestBuilder;
  * <ul>
  * <li>POST /model : will get the user responds into the cache using the location header for the key</li>
  * <li>GET /model/{id} : will use the cached responds from cache if present</li>
- * <li>PUT /model/{id} : will put the responds from the server into the cache. a conflict will delete the cache entry to allow
+ * <li>PUT /model/{id} : will put the responds from the server into the cache. a conflict will delete the cache entry
+ * to allow
  * a get to retrieve the up to date data</li>
  * <li>DELETE /model/{id} : will also delete the resource in the cache</li>
  * </ul>
@@ -40,14 +41,13 @@ import com.google.gwt.http.client.RequestBuilder;
  */
 public class RestfulCachingDispatcherFilter extends CachingDispatcherFilter {
 
-    public RestfulCachingDispatcherFilter(QueueableCacheStorage cacheStorage,
-            CallbackFactory cf) {
+    public RestfulCachingDispatcherFilter(QueueableCacheStorage cacheStorage, CallbackFactory cf) {
         super(cacheStorage, cf);
     }
-    
+
     @Override
-    protected CacheKey cacheKey(RequestBuilder builder){
-        if (RequestBuilder.GET.toString().equalsIgnoreCase(builder.getHTTPMethod())){
+    protected CacheKey cacheKey(RequestBuilder builder) {
+        if (RequestBuilder.GET.toString().equalsIgnoreCase(builder.getHTTPMethod())) {
             return new UrlCacheKey(builder);
         }
         return null;

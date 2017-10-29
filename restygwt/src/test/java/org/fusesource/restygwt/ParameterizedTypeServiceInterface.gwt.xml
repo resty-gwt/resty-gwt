@@ -19,16 +19,18 @@
 -->
 
 <module>
-    <inherits name='com.google.gwt.user.User' />
+    <inherits name='com.google.gwt.user.User'/>
     <inherits name='com.google.gwt.logging.Logging'/>
     <inherits name='org.fusesource.restygwt.RestyGWT'/>
-    
-    <servlet path='/api/ptype/int' class='org.fusesource.restygwt.server.complex.ParameterizedTypeServlet$IntServlet' />
-    <servlet path='/api/ptype/thing' class='org.fusesource.restygwt.server.complex.ParameterizedTypeServlet$ThingServlet' />
-    <servlet path='/api/concrete/echo' class='org.fusesource.restygwt.server.complex.ParameterizedTypeServlet$EchoNameServlet' />
-    
+
+    <servlet path='/api/ptype/int' class='org.fusesource.restygwt.server.complex.ParameterizedTypeServlet$IntServlet'/>
+    <servlet path='/api/ptype/thing'
+             class='org.fusesource.restygwt.server.complex.ParameterizedTypeServlet$ThingServlet'/>
+    <servlet path='/api/concrete/echo'
+             class='org.fusesource.restygwt.server.complex.ParameterizedTypeServlet$EchoNameServlet'/>
+
     <extend-configuration-property name='org.fusesource.restygwt.jsontypeidresolver'
-    	value='org.fusesource.restygwt.server.complex.InterfaceAndImplementationRestyTypeResolver' />
+                                   value='org.fusesource.restygwt.server.complex.InterfaceAndImplementationRestyTypeResolver'/>
 
     <source path='client'/>
     <source path='example/client'/>

@@ -69,7 +69,7 @@ import junit.framework.TestCase;
  * </ul>
  * </p>
  *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>
  */
 public class GwtCompleteTestSuite extends TestCase {
 

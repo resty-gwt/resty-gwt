@@ -23,8 +23,7 @@ import com.google.gwt.http.client.RequestBuilder;
 public final class ComplexCacheKey extends SimpleCacheKey {
 
     public ComplexCacheKey(RequestBuilder requestBuilder) {
-        super(requestBuilder.getHTTPMethod() + 
-                " " + requestBuilder.getUrl() + 
-                " [" + requestBuilder.getRequestData() + "]");
+        super(requestBuilder.getHTTPMethod() + " " + requestBuilder.getUrl() + " [" + requestBuilder.getRequestData() +
+            "]");
     }
 }

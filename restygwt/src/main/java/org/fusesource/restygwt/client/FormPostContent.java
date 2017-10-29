@@ -11,23 +11,21 @@ public class FormPostContent {
             return;
         }
 
-        textContent.append((ampersand ? "&" : "") +
-                URL.encodeQueryString(name) +
-                "=" +
-                URL.encodeQueryString(value));
+        textContent.append((ampersand ? "&" : "") + URL.encodeQueryString(name) + "=" + URL.encodeQueryString(value));
         ampersand = true;
     }
 
     public void addParameters(String key, Iterable<String> values) {
-        if (values == null)
+        if (values == null) {
             return;
+        }
         key = URL.encodeQueryString(key);
         for (String value : values) {
-            if (value == null)
+            if (value == null) {
                 continue;
+            }
 
-            textContent.append((ampersand ? "&" : "") + key + "="
-                    + URL.encodeQueryString(value));
+            textContent.append((ampersand ? "&" : "") + key + "=" + URL.encodeQueryString(value));
             ampersand = true;
         }
     }

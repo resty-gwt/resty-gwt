@@ -23,7 +23,7 @@ import org.fusesource.restygwt.client.JsonEncoderDecoder;
 import com.google.gwt.core.client.GWT;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class OrderConfirmation {

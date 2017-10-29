@@ -35,7 +35,7 @@ public class RestfulCachingCallbackFilter extends CachingCallbackFilter {
     public RestfulCachingCallbackFilter(QueueableCacheStorage cache) {
         super(cache);
     }
-    
+
     @Override
     protected CacheKey cacheKey(RequestBuilder builder) {
         return new UrlCacheKey(builder);
@@ -45,31 +45,28 @@ public class RestfulCachingCallbackFilter extends CachingCallbackFilter {
     protected boolean isCachingStatusCode(final int code) {
         return code == Response.SC_CONFLICT || super.isCachingStatusCode(code);
     }
-    
+
     @Override
     protected void cacheResult(Method method, Response response) {
         final CacheKey cacheKey;
-        if (response.getStatusCode() == Response.SC_CREATED && response.getHeader("Location") != null){
+        if (response.getStatusCode() == Response.SC_CREATED && response.getHeader("Location") != null) {
             final String uri;
-            if(response.getHeader("Location").startsWith("http")){
+            if (response.getHeader("Location").startsWith("http")) {
                 uri = response.getHeader("Location");
-            }
-            else {
+            } else {
                 // TODO very fragile way of getting the URL
                 uri = method.builder.getUrl().replaceFirst("/[^/]*$", "") + response.getHeader("Location");
             }
             cacheKey = new UrlCacheKey(uri);
-        }
-        else {
+        } else {
             cacheKey = cacheKey(method.builder);
         }
-        if (RequestBuilder.DELETE.toString().equalsIgnoreCase(
-               method.builder.getHTTPMethod()) || 
-               // in case of a conflict the next GET request needs to
-               // go remote !!
-               response.getStatusCode() == Response.SC_CONFLICT) {
+        if (RequestBuilder.DELETE.toString().equalsIgnoreCase(method.builder.getHTTPMethod()) ||
+            // in case of a conflict the next GET request needs to
+            // go remote !!
+            response.getStatusCode() == Response.SC_CONFLICT) {
             cache.remove(cacheKey);
-        } else if (method.builder.getUrl().matches(".*/[0-9]+$")){
+        } else if (method.builder.getUrl().matches(".*/[0-9]+$")) {
             // if url has an ID at the end then treat it as single entity
             // otherwise assume a collection which are not cached.
             cache.putResult(cacheKey, response);

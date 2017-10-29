@@ -32,8 +32,8 @@ import org.fusesource.restygwt.examples.client.MapResult;
 import com.sun.jersey.spi.resource.Singleton;
 
 @Path("/mapservice")
-@Consumes( { MediaType.APPLICATION_JSON })
-@Produces( { MediaType.APPLICATION_JSON })
+@Consumes({ MediaType.APPLICATION_JSON })
+@Produces({ MediaType.APPLICATION_JSON })
 @Singleton
 public class MapService {
 

@@ -29,13 +29,13 @@ import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 public class InterfaceAndImplementationRestyTypeResolver implements RestyJsonTypeIdResolver {
     @Override
     public Map<String, Class<?>> getIdClassMap() {
-	Map<String, Class<?>> map = new HashMap<String, Class<?>>();
-	map.put("implementation", DTOImplementation.class);
-	return map;
+        Map<String, Class<?>> map = new HashMap<String, Class<?>>();
+        map.put("implementation", DTOImplementation.class);
+        return map;
     }
 
     @Override
     public Class<? extends TypeIdResolver> getTypeIdResolverClass() {
-	return InterfaceAndImplementationTypeResolver.class;
+        return InterfaceAndImplementationTypeResolver.class;
     }
 }

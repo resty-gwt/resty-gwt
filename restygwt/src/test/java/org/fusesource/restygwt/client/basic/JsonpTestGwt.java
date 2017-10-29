@@ -34,7 +34,7 @@ import com.google.gwt.user.client.Timer;
 
 /**
  *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>
  * @author Ralf Sommer {@literal <ralf.sommer.dev@gmail.com>}
  *
  */
@@ -78,8 +78,9 @@ public class JsonpTestGwt extends GWTTestCase {
      * HtmlUnit execute synchronously. Should be async.
      * <p>
      * Run manually with -Dgwt.args="-prod -runStyle Manual:1" works as expected
-     * 
-     * @see <a href="https://github.com/gwtproject/gwt/blob/138c60c7625a9403f34bd9616cea483fbdbeb2f0/user/test/com/google/gwt/jsonp/client/JsonpRequestTest.java#L191">GWT JsonpRequestTest.java</a>
+     *
+     * @see
+     * <a href="https://github.com/gwtproject/gwt/blob/138c60c7625a9403f34bd9616cea483fbdbeb2f0/user/test/com/google/gwt/jsonp/client/JsonpRequestTest.java#L191">GWT JsonpRequestTest.java</a>
      */
     @DoNotRunWith(Platform.HtmlUnitBug)
     public void testCancel() {

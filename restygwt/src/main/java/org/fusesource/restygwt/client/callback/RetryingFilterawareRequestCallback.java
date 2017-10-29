@@ -51,8 +51,7 @@ public class RetryingFilterawareRequestCallback extends DefaultFilterawareReques
         super(method);
     }
 
-    public RetryingFilterawareRequestCallback(Method method,
-            int gracePeriodMillis, int numberOfRetries) {
+    public RetryingFilterawareRequestCallback(Method method, int gracePeriodMillis, int numberOfRetries) {
         super(method);
         this.gracePeriod = gracePeriodMillis;
         this.numberOfRetries = numberOfRetries;
@@ -60,40 +59,37 @@ public class RetryingFilterawareRequestCallback extends DefaultFilterawareReques
 
     @Override
     public final void doError(Request request, Response response) {
-            int code = response.getStatusCode();
-            /*
-             * retry only on GET requests that are no redirects (301, 302, 303)
-             */
-            if (code != 301
-                    && code != 302
-                    && code != 303
-                    && code != 404
-                    && (method.builder == null // jsonp method do not have a builder !! 
-                            || method.builder.getHTTPMethod().equalsIgnoreCase("get"))) {
-                handleErrorGracefully(request, response, requestCallback);
-            } else {
-                if (LogConfiguration.loggingIsEnabled()) {
-                    Logger.getLogger(RetryingFilterawareRequestCallback.class.getName()).severe(
-                            "ERROR with non-GET method: " + method.builder.getHTTPMethod() + " "
-                            + method.builder.getUrl() + ", " + response.getStatusText());
-                }
-
-                /*
-                 *  RuntimeException token from
-                 *  com.google.gwt.http.client.Request#fireOnResponseReceived()
-                 */
-                requestCallback.onError(request, new FailedStatusCodeException(response.getStatusText(), response.getStatusCode()));
+        int code = response.getStatusCode();
+        /**
+         * retry only on GET requests that are no redirects (301, 302, 303)
+         */
+        if (code != 301 && code != 302 && code != 303 && code != 404 &&
+            (method.builder == null // jsonp method do not have a builder !!
+                || method.builder.getHTTPMethod().equalsIgnoreCase("get"))) {
+            handleErrorGracefully(request, response, requestCallback);
+        } else {
+            if (LogConfiguration.loggingIsEnabled()) {
+                Logger.getLogger(RetryingFilterawareRequestCallback.class.getName()).severe(
+                    "ERROR with non-GET method: " + method.builder.getHTTPMethod() + " " + method.builder.getUrl() +
+                        ", " + response.getStatusText());
             }
+
+            /**
+             *  RuntimeException token from
+             *  com.google.gwt.http.client.Request#fireOnResponseReceived()
+             */
+            requestCallback
+                .onError(request, new FailedStatusCodeException(response.getStatusText(), response.getStatusCode()));
+        }
     }
 
-    private void handleErrorGracefully(Request request, Response response,
-            RequestCallback requestCallback) {
+    private void handleErrorGracefully(Request request, Response response, RequestCallback requestCallback) {
         // error handling...:
         if (currentRetryCounter < numberOfRetries) {
             if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(RetryingFilterawareRequestCallback.class.getName()).severe(
-                        "error handling in progress for: " + method.builder.getHTTPMethod()
-                        + " " + method.builder.getUrl());
+                    "error handling in progress for: " + method.builder.getHTTPMethod() + " " +
+                        method.builder.getUrl());
             }
 
             currentRetryCounter++;
@@ -106,7 +102,7 @@ public class RetryingFilterawareRequestCallback extends DefaultFilterawareReques
                     } catch (RequestException ex) {
                         if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                             Logger.getLogger(RetryingFilterawareRequestCallback.class.getName())
-                                    .severe(ex.getMessage());
+                                .severe(ex.getMessage());
                         }
                     }
                 }
@@ -116,18 +112,16 @@ public class RetryingFilterawareRequestCallback extends DefaultFilterawareReques
             gracePeriod = gracePeriod * 2;
         } else {
             if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
-                Logger.getLogger(RetryingFilterawareRequestCallback.class.getName()).severe("Request failed: "
-                        + method.builder.getHTTPMethod() + " " + method.builder.getUrl()
-                        + " after " + currentRetryCounter + " tries.");
+                Logger.getLogger(RetryingFilterawareRequestCallback.class.getName()).severe(
+                    "Request failed: " + method.builder.getHTTPMethod() + " " + method.builder.getUrl() + " after " +
+                        currentRetryCounter + " tries.");
             }
 
-            if (null != request
-                    && null != response
-                    && null != requestCallback) {
+            if (null != request && null != response && null != requestCallback) {
                 // got the original callback, call error here
-                requestCallback.onError(request, new RuntimeException("Response "
-                        + response.getStatusCode() + " for " + method.builder.getHTTPMethod() + " "
-                        + method.builder.getUrl() + " after " + numberOfRetries + " retries."));
+                requestCallback.onError(request, new RuntimeException(
+                    "Response " + response.getStatusCode() + " for " + method.builder.getHTTPMethod() + " " +
+                        method.builder.getUrl() + " after " + numberOfRetries + " retries."));
             } else {
                 // got no callback - well, goodbye
                 if (Window.confirm("something severly went wrong - error - reload page ?")) {

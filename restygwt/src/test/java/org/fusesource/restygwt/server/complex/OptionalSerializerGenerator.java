@@ -15,13 +15,14 @@ public class OptionalSerializerGenerator extends JsonEncoderDecoderClassCreator 
     private JClassType typeArg;
 
     public OptionalSerializerGenerator(TreeLogger logger, GeneratorContext context, JClassType source)
-            throws UnableToCompleteException {
+        throws UnableToCompleteException {
         super(logger, context, source);
     }
 
     private JClassType getTypeArg() throws UnableToCompleteException {
         JParameterizedType parameterizedType = source.isParameterized();
-        if (parameterizedType == null || parameterizedType.getTypeArgs() == null || parameterizedType.getTypeArgs().length == 0) {
+        if (parameterizedType == null || parameterizedType.getTypeArgs() == null ||
+            parameterizedType.getTypeArgs().length == 0) {
             getLogger().log(ERROR, "Optional types must be parameterized.");
             throw new UnableToCompleteException();
         }
@@ -39,23 +40,23 @@ public class OptionalSerializerGenerator extends JsonEncoderDecoderClassCreator 
 
     private void generateEncodeMethod() throws UnableToCompleteException {
         p("public " + JSON_VALUE_CLASS + " encode(" + source.getParameterizedQualifiedSourceName() + " value) {").i(1);
-            p("if (value == null) {").i(1);
-                p("return null;").i(-1);
-            p("}");
-            p("if (!value.isPresent()) {").i(1);
-                p("return null;").i(-1);
-            p("}");
-            p("return " + locator.encodeExpression(typeArg, "value.get()", Json.Style.DEFAULT) + ";").i(-1);
+        p("if (value == null) {").i(1);
+        p("return null;").i(-1);
+        p("}");
+        p("if (!value.isPresent()) {").i(1);
+        p("return null;").i(-1);
+        p("}");
+        p("return " + locator.encodeExpression(typeArg, "value.get()", Json.Style.DEFAULT) + ";").i(-1);
         p("}");
         p();
     }
 
     private void generateDecodeMethod() throws UnableToCompleteException {
         p("public " + source.getName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
-            p("if (value == null || value.isNull() != null ) {").i(1);
-                p("return Optional.absent();").i(-1);
-            p("}");
-            p("return Optional.of(" + locator.decodeExpression(typeArg, "value", Json.Style.DEFAULT) + ");").i(-1);
+        p("if (value == null || value.isNull() != null ) {").i(1);
+        p("return Optional.absent();").i(-1);
+        p("}");
+        p("return Optional.of(" + locator.decodeExpression(typeArg, "value", Json.Style.DEFAULT) + ");").i(-1);
         p("}");
         p();
     }

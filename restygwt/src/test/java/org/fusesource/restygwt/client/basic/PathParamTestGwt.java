@@ -47,7 +47,7 @@ public class PathParamTestGwt extends GWTTestCase {
     }
 
     static interface TestRestService extends RestService {
-        
+
         @Path("/get")
         void get(MethodCallback<Echo> callback);
 
@@ -56,61 +56,65 @@ public class PathParamTestGwt extends GWTTestCase {
 
         @Path("/get/{id}")
         void get(@PathParam(value = "id") Integer i, MethodCallback<Echo> callback);
-        
+
         @Path("/get/{id}")
         void get(@PathParam(value = "id") String i, MethodCallback<Echo> callback);
 
-        @GET @Path("/get/{id : \\d+}")
+        @GET
+        @Path("/get/{id : \\d+}")
         void getRegex(@PathParam(value = "id") Integer i, MethodCallback<Echo> callback);
 
-        @GET @Path("/get/{id : \\d+}/things/{thing: \\d+}")
-        void getRegexMultiParams(@PathParam(value = "id") Integer i, @PathParam(value = "thing") Integer t, MethodCallback<Echo> callback);
+        @GET
+        @Path("/get/{id : \\d+}/things/{thing: \\d+}")
+        void getRegexMultiParams(@PathParam(value = "id") Integer i, @PathParam(value = "thing") Integer t,
+                                 MethodCallback<Echo> callback);
 
-        @GET @Path("{url}")
+        @GET
+        @Path("{url}")
         void absolute(@PathParam(value = "url") String u, MethodCallback<Echo> callback);
     }
 
-    
-    private  MethodCallback<Echo> echoMethodCallback( final String path ){
-        return new MethodCallback<Echo>() {
-            
-        @Override
-        public void onSuccess(Method method, Echo response) {
-            assertEquals(response.path, path);
-            finishTest();
-        }
 
-        @Override
-        public void onFailure(Method method, Throwable exception) {
-            fail();
-        }
-    };
+    private MethodCallback<Echo> echoMethodCallback(final String path) {
+        return new MethodCallback<Echo>() {
+
+            @Override
+            public void onSuccess(Method method, Echo response) {
+                assertEquals(response.path, path);
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                fail();
+            }
+        };
     }
-    
+
     @Override
     protected void gwtSetUp() throws Exception {
-        super.gwtSetUp();        
-        service = GWT.create(TestRestService.class);  
+        super.gwtSetUp();
+        service = GWT.create(TestRestService.class);
         Resource resource = new Resource(GWT.getModuleBaseURL() + "echo");
         ((RestServiceProxy) service).setResource(resource);
     }
 
     public void testGet() {
-        
+
         service.get(echoMethodCallback("/get"));
         delayTestFinish(10000);
 
     }
 
     public void testGetWithInteger() {
-    
+
         service.get(new Integer(2), echoMethodCallback("/get/2"));
         delayTestFinish(10000);
 
     }
 
     public void testGetWithNull() {
-    
+
         service.get((String) null, echoMethodCallback("/get/null"));
         delayTestFinish(10000);
 
@@ -118,20 +122,20 @@ public class PathParamTestGwt extends GWTTestCase {
 
     public void testGetWithStringContainingSlashes() {
 
-        service.get("a\\b/c&", echoMethodCallback("/get/a\\b/c&") );
+        service.get("a\\b/c&", echoMethodCallback("/get/a\\b/c&"));
         delayTestFinish(10000);
 
     }
 
     public void testGetWithStringContainingSpaces() {
 
-        service.get("a b c", echoMethodCallback("/get/a b c") );
+        service.get("a b c", echoMethodCallback("/get/a b c"));
         delayTestFinish(10000);
 
     }
 
     public void testGetWithInt() {
-    
+
         service.get(123, echoMethodCallback("/get/123"));
         delayTestFinish(10000);
 
@@ -152,7 +156,7 @@ public class PathParamTestGwt extends GWTTestCase {
      */
     public void testAbsolute() {
         String absoluteUrl = "http://host:port/echo/somewhere";
-        service.absolute(absoluteUrl, echoMethodCallback("/" + absoluteUrl) );
+        service.absolute(absoluteUrl, echoMethodCallback("/" + absoluteUrl));
         delayTestFinish(10000);
     }
 

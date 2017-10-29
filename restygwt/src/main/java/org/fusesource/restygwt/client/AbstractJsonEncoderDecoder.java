@@ -163,7 +163,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             }
             final JSONString valueString = value.isString();
             if (valueString != null) {
-                 return Long.parseLong(valueString.stringValue());
+                return Long.parseLong(valueString.stringValue());
             }
             return (long) toDouble(value);
         }
@@ -234,55 +234,57 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         }
     };
 
-    public static final AbstractJsonEncoderDecoder<BigDecimal> BIG_DECIMAL = new AbstractJsonEncoderDecoder<BigDecimal>() {
+    public static final AbstractJsonEncoderDecoder<BigDecimal> BIG_DECIMAL =
+        new AbstractJsonEncoderDecoder<BigDecimal>() {
 
-        @Override
-        public BigDecimal decode(JSONValue value) throws DecodingException {
-            if (value == null || value.isNull() != null) {
-                return null;
+            @Override
+            public BigDecimal decode(JSONValue value) throws DecodingException {
+                if (value == null || value.isNull() != null) {
+                    return null;
+                }
+                return toBigDecimal(value);
             }
-            return toBigDecimal(value);
-        }
 
-        @Override
-        public JSONValue encode(BigDecimal value) throws EncodingException {
-            return (value == null) ? getNullType() : new JSONString(value.toString());
-        }
-    };
-
-    public static final AbstractJsonEncoderDecoder<BigInteger> BIG_INTEGER = new AbstractJsonEncoderDecoder<BigInteger>() {
-
-        @Override
-        public BigInteger decode(JSONValue value) throws DecodingException {
-            if (value == null || value.isNull() != null) {
-                return null;
+            @Override
+            public JSONValue encode(BigDecimal value) throws EncodingException {
+                return (value == null) ? getNullType() : new JSONString(value.toString());
             }
-            JSONNumber number = value.isNumber();
-            if (number == null) {
-                JSONString str = value.isString();
-                if (str == null) {
-                    throw new DecodingException("Expected a json number r string, but was given: " + value);
+        };
+
+    public static final AbstractJsonEncoderDecoder<BigInteger> BIG_INTEGER =
+        new AbstractJsonEncoderDecoder<BigInteger>() {
+
+            @Override
+            public BigInteger decode(JSONValue value) throws DecodingException {
+                if (value == null || value.isNull() != null) {
+                    return null;
+                }
+                JSONNumber number = value.isNumber();
+                if (number == null) {
+                    JSONString str = value.isString();
+                    if (str == null) {
+                        throw new DecodingException("Expected a json number r string, but was given: " + value);
+                    }
+
+                    // Doing a straight conversion from string to BigInteger will
+                    // not work for large values
+                    // So we convert to BigDecimal first and then convert it to
+                    // BigInteger.
+                    return new BigDecimal(str.stringValue()).toBigInteger();
                 }
 
-                // Doing a straight conversion from string to BigInteger will
-                // not work for large values
+                // Doing a straight conversion from string to BigInteger will not
+                // work for large values
                 // So we convert to BigDecimal first and then convert it to
                 // BigInteger.
-                return new BigDecimal(str.stringValue()).toBigInteger();
+                return new BigDecimal(value.toString()).toBigInteger();
             }
 
-            // Doing a straight conversion from string to BigInteger will not
-            // work for large values
-            // So we convert to BigDecimal first and then convert it to
-            // BigInteger.
-            return new BigDecimal(value.toString()).toBigInteger();
-        }
-
-        @Override
-        public JSONValue encode(BigInteger value) throws EncodingException {
-            return (value == null) ? getNullType() : new JSONString(value.toString());
-        }
-    };
+            @Override
+            public JSONValue encode(BigInteger value) throws EncodingException {
+                return (value == null) ? getNullType() : new JSONString(value.toString());
+            }
+        };
 
     public static final AbstractJsonEncoderDecoder<Document> DOCUMENT = new AbstractJsonEncoderDecoder<Document>() {
 
@@ -324,9 +326,9 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             if (value == null || value.isNull() != null) {
                 return null;
             }
-            
+
             String format = Defaults.getDateFormat();
-            
+
             if (format == null) {
                 JSONNumber num = value.isNumber();
                 if (num == null) {
@@ -334,20 +336,20 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
                 }
                 return new Date((long) num.doubleValue());
             }
-            
+
             JSONString str = value.isString();
             if (str == null) {
                 throw new DecodingException("Expected a json string, but was given: " + value);
             }
-            
+
             if (Defaults.getTimeZone() == null || Defaults.dateFormatHasTimeZone()) {
                 return DateTimeFormat.getFormat(format).parse(str.stringValue());
             }
             // We need to provide time zone information to the GWT date parser.
             // Unfortunately, DateTimeFormat has no overload specifying a TimeZone,
             // so the only way is to extend the format string.
-            return DateTimeFormat.getFormat(format + " v").parse(
-                    str.stringValue() + " " + Defaults.getTimeZone().getID());
+            return DateTimeFormat.getFormat(format + " v")
+                .parse(str.stringValue() + " " + Defaults.getTimeZone().getID());
         }
 
         @Override
@@ -355,13 +357,13 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             if (value == null) {
                 return getNullType();
             }
-            
+
             String format = Defaults.getDateFormat();
-            
+
             if (format == null) {
                 return new JSONNumber(value.getTime());
             }
-            
+
             if (Defaults.getTimeZone() == null || Defaults.dateFormatHasTimeZone()) {
                 return new JSONString(DateTimeFormat.getFormat(format).format(value));
             }
@@ -374,19 +376,19 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
     // /////////////////////////////////////////////////////////////////
 
     static public BigDecimal toBigDecimal(JSONValue value) {
-    	JSONNumber number = value.isNumber();
-    	if (number != null) {
-    		return new BigDecimal(number.toString());
-    	}
-        
+        JSONNumber number = value.isNumber();
+        if (number != null) {
+            return new BigDecimal(number.toString());
+        }
+
         JSONString string = value.isString();
         if (string != null) {
             try {
-            	return new BigDecimal(string.stringValue());
+                return new BigDecimal(string.stringValue());
             } catch (NumberFormatException e) {
             }
         }
-        
+
         throw new DecodingException("Expected a json number, but was given: " + value);
     }
 
@@ -394,11 +396,10 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         JSONNumber number = value.isNumber();
         if (number == null) {
             JSONString val = value.isString();
-            if (val != null){
+            if (val != null) {
                 try {
                     return Double.parseDouble(val.stringValue());
-                }
-                catch(NumberFormatException e){
+                } catch (NumberFormatException e) {
                     // just through exception below
                 }
             }
@@ -427,19 +428,19 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         }
         return toObject(result);
     }
-    
+
     static JSONArray asArray(JSONValue value) {
         JSONArray array = value.isArray();
         if (array == null) {
-        	//Jersey render arrays with one object as object and not as array.
-        	JSONObject object = value.isObject();
-        	if(object == null){
-        		throw new DecodingException("Expected a json array, but was given: " + value);
-        	}
-        	//Found a object and return it as array.
-        	array = new JSONArray();
-        	array.set(0, object);
-        }        
+            //Jersey render arrays with one object as object and not as array.
+            JSONObject object = value.isObject();
+            if (object == null) {
+                throw new DecodingException("Expected a json array, but was given: " + value);
+            }
+            //Found a object and return it as array.
+            array = new JSONArray();
+            array.set(0, object);
+        }
         return array;
     }
 
@@ -539,9 +540,9 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         if (value == null || value.isNull() != null) {
             return null;
         }
-        
+
         if (value.isString() != null) {
-           return Base64Codec.decode(value.isString().stringValue());
+            return Base64Codec.decode(value.isString().stringValue());
         }
         JSONArray array = asArray(value);
         int size = array.size();
@@ -600,194 +601,202 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         return rc;
     }
 
-    static public <Type> Map<String, Type> toMap(JSONValue value, AbstractJsonEncoderDecoder<Type> encoder, Style style) {
+    static public <Type> Map<String, Type> toMap(JSONValue value, AbstractJsonEncoderDecoder<Type> encoder,
+                                                 Style style) {
         if (value == null || value.isNull() != null) {
             return null;
         }
 
         switch (style) {
-        case DEFAULT:
-        case SIMPLE: {
-            JSONObject object = value.isObject();
-            if (object == null) {
-                throw new DecodingException("Expected a json object, but was given: " + value);
-            }
+            case DEFAULT:
+            case SIMPLE: {
+                JSONObject object = value.isObject();
+                if (object == null) {
+                    throw new DecodingException("Expected a json object, but was given: " + value);
+                }
 
-            HashMap<String, Type> rc = new HashMap<String, Type>(object.size() * 2);
-            for (String key : object.keySet()) {
-                rc.put(key, encoder.decode(object.get(key)));
+                HashMap<String, Type> rc = new HashMap<String, Type>(object.size() * 2);
+                for (String key : object.keySet()) {
+                    rc.put(key, encoder.decode(object.get(key)));
+                }
+                return rc;
             }
-            return rc;
-        }
-        case JETTISON_NATURAL: {
-            JSONObject object = value.isObject();
-            if (object == null) {
-                throw new DecodingException("Expected a json object, but was given: " + value);
-            }
-            value = object.get("entry");
-            if (value == null) {
-                throw new DecodingException("Expected an entry array not found");
-            }
-            JSONArray entries = value.isArray();
-            if (entries == null) {
-                throw new DecodingException("Expected an entry array, but was given: " + value);
-            }
+            case JETTISON_NATURAL: {
+                JSONObject object = value.isObject();
+                if (object == null) {
+                    throw new DecodingException("Expected a json object, but was given: " + value);
+                }
+                value = object.get("entry");
+                if (value == null) {
+                    throw new DecodingException("Expected an entry array not found");
+                }
+                JSONArray entries = value.isArray();
+                if (entries == null) {
+                    throw new DecodingException("Expected an entry array, but was given: " + value);
+                }
 
-            HashMap<String, Type> rc = new HashMap<String, Type>(object.size() * 2);
-            for (int i = 0; i < entries.size(); i++) {
-                JSONObject entry = entries.get(i).isObject();
-                if (entry == null)
-                    throw new DecodingException("Expected an entry object, but was given: " + value);
-                JSONValue key = entry.get("key");
-                if (key == null)
-                    throw new DecodingException("Expected an entry key field not found");
-                JSONString k = key.isString();
-                if (k == null)
-                    throw new DecodingException("Expected an entry key to be a string, but was given: " + value);
+                HashMap<String, Type> rc = new HashMap<String, Type>(object.size() * 2);
+                for (int i = 0; i < entries.size(); i++) {
+                    JSONObject entry = entries.get(i).isObject();
+                    if (entry == null) {
+                        throw new DecodingException("Expected an entry object, but was given: " + value);
+                    }
+                    JSONValue key = entry.get("key");
+                    if (key == null) {
+                        throw new DecodingException("Expected an entry key field not found");
+                    }
+                    JSONString k = key.isString();
+                    if (k == null) {
+                        throw new DecodingException("Expected an entry key to be a string, but was given: " + value);
+                    }
 
-                rc.put(k.stringValue(), encoder.decode(entry.get("value")));
+                    rc.put(k.stringValue(), encoder.decode(entry.get("value")));
+                }
+                return rc;
             }
-            return rc;
-        }
-        default:
-            throw new UnsupportedOperationException("The encoding style is not yet suppored: " + style.name());
+            default:
+                throw new UnsupportedOperationException("The encoding style is not yet suppored: " + style.name());
         }
     }
 
     static public <KeyType, ValueType> Map<KeyType, ValueType> toMap(JSONValue value,
-            AbstractJsonEncoderDecoder<KeyType> keyEncoder, AbstractJsonEncoderDecoder<ValueType> valueEncoder,
-            Style style) {
+                                                                     AbstractJsonEncoderDecoder<KeyType> keyEncoder,
+                                                                     AbstractJsonEncoderDecoder<ValueType> valueEncoder,
+                                                                     Style style) {
         if (value == null || value.isNull() != null) {
             return null;
         }
 
         switch (style) {
-        case DEFAULT:
-        case SIMPLE: {
-            JSONObject object = value.isObject();
-            if (object == null) {
-                throw new DecodingException("Expected a json object, but was given: " + value);
-            }
+            case DEFAULT:
+            case SIMPLE: {
+                JSONObject object = value.isObject();
+                if (object == null) {
+                    throw new DecodingException("Expected a json object, but was given: " + value);
+                }
 
-            HashMap<KeyType, ValueType> rc = new HashMap<KeyType, ValueType>(object.size() * 2);
-            for (String key : object.keySet()) {
-                rc.put(keyEncoder.decode(key), valueEncoder.decode(object.get(key)));
+                HashMap<KeyType, ValueType> rc = new HashMap<KeyType, ValueType>(object.size() * 2);
+                for (String key : object.keySet()) {
+                    rc.put(keyEncoder.decode(key), valueEncoder.decode(object.get(key)));
+                }
+                return rc;
             }
-            return rc;
-        }
-        case JETTISON_NATURAL: {
-            JSONObject object = value.isObject();
-            if (object == null) {
-                throw new DecodingException("Expected a json object, but was given: " + value);
-            }
-            value = object.get("entry");
-            if (value == null) {
-                throw new DecodingException("Expected an entry array not found");
-            }
-            JSONArray entries = value.isArray();
-            if (entries == null) {
-                throw new DecodingException("Expected an entry array, but was given: " + value);
-            }
+            case JETTISON_NATURAL: {
+                JSONObject object = value.isObject();
+                if (object == null) {
+                    throw new DecodingException("Expected a json object, but was given: " + value);
+                }
+                value = object.get("entry");
+                if (value == null) {
+                    throw new DecodingException("Expected an entry array not found");
+                }
+                JSONArray entries = value.isArray();
+                if (entries == null) {
+                    throw new DecodingException("Expected an entry array, but was given: " + value);
+                }
 
-            HashMap<KeyType, ValueType> rc = new HashMap<KeyType, ValueType>(object.size() * 2);
-            for (int i = 0; i < entries.size(); i++) {
-                JSONObject entry = entries.get(i).isObject();
-                if (entry == null)
-                    throw new DecodingException("Expected an entry object, but was given: " + value);
-                JSONValue key = entry.get("key");
-                if (key == null)
-                    throw new DecodingException("Expected an entry key field not found");
-                JSONString k = key.isString();
-                if (k == null)
-                    throw new DecodingException("Expected an entry key to be a string, but was given: " + value);
-                rc.put(keyEncoder.decode(k.stringValue()), valueEncoder.decode(entry.get("value")));
+                HashMap<KeyType, ValueType> rc = new HashMap<KeyType, ValueType>(object.size() * 2);
+                for (int i = 0; i < entries.size(); i++) {
+                    JSONObject entry = entries.get(i).isObject();
+                    if (entry == null) {
+                        throw new DecodingException("Expected an entry object, but was given: " + value);
+                    }
+                    JSONValue key = entry.get("key");
+                    if (key == null) {
+                        throw new DecodingException("Expected an entry key field not found");
+                    }
+                    JSONString k = key.isString();
+                    if (k == null) {
+                        throw new DecodingException("Expected an entry key to be a string, but was given: " + value);
+                    }
+                    rc.put(keyEncoder.decode(k.stringValue()), valueEncoder.decode(entry.get("value")));
+                }
+                return rc;
             }
-            return rc;
-        }
-        default:
-            throw new UnsupportedOperationException("The encoding style is not yet supported: " + style.name());
+            default:
+                throw new UnsupportedOperationException("The encoding style is not yet supported: " + style.name());
         }
     }
 
     // TODO(sbeutel): new map method to handle other key values than String
     static public <KeyType, ValueType> JSONValue toJSON(Map<KeyType, ValueType> value,
-            AbstractJsonEncoderDecoder<? super KeyType> keyEncoder, AbstractJsonEncoderDecoder<? super ValueType> valueEncoder,
-            Style style) {
+                                                        AbstractJsonEncoderDecoder<? super KeyType> keyEncoder,
+                                                        AbstractJsonEncoderDecoder<? super ValueType> valueEncoder,
+                                                        Style style) {
         if (value == null) {
             return getNullType();
         }
 
         switch (style) {
-        case DEFAULT:
-        case SIMPLE: {
-            JSONObject rc = new JSONObject();
-            
-            for (Entry<KeyType, ValueType> t : value.entrySet()) {
-                //TODO find a way to check only once
-                JSONValue k = keyEncoder.encode(t.getKey());
-                if (k.isString() != null) {
-                    rc.put(k.isString().stringValue(), valueEncoder.encode(t.getValue()));
+            case DEFAULT:
+            case SIMPLE: {
+                JSONObject rc = new JSONObject();
+
+                for (Entry<KeyType, ValueType> t : value.entrySet()) {
+                    //TODO find a way to check only once
+                    JSONValue k = keyEncoder.encode(t.getKey());
+                    if (k.isString() != null) {
+                        rc.put(k.isString().stringValue(), valueEncoder.encode(t.getValue()));
+                    } else {
+                        rc.put(k.toString(), valueEncoder.encode(t.getValue()));
+                    }
                 }
-                else {
-                    rc.put(k.toString(), valueEncoder.encode(t.getValue()));
-                }
+                return rc;
             }
-            return rc;
-        }
-        case JETTISON_NATURAL: {
-            JSONObject rc = new JSONObject();
-            JSONArray entries = new JSONArray();
-            int i = 0;
-            for (Entry<KeyType, ValueType> t : value.entrySet()) {
-                JSONObject entry = new JSONObject();
-                //TODO find a way to check only once
-                JSONValue k = keyEncoder.encode(t.getKey());
-                if (k.isString() != null) {
-                    entry.put("key", k);
+            case JETTISON_NATURAL: {
+                JSONObject rc = new JSONObject();
+                JSONArray entries = new JSONArray();
+                int i = 0;
+                for (Entry<KeyType, ValueType> t : value.entrySet()) {
+                    JSONObject entry = new JSONObject();
+                    //TODO find a way to check only once
+                    JSONValue k = keyEncoder.encode(t.getKey());
+                    if (k.isString() != null) {
+                        entry.put("key", k);
+                    } else {
+                        entry.put("key", new JSONString(k.toString()));
+                    }
+                    entry.put("value", valueEncoder.encode(t.getValue()));
+                    entries.set(i++, entry);
                 }
-                else {
-                    entry.put("key", new JSONString(k.toString()));
-                }
-                entry.put("value", valueEncoder.encode(t.getValue()));
-                entries.set(i++, entry);
+                rc.put("entry", entries);
+                return rc;
             }
-            rc.put("entry", entries);
-            return rc;
-        }
-        default:
-            throw new UnsupportedOperationException("The encoding style is not yet supported: " + style.name());
+            default:
+                throw new UnsupportedOperationException("The encoding style is not yet supported: " + style.name());
         }
     }
 
-    static public <Type> JSONValue toJSON(Map<String, Type> value, AbstractJsonEncoderDecoder<Type> encoder, Style style) {
+    static public <Type> JSONValue toJSON(Map<String, Type> value, AbstractJsonEncoderDecoder<Type> encoder,
+                                          Style style) {
         if (value == null) {
             return getNullType();
         }
 
         switch (style) {
-        case DEFAULT:
-        case SIMPLE: {
-            JSONObject rc = new JSONObject();
-            for (Entry<String, Type> t : value.entrySet()) {
-                rc.put(t.getKey(), encoder.encode(t.getValue()));
+            case DEFAULT:
+            case SIMPLE: {
+                JSONObject rc = new JSONObject();
+                for (Entry<String, Type> t : value.entrySet()) {
+                    rc.put(t.getKey(), encoder.encode(t.getValue()));
+                }
+                return rc;
             }
-            return rc;
-        }
-        case JETTISON_NATURAL: {
-            JSONObject rc = new JSONObject();
-            JSONArray entries = new JSONArray();
-            int i = 0;
-            for (Entry<String, Type> t : value.entrySet()) {
-                JSONObject entry = new JSONObject();
-                entry.put("key", new JSONString(t.getKey()));
-                entry.put("value", encoder.encode(t.getValue()));
-                entries.set(i++, entry);
+            case JETTISON_NATURAL: {
+                JSONObject rc = new JSONObject();
+                JSONArray entries = new JSONArray();
+                int i = 0;
+                for (Entry<String, Type> t : value.entrySet()) {
+                    JSONObject entry = new JSONObject();
+                    entry.put("key", new JSONString(t.getKey()));
+                    entry.put("value", encoder.encode(t.getValue()));
+                    entries.set(i++, entry);
+                }
+                rc.put("entry", entries);
+                return rc;
             }
-            rc.put("entry", entries);
-            return rc;
-        }
-        default:
-            throw new UnsupportedOperationException("The encoding style is not yet suppored: " + style.name());
+            default:
+                throw new UnsupportedOperationException("The encoding style is not yet suppored: " + style.name());
         }
     }
 
@@ -862,7 +871,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         }
         return rc;
     }
-    
+
     static public <Type> JSONValue toJSON(double[] value, AbstractJsonEncoderDecoder<Type> encoder) {
         if (value == null) {
             return getNullType();
@@ -903,9 +912,9 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         if (value == null) {
             return getNullType();
         }
-        
+
         if (Defaults.isByteArraysToBase64()) {
-           return new JSONString(Base64Codec.encode(value));
+            return new JSONString(Base64Codec.encode(value));
         }
         JSONArray rc = new JSONArray();
         int i = 0;
@@ -915,32 +924,35 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         return rc;
     }
 
-    static protected short getValueToSetForShort(Short value, int defaultValue){
-    	if(value == null)
-    		return (short)defaultValue;
-    	return value;
-    }
-    
-    static protected <T extends Object> T getValueToSet(T value, T defaultValue) {
-    	if(value instanceof JSONNull || value == null)
-    		return defaultValue;
+    static protected short getValueToSetForShort(Short value, int defaultValue) {
+        if (value == null) {
+            return (short) defaultValue;
+        }
         return value;
     }
-    
-    static protected void isNotNullValuePut(JSONValue object, JSONObject value, String jsonName) {
-    	if(object != null)
-    		value.put(jsonName, object);
+
+    static protected <T extends Object> T getValueToSet(T value, T defaultValue) {
+        if (value instanceof JSONNull || value == null) {
+            return defaultValue;
+        }
+        return value;
     }
-    
+
+    static protected void isNotNullValuePut(JSONValue object, JSONObject value, String jsonName) {
+        if (object != null) {
+            value.put(jsonName, object);
+        }
+    }
+
     static protected boolean isNotNullAndCheckDefaults(Object object, JSONObject value, String jsonName) {
-    	if(object != null)
-    		return true;
-    	else if(Defaults.doesIgnoreJsonNulls())
-    		return false;
-    	else {
-    		value.put(jsonName, JSONNull.getInstance());
-    		return false;
-    	}
+        if (object != null) {
+            return true;
+        } else if (Defaults.doesIgnoreJsonNulls()) {
+            return false;
+        } else {
+            value.put(jsonName, JSONNull.getInstance());
+            return false;
+        }
     }
 
     static protected JSONNull getNullType() {

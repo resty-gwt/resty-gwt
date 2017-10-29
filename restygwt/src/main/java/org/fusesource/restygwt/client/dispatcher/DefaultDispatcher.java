@@ -45,14 +45,13 @@ import com.google.gwt.logging.client.LogConfiguration;
 public class DefaultDispatcher implements Dispatcher {
 
     public static final DefaultDispatcher INSTANCE = new DefaultDispatcher();
-    
+
     @Override
     public Request send(Method method, RequestBuilder builder) throws RequestException {
-        if(GWT.isClient() && LogConfiguration.loggingIsEnabled() ){
-            Logger logger = Logger.getLogger( DefaultDispatcher.class.getName() );
-            logger.fine("Sending http request: " + builder.getHTTPMethod() + " "
-                + builder.getUrl() + " ,timeout:"
-                + builder.getTimeoutMillis());
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
+            Logger logger = Logger.getLogger(DefaultDispatcher.class.getName());
+            logger.fine("Sending http request: " + builder.getHTTPMethod() + " " + builder.getUrl() + " ,timeout:" +
+                builder.getTimeoutMillis());
 
             String content = builder.getRequestData();
             if (content != null && content.length() > 0) {

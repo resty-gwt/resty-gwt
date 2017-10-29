@@ -20,8 +20,8 @@
 -->
 
 <module rename-to='example'>
-  <inherits name='com.google.gwt.user.User' />
-  <inherits name="org.fusesource.restygwt.RestyGWT" />
-  
-  <servlet path='/rest' class='org.fusesource.restygwt.examples.server.CxfServlet'/>  
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name="org.fusesource.restygwt.RestyGWT"/>
+
+    <servlet path='/rest' class='org.fusesource.restygwt.examples.server.CxfServlet'/>
 </module>

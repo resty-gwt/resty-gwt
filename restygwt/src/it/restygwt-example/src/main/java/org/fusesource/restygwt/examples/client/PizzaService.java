@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 @Path("/pizza-service")
@@ -44,12 +44,12 @@ public interface PizzaService extends RestService {
 
     @GET
     @Path("/toppings")
-    @Produces( MediaType.APPLICATION_JSON )
+    @Produces(MediaType.APPLICATION_JSON)
     public void listToppings(MethodCallback<List<Topping>> callback);
 
     @OPTIONS
     @Path("/crusts")
-    @Produces( MediaType.APPLICATION_JSON )
+    @Produces(MediaType.APPLICATION_JSON)
     public void getCurstPrices(Crust crust, MethodCallback<Map<Integer, Double>> callback);
 
     @DELETE

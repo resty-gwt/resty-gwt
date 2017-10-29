@@ -32,7 +32,7 @@ import org.junit.Test;
 /**
  *
  *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>
  *
  */
 public class BasicTestGwt extends GWTTestCase {
@@ -95,7 +95,7 @@ public class BasicTestGwt extends GWTTestCase {
                 finishTest();
             }
         }.schedule(10000);
-        
+
         // wait... we are in async testing...
         delayTestFinish(15000);
     }

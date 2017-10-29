@@ -31,7 +31,7 @@ import com.google.gwt.json.client.JSONValue;
 /**
  * This test verifies that all the http methods can be accessed via a
  * RestService.
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class JsonpTestGWT extends UITestGWT {

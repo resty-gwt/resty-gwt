@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * This servlet is a horible hack to integrate jersey /w gwt hosted mode junit
  * tests.
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class JerseyServlet extends com.sun.jersey.spi.container.servlet.ServletContainer {
@@ -40,8 +40,10 @@ public class JerseyServlet extends com.sun.jersey.spi.container.servlet.ServletC
     private static final long serialVersionUID = -273961734543645503L;
 
     private static Properties initParams = new Properties();
+
     static {
-        initParams.put("com.sun.jersey.config.property.packages", "org.fusesource.restygwt.examples.server;org.codehaus.jackson.jaxrs");
+        initParams.put("com.sun.jersey.config.property.packages",
+            "org.fusesource.restygwt.examples.server;org.codehaus.jackson.jaxrs");
     }
 
     public void init(final ServletConfig servletConfig) throws ServletException {

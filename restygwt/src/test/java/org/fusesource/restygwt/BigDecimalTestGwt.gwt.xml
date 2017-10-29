@@ -19,11 +19,11 @@
 -->
 
 <module>
-    <inherits name='com.google.gwt.user.User' />
+    <inherits name='com.google.gwt.user.User'/>
     <inherits name='com.google.gwt.logging.Logging'/>
     <inherits name='org.fusesource.restygwt.RestyGWT'/>
-    <servlet path='/api/bigdecimal' class='org.fusesource.restygwt.server.complex.BigDecimalDtoServlet' />
-    <servlet path='/api/biginteger' class='org.fusesource.restygwt.server.complex.BigIntegerDtoServlet' />
+    <servlet path='/api/bigdecimal' class='org.fusesource.restygwt.server.complex.BigDecimalDtoServlet'/>
+    <servlet path='/api/biginteger' class='org.fusesource.restygwt.server.complex.BigIntegerDtoServlet'/>
 
     <source path='client'/>
     <source path='example/client'/>

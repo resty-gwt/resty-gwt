@@ -78,8 +78,7 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
 
         @Override
         public String getHeadersAsString() {
-            return response.getHeadersAsString() + RESTY_CACHE_HEADER
-                    + "=true\r\n";
+            return response.getHeadersAsString() + RESTY_CACHE_HEADER + "=true\r\n";
         }
 
         @Override
@@ -116,12 +115,13 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
 
     /**
      * key-value hashmap for holding cache values. nothing special here.
-     * 
+     *
      * invalidated values will be dropped by timer
      */
     protected final Map<String, HashMap<CacheKey, Response>> cache = new HashMap<String, HashMap<CacheKey, Response>>();
 
-    private final Map<CacheKey, List<RequestCallback>> pendingCallbacks = new HashMap<CacheKey, List<RequestCallback>>();
+    private final Map<CacheKey, List<RequestCallback>> pendingCallbacks =
+        new HashMap<CacheKey, List<RequestCallback>>();
 
     @Override
     public Response getResultOrReturnNull(CacheKey key) {
@@ -146,8 +146,7 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
         putResult(key, response, DEFAULT_SCOPE);
     }
 
-    protected void putResult(final CacheKey key, final Response response,
-            final String scope) {
+    protected void putResult(final CacheKey key, final Response response, final String scope) {
         HashMap<CacheKey, Response> scoped = cache.get(scope);
 
         if (null == scoped) {
@@ -181,8 +180,7 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
     public void addCallback(final CacheKey k, final RequestCallback rc) {
         // init value of key if not there...
         if (!pendingCallbacks.containsKey(k)) {
-            pendingCallbacks
-                    .put(k, new java.util.LinkedList<RequestCallback>());
+            pendingCallbacks.put(k, new java.util.LinkedList<RequestCallback>());
         }
 
         // just add callbacks which are not already there
@@ -200,7 +198,7 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
     public void purge() {
         if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
             Logger.getLogger(DefaultQueueableCacheStorage.class.getName())
-                    .finer("remove " + cache.size() + " elements from cache.");
+                .finer("remove " + cache.size() + " elements from cache.");
         }
         cache.clear();
     }
@@ -210,8 +208,9 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
         HashMap<CacheKey, Response> scoped = cache.get(scope);
 
         // TODO handle timers in scoping too
-        if (null != scoped)
+        if (null != scoped) {
             scoped.clear();
+        }
     }
 
     @Override
@@ -231,12 +230,12 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
     private void doRemove(CacheKey key, String scope) {
         if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
             Logger.getLogger(DefaultQueueableCacheStorage.class.getName())
-                    .finer("removing cache-key " + key + " from scope \""
-                            + scope + "\"");
+                .finer("removing cache-key " + key + " from scope \"" + scope + "\"");
         }
 
         HashMap<CacheKey, Response> scoped = cache.get(scope);
-        if (null != scoped)
+        if (null != scoped) {
             scoped.remove(key);
+        }
     }
 }

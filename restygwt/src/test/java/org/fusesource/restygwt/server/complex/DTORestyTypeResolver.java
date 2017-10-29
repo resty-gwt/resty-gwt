@@ -32,16 +32,16 @@ import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 public class DTORestyTypeResolver implements RestyJsonTypeIdResolver {
     @Override
     public Map<String, Class<?>> getIdClassMap() {
-	Map<String, Class<?>> map = new HashMap<String, Class<?>>();
-	map.put("dto1", DTO1.class);
-	map.put("dto2", DTO2.class);
-	map.put("dtocustom1", DTOCustom1.class);
-	map.put("dtocustom2", DTOCustom2.class);
-	return map;
+        Map<String, Class<?>> map = new HashMap<String, Class<?>>();
+        map.put("dto1", DTO1.class);
+        map.put("dto2", DTO2.class);
+        map.put("dtocustom1", DTOCustom1.class);
+        map.put("dtocustom2", DTOCustom2.class);
+        return map;
     }
 
     @Override
     public Class<? extends TypeIdResolver> getTypeIdResolverClass() {
-	return DTOTypeResolver.class;
+        return DTOTypeResolver.class;
     }
 }

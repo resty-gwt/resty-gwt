@@ -23,7 +23,7 @@ import org.fusesource.restygwt.client.Method;
 /**
  * default callback factory with a given set of callback filters which
  * gets added to a new callback after creating it.
- * 
+ *
  * @author <a href="blog.mkristian.tk">Kristian</a>
  *
  */
@@ -43,10 +43,9 @@ public class DefaultCallbackFactory implements CallbackFactory {
      */
     @Override
     public FilterawareRequestCallback createCallback(Method method) {
-        final FilterawareRequestCallback callback = new DefaultFilterawareRequestCallback(
-                method);
+        final FilterawareRequestCallback callback = new DefaultFilterawareRequestCallback(method);
 
-        for(CallbackFilter filter: callbackFilters){
+        for (CallbackFilter filter : callbackFilters) {
             callback.addFilter(filter);
         }
         return callback;

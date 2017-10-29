@@ -37,51 +37,51 @@ public class JsonCreatorWithSubtypes extends GWTTestCase {
 
     @Override
     public String getModuleName() {
-	return "org.fusesource.restygwt.BasicTestGwt";
+        return "org.fusesource.restygwt.BasicTestGwt";
     }
 
     @JsonTypeInfo(use = Id.NAME, include = As.PROPERTY, property = "@type")
     @JsonSubTypes({ @Type(Thing1.class), @Type(Thing2.class) })
     public static abstract class AbstractThing {
-	private final String name;
+        private final String name;
 
-	protected AbstractThing(String name) {
-	    this.name = name;
-	}
+        protected AbstractThing(String name) {
+            this.name = name;
+        }
 
-	public String getName() {
-	    return name;
-	}
+        public String getName() {
+            return name;
+        }
     }
 
     @JsonTypeName("thing1")
     public static class Thing1 extends AbstractThing {
-	private final double value;
+        private final double value;
 
-	@JsonCreator
-	public Thing1(@JsonProperty("name") String name, @JsonProperty("value") double value) {
-	    super(name);
-	    this.value = value;
-	}
+        @JsonCreator
+        public Thing1(@JsonProperty("name") String name, @JsonProperty("value") double value) {
+            super(name);
+            this.value = value;
+        }
 
-	public double getValue() {
-	    return value;
-	}
+        public double getValue() {
+            return value;
+        }
     }
 
     @JsonTypeName("thing2")
     public static class Thing2 extends AbstractThing {
-	private final String value;
+        private final String value;
 
-	@JsonCreator
-	public Thing2(@JsonProperty("name") String name, @JsonProperty("value") String value) {
-	    super(name);
-	    this.value = value;
-	}
+        @JsonCreator
+        public Thing2(@JsonProperty("name") String name, @JsonProperty("value") String value) {
+            super(name);
+            this.value = value;
+        }
 
-	public String getValue() {
-	    return value;
-	}
+        public String getValue() {
+            return value;
+        }
     }
 
     public interface ThingCodec extends JsonEncoderDecoder<AbstractThing> {
@@ -89,20 +89,20 @@ public class JsonCreatorWithSubtypes extends GWTTestCase {
 
     @Test
     public void test() {
-	ThingCodec codec = GWT.create(ThingCodec.class);
-	
-	Thing1 t1 = new Thing1("Fred", 12.0);
-	JSONValue t1v = codec.encode(t1);
-	Thing1 t1a = (Thing1)codec.decode(t1v);
-	
-	assertEquals("name", t1.getName(), t1a.getName());
-	assertEquals("value", t1.getValue(), t1a.getValue(), 0.0);
-	
-	Thing2 t2 = new Thing2("Fred", "Bob");
-	JSONValue t2v = codec.encode(t2);
-	Thing2 t2a = (Thing2)codec.decode(t2v);
-	
-	assertEquals("name", t2.getName(), t2a.getName());
-	assertEquals("value", t2.getValue(), t2a.getValue());
+        ThingCodec codec = GWT.create(ThingCodec.class);
+
+        Thing1 t1 = new Thing1("Fred", 12.0);
+        JSONValue t1v = codec.encode(t1);
+        Thing1 t1a = (Thing1) codec.decode(t1v);
+
+        assertEquals("name", t1.getName(), t1a.getName());
+        assertEquals("value", t1.getValue(), t1a.getValue(), 0.0);
+
+        Thing2 t2 = new Thing2("Fred", "Bob");
+        JSONValue t2v = codec.encode(t2);
+        Thing2 t2a = (Thing2) codec.decode(t2v);
+
+        assertEquals("name", t2.getName(), t2a.getName());
+        assertEquals("value", t2.getValue(), t2a.getValue());
     }
 }

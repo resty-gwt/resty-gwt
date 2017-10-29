@@ -21,75 +21,75 @@
 
 <module>
 
-  <inherits name="com.google.gwt.http.HTTP" />
-  <inherits name="com.google.gwt.json.JSON" />
-  <inherits name='com.google.gwt.jsonp.Jsonp' />
-  <inherits name="com.google.gwt.xml.XML" />
-  <inherits name='com.google.gwt.logging.LoggingDisabled'/>
-  
-  <inherits name="com.github.nmorel.gwtjackson.GwtJackson" />
+    <inherits name="com.google.gwt.http.HTTP"/>
+    <inherits name="com.google.gwt.json.JSON"/>
+    <inherits name='com.google.gwt.jsonp.Jsonp'/>
+    <inherits name="com.google.gwt.xml.XML"/>
+    <inherits name='com.google.gwt.logging.LoggingDisabled'/>
+
+    <inherits name="com.github.nmorel.gwtjackson.GwtJackson"/>
 
 
-  <replace-with class="org.fusesource.restygwt.emulated.JsonTypeInfo">
-    <when-type-is class="com.fasterxml.jackson.annotation.JsonTypeInfo"/>
-  </replace-with>
+    <replace-with class="org.fusesource.restygwt.emulated.JsonTypeInfo">
+        <when-type-is class="com.fasterxml.jackson.annotation.JsonTypeInfo"/>
+    </replace-with>
 
-  <generate-with class="org.fusesource.restygwt.rebind.RestServiceGenerator">
-    <when-type-assignable class="org.fusesource.restygwt.client.RestService" />
-  </generate-with>
-  <generate-with class="org.fusesource.restygwt.rebind.JsonEncoderDecoderGenerator">
-    <when-type-assignable class="org.fusesource.restygwt.client.JsonEncoderDecoder" />
-  </generate-with>
-  <generate-with class="org.fusesource.restygwt.rebind.DirectRestServiceGenerator">
-    <when-type-assignable class="org.fusesource.restygwt.client.DirectRestService" />
-  </generate-with>
+    <generate-with class="org.fusesource.restygwt.rebind.RestServiceGenerator">
+        <when-type-assignable class="org.fusesource.restygwt.client.RestService"/>
+    </generate-with>
+    <generate-with class="org.fusesource.restygwt.rebind.JsonEncoderDecoderGenerator">
+        <when-type-assignable class="org.fusesource.restygwt.client.JsonEncoderDecoder"/>
+    </generate-with>
+    <generate-with class="org.fusesource.restygwt.rebind.DirectRestServiceGenerator">
+        <when-type-assignable class="org.fusesource.restygwt.client.DirectRestService"/>
+    </generate-with>
 
-  <define-configuration-property name="org.fusesource.restygwt.jsontypeidresolver" is-multi-valued="true"/>
-  
-  <define-configuration-property name="org.fusesource.restygwt.annotationresolver" is-multi-valued="true"/>
+    <define-configuration-property name="org.fusesource.restygwt.jsontypeidresolver" is-multi-valued="true"/>
 
-  <define-configuration-property name="org.fusesource.restygwt.restyjsonserializergenerator" is-multi-valued="true"/>
+    <define-configuration-property name="org.fusesource.restygwt.annotationresolver" is-multi-valued="true"/>
 
-<!-- /gwt-user/core/src/com/google/gwt/user/RemoteService.gwt.xml -->
+    <define-configuration-property name="org.fusesource.restygwt.restyjsonserializergenerator" is-multi-valued="true"/>
 
-  <!--
-    Declare a property to determine whether autodetection of text/* with @Consumes and @Produces annotations should be used.
-  -->
-  <define-property name="restygwt.autodetect.plainText" values="true,false" />
+    <!-- /gwt-user/core/src/com/google/gwt/user/RemoteService.gwt.xml -->
 
-  <!--
-    Declare a property to determine whether the detection for Accessor and Mutator should follow the naming convention from JavaBeans API specification.
-  -->
-  <define-property name="restygwt.conventions.useJavaBeansSpecNaming" values="true,false" />
- 
- <!--
-    Declare a property to determine whether to use gwt-jackson as encoder/decoder. https://github.com/nmorel/gwt-jackson 
-  	If set to true
-  	This may influence restygwt.autodetect.plainText , 
-  	                   restygwt.conventions.useJavaBeansSpecNaming , 
-  	                   restygwt.autodetect.plainText , 
-  	                   restygwt.autodetect.plainText 
-  	   properties.
-  -->
-  <define-property name="restygwt.encodeDecode.useGwtJackson" values="true,false" />
+    <!--
+      Declare a property to determine whether autodetection of text/* with @Consumes and @Produces annotations should be used.
+    -->
+    <define-property name="restygwt.autodetect.plainText" values="true,false"/>
 
-  <!--
-    Default no autodetection for text/*, for backward compatibility.
-  -->
-  <set-property name="restygwt.autodetect.plainText" value="false" />
+    <!--
+      Declare a property to determine whether the detection for Accessor and Mutator should follow the naming convention from JavaBeans API specification.
+    -->
+    <define-property name="restygwt.conventions.useJavaBeansSpecNaming" values="true,false"/>
 
-  <!--
-    Use JavaBeans naming convention by default.
-  -->
-  <set-property name="restygwt.conventions.useJavaBeansSpecNaming" value="true" />
+    <!--
+       Declare a property to determine whether to use gwt-jackson as encoder/decoder. https://github.com/nmorel/gwt-jackson
+         If set to true
+         This may influence restygwt.autodetect.plainText ,
+                            restygwt.conventions.useJavaBeansSpecNaming ,
+                            restygwt.autodetect.plainText ,
+                            restygwt.autodetect.plainText
+            properties.
+     -->
+    <define-property name="restygwt.encodeDecode.useGwtJackson" values="true,false"/>
 
- <!-- 
-  	Default use standard resty-gwt encoder/decoder for backward compatibility.
-   -->
-  <set-property name="restygwt.encodeDecode.useGwtJackson" value="false" />
-  
-  <source path="client"/>
-  <source path="example/client"/>
-  <super-source path="supersrc"/>
+    <!--
+      Default no autodetection for text/*, for backward compatibility.
+    -->
+    <set-property name="restygwt.autodetect.plainText" value="false"/>
+
+    <!--
+      Use JavaBeans naming convention by default.
+    -->
+    <set-property name="restygwt.conventions.useJavaBeansSpecNaming" value="true"/>
+
+    <!--
+         Default use standard resty-gwt encoder/decoder for backward compatibility.
+      -->
+    <set-property name="restygwt.encodeDecode.useGwtJackson" value="false"/>
+
+    <source path="client"/>
+    <source path="example/client"/>
+    <super-source path="supersrc"/>
 
 </module>

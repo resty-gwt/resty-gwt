@@ -51,21 +51,19 @@ public class CachingCallbackFilter implements CallbackFilter {
      * TODO method.getResponse() is not equal to response. unfortunately
      */
     @Override
-    public RequestCallback filter(final Method method, final Response response,
-            RequestCallback callback) {
+    public RequestCallback filter(final Method method, final Response response, RequestCallback callback) {
         final int code = response.getStatusCode();
 
         final CacheKey ck = cacheKey(method.builder);
         final List<RequestCallback> removedCallbacks = cache.removeCallbacks(ck);
 
-        if (removedCallbacks != null){
+        if (removedCallbacks != null) {
             callback = new RequestCallback() {
                 @Override
                 public void onResponseReceived(Request request, Response response) {
                     if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
-                                .finer("call "+ removedCallbacks.size()
-                                        + " more queued callbacks for " + ck);
+                            .finer("call " + removedCallbacks.size() + " more queued callbacks for " + ck);
                     }
 
                     // call all callbacks found in cache
@@ -77,16 +75,14 @@ public class CachingCallbackFilter implements CallbackFilter {
                 @Override
                 public void onError(Request request, Throwable exception) {
                     if (LogConfiguration.loggingIsEnabled()) {
-                        Logger.getLogger(CachingCallbackFilter.class.getName())
-                                .severe("cannot call " + (removedCallbacks.size()+1)
-                                        + " callbacks for " + ck + " due to error: "
-                                        + exception.getMessage());
+                        Logger.getLogger(CachingCallbackFilter.class.getName()).severe(
+                            "cannot call " + (removedCallbacks.size() + 1) + " callbacks for " + ck +
+                                " due to error: " + exception.getMessage());
                     }
 
                     if (LogConfiguration.loggingIsEnabled()) {
                         Logger.getLogger(CachingCallbackFilter.class.getName())
-                                .finer("call "+ removedCallbacks.size()
-                                        + " more queued callbacks for " + ck);
+                            .finer("call " + removedCallbacks.size() + " more queued callbacks for " + ck);
                     }
 
                     // and all the others, found in cache
@@ -97,26 +93,26 @@ public class CachingCallbackFilter implements CallbackFilter {
             };
         } else {
             if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
-                Logger.getLogger(CachingCallbackFilter.class.getName()).finer("removed one or no " +
-                        "callback for cachekey " + ck);
+                Logger.getLogger(CachingCallbackFilter.class.getName())
+                    .finer("removed one or no " + "callback for cachekey " + ck);
             }
         }
 
-        if (isCachingStatusCode(code)) { 
+        if (isCachingStatusCode(code)) {
             cacheResult(method, response);
             return callback;
         }
 
         if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
             Logger.getLogger(CachingCallbackFilter.class.getName())
-                    .info("cannot cache due to invalid response code: " + code);
+                .info("cannot cache due to invalid response code: " + code);
         }
         return callback;
     }
 
     protected boolean isCachingStatusCode(final int code) {
         return code < Response.SC_MULTIPLE_CHOICES // code < 300
-                && code >= Response.SC_OK; // code >= 200
+            && code >= Response.SC_OK; // code >= 200
     }
 
     protected CacheKey cacheKey(final RequestBuilder builder) {
@@ -126,8 +122,7 @@ public class CachingCallbackFilter implements CallbackFilter {
     protected void cacheResult(final Method method, final Response response) {
         CacheKey cacheKey = cacheKey(method.builder);
         if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
-            Logger.getLogger(CachingCallbackFilter.class.getName()).finer("cache to " + cacheKey
-                    + ": " + response);
+            Logger.getLogger(CachingCallbackFilter.class.getName()).finer("cache to " + cacheKey + ": " + response);
         }
         cache.putResult(cacheKey, response, getCacheDomains(method));
     }
@@ -140,10 +135,11 @@ public class CachingCallbackFilter implements CallbackFilter {
      * @return array of names of cache domains
      */
     protected String[] getCacheDomains(final Method method) {
-        if (null == method.getData().get(Domain.CACHE_DOMAIN_KEY)) return null;
+        if (null == method.getData().get(Domain.CACHE_DOMAIN_KEY)) {
+            return null;
+        }
 
-        final JSONValue jsonValue = JSONParser.parseStrict(method.getData()
-                .get(Domain.CACHE_DOMAIN_KEY));
+        final JSONValue jsonValue = JSONParser.parseStrict(method.getData().get(Domain.CACHE_DOMAIN_KEY));
         if (null == jsonValue) {
             return null;
         }

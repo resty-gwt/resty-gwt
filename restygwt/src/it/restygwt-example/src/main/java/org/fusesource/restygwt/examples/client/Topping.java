@@ -31,6 +31,7 @@ public class Topping {
 
     public Topping() {
     }
+
     public Topping(String name, double price) {
         this.name = name;
         this.price = price;

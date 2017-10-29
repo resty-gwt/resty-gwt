@@ -45,12 +45,11 @@ import com.google.gwt.logging.client.LogConfiguration;
 public class DefaultFilterawareDispatcher implements FilterawareDispatcher {
 
     public static DefaultFilterawareDispatcher INSTANCE;
- 
+
     /**
      * list of dispatcherfilters to be performed when an request is done
      */
-    final protected List<DispatcherFilter> dispatcherFilters =
-            new ArrayList<DispatcherFilter>();
+    final protected List<DispatcherFilter> dispatcherFilters = new ArrayList<DispatcherFilter>();
 
     /**
      * get one instance of this class
@@ -58,30 +57,32 @@ public class DefaultFilterawareDispatcher implements FilterawareDispatcher {
      * @return the DefaultFilterawareDispatcher singleton
      */
     public static DefaultFilterawareDispatcher singleton() {
-        if (null != INSTANCE) return INSTANCE;
+        if (null != INSTANCE) {
+            return INSTANCE;
+        }
 
         INSTANCE = new DefaultFilterawareDispatcher();
         return INSTANCE;
     }
-    
-    public DefaultFilterawareDispatcher(){    
+
+    public DefaultFilterawareDispatcher() {
     }
-    
-    public DefaultFilterawareDispatcher(DispatcherFilter... filters){
-        for(DispatcherFilter filter: filters){
+
+    public DefaultFilterawareDispatcher(DispatcherFilter... filters) {
+        for (DispatcherFilter filter : filters) {
             addFilter(filter);
         }
     }
-    
+
     @Override
     public Request send(Method method, RequestBuilder builder) throws RequestException {
         for (DispatcherFilter f : dispatcherFilters) {
             if (!f.filter(method, builder)) {
                 // filter returned false, no continue
                 if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
-                    Logger.getLogger(DefaultFilterawareDispatcher.class.getName())
-                            .fine(f.getClass() + " told me not to continue filtering for: "
-                                    + builder.getHTTPMethod() + " " + builder.getUrl());
+                    Logger.getLogger(DefaultFilterawareDispatcher.class.getName()).fine(
+                        f.getClass() + " told me not to continue filtering for: " + builder.getHTTPMethod() + " " +
+                            builder.getUrl());
                 }
                 return null;
             }

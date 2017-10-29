@@ -53,15 +53,13 @@ public class CachingDispatcherFilter implements DispatcherFilter {
      * @param cacheStorage
      * @param cf
      */
-    public CachingDispatcherFilter(final QueueableCacheStorage cacheStorage,
-            final CallbackFactory cf) {
+    public CachingDispatcherFilter(final QueueableCacheStorage cacheStorage, final CallbackFactory cf) {
         this.cacheStorage = cacheStorage;
         this.callbackFactory = cf;
     }
-    
+
     protected CacheKey cacheKey(RequestBuilder builder) {
-        if (RequestBuilder.GET.toString().equalsIgnoreCase(
-                builder.getHTTPMethod())) {
+        if (RequestBuilder.GET.toString().equalsIgnoreCase(builder.getHTTPMethod())) {
             return new ComplexCacheKey(builder);
         }
         return null;
@@ -82,13 +80,12 @@ public class CachingDispatcherFilter implements DispatcherFilter {
                 //case 1: we got a result in cache => return it...
                 if (LogConfiguration.loggingIsEnabled()) {
                     Logger.getLogger(Dispatcher.class.getName())
-                            .info("already got a cached response for: " + builder.getHTTPMethod() + " "
-                            + builder.getUrl());
+                        .info("already got a cached response for: " + builder.getHTTPMethod() + " " + builder.getUrl());
                 }
                 // onResponseReceived can be time consuming and can manipulate the DOM
                 // deferring the command keeps the async behaviour of this method call
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                    
+
                     @Override
                     public void execute() {
                         builder.getCallback().onResponseReceived(null, cachedResponse);
@@ -105,8 +102,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
 
                 if (LogConfiguration.loggingIsEnabled()) {
                     Logger.getLogger(Dispatcher.class.getName())
-                            .info("Sending *caching* http request: " + builder.getHTTPMethod() + " "
-                            + builder.getUrl());
+                        .info("Sending *caching* http request: " + builder.getHTTPMethod() + " " + builder.getUrl());
                 }
 
                 // important part:
@@ -116,8 +112,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
             //case 2.2 => a callback already in progress => queue to get response when back
             if (LogConfiguration.loggingIsEnabled()) {
                 Logger.getLogger(Dispatcher.class.getName())
-                        .info("request in progress, queue callback: " + builder.getHTTPMethod() + " "
-                        + builder.getUrl());
+                    .info("request in progress, queue callback: " + builder.getHTTPMethod() + " " + builder.getUrl());
             }
             cacheStorage.addCallback(cacheKey, callback);
             return false;
@@ -125,15 +120,15 @@ public class CachingDispatcherFilter implements DispatcherFilter {
         // non cachable case
         if (LogConfiguration.loggingIsEnabled()) {
             String content = builder.getRequestData();
-            Logger.getLogger(Dispatcher.class.getName())
-                    .info("Sending *non-caching* http request: " + builder.getHTTPMethod() + " "
-                    + builder.getUrl() + " (Content: `" + content + "´)");
+            Logger.getLogger(Dispatcher.class.getName()).info(
+                "Sending *non-caching* http request: " + builder.getHTTPMethod() + " " + builder.getUrl() +
+                    " (Content: `" + content + "´)");
         }
 
-//            /*
-//             * add X-Request-Token to all non-caching calls (!= GET) if we have some
-//             */
-//            builder.setHeader("X-Testing", "Bude");
+        //            /*
+        //             * add X-Request-Token to all non-caching calls (!= GET) if we have some
+        //             */
+        //            builder.setHeader("X-Testing", "Bude");
 
         builder.setCallback(callbackFactory.createCallback(method));
         return true;// continue filtering

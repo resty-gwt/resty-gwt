@@ -35,50 +35,44 @@ import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOCustom2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 
-public class DTOTypeResolverInsideServlet extends HttpServlet
-{
-	private static final long serialVersionUID = 8761900300798640874L;
+public class DTOTypeResolverInsideServlet extends HttpServlet {
+    private static final long serialVersionUID = 8761900300798640874L;
 
-	/**
-	 * Fake method to introspect to get generic type
-	 * @return null
-	 */
-	public List<AbstractDTO> prototype()
-	{
-		return null;
-	}
-	
-	private static class AbstractCustomDtoList extends ArrayList<AbstractCustomDto> {
-		public AbstractCustomDtoList(List<AbstractCustomDto> abstractAccountTransactionDTOs) {
-			this.addAll(abstractAccountTransactionDTOs);
-		}
-	}	
-	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-	{
-		DTOCustom1 one = new DTOCustom1();
-		one.name = "Fred Flintstone";
-		one.size = 1024;
+    /**
+     * Fake method to introspect to get generic type
+     * @return null
+     */
+    public List<AbstractDTO> prototype() {
+        return null;
+    }
 
-		DTOCustom2 two = new DTOCustom2();
-		two.name = "Barney Rubble";
-		two.foo = "schmaltzy";
+    private static class AbstractCustomDtoList extends ArrayList<AbstractCustomDto> {
+        public AbstractCustomDtoList(List<AbstractCustomDto> abstractAccountTransactionDTOs) {
+            this.addAll(abstractAccountTransactionDTOs);
+        }
+    }
 
-		DTOCustom2 three = new DTOCustom2();
-		three.name = "BamBam Rubble";
-		three.foo = "dorky";
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        DTOCustom1 one = new DTOCustom1();
+        one.name = "Fred Flintstone";
+        one.size = 1024;
 
-		resp.setContentType("application/json");
-		ObjectMapper om = new ObjectMapper();
-		try
-		{
-			AbstractCustomDtoList list = new AbstractCustomDtoList(Lists.newArrayList(one, two, three));
-			om.writeValue(resp.getOutputStream(), list);
-		}
-		catch (Exception e)
-		{
-			throw new ServletException(e);
-		}
-	}
+        DTOCustom2 two = new DTOCustom2();
+        two.name = "Barney Rubble";
+        two.foo = "schmaltzy";
+
+        DTOCustom2 three = new DTOCustom2();
+        three.name = "BamBam Rubble";
+        three.foo = "dorky";
+
+        resp.setContentType("application/json");
+        ObjectMapper om = new ObjectMapper();
+        try {
+            AbstractCustomDtoList list = new AbstractCustomDtoList(Lists.newArrayList(one, two, three));
+            om.writeValue(resp.getOutputStream(), list);
+        } catch (Exception e) {
+            throw new ServletException(e);
+        }
+    }
 }

@@ -38,37 +38,35 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class JsonStringProvider implements MessageBodyWriter<String>, MessageBodyReader<String>
-{
-	@Override
-	public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType)
-	{
-		return type == String.class && MediaType.APPLICATION_JSON_TYPE.isCompatible(mediaType);
-	}
+public class JsonStringProvider implements MessageBodyWriter<String>, MessageBodyReader<String> {
+    @Override
+    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+        return type == String.class && MediaType.APPLICATION_JSON_TYPE.isCompatible(mediaType);
+    }
 
-	@Override
-	public long getSize(String t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType)
-	{
-		return -1;
-	}
+    @Override
+    public long getSize(String t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+        return -1;
+    }
 
-	@Override
-	public void writeTo(String t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException
-	{
-		// TODO: issue of encoding here???
-		new ObjectMapper().writeValue(entityStream, t);
-	}
+    @Override
+    public void writeTo(String t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+                        MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream)
+        throws IOException, WebApplicationException {
+        // TODO: issue of encoding here???
+        new ObjectMapper().writeValue(entityStream, t);
+    }
 
-	@Override
-	public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType)
-	{
-		return type == String.class && MediaType.APPLICATION_JSON_TYPE.isCompatible(mediaType);
-	}
+    @Override
+    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+        return type == String.class && MediaType.APPLICATION_JSON_TYPE.isCompatible(mediaType);
+    }
 
-	@Override
-	public String readFrom(Class<String> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException
-	{
-		// TODO: issue of encoding here???
-		return new ObjectMapper().readValue(entityStream, String.class);
-	}
+    @Override
+    public String readFrom(Class<String> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+                           MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
+        throws IOException, WebApplicationException {
+        // TODO: issue of encoding here???
+        return new ObjectMapper().readValue(entityStream, String.class);
+    }
 }

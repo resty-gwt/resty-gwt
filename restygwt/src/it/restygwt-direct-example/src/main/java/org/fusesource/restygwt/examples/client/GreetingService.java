@@ -33,7 +33,9 @@ import org.fusesource.restygwt.client.RestService;
 @Path("/greeting-service")
 public interface GreetingService extends DirectRestService {
 
-    @GET Greeting getGreeting();
+    @GET
+    Greeting getGreeting();
 
-    @POST Greeting getCustomGreeting(NameObject nameArg);
+    @POST
+    Greeting getCustomGreeting(NameObject nameArg);
 }

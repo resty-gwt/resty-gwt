@@ -30,36 +30,31 @@ import org.fusesource.restygwt.client.TextCallback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 
-public class SubResourceClientGeneration extends GWTTestCase
-{
-	public static interface TestInterfaceA extends RestService
-	{
-		@GET
-		@Path("/foo")
-		public void getFoo(TextCallback cb);
+public class SubResourceClientGeneration extends GWTTestCase {
+    public static interface TestInterfaceA extends RestService {
+        @GET
+        @Path("/foo")
+        public void getFoo(TextCallback cb);
 
-		@Path("interfaceB/{id}")
-		public TestInterfaceB getInterfaceB(@PathParam("id") String nameOfThing);
-	}
+        @Path("interfaceB/{id}")
+        public TestInterfaceB getInterfaceB(@PathParam("id") String nameOfThing);
+    }
 
-	public static interface TestInterfaceB extends RestService
-	{
-		@GET
-		@Path("/bar")
-		public void getBar(TextCallback cb);
-	}
+    public static interface TestInterfaceB extends RestService {
+        @GET
+        @Path("/bar")
+        public void getBar(TextCallback cb);
+    }
 
-	@Override
-	public String getModuleName()
-	{
-		return "org.fusesource.restygwt.BasicTestGwt";
-	}
+    @Override
+    public String getModuleName() {
+        return "org.fusesource.restygwt.BasicTestGwt";
+    }
 
-	public void testSimpleGeneration()
-	{
-		TestInterfaceA a = GWT.create(TestInterfaceA.class);
-		((RestServiceProxy)a).setResource(new Resource("/path/to/interfaceA"));
-		TestInterfaceB b = a.getInterfaceB("fred");
-		assertEquals("/path/to/interfaceA/interfaceB/fred", ((RestServiceProxy)b).getResource().getPath());
-	}
+    public void testSimpleGeneration() {
+        TestInterfaceA a = GWT.create(TestInterfaceA.class);
+        ((RestServiceProxy) a).setResource(new Resource("/path/to/interfaceA"));
+        TestInterfaceB b = a.getInterfaceB("fred");
+        assertEquals("/path/to/interfaceA/interfaceB/fred", ((RestServiceProxy) b).getResource().getPath());
+    }
 }

@@ -37,7 +37,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class UI implements EntryPoint {
@@ -122,7 +122,9 @@ public class UI implements EntryPoint {
     }
 
     protected void doJsonp() {
-        Resource resource = new Resource("http://search.yahooapis.com/WebSearchService/V1/webSearch?appid=YahooDemo&query=finances&format=pdf&output=json&callback=callback");
+        Resource resource = new Resource(
+            "http://search.yahooapis.com/WebSearchService/V1/webSearch?appid=YahooDemo&query=finances&format=pdf" +
+                "&output=json&callback=callback");
         resource.jsonp().send(new JsonCallback() {
             public void onSuccess(Method method, JSONValue response) {
                 JSONObject obj = (JSONObject) ((JSONObject) response).get("ResultSet");

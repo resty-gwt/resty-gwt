@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  * Super simple servlet that simply does nothing to check if
  * timeout management is okay.
  *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>
  *
  */
 public class CachingTestServlet extends HttpServlet {
@@ -51,8 +51,7 @@ public class CachingTestServlet extends HttpServlet {
     private final String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
 
     @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         response.setStatus(200);
         if (request.getPathInfo().equals("/getnumberofcontacts")) {

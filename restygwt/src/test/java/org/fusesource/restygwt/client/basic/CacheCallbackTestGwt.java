@@ -224,18 +224,15 @@ public class CacheCallbackTestGwt extends GWTTestCase {
         final QueueableCacheStorage cacheStorage = new VolatileQueueableCacheStorage();
         final FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher();
 
-        dispatcher.addFilter(new CachingDispatcherFilter(
-                cacheStorage,
-                new CallbackFactory() {
-                    public FilterawareRequestCallback createCallback(Method method) {
-                        final FilterawareRequestCallback retryingCallback = new DefaultFilterawareRequestCallback(
-                                method);
+        dispatcher.addFilter(new CachingDispatcherFilter(cacheStorage, new CallbackFactory() {
+            public FilterawareRequestCallback createCallback(Method method) {
+                final FilterawareRequestCallback retryingCallback = new DefaultFilterawareRequestCallback(method);
 
-                        retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
-                        retryingCallback.addFilter(new ModelChangeCallbackFilter(eventBus));
-                        return retryingCallback;
-                    }
-                }));
+                retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
+                retryingCallback.addFilter(new ModelChangeCallbackFilter(eventBus));
+                return retryingCallback;
+            }
+        }));
 
         Defaults.setDispatcher(dispatcher);
 

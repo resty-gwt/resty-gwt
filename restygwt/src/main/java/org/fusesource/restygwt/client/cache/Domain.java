@@ -29,7 +29,7 @@ import org.fusesource.restygwt.client.Method;
 
 @Documented
 @Retention(RUNTIME)
-@Target( { TYPE })
+@Target({ TYPE })
 public @interface Domain {
     /**
      * When creating the ``RestService`` classes, there will be put some information

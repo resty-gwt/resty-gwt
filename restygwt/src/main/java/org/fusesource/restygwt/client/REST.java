@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.fusesource.restygwt.client;
 
 import org.fusesource.restygwt.client.callback.CallbackAware;
@@ -34,7 +35,7 @@ public class REST<R> {
     }
 
     public final <T extends DirectRestService> T call(T service) {
-        ((CallbackAware)service).setCallback(callback);
+        ((CallbackAware) service).setCallback(callback);
         return service;
     }
 }

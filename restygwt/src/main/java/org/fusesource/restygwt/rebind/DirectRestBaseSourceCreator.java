@@ -15,13 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.fusesource.restygwt.rebind;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
-import com.google.gwt.core.ext.typeinfo.*;
+import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JGenericType;
+import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JTypeParameter;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
 /**
@@ -34,19 +38,18 @@ public abstract class DirectRestBaseSourceCreator extends BaseSourceCreator {
         super(logger, context, source, suffix);
     }
 
-    @Override protected void generate() throws UnableToCompleteException {
+    @Override
+    protected void generate() throws UnableToCompleteException {
         this.OVERLAY_VALUE_TYPE = find(JavaScriptObject.class, getLogger(), context);
     }
 
     protected ClassSourceFileComposerFactory createClassSourceComposerFactory(JavaSourceCategory createWhat,
-                                                                            String [] annotationDeclarations,
-                                                                            String [] extendedInterfaces) {
+                                                                              String[] annotationDeclarations,
+                                                                              String[] extendedInterfaces) {
         String genericTypeParameters = createClassDeclarationGenericType();
 
-        ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(
-                packageName,
-                shortName + genericTypeParameters
-        );
+        ClassSourceFileComposerFactory composerFactory =
+            new ClassSourceFileComposerFactory(packageName, shortName + genericTypeParameters);
 
         if (createWhat == JavaSourceCategory.INTERFACE) {
             composerFactory.makeInterface();
@@ -69,16 +72,15 @@ public abstract class DirectRestBaseSourceCreator extends BaseSourceCreator {
 
     private String createClassDeclarationGenericType() {
         String parameters = "";
-        if(source instanceof JGenericType)
-        {
-            JGenericType genericType = (JGenericType)source;
+        if (source instanceof JGenericType) {
+            JGenericType genericType = (JGenericType) source;
             StringBuilder builder = new StringBuilder();
             builder.append("<");
             boolean first = true;
-            for(JTypeParameter arg : genericType.getTypeParameters())
-            {
-                if(!first)
+            for (JTypeParameter arg : genericType.getTypeParameters()) {
+                if (!first) {
                     builder.append(",");
+                }
                 builder.append(arg.getName());
                 builder.append(" extends ");
                 builder.append(arg.getFirstBound().getParameterizedQualifiedSourceName());

@@ -39,12 +39,11 @@ import com.google.gwt.json.client.JSONValue;
 public interface ModelChangeAnnotatedService extends RestService {
     @GET
     @Path("/foo/")
-    public void getItems(@HeaderParam("X-Echo-Body") String responseBody,
-            MethodCallback<JSONValue> callback);
+    public void getItems(@HeaderParam("X-Echo-Body") String responseBody, MethodCallback<JSONValue> callback);
 
     @PUT
     @Path("/foo/{fooId}")
     @ModelChange
-    public void setItem(@HeaderParam("X-Echo-Code") int responseCode,
-            @PathParam("fooId") int fooId, MethodCallback<Void> callback);
+    public void setItem(@HeaderParam("X-Echo-Code") int responseCode, @PathParam("fooId") int fooId,
+                        MethodCallback<Void> callback);
 }

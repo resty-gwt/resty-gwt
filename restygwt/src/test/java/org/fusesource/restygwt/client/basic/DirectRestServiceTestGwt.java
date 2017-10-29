@@ -20,7 +20,13 @@ package org.fusesource.restygwt.client.basic;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
-import org.fusesource.restygwt.client.*;
+import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.DirectRestService;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.REST;
+import org.fusesource.restygwt.client.Resource;
+import org.fusesource.restygwt.client.RestServiceProxy;
 
 import java.util.Date;
 import java.util.List;
@@ -29,7 +35,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
 /**
- * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</<a>
+ * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</a>
  */
 public class DirectRestServiceTestGwt extends GWTTestCase {
     @Override
@@ -38,7 +44,8 @@ public class DirectRestServiceTestGwt extends GWTTestCase {
     }
 
     static interface InnerDirectRestService extends DirectRestService {
-        @GET @Path("/something")
+        @GET
+        @Path("/something")
         void getSomething();
     }
 
@@ -117,7 +124,7 @@ public class DirectRestServiceTestGwt extends GWTTestCase {
             public void onFailure(Method method, Throwable e) {
                 fail(e.getMessage());
             }
-            }).call(directExampleService).getRegexMultiParams(123, 456);
+        }).call(directExampleService).getRegexMultiParams(123, 456);
     }
 
     public void testVoidCall() {

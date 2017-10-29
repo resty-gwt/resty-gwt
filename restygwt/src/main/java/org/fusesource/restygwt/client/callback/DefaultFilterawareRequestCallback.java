@@ -27,7 +27,8 @@ import org.fusesource.restygwt.client.Method;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.Response;
 
-public class DefaultFilterawareRequestCallback extends AbstractNestedRequestCallback implements FilterawareRequestCallback {
+public class DefaultFilterawareRequestCallback extends AbstractNestedRequestCallback
+    implements FilterawareRequestCallback {
 
 
     final protected List<CallbackFilter> callbackFilters = new ArrayList<CallbackFilter>();
@@ -47,7 +48,7 @@ public class DefaultFilterawareRequestCallback extends AbstractNestedRequestCall
     }
 
     @Override
-    protected void doError(Request request, Response response){
+    protected void doError(Request request, Response response) {
         for (CallbackFilter f : callbackFilters) {
             requestCallback = f.filter(method, response, requestCallback);
         }

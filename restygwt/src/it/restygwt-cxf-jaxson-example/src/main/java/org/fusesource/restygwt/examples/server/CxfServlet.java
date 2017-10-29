@@ -30,7 +30,7 @@ import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
 /**
  * This servlet is a horible hack to integrate jersey /w gwt hosted mode junit
  * tests.
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class CxfServlet extends CXFNonSpringJaxrsServlet {
@@ -38,6 +38,7 @@ public class CxfServlet extends CXFNonSpringJaxrsServlet {
     private static final long serialVersionUID = -273961734543645503L;
 
     private static Properties initParams = new Properties();
+
     static {
         initParams.put("jaxrs.address", "/org.fusesource.restygwt.examples.CXF_JAXSON.JUnit/rest/");
         initParams.put("jaxrs.serviceClasses", MapService.class.getName() + " ");

@@ -27,7 +27,7 @@ import java.util.Date;
 /**
  * A servlet that just implements the services required for the direct service test.
  *
- * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</<a>
+ * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</a>
  */
 public class DirectServiceTestGwtServlet extends HttpServlet {
 
@@ -35,8 +35,7 @@ public class DirectServiceTestGwtServlet extends HttpServlet {
     String THREE_ELEMENT_LIST = "[{name:'1'},{name:'2'},{name:'3'}]";
 
     @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         if (request.getRequestURI().endsWith("/date")) {
             response.getWriter().print(Long.parseLong(request.getParameter("date")));
@@ -53,8 +52,7 @@ public class DirectServiceTestGwtServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request,
-                         HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         if (request.getRequestURI().endsWith("/api/store")) {
             response.getWriter().print(EMPTY_RESPONSE);

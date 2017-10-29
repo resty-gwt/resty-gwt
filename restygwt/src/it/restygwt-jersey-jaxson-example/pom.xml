@@ -19,45 +19,46 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.fusesource.restygwt</groupId>
-    <artifactId>restygwt-it-parent</artifactId>
+    <parent>
+        <groupId>org.fusesource.restygwt</groupId>
+        <artifactId>restygwt-it-parent</artifactId>
+        <version>@project.version@</version>
+    </parent>
+    <artifactId>restygwt-jersey-jaxson-example</artifactId>
     <version>@project.version@</version>
-  </parent>
-  <artifactId>restygwt-jersey-jaxson-example</artifactId>
-  <version>@project.version@</version>
-  <packaging>war</packaging>
+    <packaging>war</packaging>
 
-  <name>RestyGWT Jersey Jaxson Example</name>
+    <name>RestyGWT Jersey Jaxson Example</name>
 
-  <properties>
-    <jersey-version>1.1.2-ea</jersey-version>
-  </properties>
+    <properties>
+        <jersey-version>1.1.2-ea</jersey-version>
+    </properties>
 
-  <dependencies>
+    <dependencies>
 
-    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-      <version>2.0.1</version>
-      <scope>provided</scope>
-    </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-server</artifactId>
-      <version>${jersey-version}</version>
-      <scope>provided</scope>      
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.jaxrs</groupId>
-      <artifactId>jackson-jaxrs-json-provider</artifactId>
-      <version>2.8.4</version>
-    </dependency>
-    
-  </dependencies>
-  
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-server</artifactId>
+            <version>${jersey-version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <version>2.8.4</version>
+        </dependency>
+
+    </dependencies>
+
 </project>

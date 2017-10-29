@@ -29,36 +29,32 @@ public class JsonCreatorWithBoolean extends GWTTestCase {
 
     @Override
     public String getModuleName() {
-	return "org.fusesource.restygwt.BasicTestGwt";
+        return "org.fusesource.restygwt.BasicTestGwt";
     }
 
 
     public static class BooleanWithIsGetter {
-        
+
         private boolean m_smallBoolean;
-        
+
         private Boolean m_bigBoolean;
-        
-        public boolean isSmallBoolean()
-        {
+
+        public boolean isSmallBoolean() {
             return this.m_smallBoolean;
         }
-        
-        public void setSmallBoolean( boolean smallBoolean)
-        {
+
+        public void setSmallBoolean(boolean smallBoolean) {
             this.m_smallBoolean = smallBoolean;
         }
-        
-        public Boolean isBigBoolean()
-        {
+
+        public Boolean isBigBoolean() {
             return this.m_bigBoolean;
         }
-        
-        public void setBigBoolean( Boolean bigBoolean)
-        {
+
+        public void setBigBoolean(Boolean bigBoolean) {
             this.m_bigBoolean = bigBoolean;
         }
-        
+
     }
 
     static interface BooleanWithIsGetterCodec extends JsonEncoderDecoder<BooleanWithIsGetter> {
@@ -68,49 +64,45 @@ public class JsonCreatorWithBoolean extends GWTTestCase {
     public void testBooleanWithIsGetter() {
         BooleanWithIsGetterCodec codec = GWT.create(BooleanWithIsGetterCodec.class);
         BooleanWithIsGetter pojoTrue = new BooleanWithIsGetter();
-        pojoTrue.setSmallBoolean( true );
-        pojoTrue.setBigBoolean( Boolean.TRUE );
-    
-        JSONValue jsonTrue = codec.encode( pojoTrue );
-        BooleanWithIsGetter roundTrip = codec.decode( jsonTrue );
-        assertEquals( roundTrip.isSmallBoolean(), true );
-        assertEquals( roundTrip.isBigBoolean(), Boolean.TRUE );
-        
+        pojoTrue.setSmallBoolean(true);
+        pojoTrue.setBigBoolean(Boolean.TRUE);
+
+        JSONValue jsonTrue = codec.encode(pojoTrue);
+        BooleanWithIsGetter roundTrip = codec.decode(jsonTrue);
+        assertEquals(roundTrip.isSmallBoolean(), true);
+        assertEquals(roundTrip.isBigBoolean(), Boolean.TRUE);
+
         BooleanWithIsGetter pojoFalse = new BooleanWithIsGetter();
-        pojoFalse.setSmallBoolean( false );
-        pojoFalse.setBigBoolean( Boolean.FALSE );
-        JSONValue jsonFalse = codec.encode( pojoFalse );
-        roundTrip = codec.decode( jsonFalse );
-        assertEquals( roundTrip.isSmallBoolean(), false );
-        assertEquals( roundTrip.isBigBoolean(), Boolean.FALSE );
+        pojoFalse.setSmallBoolean(false);
+        pojoFalse.setBigBoolean(Boolean.FALSE);
+        JSONValue jsonFalse = codec.encode(pojoFalse);
+        roundTrip = codec.decode(jsonFalse);
+        assertEquals(roundTrip.isSmallBoolean(), false);
+        assertEquals(roundTrip.isBigBoolean(), Boolean.FALSE);
     }
-    
+
     static class BooleanWithHasGetter {
-        
+
         private boolean m_smallBoolean;
-        
+
         private Boolean m_bigBoolean;
-        
-        public boolean hasSmallBoolean()
-        {
+
+        public boolean hasSmallBoolean() {
             return this.m_smallBoolean;
         }
-        
-        public void setSmallBoolean( boolean smallBoolean)
-        {
+
+        public void setSmallBoolean(boolean smallBoolean) {
             this.m_smallBoolean = smallBoolean;
         }
-        
-        public Boolean hasBigBoolean()
-        {
+
+        public Boolean hasBigBoolean() {
             return this.m_bigBoolean;
         }
-        
-        public void setBigBoolean( Boolean bigBoolean)
-        {
+
+        public void setBigBoolean(Boolean bigBoolean) {
             this.m_bigBoolean = bigBoolean;
         }
-        
+
     }
 
     static interface BooleanWithHasGetterCodec extends JsonEncoderDecoder<BooleanWithHasGetter> {
@@ -120,20 +112,20 @@ public class JsonCreatorWithBoolean extends GWTTestCase {
     public void testBooleanWithHasGetter() {
         BooleanWithHasGetterCodec codec = GWT.create(BooleanWithHasGetterCodec.class);
         BooleanWithHasGetter pojoTrue = new BooleanWithHasGetter();
-        pojoTrue.setSmallBoolean( true );
-        pojoTrue.setBigBoolean( Boolean.TRUE );
-    
-        JSONValue jsonTrue = codec.encode( pojoTrue );
-        BooleanWithHasGetter roundTrip = codec.decode( jsonTrue );
-        assertEquals( roundTrip.hasSmallBoolean(), true );
-        assertEquals( roundTrip.hasBigBoolean(), Boolean.TRUE );
-        
+        pojoTrue.setSmallBoolean(true);
+        pojoTrue.setBigBoolean(Boolean.TRUE);
+
+        JSONValue jsonTrue = codec.encode(pojoTrue);
+        BooleanWithHasGetter roundTrip = codec.decode(jsonTrue);
+        assertEquals(roundTrip.hasSmallBoolean(), true);
+        assertEquals(roundTrip.hasBigBoolean(), Boolean.TRUE);
+
         BooleanWithHasGetter pojoFalse = new BooleanWithHasGetter();
-        pojoFalse.setSmallBoolean( false );
-        pojoFalse.setBigBoolean( Boolean.FALSE );
-        JSONValue jsonFalse = codec.encode( pojoFalse );
-        roundTrip = codec.decode( jsonFalse );
-        assertEquals( roundTrip.hasSmallBoolean(), false );
-        assertEquals( roundTrip.hasBigBoolean(), Boolean.FALSE );
+        pojoFalse.setSmallBoolean(false);
+        pojoFalse.setBigBoolean(Boolean.FALSE);
+        JSONValue jsonFalse = codec.encode(pojoFalse);
+        roundTrip = codec.decode(jsonFalse);
+        assertEquals(roundTrip.hasSmallBoolean(), false);
+        assertEquals(roundTrip.hasBigBoolean(), Boolean.FALSE);
     }
 }

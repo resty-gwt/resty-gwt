@@ -28,7 +28,7 @@ import com.google.gwt.http.client.RequestTimeoutException;
 import com.google.gwt.junit.client.GWTTestCase;
 
 /**
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>
  */
 public class TimeoutTestGwt extends GWTTestCase {
 
@@ -56,10 +56,9 @@ public class TimeoutTestGwt extends GWTTestCase {
 
             @Override
             public void onFailure(Method method, Throwable exception) {
-                if ( exception instanceof RequestTimeoutException ) {
+                if (exception instanceof RequestTimeoutException) {
                     finishTest();
-                }
-                else {
+                } else {
                     fail();
                 }
             }

@@ -49,7 +49,7 @@ import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
 
 /**
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>
  */
 public class CachingTestGwt extends GWTTestCase {
 
@@ -77,10 +77,10 @@ public class CachingTestGwt extends GWTTestCase {
         final EventBus eventBus = new SimpleEventBus();
         QueueableCacheStorage cache = new VolatileQueueableCacheStorage();
         CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
-        CallbackFactory callbackFactory = new DefaultCallbackFactory(cachingCallbackFilter, 
-                    new ModelChangeCallbackFilter(eventBus));
+        CallbackFactory callbackFactory =
+            new DefaultCallbackFactory(cachingCallbackFilter, new ModelChangeCallbackFilter(eventBus));
         DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
-        
+
         Dispatcher dispatcher = new DefaultFilterawareDispatcher(cachingDispatcherFilter);
 
         Defaults.setDispatcher(dispatcher);
@@ -119,13 +119,12 @@ public class CachingTestGwt extends GWTTestCase {
     }
 
 
-
     public void checkIfServerIsRequestsAreCached() {
         Timer timerCheck = new Timer() {
             @Override
             public void run() {
-                final RequestBuilder ajax = new RequestBuilder(
-                        RequestBuilder.GET, GWT.getModuleBaseURL() + "api/getnumberofcontacts");
+                final RequestBuilder ajax =
+                    new RequestBuilder(RequestBuilder.GET, GWT.getModuleBaseURL() + "api/getnumberofcontacts");
 
                 try {
                     ajax.sendRequest("", new RequestCallback() {
@@ -133,8 +132,7 @@ public class CachingTestGwt extends GWTTestCase {
 
                         }
 
-                        public void onResponseReceived(Request request,
-                                Response response) {
+                        public void onResponseReceived(Request request, Response response) {
                             String text = response.getText();
 
                             if (!text.equals("1")) {

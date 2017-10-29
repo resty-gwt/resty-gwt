@@ -17,8 +17,9 @@
  */
 
 /**
- * 
+ *
  */
+
 package org.fusesource.restygwt.client.codec;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -26,12 +27,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
-@JsonSubTypes({@JsonSubTypes.Type(value = SpriteBasedItemWithWrapper.class)})
+@JsonSubTypes({ @JsonSubTypes.Type(value = SpriteBasedItemWithWrapper.class) })
 @JsonTypeInfo(use = Id.CLASS, include = As.WRAPPER_OBJECT)
 abstract public class LibraryItemWithWrapper {
     public String id;
-    
-    public boolean equals(Object other){
-       return getClass().equals(other.getClass()) && id.equals(((LibraryItemWithWrapper)other).id);
+
+    public boolean equals(Object other) {
+        return getClass().equals(other.getClass()) && id.equals(((LibraryItemWithWrapper) other).id);
     }
 }

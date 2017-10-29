@@ -30,7 +30,8 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
-import static org.fusesource.restygwt.rebind.util.AnnotationUtils.*;
+
+import static org.fusesource.restygwt.rebind.util.AnnotationUtils.getAnnotation;
 
 /**
  * Implementation for an annotationparser which is responsible to put
@@ -45,40 +46,40 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
 
     @Override
     public Map<String, String[]> resolveAnnotation(TreeLogger logger, JClassType source, JMethod method,
-            final String restMethod) throws UnableToCompleteException {
+                                                   final String restMethod) throws UnableToCompleteException {
         ModelChange classAnnot = getAnnotation(source, ModelChange.class);
         String[] serviceDomains = null;
         ModelChange methodAnnot = getAnnotation(method, ModelChange.class);
         final Map<String, String[]> ret = new java.util.HashMap<String, String[]>();
 
-        if(null != getAnnotation(source, Domain.class)) {
-            serviceDomains = getAnnotationsAsStringArray(
-            		getAnnotation(source, Domain.class).value());
+        if (null != getAnnotation(source, Domain.class)) {
+            serviceDomains = getAnnotationsAsStringArray(getAnnotation(source, Domain.class).value());
 
             // cachedomain annotations are resolved in any case
-            logger.log(TreeLogger.TRACE, "found ``Domain`` annotation with " + serviceDomains.length
-                    + " domains in " + source.getName());
+            logger.log(TreeLogger.TRACE,
+                "found ``Domain`` annotation with " + serviceDomains.length + " domains in " + source.getName());
             ret.put(Domain.CACHE_DOMAIN_KEY, serviceDomains);
         }
 
         if (methodAnnot != null) {
             String[] domains = null;
 
-            if (methodAnnot.domain() == null
-                    || methodAnnot.domain().length == 0) {
+            if (methodAnnot.domain() == null || methodAnnot.domain().length == 0) {
                 if (serviceDomains == null) {
-                    logger.log(TreeLogger.ERROR, "found method annotation with empty domain definition in " +
-                            source.getName() + " on method " + method.getName());
+                    logger.log(TreeLogger.ERROR,
+                        "found method annotation with empty domain definition in " + source.getName() + " on method " +
+                            method.getName());
                     throw new UnableToCompleteException();
                 }
-                logger.log(TreeLogger.TRACE, "found ``Domain`` annotation with " + serviceDomains.length
-                        + " domains '" + serviceDomains + "' "
-                        + source.getName() + " on method " + method.getName());
+                logger.log(TreeLogger.TRACE,
+                    "found ``Domain`` annotation with " + serviceDomains.length + " domains '" + serviceDomains + "' " +
+                        source.getName() + " on method " + method.getName());
                 domains = serviceDomains;
             } else {
                 domains = getAnnotationsAsStringArray(methodAnnot.domain());
-                logger.log(TreeLogger.TRACE, "use domain from ModelChange annotation at: "
-                        + source.getName() + "#" + method.getName() + ": " + domains);
+                logger.log(TreeLogger.TRACE,
+                    "use domain from ModelChange annotation at: " + source.getName() + "#" + method.getName() + ": " +
+                        domains);
             }
 
             // method annotation match
@@ -86,17 +87,15 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
             return ret;
         }
 
-        if (classAnnot != null
-                && classAnnot.on() != null) {
+        if (classAnnot != null && classAnnot.on() != null) {
             for (String s : classAnnot.on()) {
                 if (s.toUpperCase().equals(restMethod.toUpperCase())) {
                     String[] domains = null;
 
-                    if (classAnnot.domain() == null
-                            || classAnnot.domain().equals("")) {
+                    if (classAnnot.domain() == null || classAnnot.domain().equals("")) {
                         if (serviceDomains == null) {
-                            logger.log(TreeLogger.ERROR, "found class annotation with empty domain definition in " +
-                                    source.getName());
+                            logger.log(TreeLogger.ERROR,
+                                "found class annotation with empty domain definition in " + source.getName());
                             throw new UnableToCompleteException();
                         }
                         domains = serviceDomains;
@@ -122,11 +121,13 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
      */
     @SuppressWarnings("rawtypes")
     private String[] getAnnotationsAsStringArray(final Class[] classes) {
-        if (null == classes) return null;
+        if (null == classes) {
+            return null;
+        }
 
         List<String> ret = new ArrayList<String>();
 
-        for(Class c: classes) {
+        for (Class c : classes) {
             ret.add(c.getName());
         }
 

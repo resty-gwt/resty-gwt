@@ -17,8 +17,9 @@
  */
 
 /**
- * 
+ *
  */
+
 package org.fusesource.restygwt.client.codec;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -29,15 +30,15 @@ class CredentialsWithCreator {
     final String password;
     @JsonProperty
     final String email;
-    
+
     int age;
-    
+
     @JsonCreator
     public CredentialsWithCreator(@JsonProperty("email") String email, @JsonProperty("password") String password) {
         this.email = email;
         this.password = password;
     }
-    
+
     public String getEmail() {
         return email;
     }

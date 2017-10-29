@@ -23,7 +23,7 @@ import java.util.Map;
 import com.google.gwt.http.client.URL;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class Resource {
@@ -40,14 +40,14 @@ public class Resource {
     final String path;
     final String query;
     final Map<String, String> headers;
-    
+
     public Resource(String uri) {
-    	this (uri, (Map<String, String>) null);
+        this(uri, (Map<String, String>) null);
     }
-    
+
     public Resource(String uri, String query) {
-		this(uri, query, null);
-	}
+        this(uri, query, null);
+    }
 
     public Resource(final String uri, final Map<String, String> headers) {
         int pos = uri.indexOf('?');
@@ -55,7 +55,7 @@ public class Resource {
             this.path = uri.substring(0, pos);
             this.query = uri.substring(pos + 1);
         } else {
-        	// Strip off trailing "/" so we have a known format to work off of when concatenating paths
+            // Strip off trailing "/" so we have a known format to work off of when concatenating paths
             this.path = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
             this.query = null;
         }
@@ -64,12 +64,12 @@ public class Resource {
 
     public Resource(final String uri, final String query, final Map<String, String> headers) {
         // Strip off trailing "/" so we have a known format to work off of when concatenating paths
-    	this.path = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
+        this.path = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
         this.query = query;
         this.headers = (headers != null) ? headers : defaultHeaders();
-    }    
+    }
 
-	public Method head() {
+    public Method head() {
         return new Method(this, "HEAD").headers(headers);
     }
 
@@ -111,10 +111,10 @@ public class Resource {
         }
         return path;
     }
-    
+
     public Map<String, String> getHeaders() {
-		return headers;
-	}
+        return headers;
+    }
 
     protected Map<String, String> defaultHeaders() {
         return null;
@@ -136,7 +136,9 @@ public class Resource {
     }
 
     public Resource addQueryParam(String key, String value) {
-    	if(value == null) return this;
+        if (value == null) {
+            return this;
+        }
         key = URL.encodeQueryString(key);
         value = URL.encodeQueryString(value);
         String q = query == null ? "" : query + "&";
@@ -144,19 +146,23 @@ public class Resource {
     }
 
     public Resource addQueryParams(String key, Iterable<String> values) {
-        if(values == null) return this;
+        if (values == null) {
+            return this;
+        }
         key = URL.encodeQueryString(key);
         StringBuilder q = new StringBuilder(query == null ? "" : query + "&");
         boolean ampersand = false;
         for (String value : values) {
-          if(value == null) continue;
-          if (ampersand) {
-            q.append('&');
-          } else {
-            ampersand = true;
-          }
-          value = URL.encodeQueryString(value);
-          q.append(key).append("=").append(value);
+            if (value == null) {
+                continue;
+            }
+            if (ampersand) {
+                q.append('&');
+            } else {
+                ampersand = true;
+            }
+            value = URL.encodeQueryString(value);
+            q.append(key).append("=").append(value);
         }
 
         return new Resource(path, q.toString(), headers);

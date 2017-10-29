@@ -32,8 +32,8 @@ import javax.servlet.http.HttpServletResponse;
  * => Used to test the retrying async callback.
  * </p>
  *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
- * @author <a href="blog.mkristian.tk">Kristian</<a>
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>
+ * @author <a href="blog.mkristian.tk">Kristian</a>
  */
 public class FailingConnectionServlet extends HttpServlet {
 
@@ -44,14 +44,11 @@ public class FailingConnectionServlet extends HttpServlet {
     private static int currentNumberOfServerFailures = 0;
 
     @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         log.fine("GET: failingMODE");
 
-        log.fine("respond code: " + 
-                (500 + currentNumberOfServerFailures) + 
-                " with purpose");
+        log.fine("respond code: " + (500 + currentNumberOfServerFailures) + " with purpose");
         response.setStatus(500 + currentNumberOfServerFailures++);
     }
 }

@@ -32,19 +32,13 @@ import org.fusesource.restygwt.client.RestService;
 public interface BlockingTimeoutService extends RestService {
     @GET
     @Path("/testing/caching_and_block")
-    public void cachingCall(
-            @HeaderParam("X-Response-Time") int secondsToWait,
-            MethodCallback<Void> callback);
+    public void cachingCall(@HeaderParam("X-Response-Time") int secondsToWait, MethodCallback<Void> callback);
 
     @GET
     @Path("/testing/caching_and_queuing")
-    public void cachingQueuingCall(
-            @HeaderParam("X-Response-Time") int secondsToWait,
-            MethodCallback<Void> callback);
+    public void cachingQueuingCall(@HeaderParam("X-Response-Time") int secondsToWait, MethodCallback<Void> callback);
 
     @POST
     @Path("/testing/caching_and_block")
-    public void noncachingCall(
-            @HeaderParam("X-Response-Time") int secondsToWait,
-            MethodCallback<Void> callback);
+    public void noncachingCall(@HeaderParam("X-Response-Time") int secondsToWait, MethodCallback<Void> callback);
 }

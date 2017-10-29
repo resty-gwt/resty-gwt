@@ -14,11 +14,11 @@
 -->
 
 <module>
-	<inherits name='com.google.gwt.user.User' />
-	<inherits name='com.google.gwt.logging.Logging'/>
-	<inherits name='org.fusesource.restygwt.RestyGWT'/>
-	<servlet path='/attribute/*' class='org.fusesource.restygwt.server.basic.AttributeTestGwtServlet' />
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name='com.google.gwt.logging.Logging'/>
+    <inherits name='org.fusesource.restygwt.RestyGWT'/>
+    <servlet path='/attribute/*' class='org.fusesource.restygwt.server.basic.AttributeTestGwtServlet'/>
 
-	<source path='client'/>
-	<source path='example/client'/>
+    <source path='client'/>
+    <source path='example/client'/>
 </module>

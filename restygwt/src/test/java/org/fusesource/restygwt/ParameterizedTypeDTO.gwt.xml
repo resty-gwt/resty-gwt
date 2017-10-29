@@ -19,13 +19,16 @@
 -->
 
 <module>
-    <inherits name='com.google.gwt.user.User' />
+    <inherits name='com.google.gwt.user.User'/>
     <inherits name='com.google.gwt.logging.Logging'/>
     <inherits name='org.fusesource.restygwt.RestyGWT'/>
-    
-    <servlet path='/api/pdto/int' class='org.fusesource.restygwt.server.complex.ParameterizedTypeDTOServlet$IntServlet' />
-    <servlet path='/api/pdto/thing' class='org.fusesource.restygwt.server.complex.ParameterizedTypeDTOServlet$ThingServlet' />
-    <servlet path='/api/pdto/thingList' class='org.fusesource.restygwt.server.complex.ParameterizedTypeDTOServlet$ThingListServlet' />
+
+    <servlet path='/api/pdto/int'
+             class='org.fusesource.restygwt.server.complex.ParameterizedTypeDTOServlet$IntServlet'/>
+    <servlet path='/api/pdto/thing'
+             class='org.fusesource.restygwt.server.complex.ParameterizedTypeDTOServlet$ThingServlet'/>
+    <servlet path='/api/pdto/thingList'
+             class='org.fusesource.restygwt.server.complex.ParameterizedTypeDTOServlet$ThingListServlet'/>
 
     <source path='client'/>
     <source path='example/client'/>

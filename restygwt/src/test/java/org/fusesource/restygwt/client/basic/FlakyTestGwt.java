@@ -44,7 +44,7 @@ import com.google.gwt.junit.client.GWTTestCase;
  * check a server sided failure response will not cause the failure call immediately.
  * instead the test proves there will be 2 retries, where the second one succeeds.
  *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>
  */
 public class FlakyTestGwt extends GWTTestCase {
 
@@ -90,12 +90,12 @@ public class FlakyTestGwt extends GWTTestCase {
          */
         final EventBus eventBus = new SimpleEventBus();
         final QueueableCacheStorage cache = new VolatileQueueableCacheStorage();
-        
+
         final CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
-        final CallbackFactory callbackFactory = new RetryingCallbackFactory(cachingCallbackFilter,
-                new ModelChangeCallbackFilter(eventBus));
+        final CallbackFactory callbackFactory =
+            new RetryingCallbackFactory(cachingCallbackFilter, new ModelChangeCallbackFilter(eventBus));
         final DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
-        
+
         Dispatcher dispatcher = new DefaultFilterawareDispatcher(cachingDispatcherFilter);
 
         Defaults.setDispatcher(dispatcher);
