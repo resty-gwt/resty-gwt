@@ -29,33 +29,33 @@ import org.fusesource.restygwt.example.client.dispatcher.DispatcherFactory;
 import com.google.gwt.core.client.GWT;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class RailsTestGWT extends RailsCreateTestGWT {
 
     public void testIndex() {
         UsersRestService service = GWT.create(UsersRestService.class);
-        ((RestServiceProxy)service).setDispatcher(new DispatcherFactory().xsrfProtectionDispatcher());
+        ((RestServiceProxy) service).setDispatcher(new DispatcherFactory().xsrfProtectionDispatcher());
         List<User> expected = new ArrayList<User>();
         expected.add(persistentUser);
-        service.index(expectResult(expected)); 
+        service.index(expectResult(expected));
         delayTestFinish(REQUEST_TIMEOUT);
     }
 
     public void testShow() {
         UsersRestService service = GWT.create(UsersRestService.class);
-        ((RestServiceProxy)service).setDispatcher(new DispatcherFactory().xsrfProtectionDispatcher());
-        service.show(persistentUser.id, expectResult(persistentUser)); 
+        ((RestServiceProxy) service).setDispatcher(new DispatcherFactory().xsrfProtectionDispatcher());
+        service.show(persistentUser.id, expectResult(persistentUser));
         delayTestFinish(REQUEST_TIMEOUT);
     }
 
     public void testUpdate() {
         UsersRestService service = GWT.create(UsersRestService.class);
-        ((RestServiceProxy)service).setDispatcher(new DispatcherFactory().xsrfProtectionDispatcher());
+        ((RestServiceProxy) service).setDispatcher(new DispatcherFactory().xsrfProtectionDispatcher());
         final User user = newUser();
         user.id = persistentUser.id;
-        service.update(user, expectResult(persistentUser)); 
+        service.update(user, expectResult(persistentUser));
         delayTestFinish(REQUEST_TIMEOUT);
     }
 
@@ -73,7 +73,7 @@ public class RailsTestGWT extends RailsCreateTestGWT {
             public void onSuccess(Method method, User response) {
                 fail("expected some failture do to missing xsrf token");
             }
-        }); 
+        });
         delayTestFinish(REQUEST_TIMEOUT);
     }
 

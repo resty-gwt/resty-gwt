@@ -32,11 +32,11 @@ import javax.ws.rs.GET;
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  *
  */
-@Options(dispatcher = DefaultDispatcher.class, expect = {200,201, 204}, timeout = 1000*30)
+@Options(dispatcher = DefaultDispatcher.class, expect = { 200, 201, 204 }, timeout = 1000 * 30)
 public interface ConfiguredService extends RestService {
 
     @GET
-    @Options(expect = {200}, timeout = 1000*10)
+    @Options(expect = { 200 }, timeout = 1000 * 10)
     public void getExampleDto(MethodCallback<ExampleDto> callback);
 
 }

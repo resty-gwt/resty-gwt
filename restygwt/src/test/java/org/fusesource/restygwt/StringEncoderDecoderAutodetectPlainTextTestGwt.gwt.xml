@@ -19,8 +19,8 @@
 -->
 
 <module>
-    <inherits name='org.fusesource.restygwt.StringEncoderDecoderTestGwt' />
+    <inherits name='org.fusesource.restygwt.StringEncoderDecoderTestGwt'/>
 
-    <set-property name="restygwt.autodetect.plainText" value="true" />
+    <set-property name="restygwt.autodetect.plainText" value="true"/>
 
 </module>

@@ -55,7 +55,8 @@ public class StringEncoderDecoderDirectRestServiceTestGwt extends GWTTestCase {
     }
 
     /**
-     * Test method only success through "onFailure" with restygwt <= 2.0.3 or plain text autodetection set to false (default)
+     * Test method only success through "onFailure" with restygwt <= 2.0.3 or plain text autodetection set to false
+     * (default)
      */
     public void testSendJsonString() {
         StringDirectRestService service = GWT.create(StringDirectRestService.class);
@@ -80,7 +81,8 @@ public class StringEncoderDecoderDirectRestServiceTestGwt extends GWTTestCase {
     }
 
     /**
-     * Test method only success through "onFailure" with restygwt <= 2.1.1 or plain text autodetection set to false (default)
+     * Test method only success through "onFailure" with restygwt <= 2.1.1 or plain text autodetection set to false
+     * (default)
      */
     public void testPlainTextStringWithTextCallback() {
         StringDirectRestService service = GWT.create(StringDirectRestService.class);
@@ -106,7 +108,8 @@ public class StringEncoderDecoderDirectRestServiceTestGwt extends GWTTestCase {
     }
 
     /**
-     * Test method only success through "onFailure" with restygwt <= 2.1.1 or plain text autodetection set to false (default)
+     * Test method only success through "onFailure" with restygwt <= 2.1.1 or plain text autodetection set to false
+     * (default)
      */
     public void testPlainTextStringWithMethodCallback() {
         StringDirectRestService service = GWT.create(StringDirectRestService.class);

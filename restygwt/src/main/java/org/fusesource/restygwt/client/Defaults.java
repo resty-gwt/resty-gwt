@@ -65,13 +65,13 @@ public class Defaults {
         }
         Defaults.serviceRoot = serviceRoot;
     }
-    
+
     /**
      * Gets the format used when encoding and decoding Dates. Defaults to
      * {@code "yyyy-MM-dd'T'HH:mm:ss.SSSZ"}. If the date format is set to
      * {@code null}, dates will be encoded and decoded as timestamps
      * (the number of milliseconds since the Unix epoch, 1970-01-01). 
-     * 
+     *
      * @return the date format string
      * @see com.google.gwt.i18n.shared.DateTimeFormat DateTimeFormat
      */
@@ -91,7 +91,7 @@ public class Defaults {
     public static void setDateFormat(String dateFormat) {
         Defaults.dateFormat = dateFormat;
         dateFormatHasTimeZone = false;
-        
+
         if (dateFormat != null) {
             for (int i = 0; i < dateFormat.length(); i++) {
                 char ch = dateFormat.charAt(i);
@@ -103,18 +103,19 @@ public class Defaults {
             }
         }
     }
-    
-    /* package */ static boolean dateFormatHasTimeZone() {
+
+    /* package */
+    static boolean dateFormatHasTimeZone() {
         return dateFormatHasTimeZone;
     }
-    
+
     /**
      * Gets the timezone used when encoding and decoding Dates.
      * <p>
      * The timezone is only taken into consideration if the date format string
      * does not contain a timezone field. If the timezone is set to
      * {@code null}, the browser's default (local) timezone will be used.
-     * 
+     *
      * @return the date format timezone (null for local timezone)
      */
     public static TimeZone getTimeZone() {
@@ -127,7 +128,7 @@ public class Defaults {
      * The timezone is only taken into consideration if the date format string
      * does not contain a timezone field. If the timezone is set to null, the
      * browser's default (local) timezone will be used.
-     * 
+     *
      * @param timeZone the new timezone (use null for local timezone)
      */
     public static void setTimeZone(TimeZone timeZone) {
@@ -158,20 +159,20 @@ public class Defaults {
     }
 
     /**
-    * @return the byteArraysToBase64
-    */
-   public static boolean isByteArraysToBase64() {
-       return byteArraysToBase64;
-   }
+     * @return the byteArraysToBase64
+     */
+    public static boolean isByteArraysToBase64() {
+        return byteArraysToBase64;
+    }
 
-   /**
-    * @param byteArraysToBase64 the byteArraysToBase64 to set
-    */
-   public static void setByteArraysToBase64(boolean byteArraysToBase64) {
-       Defaults.byteArraysToBase64 = byteArraysToBase64;
-   }
+    /**
+     * @param byteArraysToBase64 the byteArraysToBase64 to set
+     */
+    public static void setByteArraysToBase64(boolean byteArraysToBase64) {
+        Defaults.byteArraysToBase64 = byteArraysToBase64;
+    }
 
-   /**
+    /**
      * Sets the default dispatcher used by Method instances.
      *
      * @param value
@@ -209,15 +210,15 @@ public class Defaults {
      * If true, the 'X-HTTP-Method-Override' header is set on each request.
      * @return
      */
-	public static boolean isAddXHttpMethodOverrideHeader() {
-		return addXHttpMethodOverrideHeader;
-	}
+    public static boolean isAddXHttpMethodOverrideHeader() {
+        return addXHttpMethodOverrideHeader;
+    }
 
-	/**
-	 * If true, the 'X-HTTP-Method-Override' header is set on each request. Default is true.
-	 * @param addXHttpMethodOverrideHeader
-	 */
-	public static void setAddXHttpMethodOverrideHeader(boolean addXHttpMethodOverrideHeader) {
-		Defaults.addXHttpMethodOverrideHeader = addXHttpMethodOverrideHeader;
-	}
+    /**
+     * If true, the 'X-HTTP-Method-Override' header is set on each request. Default is true.
+     * @param addXHttpMethodOverrideHeader
+     */
+    public static void setAddXHttpMethodOverrideHeader(boolean addXHttpMethodOverrideHeader) {
+        Defaults.addXHttpMethodOverrideHeader = addXHttpMethodOverrideHeader;
+    }
 }

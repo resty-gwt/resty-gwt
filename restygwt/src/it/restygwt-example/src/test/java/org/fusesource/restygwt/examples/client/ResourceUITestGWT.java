@@ -29,7 +29,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONValue;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class ResourceUITestGWT extends UITestGWT {

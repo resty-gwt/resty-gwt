@@ -27,47 +27,49 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JType;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class GwtJacksonEncoderDecoderInstanceLocator extends JsonEncoderDecoderInstanceLocator {
 
-    
+
     public GwtJacksonEncoderDecoderInstanceLocator(GeneratorContext context, TreeLogger logger)
-            throws UnableToCompleteException {
-    	super(context,logger);
+        throws UnableToCompleteException {
+        super(context, logger);
     }
-
 
 
     /* (non-Javadoc)
-	 * @see org.fusesource.restygwt.rebind.EncoderDecoderLocator#encodeExpression(com.google.gwt.core.ext.typeinfo.JType, java.lang.String, org.fusesource.restygwt.client.Json.Style)
-	 */
+    * @see org.fusesource.restygwt.rebind.EncoderDecoderLocator#encodeExpression(com.google.gwt.core.ext.typeinfo
+    * .JType, java.lang.String, org.fusesource.restygwt.client.Json.Style)
+    */
     @Override
-	public String encodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
-        return encodeDecodeExpression(type, expression,"encode");
+    public String encodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
+        return encodeDecodeExpression(type, expression, "encode");
     }
 
     /* (non-Javadoc)
-	 * @see org.fusesource.restygwt.rebind.EncoderDecoderLocator#decodeExpression(com.google.gwt.core.ext.typeinfo.JType, java.lang.String, org.fusesource.restygwt.client.Json.Style)
-	 */
+    * @see org.fusesource.restygwt.rebind.EncoderDecoderLocator#decodeExpression(com.google.gwt.core.ext.typeinfo
+    * .JType, java.lang.String, org.fusesource.restygwt.client.Json.Style)
+    */
     @Override
-	public String decodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
-        return encodeDecodeExpression(type, expression,"decode");
+    public String decodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
+        return encodeDecodeExpression(type, expression, "decode");
     }
-    
+
     private String getEncoderDecoder(JType type, TreeLogger logger) throws UnableToCompleteException {
         String rc = builtInEncoderDecoders.get(type);
         if (rc == null) {
-            JClassType ct = type.isClass() == null? type.isInterface() : type.isClass();
-        	GwtJacksonEncoderDecoderClassCreator generator = new GwtJacksonEncoderDecoderClassCreator(logger, context, ct);
+            JClassType ct = type.isClass() == null ? type.isInterface() : type.isClass();
+            GwtJacksonEncoderDecoderClassCreator generator =
+                new GwtJacksonEncoderDecoderClassCreator(logger, context, ct);
             return generator.create() + ".INSTANCE";
         }
         return rc;
     }
 
     private String encodeDecodeExpression(JType type, String expression, String encoderMethod)
-            throws UnableToCompleteException {
+        throws UnableToCompleteException {
 
         String encoderDecoder = getEncoderDecoder(type, logger);
         if (encoderDecoder != null) {
@@ -77,6 +79,5 @@ public class GwtJacksonEncoderDecoderInstanceLocator extends JsonEncoderDecoderI
         return null;
     }
 
-   
 
 }

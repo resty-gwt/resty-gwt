@@ -26,13 +26,14 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class NameObject extends JavaScriptObject {
 
-  protected NameObject() { }
+    protected NameObject() {
+    }
 
-  public final native String getName() /*-{
-    return this.name;
-  }-*/;
+    public final native String getName() /*-{
+        return this.name;
+    }-*/;
 
-  public final native void setName(String name) /*-{
-    this.name = name;
-  }-*/;
+    public final native void setName(String name) /*-{
+        this.name = name;
+    }-*/;
 }

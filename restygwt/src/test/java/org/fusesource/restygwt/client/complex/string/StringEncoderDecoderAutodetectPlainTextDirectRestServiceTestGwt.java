@@ -26,7 +26,8 @@ import org.fusesource.restygwt.client.complex.string.service.StringDirectRestSer
 
 import com.google.gwt.core.client.GWT;
 
-public class StringEncoderDecoderAutodetectPlainTextDirectRestServiceTestGwt extends StringEncoderDecoderDirectRestServiceTestGwt {
+public class StringEncoderDecoderAutodetectPlainTextDirectRestServiceTestGwt
+    extends StringEncoderDecoderDirectRestServiceTestGwt {
 
     @Override
     public String getModuleName() {

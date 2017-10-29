@@ -21,13 +21,14 @@ package org.fusesource.restygwt.examples.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fusesource.restygwt.client.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.google.gwt.core.client.GWT;
+import org.fusesource.restygwt.client.Json;
+import org.fusesource.restygwt.client.JsonEncoderDecoder;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class PizzaOrder {
@@ -35,8 +36,8 @@ public class PizzaOrder {
     public String phone_number;
 
     public boolean delivery;
-    
-    @Json(name="delivery-address")
+
+    @Json(name = "delivery-address")
     @JsonProperty("delivery-address")
     public List<String> delivery_address = new ArrayList<String>(4);
 

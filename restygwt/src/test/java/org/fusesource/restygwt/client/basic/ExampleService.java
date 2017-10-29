@@ -29,7 +29,7 @@ import javax.ws.rs.Path;
 /**
  * Supersimple example service for testing...
  *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>
  */
 public interface ExampleService extends RestService {
     @GET

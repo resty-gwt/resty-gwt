@@ -37,47 +37,45 @@ public class JsonCreatorWithSubtypesRecursive extends GWTTestCase {
 
     @Override
     public String getModuleName() {
-	return "org.fusesource.restygwt.BasicTestGwt";
+        return "org.fusesource.restygwt.BasicTestGwt";
     }
 
     @JsonTypeInfo(use = Id.NAME, include = As.PROPERTY, property = "@type")
     @JsonSubTypes({ @Type(Thing1.class), @Type(Thing2.class) })
     public static abstract class AbstractThing {
-	private final String name;
+        private final String name;
 
-	protected AbstractThing(String name) {
-	    this.name = name;
-	}
+        protected AbstractThing(String name) {
+            this.name = name;
+        }
 
-	public String getName() {
-	    return name;
-	}
+        public String getName() {
+            return name;
+        }
     }
 
     @JsonTypeName("thing1")
     public static class Thing1 extends AbstractThing {
-	private final double value;
+        private final double value;
 
-	@JsonCreator
-	public Thing1(@JsonProperty("name") String name, @JsonProperty("value") double value) {
-	    super(name);
-	    this.value = value;
-	}
+        @JsonCreator
+        public Thing1(@JsonProperty("name") String name, @JsonProperty("value") double value) {
+            super(name);
+            this.value = value;
+        }
 
-	public double getValue() {
-	    return value;
-	}
+        public double getValue() {
+            return value;
+        }
     }
 
     @JsonTypeName("thing2")
-    @JsonSubTypes({ @Type(Thing3.class)})
+    @JsonSubTypes({ @Type(Thing3.class) })
     public static class Thing2 extends AbstractThing {
         private final String value;
 
         @JsonCreator
-        public Thing2(@JsonProperty("name")
-        String name, @JsonProperty("value")
-        String value) {
+        public Thing2(@JsonProperty("name") String name, @JsonProperty("value") String value) {
             super(name);
             this.value = value;
         }
@@ -92,10 +90,8 @@ public class JsonCreatorWithSubtypesRecursive extends GWTTestCase {
         private final String value2;
 
         @JsonCreator
-        public Thing3(@JsonProperty("name")
-        String name, @JsonProperty("value")
-        String value, @JsonProperty("value2")
-        String value2) {
+        public Thing3(@JsonProperty("name") String name, @JsonProperty("value") String value,
+                      @JsonProperty("value2") String value2) {
             super(name, value);
             this.value2 = value2;
         }
@@ -110,29 +106,29 @@ public class JsonCreatorWithSubtypesRecursive extends GWTTestCase {
 
     @Test
     public void test() {
-	ThingCodec codec = GWT.create(ThingCodec.class);
+        ThingCodec codec = GWT.create(ThingCodec.class);
 
-	Thing1 t1 = new Thing1("Fred", 12.0);
-	JSONValue t1v = codec.encode(t1);
-	Thing1 t1a = (Thing1)codec.decode(t1v);
+        Thing1 t1 = new Thing1("Fred", 12.0);
+        JSONValue t1v = codec.encode(t1);
+        Thing1 t1a = (Thing1) codec.decode(t1v);
 
-	assertEquals("name", t1.getName(), t1a.getName());
-	assertEquals("value", t1.getValue(), t1a.getValue(), 0.0);
+        assertEquals("name", t1.getName(), t1a.getName());
+        assertEquals("value", t1.getValue(), t1a.getValue(), 0.0);
 
-	Thing2 t2 = new Thing2("Fred", "Bob");
-    JSONValue t2v = codec.encode(t2);
-    Thing2 t2a = (Thing2)codec.decode(t2v);
+        Thing2 t2 = new Thing2("Fred", "Bob");
+        JSONValue t2v = codec.encode(t2);
+        Thing2 t2a = (Thing2) codec.decode(t2v);
 
-    assertEquals("name", t2.getName(), t2a.getName());
-    assertEquals("value", t2.getValue(), t2a.getValue());
+        assertEquals("name", t2.getName(), t2a.getName());
+        assertEquals("value", t2.getValue(), t2a.getValue());
 
-    Thing3 t3 = new Thing3("Fred", "Bob", "Wilma"); //$NON-NLS-1$
-    JSONValue t3v = codec.encode(t3);
-    Thing3 t3a = (Thing3)codec.decode(t3v);
-    assertNotNull(t3a);
+        Thing3 t3 = new Thing3("Fred", "Bob", "Wilma"); //$NON-NLS-1$
+        JSONValue t3v = codec.encode(t3);
+        Thing3 t3a = (Thing3) codec.decode(t3v);
+        assertNotNull(t3a);
 
-    assertEquals("name", t3.getName(), t3a.getName());
-    assertEquals("value", t3.getValue(), t3a.getValue());
-    assertEquals("value2", t3.getValue2(), t3a.getValue2());
+        assertEquals("name", t3.getName(), t3a.getName());
+        assertEquals("value", t3.getValue(), t3a.getValue());
+        assertEquals("value2", t3.getValue2(), t3a.getValue2());
     }
 }

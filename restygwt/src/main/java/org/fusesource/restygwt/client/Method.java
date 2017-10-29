@@ -41,6 +41,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
+
 /**
  *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
@@ -65,11 +66,12 @@ public class Method {
 
             super(method, url);
             //without null value being explicitly set gwt would generate "undefined" as a default value,
-            //so if request does not have a body, Internet Explorer would send string "undefined" in the body of POST, PUT and DELETE requests,
+            //so if request does not have a body, Internet Explorer would send string "undefined" in the body of
+            // POST, PUT and DELETE requests,
             //which may cause the request to fall on server with "No operation matching request path"
             setRequestData(null);
-            if(Defaults.isAddXHttpMethodOverrideHeader()){
-            	setHeader("X-HTTP-Method-Override", method);
+            if (Defaults.isAddXHttpMethodOverrideHeader()) {
+                setHeader("X-HTTP-Method-Override", method);
             }
         }
     }
@@ -77,14 +79,16 @@ public class Method {
     public RequestBuilder builder;
 
     final Set<Integer> expectedStatuses;
+
     {
-      expectedStatuses = new HashSet<Integer>();
-      expectedStatuses.add(200);
-      expectedStatuses.add(201);
-      expectedStatuses.add(204);
-      // This is needed for MSIE mangling with status 204 to become 1223
-      expectedStatuses.add(1223);
+        expectedStatuses = new HashSet<Integer>();
+        expectedStatuses.add(200);
+        expectedStatuses.add(201);
+        expectedStatuses.add(204);
+        // This is needed for MSIE mangling with status 204 to become 1223
+        expectedStatuses.add(1223);
     }
+
     boolean anyStatus;
 
     Request request;
@@ -173,34 +177,34 @@ public class Method {
      * any of the values specified then the request is considered to have failed.  Defaults to accepting
      * 200,201,204. If set to -1 then any status code is considered a success.
      */
-    public Method expect(int ... statuses) {
-        if ( statuses.length==1 && statuses[0] < 0) {
+    public Method expect(int... statuses) {
+        if (statuses.length == 1 && statuses[0] < 0) {
             anyStatus = true;
         } else {
             anyStatus = false;
             this.expectedStatuses.clear();
-            for( int status : statuses ) {
+            for (int status : statuses) {
                 this.expectedStatuses.add(status);
             }
         }
         return this;
     }
 
-	/**
+    /**
      * Local file-system (file://) does not return any status codes.
      * Therefore - if we read from the file-system we accept all codes.
-     * 
+     *
      * This is for instance relevant when developing a PhoneGap application with
      * restyGwt.
      */
     public boolean isExpected(int status) {
-    	
-    	String baseUrl = GWT.getHostPageBaseURL();
-    	String requestUrl = builder.getUrl();
-		
-    	if (FileSystemHelper.isRequestGoingToFileSystem(baseUrl, requestUrl)) {
-    		return true;
-    	} else if (anyStatus) {
+
+        String baseUrl = GWT.getHostPageBaseURL();
+        String requestUrl = builder.getUrl();
+
+        if (FileSystemHelper.isRequestGoingToFileSystem(baseUrl, requestUrl)) {
+            return true;
+        } else if (anyStatus) {
             return true;
         } else {
             return this.expectedStatuses.contains(status);
@@ -217,7 +221,7 @@ public class Method {
 
     private Logger getLogger() {
         if (GWT.isClient() && LogConfiguration.loggingIsEnabled() && this.logger == null) {
-            this.logger = Logger.getLogger( Method.class.getName() );
+            this.logger = Logger.getLogger(Method.class.getName());
         }
         return this.logger;
     }
@@ -236,8 +240,9 @@ public class Method {
                 }
             });
         } catch (Throwable e) {
-            if( getLogger() != null ){
-                getLogger().log(Level.FINE, "Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            if (getLogger() != null) {
+                getLogger()
+                    .log(Level.FINE, "Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
             }
             callback.onFailure(this, e);
             return null;
@@ -259,8 +264,9 @@ public class Method {
                 }
             });
         } catch (Throwable e) {
-            if( getLogger() != null ){
-                getLogger().log(Level.FINE, "Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            if (getLogger() != null) {
+                getLogger()
+                    .log(Level.FINE, "Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
             }
             callback.onFailure(this, e);
             return null;
@@ -281,8 +287,9 @@ public class Method {
                 }
             });
         } catch (Throwable e) {
-            if( getLogger() != null ){
-                getLogger().log(Level.FINE, "Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            if (getLogger() != null) {
+                getLogger()
+                    .log(Level.FINE, "Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
             }
             callback.onFailure(this, e);
             return null;
@@ -315,8 +322,9 @@ public class Method {
                 }
             });
         } catch (Throwable e) {
-            if( getLogger() != null ){
-                getLogger().log(Level.FINE, "Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
+            if (getLogger() != null) {
+                getLogger()
+                    .log(Level.FINE, "Received http error for: " + builder.getHTTPMethod() + " " + builder.getUrl(), e);
             }
             callback.onFailure(this, e);
             return null;

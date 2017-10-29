@@ -19,10 +19,10 @@
 -->
 
 <module>
-    <inherits name='com.google.gwt.user.User' />
+    <inherits name='com.google.gwt.user.User'/>
     <inherits name='com.google.gwt.logging.Logging'/>
     <inherits name='org.fusesource.restygwt.RestyGWT'/>
-    <servlet path='/echo/*' class='org.fusesource.restygwt.server.basic.EchoTestGwtServlet' />
+    <servlet path='/echo/*' class='org.fusesource.restygwt.server.basic.EchoTestGwtServlet'/>
 
     <source path='client'/>
     <source path='example/client'/>

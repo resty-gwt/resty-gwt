@@ -27,23 +27,24 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class PizzaServiceUITestGWT extends UITestGWT {
 
-        public void testListToppings() {
+    public void testListToppings() {
 
         // Initialize the pizza service..
         PizzaService service = GWT.create(PizzaService.class);
 
-        service.listToppings(new MethodCallback<List<Topping>>(){
+        service.listToppings(new MethodCallback<List<Topping>>() {
             public void onSuccess(Method method, List<Topping> response) {
                 System.out.println(response);
                 assertNotNull(response);
                 assertEquals(3, response.size());
                 finishTest();
             }
+
             public void onFailure(Method method, Throwable exception) {
                 exception.printStackTrace();
                 fail(exception.getMessage());
@@ -125,13 +126,14 @@ public class PizzaServiceUITestGWT extends UITestGWT {
         // Initialize the pizza service..
         PizzaService service = GWT.create(PizzaService.class);
 
-        service.getCurstPrices(crust, new MethodCallback<Map<Integer, Double>>(){
+        service.getCurstPrices(crust, new MethodCallback<Map<Integer, Double>>() {
             public void onSuccess(Method method, Map<Integer, Double> response) {
                 System.out.println(response);
                 assertNotNull(response);
                 assertEquals(2, response.size());
                 finishTest();
             }
+
             public void onFailure(Method method, Throwable exception) {
                 exception.printStackTrace();
                 fail(exception.getMessage());

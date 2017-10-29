@@ -25,16 +25,18 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class JsonEncoderDecoderGenerator extends Generator {
 
     @Override
-    public String generate(TreeLogger logger, GeneratorContext context, String source) throws UnableToCompleteException {
+    public String generate(TreeLogger logger, GeneratorContext context, String source)
+        throws UnableToCompleteException {
         try {
             JClassType type = find(logger, context, source);
-            ExtendedJsonEncoderDecoderClassCreator generator = new ExtendedJsonEncoderDecoderClassCreator(logger, context, type);
+            ExtendedJsonEncoderDecoderClassCreator generator =
+                new ExtendedJsonEncoderDecoderClassCreator(logger, context, type);
             return generator.create();
         } finally {
             BaseSourceCreator.clearGeneratedClasses();

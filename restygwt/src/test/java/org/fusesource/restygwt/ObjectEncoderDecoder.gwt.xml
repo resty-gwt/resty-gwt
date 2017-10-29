@@ -19,11 +19,11 @@
 -->
 
 <module>
-    <inherits name='com.google.gwt.user.User' />
+    <inherits name='com.google.gwt.user.User'/>
     <inherits name='com.google.gwt.logging.Logging'/>
     <inherits name='org.fusesource.restygwt.RestyGWT'/>
-    
-    <servlet path='/properties/*' class='org.fusesource.restygwt.server.complex.ObjectEncoderDecoderServlet' />
+
+    <servlet path='/properties/*' class='org.fusesource.restygwt.server.complex.ObjectEncoderDecoderServlet'/>
 
     <source path='client'/>
 </module>

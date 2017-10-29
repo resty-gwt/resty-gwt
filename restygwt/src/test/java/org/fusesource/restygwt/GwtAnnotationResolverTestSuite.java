@@ -30,7 +30,7 @@ import com.google.gwt.junit.tools.GWTTestSuite;
 /**
  * separate testsuite for tests where {@link AnnotationResolver}s are added to restygwt
  *
- * @author <a href="mailto:andi.balke@gmail.com">andi</<a>
+ * @author <a href="mailto:andi.balke@gmail.com">andi</a>
  */
 public class GwtAnnotationResolverTestSuite extends TestCase {
 
@@ -39,7 +39,7 @@ public class GwtAnnotationResolverTestSuite extends TestCase {
      * @return the suite of that module
      */
     public static Test suite() {
-        GWTTestSuite suite = new GWTTestSuite("AnnotationResolver GwtTestCases" );
+        GWTTestSuite suite = new GWTTestSuite("AnnotationResolver GwtTestCases");
 
         suite.addTestSuite(ModelChangeAnnotationTestGwt.class);
 

@@ -16,19 +16,19 @@ import java.io.IOException;
  */
 public class AttributeTestGwtServlet extends HttpServlet {
 
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		doAttributeRequest(request, response);
-	}
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        doAttributeRequest(request, response);
+    }
 
-	@SuppressWarnings("unchecked")
-	private void doAttributeRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		AttributeDTO dto = new AttributeDTO();
-		dto.setPath(request.getPathInfo());
+    @SuppressWarnings("unchecked")
+    private void doAttributeRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        AttributeDTO dto = new AttributeDTO();
+        dto.setPath(request.getPathInfo());
 
-		ObjectMapper mapper = new ObjectMapper();
-		response.setContentType("application/json");
-		mapper.writeValue(response.getOutputStream(), dto);
-	}
+        ObjectMapper mapper = new ObjectMapper();
+        response.setContentType("application/json");
+        mapper.writeValue(response.getOutputStream(), dto);
+    }
 
 }

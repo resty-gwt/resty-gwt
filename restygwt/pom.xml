@@ -19,236 +19,237 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.fusesource.restygwt</groupId>
-    <artifactId>restygwt-project</artifactId>
-    <version>2.2.1</version>
-    <relativePath>..</relativePath>
-  </parent>
+    <parent>
+        <groupId>org.fusesource.restygwt</groupId>
+        <artifactId>restygwt-project</artifactId>
+        <version>2.2.1</version>
+        <relativePath>..</relativePath>
+    </parent>
 
-  <artifactId>restygwt</artifactId>
-  <packaging>jar</packaging>
+    <artifactId>restygwt</artifactId>
+    <packaging>jar</packaging>
 
-  <name>${project.artifactId}</name>
-  <description>RestyGWT is a GWT generator for REST services and JSON encoded data transfer objects</description>
+    <name>${project.artifactId}</name>
+    <description>RestyGWT is a GWT generator for REST services and JSON encoded data transfer objects</description>
 
-  <dependencies>
+    <dependencies>
 
-    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-      <version>2.0.1</version>
-      <scope>provided</scope>
-    </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-user</artifactId>
-      <version>${gwt.version}</version>
-      <scope>provided</scope>
-    </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-dev</artifactId>
-      <version>${gwt.version}</version>
-      <scope>provided</scope>
-    </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-    <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.8.1</version>
-        <scope>test</scope>
-    </dependency>
-    
-    <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>${jackson.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>${jackson.version}</version>
-        <classifier>sources</classifier>
-    </dependency>
-    <dependency>
-        <groupId>org.easymock</groupId>
-        <artifactId>easymock</artifactId>
-        <version>3.0</version>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-jaxrs</artifactId>
-      <version>${resteasy.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-jackson-provider</artifactId>
-      <version>${resteasy.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.github.nmorel.gwtjackson</groupId>
-      <artifactId>gwt-jackson</artifactId>
-      <version>0.14.2</version>
-    </dependency>
-  </dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
 
-  <build>
-    <defaultGoal>install</defaultGoal>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+            <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jaxrs</artifactId>
+            <version>${resteasy.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson-provider</artifactId>
+            <version>${resteasy.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.nmorel.gwtjackson</groupId>
+            <artifactId>gwt-jackson</artifactId>
+            <version>0.14.2</version>
+        </dependency>
+    </dependencies>
 
-    <plugins>
-      <!-- IDE -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-eclipse-plugin</artifactId>
-        <version>2.8</version>  <!-- Note 2.8 does not work with AspectJ aspect path -->
-        <configuration>
-          <downloadSources>true</downloadSources>
-          <downloadJavadocs>false</downloadJavadocs>
-          <wtpversion>none</wtpversion>
-          <additionalBuildcommands>
+    <build>
+        <defaultGoal>install</defaultGoal>
 
-            <buildCommand>
-              <name>com.google.gwt.eclipse.core.gwtProjectValidator</name>
-            </buildCommand>
-          </additionalBuildcommands>
-          <additionalProjectnatures>
-            <projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
-          </additionalProjectnatures>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>gwt-maven-plugin</artifactId>
-	<version>${gwt.version}</version>
-
-        <configuration>
-          <gen>${project.build.directory}/.generated</gen>
-          <logLevel>INFO</logLevel>
-          <noServer>false</noServer>
-          <extraJvmArgs>-Xmx1024m</extraJvmArgs>
-          <mode>htmlunit</mode>
-          <testTimeOut>300</testTimeOut>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>resources</goal>
-              <goal>test</goal>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
-        <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.19.1</version>
-        <configuration>
-          <failIfNoTests>false</failIfNoTests>
-          <useFile>false</useFile>
-        </configuration>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.3</version>
-
-        <configuration>
-          <charset>UTF-8</charset>
-          <docencoding>UTF-8</docencoding>
-          <version>false</version>
-          <author>true</author>
-          <keywords>true</keywords>
-
-          <stylesheetfile>${project.build.directory}/javadoc-skin/stylesheet.css</stylesheetfile>
-
-          <doctitle>${project.name} API Reference (${project.version})</doctitle>
-          <windowtitle>${project.name} API Reference (${project.version})</windowtitle>
-          <links>
-            <link>http://download.oracle.com/javase/6/docs/api</link>
-            <link>http://google-web-toolkit.googlecode.com/svn/javadoc/2.2</link>
-          </links>
-          <encoding>UTF-8</encoding>
-          <locale>en_US</locale>
-          <linksource>true</linksource>
-          <excludePackageNames>*.internal</excludePackageNames>
-        </configuration>
-      </plugin> 
-
-    </plugins>
-  </build>
-
-
-  <profiles>
-
-    <profile>
-      <id>run-its</id>
-      <build>
         <plugins>
-          <plugin>
-            <artifactId>maven-invoker-plugin</artifactId>
-            <version>1.5</version>
-            <configuration>
-              <debug>true</debug>
-              <projectsDirectory>src/it</projectsDirectory>
-              <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
-              <pomIncludes>
-                <pomInclude>*/pom.xml</pomInclude>
-              </pomIncludes>
-              <preBuildHookScript>setup</preBuildHookScript>
-              <postBuildHookScript>verify</postBuildHookScript>
-              <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
-              <settingsFile>src/it/settings.xml</settingsFile>
-              <goals>
-                <goal>clean</goal>
-                <goal>install</goal>
-              </goals>
-              <properties>
-                <restygwt-version>${project.version}</restygwt-version>
-              </properties>
-            </configuration>
-            <executions>
-              <execution>
-                <id>integration-test</id>
-                <goals>
-                  <goal>install</goal>
-                  <goal>run</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
+            <!-- IDE -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.8</version>  <!-- Note 2.8 does not work with AspectJ aspect path -->
+                <configuration>
+                    <downloadSources>true</downloadSources>
+                    <downloadJavadocs>false</downloadJavadocs>
+                    <wtpversion>none</wtpversion>
+                    <additionalBuildcommands>
+
+                        <buildCommand>
+                            <name>com.google.gwt.eclipse.core.gwtProjectValidator</name>
+                        </buildCommand>
+                    </additionalBuildcommands>
+                    <additionalProjectnatures>
+                        <projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
+                    </additionalProjectnatures>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>${gwt.version}</version>
+
+                <configuration>
+                    <gen>${project.build.directory}/.generated</gen>
+                    <logLevel>INFO</logLevel>
+                    <noServer>false</noServer>
+                    <extraJvmArgs>-Xmx1024m</extraJvmArgs>
+                    <mode>htmlunit</mode>
+                    <testTimeOut>300</testTimeOut>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>resources</goal>
+                            <goal>test</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <failIfNoTests>false</failIfNoTests>
+                    <useFile>false</useFile>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+
+                <configuration>
+                    <charset>UTF-8</charset>
+                    <docencoding>UTF-8</docencoding>
+                    <version>false</version>
+                    <author>true</author>
+                    <keywords>true</keywords>
+
+                    <stylesheetfile>${project.build.directory}/javadoc-skin/stylesheet.css</stylesheetfile>
+
+                    <doctitle>${project.name} API Reference (${project.version})</doctitle>
+                    <windowtitle>${project.name} API Reference (${project.version})</windowtitle>
+                    <links>
+                        <link>http://download.oracle.com/javase/6/docs/api</link>
+                        <link>http://google-web-toolkit.googlecode.com/svn/javadoc/2.2</link>
+                    </links>
+                    <encoding>UTF-8</encoding>
+                    <locale>en_US</locale>
+                    <linksource>true</linksource>
+                    <excludePackageNames>*.internal</excludePackageNames>
+                </configuration>
+            </plugin>
+
         </plugins>
-      </build>
-    </profile>
+    </build>
 
-  </profiles>
 
-  <properties>
-    <!--Must stay on 3.0.x branch to be buildable with JDK7 (3.1.x branch requires JDK8).-->
-    <resteasy.version>3.0.24.Final</resteasy.version>
-    <!-- we need to keep this in sync with gwt-jackson's dependencies -->
-    <jackson.version>2.8.4</jackson.version>
-    <gwt.version>2.7.0</gwt.version>
-  </properties>
+    <profiles>
+
+        <profile>
+            <id>run-its</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-invoker-plugin</artifactId>
+                        <version>1.5</version>
+                        <configuration>
+                            <debug>true</debug>
+                            <projectsDirectory>src/it</projectsDirectory>
+                            <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+                            <pomIncludes>
+                                <pomInclude>*/pom.xml</pomInclude>
+                            </pomIncludes>
+                            <preBuildHookScript>setup</preBuildHookScript>
+                            <postBuildHookScript>verify</postBuildHookScript>
+                            <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
+                            <settingsFile>src/it/settings.xml</settingsFile>
+                            <goals>
+                                <goal>clean</goal>
+                                <goal>install</goal>
+                            </goals>
+                            <properties>
+                                <restygwt-version>${project.version}</restygwt-version>
+                            </properties>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>integration-test</id>
+                                <goals>
+                                    <goal>install</goal>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+
+    <properties>
+        <!--Must stay on 3.0.x branch to be buildable with JDK7 (3.1.x branch requires JDK8).-->
+        <resteasy.version>3.0.24.Final</resteasy.version>
+        <!-- we need to keep this in sync with gwt-jackson's dependencies -->
+        <jackson.version>2.8.4</jackson.version>
+        <gwt.version>2.7.0</gwt.version>
+    </properties>
 </project>

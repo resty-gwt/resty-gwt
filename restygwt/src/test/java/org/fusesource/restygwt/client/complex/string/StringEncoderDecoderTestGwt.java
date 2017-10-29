@@ -55,7 +55,8 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
     }
 
     /**
-     * Test method only success through "onFailure" with restygwt <= 2.0.3 or plain text autodetection set to false (default)
+     * Test method only success through "onFailure" with restygwt <= 2.0.3 or plain text autodetection set to false
+     * (default)
      */
     public void testSendJsonString() {
         StringRestService strings = GWT.create(StringRestService.class);
@@ -71,7 +72,7 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
             @Override
             public void onFailure(Method method, Throwable exception) {
                 if (400 == method.getResponse().getStatusCode() && exception instanceof FailedResponseException &&
-                        "Wrong Format".equals(((FailedResponseException) exception).getResponse().getText())) {
+                    "Wrong Format".equals(((FailedResponseException) exception).getResponse().getText())) {
                     finishTest();
                 } else {
                     fail();
@@ -100,7 +101,8 @@ public class StringEncoderDecoderTestGwt extends GWTTestCase {
     }
 
     /**
-     * Test method only success through "onFailure" with restygwt <= 2.0.3 or plain text autodetection set to false (default)
+     * Test method only success through "onFailure" with restygwt <= 2.0.3 or plain text autodetection set to false
+     * (default)
      */
     public void testPlainTextStringWithMethodCallback() {
         StringRestService strings = GWT.create(StringRestService.class);

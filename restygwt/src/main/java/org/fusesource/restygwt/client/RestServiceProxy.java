@@ -19,7 +19,7 @@
 package org.fusesource.restygwt.client;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public interface RestServiceProxy {
@@ -27,9 +27,9 @@ public interface RestServiceProxy {
     void setResource(Resource resource);
 
     Resource getResource();
-    
+
     void setDispatcher(Dispatcher dispatcher);
-    
+
     Dispatcher getDispatcher();
 
 }

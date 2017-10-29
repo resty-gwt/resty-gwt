@@ -21,7 +21,7 @@ package org.fusesource.restygwt.examples.client;
 import com.google.gwt.junit.client.GWTTestCase;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 abstract public class UITestGWT extends GWTTestCase {

@@ -52,9 +52,8 @@ public class DefaultDispatcherFilter implements DispatcherFilter {
     @Override
     public boolean filter(final Method method, final RequestBuilder builder) {
         if (LogConfiguration.loggingIsEnabled()) {
-            Logger.getLogger(Dispatcher.class.getName()).info(
-                    "Sending http request: " + builder.getHTTPMethod() + " "
-                            + builder.getUrl());
+            Logger.getLogger(Dispatcher.class.getName())
+                .info("Sending http request: " + builder.getHTTPMethod() + " " + builder.getUrl());
         }
 
         builder.setCallback(callbackFactory.createCallback(method));

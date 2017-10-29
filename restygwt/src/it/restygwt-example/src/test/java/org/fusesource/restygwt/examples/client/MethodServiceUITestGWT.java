@@ -27,7 +27,7 @@ import com.google.gwt.core.client.GWT;
 /**
  * This test verifies that all the http methods can be accessed via a
  * RestService.
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class MethodServiceUITestGWT extends UITestGWT {

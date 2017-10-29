@@ -31,23 +31,28 @@ import java.util.List;
 
 /**
  * Example of using the DirectRestService call.
- * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</<a>
+ * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</a>
  */
 public interface DirectExampleService extends DirectRestService {
 
-    @GET @Path("/list")
+    @GET
+    @Path("/list")
     List<ExampleDto> getExampleDtos(@QueryParam("id") String id);
 
-    @GET @Path("/date")
+    @GET
+    @Path("/date")
     Long getDate(@QueryParam("date") Date date);
 
-    @POST @Path("/store")
+    @POST
+    @Path("/store")
     void storeDto(ExampleDto exampleDto);
 
-    @GET @Path("/get/{id : \\d+}")
+    @GET
+    @Path("/get/{id : \\d+}")
     Integer getRegex(@PathParam(value = "id") Integer i);
 
-    @GET @Path("/get/{id : \\d+}/things/{thing: \\d+}")
+    @GET
+    @Path("/get/{id : \\d+}/things/{thing: \\d+}")
     Integer getRegexMultiParams(@PathParam(value = "id") Integer i, @PathParam(value = "thing") Integer t);
 
 }

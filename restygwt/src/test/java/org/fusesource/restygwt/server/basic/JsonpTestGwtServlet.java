@@ -42,7 +42,8 @@ public class JsonpTestGwtServlet extends HttpServlet {
         String responseFunction = request.getParameter("callback");
         if (null != responseFunction) {
             if (request.getRequestURI().endsWith("/list")) {
-                response.getWriter().print(responseFunction + "([" + DUMMY_RESPONSE + ",{\"name\":\"myName2\"}" + "]);");
+                response.getWriter()
+                    .print(responseFunction + "([" + DUMMY_RESPONSE + ",{\"name\":\"myName2\"}" + "]);");
             } else {
                 response.getWriter().print(responseFunction + "(" + DUMMY_RESPONSE + ");");
             }

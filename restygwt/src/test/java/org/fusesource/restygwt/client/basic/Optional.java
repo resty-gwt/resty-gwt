@@ -44,11 +44,13 @@ public abstract class Optional<T> {
             this.reference = reference;
         }
 
-        @Override public boolean isPresent() {
+        @Override
+        public boolean isPresent() {
             return true;
         }
 
-        @Override public T get() {
+        @Override
+        public T get() {
             return reference;
         }
 

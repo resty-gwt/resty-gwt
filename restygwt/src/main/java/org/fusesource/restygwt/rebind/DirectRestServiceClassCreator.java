@@ -27,14 +27,9 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
 
     @Override
     protected ClassSourceFileComposerFactory createComposerFactory() throws UnableToCompleteException {
-        return createClassSourceComposerFactory(JavaSourceCategory.CLASS,
-                null,
-                new String[]{
-                        source.getParameterizedQualifiedSourceName(),
-                        CallbackAware.class.getCanonicalName(),
-                        RestServiceProxy.class.getCanonicalName()
-                }
-        );
+        return createClassSourceComposerFactory(JavaSourceCategory.CLASS, null,
+            new String[] { source.getParameterizedQualifiedSourceName(), CallbackAware.class.getCanonicalName(),
+                RestServiceProxy.class.getCanonicalName() });
     }
 
     @Override
@@ -58,20 +53,16 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
         String restServiceProxyClass = RestServiceProxy.class.getCanonicalName();
 
         p("public final void setResource(" + resourceClass + " resource) {").i(1)
-            .p("((" + restServiceProxyClass + ")service).setResource(resource);").i(-1)
-        .p("}");
+            .p("((" + restServiceProxyClass + ")service).setResource(resource);").i(-1).p("}");
 
         p("public final " + resourceClass + " getResource() {").i(1)
-            .p("return ((" + restServiceProxyClass + ")service).getResource();").i(-1)
-        .p("}");
+            .p("return ((" + restServiceProxyClass + ")service).getResource();").i(-1).p("}");
 
         p("public final void setDispatcher(" + dispatcherClass + " resource) {").i(1)
-            .p("((" + restServiceProxyClass + ")service).setDispatcher(resource);").i(-1)
-        .p("}");
+            .p("((" + restServiceProxyClass + ")service).setDispatcher(resource);").i(-1).p("}");
 
         p("public final " + dispatcherClass + " getDispatcher() {").i(1)
-            .p("return ((" + restServiceProxyClass + ")service).getDispatcher();").i(-1)
-        .p("}");
+            .p("return ((" + restServiceProxyClass + ")service).getDispatcher();").i(-1).p("}");
     }
 
     private void createCallbackSupportMethodsAndField() {
@@ -87,10 +78,10 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
     }
 
     private void generateMethod(JMethod method) {
-        p( getMethodDeclaration(method) + " {").i(1);
-            generateCallVerifyCallback(method);
-            generateCallServiceMethod(method);
-            generateReturnNull(method);
+        p(getMethodDeclaration(method) + " {").i(1);
+        generateCallVerifyCallback(method);
+        generateCallServiceMethod(method);
+        generateReturnNull(method);
         i(-1).p("}");
     }
 
@@ -106,13 +97,10 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
         StringBuilder stringBuilder = new StringBuilder();
         OnceFirstIterator<String> comma = new OnceFirstIterator<String>("", ", ");
 
-        stringBuilder.append("service.")
-                .append(method.getName())
-                .append("(");
+        stringBuilder.append("service.").append(method.getName()).append("(");
 
         for (JParameter parameter : method.getParameters()) {
-            stringBuilder.append(comma.next())
-                    .append(parameter.getName());
+            stringBuilder.append(comma.next()).append(parameter.getName());
         }
 
         stringBuilder.append(comma.next());
@@ -129,12 +117,12 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
 
     private void generateReturnNull(JMethod method) {
         if (isVoidMethod(method)) {
-        	// check void first since JPrimitiveType will consider void to be a primitive
-        	return;
+            // check void first since JPrimitiveType will consider void to be a primitive
+            return;
         } else if (method.getReturnType().isPrimitive() != null) {
-        	JPrimitiveType primitiveType = method.getReturnType().isPrimitive();
-        	p("return " + primitiveType.getUninitializedFieldExpression() + ";");
-    	} else {
+            JPrimitiveType primitiveType = method.getReturnType().isPrimitive();
+            p("return " + primitiveType.getUninitializedFieldExpression() + ";");
+        } else {
             p("return null;");
         }
     }
@@ -146,21 +134,18 @@ public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
     private void createCallbackField() {
         p("private " + MethodCallback.class.getCanonicalName() + " callback;");
     }
+
     private void createCallbackSetter() {
-        p( "public void setCallback(" + MethodCallback.class.getCanonicalName() + " callback) {").i(1)
-            .p("this.callback = callback;").i(-1)
-        .p("}");
+        p("public void setCallback(" + MethodCallback.class.getCanonicalName() + " callback) {").i(1)
+            .p("this.callback = callback;").i(-1).p("}");
     }
 
     private void createVerifyCallbackMethod() {
-        p( "public void verifyCallback(String methodName) {").i(1)
-           .p("if (this.callback == null) {").i(1)
-               .p("throw new IllegalArgumentException(" +
-                       "\"You need to call this service with REST.withCallback(new MethodCallback<..>(){..}).call(service).\" + " +
-                       "methodName + " +
-                       "\"(..) and not try to access the service directly\");").i(-1)
-           .p("}").i(-1)
-        .p("}");
+        p("public void verifyCallback(String methodName) {").i(1).p("if (this.callback == null) {").i(1)
+            .p("throw new IllegalArgumentException(" +
+                "\"You need to call this service with REST.withCallback(new MethodCallback<..>(){..}).call(service)" +
+                ".\" + " + "methodName + " + "\"(..) and not try to access the service directly\");").i(-1).p("}").i(-1)
+            .p("}");
     }
 
 }

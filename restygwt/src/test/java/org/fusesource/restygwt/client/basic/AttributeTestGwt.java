@@ -17,93 +17,93 @@ import javax.ws.rs.Path;
  */
 public class AttributeTestGwt extends GWTTestCase {
 
-	private AttributeTestRestService service;
+    private AttributeTestRestService service;
 
-	@Override
-	public String getModuleName() {
-		return "org.fusesource.restygwt.AttributeTestGwt";
-	}
+    @Override
+    public String getModuleName() {
+        return "org.fusesource.restygwt.AttributeTestGwt";
+    }
 
-	interface AttributeTestRestService extends RestService {
+    interface AttributeTestRestService extends RestService {
 
-		@POST
-		@Path("/save")
-		void savePublicAttribute(@Attribute("publicId") AttributeDTO instance, MethodCallback<AttributeDTO> callback);
-
-
-		@POST
-		@Path("/save")
-		void savePrivateAttribute(@Attribute("privateId") AttributeDTO instance, MethodCallback<AttributeDTO> callback);
-	}
-
-	class AttributeDTOMethodCallback implements MethodCallback<AttributeDTO> {
-
-		private final String path;
-
-		AttributeDTOMethodCallback(String path) {
-			this.path = path;
-		}
-
-		@Override
-		public void onSuccess(Method method, AttributeDTO response) {
-
-			assertEquals(response.getPath(), path);
-
-			finishTest();
-
-		}
-
-		@Override
-		public void onFailure(Method method, Throwable exception) {
-
-			fail();
-
-		}
-	}
-
-	@Override
-	protected void gwtSetUp() throws Exception {
-		super.gwtSetUp();
-		service = GWT.create(AttributeTestRestService.class);
-		Resource resource = new Resource(GWT.getModuleBaseURL() + "attribute");
-		((RestServiceProxy) service).setResource(resource);
-	}
+        @POST
+        @Path("/save")
+        void savePublicAttribute(@Attribute("publicId") AttributeDTO instance, MethodCallback<AttributeDTO> callback);
 
 
-	public void testSaveWithInstance() {
+        @POST
+        @Path("/save")
+        void savePrivateAttribute(@Attribute("privateId") AttributeDTO instance, MethodCallback<AttributeDTO> callback);
+    }
 
-		AttributeDTO dto = new AttributeDTO();
-		dto.setPath("/save");
+    class AttributeDTOMethodCallback implements MethodCallback<AttributeDTO> {
 
-		service.savePublicAttribute(dto, new AttributeDTOMethodCallback("/save"));
+        private final String path;
 
-	}
+        AttributeDTOMethodCallback(String path) {
+            this.path = path;
+        }
 
-	public void testSaveWithNull() {
+        @Override
+        public void onSuccess(Method method, AttributeDTO response) {
 
-		service.savePublicAttribute(null, new MethodCallback<AttributeDTO>() {
+            assertEquals(response.getPath(), path);
 
-			@Override
-			public void onFailure(Method method, Throwable exception) {
+            finishTest();
 
-				fail();
+        }
 
-			}
+        @Override
+        public void onFailure(Method method, Throwable exception) {
 
-			@Override
-			public void onSuccess(Method method, AttributeDTO response) {
+            fail();
 
-				assertFalse(response.getPath().contains("path"));
+        }
+    }
 
-			}
-		});
+    @Override
+    protected void gwtSetUp() throws Exception {
+        super.gwtSetUp();
+        service = GWT.create(AttributeTestRestService.class);
+        Resource resource = new Resource(GWT.getModuleBaseURL() + "attribute");
+        ((RestServiceProxy) service).setResource(resource);
+    }
 
-	}
 
-	public void gwtTearDown() {
+    public void testSaveWithInstance() {
 
-		// wait... we are in async testing...
-		delayTestFinish(10000);
+        AttributeDTO dto = new AttributeDTO();
+        dto.setPath("/save");
 
-	}
+        service.savePublicAttribute(dto, new AttributeDTOMethodCallback("/save"));
+
+    }
+
+    public void testSaveWithNull() {
+
+        service.savePublicAttribute(null, new MethodCallback<AttributeDTO>() {
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+
+                fail();
+
+            }
+
+            @Override
+            public void onSuccess(Method method, AttributeDTO response) {
+
+                assertFalse(response.getPath().contains("path"));
+
+            }
+        });
+
+    }
+
+    public void gwtTearDown() {
+
+        // wait... we are in async testing...
+        delayTestFinish(10000);
+
+    }
 }

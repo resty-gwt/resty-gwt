@@ -28,50 +28,46 @@ import com.fasterxml.jackson.databind.type.SimpleType;
 
 import java.io.IOException;
 
-public class InterfaceAndImplementationTypeResolver implements TypeIdResolver
-{
-	@Override
-	public void init(JavaType baseType)
-	{
-	}
+public class InterfaceAndImplementationTypeResolver implements TypeIdResolver {
+    @Override
+    public void init(JavaType baseType) {
+    }
 
-	@Override
-	public String idFromValueAndType(Object value, Class<?> suggestedType)
-	{
-		return idFromValue(value);
-	}
+    @Override
+    public String idFromValueAndType(Object value, Class<?> suggestedType) {
+        return idFromValue(value);
+    }
 
-	@Override
-	public String idFromValue(Object value)
-	{
-		if (value instanceof DTOImplementation)
-			return "implementation";
-		else
-			throw new IllegalArgumentException("Unknown type: " + value);
-	}
-	
-	@Override
-	public String idFromBaseType()
-	{
-		throw new AssertionError();
-	}
+    @Override
+    public String idFromValue(Object value) {
+        if (value instanceof DTOImplementation) {
+            return "implementation";
+        } else {
+            throw new IllegalArgumentException("Unknown type: " + value);
+        }
+    }
 
-	@Override
-	public Id getMechanism()
-	{
-		return Id.NAME;
-	}
+    @Override
+    public String idFromBaseType() {
+        throw new AssertionError();
+    }
+
+    @Override
+    public Id getMechanism() {
+        return Id.NAME;
+    }
 
     @Override
     public JavaType typeFromId(DatabindContext context, String id) throws IOException {
-		if("implementation".equals(id))
-			return SimpleType.construct(DTOImplementation.class);
-		else
-			throw new IllegalArgumentException("Unknown id: " + id);
+        if ("implementation".equals(id)) {
+            return SimpleType.construct(DTOImplementation.class);
+        } else {
+            throw new IllegalArgumentException("Unknown id: " + id);
+        }
     }
 
     //@Override
     public String getDescForKnownTypeIds() {
-	return null;
+        return null;
     }
 }

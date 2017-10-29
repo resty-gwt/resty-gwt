@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
 
 @Documented
 @Retention(RUNTIME)
-@Target( { METHOD, TYPE })
+@Target({ METHOD, TYPE })
 public @interface ModelChange {
 
     /**
@@ -52,6 +52,5 @@ public @interface ModelChange {
      *
      * @return
      */
-    @SuppressWarnings("rawtypes")
-    Class[] domain() default {};
+    @SuppressWarnings("rawtypes") Class[] domain() default {};
 }

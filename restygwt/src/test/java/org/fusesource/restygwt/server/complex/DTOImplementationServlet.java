@@ -29,25 +29,20 @@ import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOImplementati
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class DTOImplementationServlet extends HttpServlet
-{
-	private static final long serialVersionUID = 8761900300798640874L;
-	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-	{
-		DTOImplementation impl = new DTOImplementation();
-		impl.setName("implementation");
-		
-		resp.setContentType("application/json");
-		ObjectMapper om = new ObjectMapper();
-		try
-		{
-			om.writeValue(resp.getOutputStream(), impl);
-		}
-		catch (Exception e)
-		{
-			throw new ServletException(e);
-		}
-	}
+public class DTOImplementationServlet extends HttpServlet {
+    private static final long serialVersionUID = 8761900300798640874L;
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        DTOImplementation impl = new DTOImplementation();
+        impl.setName("implementation");
+
+        resp.setContentType("application/json");
+        ObjectMapper om = new ObjectMapper();
+        try {
+            om.writeValue(resp.getOutputStream(), impl);
+        } catch (Exception e) {
+            throw new ServletException(e);
+        }
+    }
 }

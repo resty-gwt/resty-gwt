@@ -17,8 +17,9 @@
  */
 
 /**
- * 
+ *
  */
+
 package org.fusesource.restygwt.client.codec;
 
 
@@ -26,7 +27,7 @@ package org.fusesource.restygwt.client.codec;
 class CredentialsWithJacksonAnnotationsInside {
 
     String password;
-    
+
     String email;
 
     public void setEmail(String email) {

@@ -24,7 +24,7 @@ import junit.framework.TestSuite;
 import com.google.gwt.junit.tools.GWTTestSuite;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class JerseyJaxsonGWTTestSuite extends GWTTestSuite {

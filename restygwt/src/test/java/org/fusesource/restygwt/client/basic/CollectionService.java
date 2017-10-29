@@ -33,21 +33,27 @@ import org.fusesource.restygwt.client.RestService;
 
 public interface CollectionService extends RestService {
 
-    @GET  @Path("/save_names")
-    void save(ArrayList<String>names, MethodCallback<Void> callback);
+    @GET
+    @Path("/save_names")
+    void save(ArrayList<String> names, MethodCallback<Void> callback);
 
-    @GET  @Path("/save_all_names")
-    void saveAll(List<String>names, MethodCallback<Void> callback);
+    @GET
+    @Path("/save_all_names")
+    void saveAll(List<String> names, MethodCallback<Void> callback);
 
-    @GET  @Path("/save_some")
-    void saveSome(Set<String>names, MethodCallback<Void> callback);
+    @GET
+    @Path("/save_some")
+    void saveSome(Set<String> names, MethodCallback<Void> callback);
 
-    @GET  @Path("/save_some_names")
-    void saveSome(TreeSet<String>names, MethodCallback<Void> callback);
+    @GET
+    @Path("/save_some_names")
+    void saveSome(TreeSet<String> names, MethodCallback<Void> callback);
 
-    @GET  @Path("/save_mapping")
-    void saveMapping(Map<String,String>namesToLogins, MethodCallback<Void> callback);
+    @GET
+    @Path("/save_mapping")
+    void saveMapping(Map<String, String> namesToLogins, MethodCallback<Void> callback);
 
-    @GET  @Path("/save_some_mapping")
-    void saveSomeMapping(HashMap<String,String>namesToLogins, MethodCallback<Void> callback);
+    @GET
+    @Path("/save_some_mapping")
+    void saveSomeMapping(HashMap<String, String> namesToLogins, MethodCallback<Void> callback);
 }

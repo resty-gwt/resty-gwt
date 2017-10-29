@@ -35,7 +35,8 @@ public class ModelChangeEventFactory {
     /**
      * static class, deny instanciation
      */
-    private ModelChangeEventFactory() {}
+    private ModelChangeEventFactory() {
+    }
 
     /**
      * factory method from the annotated domain name to a real event object

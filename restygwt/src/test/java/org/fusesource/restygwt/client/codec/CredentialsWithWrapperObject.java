@@ -17,8 +17,9 @@
  */
 
 /**
- * 
+ *
  */
+
 package org.fusesource.restygwt.client.codec;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -27,12 +28,12 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
-@JsonTypeInfo(use=Id.CLASS, include=As.WRAPPER_OBJECT)
-@JsonSubTypes(value={@Type(SubCredentialsWithWrapperObject.class), @Type(CredentialsWithWrapperObject.class)}) 
+@JsonTypeInfo(use = Id.CLASS, include = As.WRAPPER_OBJECT)
+@JsonSubTypes(value = { @Type(SubCredentialsWithWrapperObject.class), @Type(CredentialsWithWrapperObject.class) })
 class CredentialsWithWrapperObject {
 
     String password;
-    
+
     String email;
 
     public void setEmail(String email) {

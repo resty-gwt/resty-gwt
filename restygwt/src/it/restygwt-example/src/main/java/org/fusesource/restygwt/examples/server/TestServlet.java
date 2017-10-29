@@ -98,8 +98,10 @@ public class TestServlet extends HttpServlet {
             for (Entry<String, String> expected : rc.entrySet()) {
                 String actual = req.getHeader(expected.getKey());
                 if (actual == null || !actual.equals(expected.getValue())) {
-                    System.out.println("expected header '" + expected.getKey() + "' not set to: '" + expected.getValue() + "'");
-                    resp.sendError(500, "expected header '" + expected.getKey() + "' not set to: '" + expected.getValue() + "'");
+                    System.out.println(
+                        "expected header '" + expected.getKey() + "' not set to: '" + expected.getValue() + "'");
+                    resp.sendError(500,
+                        "expected header '" + expected.getKey() + "' not set to: '" + expected.getValue() + "'");
                 }
             }
         }

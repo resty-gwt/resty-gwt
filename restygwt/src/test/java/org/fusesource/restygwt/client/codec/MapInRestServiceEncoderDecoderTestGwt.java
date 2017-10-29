@@ -18,22 +18,23 @@ public class MapInRestServiceEncoderDecoderTestGwt extends GWTTestCase {
     public String getModuleName() {
         return "org.fusesource.restygwt.EncoderDecoderTestGwt";
     }
-    static enum Key { MESSAGE } 
-    
+
+    static enum Key { MESSAGE }
+
     static interface MapWithEnumKeyRestService extends RestService {
-        
+
         @GET
         @Path("/")
-        void messages( Map<Key, String> map, MethodCallback<Void> callback );
-        
+        void messages(Map<Key, String> map, MethodCallback<Void> callback);
+
         @GET
         @Path("/api/testMap")
         public void testMap(MethodCallback<Map<Integer, List<String>>> callback);
     }
-    
-    public void test(){
+
+    public void test() {
         MapWithEnumKeyRestService service = GWT.create(MapWithEnumKeyRestService.class);
         // just ensure they compile
-        assertNotNull( service );
+        assertNotNull(service);
     }
 }

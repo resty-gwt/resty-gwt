@@ -35,44 +35,39 @@ import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO2;
 
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 
-public class DTOTypeResolverServlet extends HttpServlet
-{
-	private static final long serialVersionUID = 8761900300798640874L;
+public class DTOTypeResolverServlet extends HttpServlet {
+    private static final long serialVersionUID = 8761900300798640874L;
 
-	/**
-	 * Fake method to introspect to get generic type
-	 * @return null
-	 */
-	public List<AbstractDTO> prototype()
-	{
-		return null;
-	}
-	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-	{
-		DTO1 one = new DTO1();
-		one.name = "Fred Flintstone";
-		one.size = 1024;
+    /**
+     * Fake method to introspect to get generic type
+     * @return null
+     */
+    public List<AbstractDTO> prototype() {
+        return null;
+    }
 
-		DTO2 two = new DTO2();
-		two.name = "Barney Rubble";
-		two.foo = "schmaltzy";
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        DTO1 one = new DTO1();
+        one.name = "Fred Flintstone";
+        one.size = 1024;
 
-		DTO2 three = new DTO2();
-		three.name = "BamBam Rubble";
-		three.foo = "dorky";
+        DTO2 two = new DTO2();
+        two.name = "Barney Rubble";
+        two.foo = "schmaltzy";
 
-		resp.setContentType("application/json");
-		ObjectMapper om = new ObjectMapper();
-		try
-		{
-			ObjectWriter writer = om.writer().withType(om.constructType(getClass().getMethod("prototype").getGenericReturnType()));
-			writer.writeValue(resp.getOutputStream(), Lists.newArrayList(one, two, three));
-		}
-		catch (Exception e)
-		{
-			throw new ServletException(e);
-		}
-	}
+        DTO2 three = new DTO2();
+        three.name = "BamBam Rubble";
+        three.foo = "dorky";
+
+        resp.setContentType("application/json");
+        ObjectMapper om = new ObjectMapper();
+        try {
+            ObjectWriter writer =
+                om.writer().withType(om.constructType(getClass().getMethod("prototype").getGenericReturnType()));
+            writer.writeValue(resp.getOutputStream(), Lists.newArrayList(one, two, three));
+        } catch (Exception e) {
+            throw new ServletException(e);
+        }
+    }
 }

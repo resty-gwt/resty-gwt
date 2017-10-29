@@ -32,15 +32,13 @@ import com.google.gwt.user.client.Window;
 public class UnauthorizedCallbackFilter implements CallbackFilter {
 
     @Override
-    public RequestCallback filter(Method method, Response response,
-            RequestCallback callback) {     
+    public RequestCallback filter(Method method, Response response, RequestCallback callback) {
         if (response.getStatusCode() == Response.SC_UNAUTHORIZED) {
-                if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
-                    Logger.getLogger(CallbackFilter.class.getName()).severe("Unauthorized: "
-                            + method.builder.getUrl());
-                    Window.Location.assign("login.html" + Window.Location.getQueryString());
-                }
+            if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
+                Logger.getLogger(CallbackFilter.class.getName()).severe("Unauthorized: " + method.builder.getUrl());
+                Window.Location.assign("login.html" + Window.Location.getQueryString());
             }
+        }
         return callback;
     }
 

@@ -35,7 +35,7 @@ import com.google.gwt.junit.GWTMockUtilities;
  *
  * In principle - you just have to implement the interface - right?
  *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>
  *
  */
 public class MockedTest extends TestCase {
@@ -53,8 +53,9 @@ public class MockedTest extends TestCase {
             public void getExampleDto(MethodCallback<ExampleDto> callback) {
                 ExampleDto exampleDto = new ExampleDto();
                 exampleDto.name = "name";
-               callback.onSuccess(null, exampleDto);
+                callback.onSuccess(null, exampleDto);
             }
+
             @Override
             public Request getExampleDtoCancelable(MethodCallback<ExampleDto> callback) {
                 ExampleDto exampleDto = new ExampleDto();
@@ -62,6 +63,7 @@ public class MockedTest extends TestCase {
                 callback.onSuccess(null, exampleDto);
                 return null;
             }
+
             @Override
             public void storeDto(ExampleDto exampleDto, MethodCallback<Void> callback) {
                 callback.onSuccess(null, null);

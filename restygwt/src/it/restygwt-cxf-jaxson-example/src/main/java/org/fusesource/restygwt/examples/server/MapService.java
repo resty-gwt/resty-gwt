@@ -31,17 +31,16 @@ import org.fusesource.restygwt.examples.client.MapResult;
 
 
 @Path("/mapservice")
-@Consumes({ MediaType.APPLICATION_JSON})
-@Produces({ MediaType.APPLICATION_JSON})
+@Consumes({ MediaType.APPLICATION_JSON })
+@Produces({ MediaType.APPLICATION_JSON })
 public class MapService {
-    
+
     @GET
-    public MapResult get()
-    {
+    public MapResult get() {
         Map<String, String> map = new LinkedHashMap<String, String>();
         map.put("hello", "world");
         map.put("another", "value");
         return new MapResult(map);
     }
- 
+
 }

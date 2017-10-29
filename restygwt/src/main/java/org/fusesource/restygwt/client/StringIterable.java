@@ -27,6 +27,7 @@ import java.util.Iterator;
 public class StringIterable implements Iterable<String> {
 
     private final Iterable<?> baseIterable;
+
     public StringIterable(Iterable<?> baseIterable) {
         this.baseIterable = baseIterable;
     }

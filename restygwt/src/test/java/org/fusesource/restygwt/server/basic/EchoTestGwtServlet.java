@@ -35,21 +35,19 @@ import org.fusesource.restygwt.client.basic.Echo;
  * just echos back the request path and the request parameters.
  *
  * @author mkristian
- * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</<a>
+ * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</a>
  */
 public class EchoTestGwtServlet extends HttpServlet {
 
     private static final long serialVersionUID = -746275386378921292L;
 
     @Override
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         doEchoRequest(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request,
-                         HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         doEchoRequest(request, response);
     }
 
@@ -60,7 +58,8 @@ public class EchoTestGwtServlet extends HttpServlet {
 
         echo.params = new HashMap<String, String>();
         ObjectMapper mapper = new ObjectMapper();
-        for ( Map.Entry<String, String[]> entry:  (Set<Map.Entry<String, String[]>>) request.getParameterMap().entrySet() ){
+        for (Map.Entry<String, String[]> entry : (Set<Map.Entry<String, String[]>>) request.getParameterMap()
+            .entrySet()) {
             if (entry.getValue().length == 1) {
                 echo.params.put(entry.getKey(), entry.getValue()[0]);
             } else {

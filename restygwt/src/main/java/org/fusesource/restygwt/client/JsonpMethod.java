@@ -33,7 +33,7 @@ import com.google.gwt.xml.client.Document;
 
 /**
  * A specialized method which accesses a resource as a JSONP request.
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class JsonpMethod extends Method {
@@ -44,7 +44,7 @@ public class JsonpMethod extends Method {
     public JsonpMethod(Resource resource) {
         this.resource = resource;
     }
-    
+
     public JsonpMethod callbackParam(String callbackParam) {
         jsonpBuilder.setCallbackParam(callbackParam);
         return this;
@@ -105,7 +105,7 @@ public class JsonpMethod extends Method {
     }
 
     @Override
-    public Method expect(int ...status) {
+    public Method expect(int... status) {
         throw unsupported();
     }
 

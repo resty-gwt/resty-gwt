@@ -19,11 +19,11 @@
 -->
 
 <module>
-    <inherits name='com.google.gwt.user.User' />
+    <inherits name='com.google.gwt.user.User'/>
     <inherits name='org.fusesource.restygwt.RestyGWT'/>
     <inherits name='com.google.gwt.logging.Logging'/>
 
-    <servlet path='/api/*' class='org.fusesource.restygwt.server.TimeoutConnectionServlet' />
+    <servlet path='/api/*' class='org.fusesource.restygwt.server.TimeoutConnectionServlet'/>
 
     <source path='client'/>
     <source path='example/client'/>

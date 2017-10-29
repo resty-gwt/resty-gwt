@@ -37,10 +37,10 @@ public class JsonpServlet extends HttpServlet {
         String function = req.getParameter("callback");
         resp.setContentType("application/javascript");
         String data = "{\"first\":\"Hiram\",\"last\":\"Chirino\",\"city\":\"Tampa\"}";
-        if ("list".equals(function)){
+        if ("list".equals(function)) {
             data = "[" + data + "]";
         }
-        if ("null".equals(function)){
+        if ("null".equals(function)) {
             data = "";
         }
         String jsonp = function + "(" + data + ")";

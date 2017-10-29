@@ -29,11 +29,11 @@ import org.jruby.rack.servlet.ServletRackConfig;
 import org.jruby.rack.servlet.ServletRackContext;
 
 @SuppressWarnings("serial")
-public class RailsServlet extends RackServlet{
+public class RailsServlet extends RackServlet {
 
     @Override
     public void init(ServletConfig config) {
-        if(config.getServletContext().getAttribute(RackApplicationFactory.RACK_CONTEXT) == null){   
+        if (config.getServletContext().getAttribute(RackApplicationFactory.RACK_CONTEXT) == null) {
             System.out.println("setup rails application via jruby-rack - started . . .");
             ServletContext ctx = config.getServletContext();
             ServletRackConfig rackConfig = new RestyServletRackConfig(ctx);
@@ -51,5 +51,5 @@ public class RailsServlet extends RackServlet{
         super.init(config);
     }
 
-    
+
 }

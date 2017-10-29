@@ -22,12 +22,13 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Documented
 @Retention(RUNTIME)
-@Target( { METHOD, TYPE })
+@Target({ METHOD, TYPE })
 public @interface Options {
 
     Class<? extends Dispatcher> dispatcher() default Dispatcher.class;
@@ -45,7 +46,7 @@ public @interface Options {
      * @return
      */
     long timeout() default -1;
-    
+
     /**
      * Sets the key of the service root entry set with the {@link ServiceRoots#add(String, String)} method.
      * If not used the default service root value set with {@link Defaults#setServiceRoot(String)} will be used.

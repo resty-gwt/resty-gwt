@@ -19,36 +19,36 @@
 -->
 
 <module>
-    <inherits name='com.google.gwt.core.Core' />
-    <inherits name='com.google.gwt.user.User' />
-    <inherits name='com.google.gwt.json.JSON' />
-    <inherits name='com.google.gwt.jsonp.Jsonp' />
-    <inherits name='com.google.gwt.xml.XML' />
-    <inherits name="org.fusesource.restygwt.RestyGWT" />
+    <inherits name='com.google.gwt.core.Core'/>
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name='com.google.gwt.json.JSON'/>
+    <inherits name='com.google.gwt.jsonp.Jsonp'/>
+    <inherits name='com.google.gwt.xml.XML'/>
+    <inherits name="org.fusesource.restygwt.RestyGWT"/>
     <inherits name='com.google.gwt.logging.Logging'/>
 
     <!-- Logging Configuration -->
     <set-property name="gwt.logging.enabled" value="TRUE"/>
     <set-property name="gwt.logging.logLevel" value="INFO"/>
-    <set-property name="gwt.logging.consoleHandler" value="ENABLED" />
-    <set-property name="gwt.logging.developmentModeHandler" value="ENABLED" />
-    <set-property name="gwt.logging.hasWidgetsHandler" value="DISABLED" />
-    <set-property name="gwt.logging.systemHandler" value="ENABLED" />
-    <set-property name="gwt.logging.simpleRemoteHandler" value="ENABLED" />
+    <set-property name="gwt.logging.consoleHandler" value="ENABLED"/>
+    <set-property name="gwt.logging.developmentModeHandler" value="ENABLED"/>
+    <set-property name="gwt.logging.hasWidgetsHandler" value="DISABLED"/>
+    <set-property name="gwt.logging.systemHandler" value="ENABLED"/>
+    <set-property name="gwt.logging.simpleRemoteHandler" value="ENABLED"/>
 
     <replace-with class="com.google.gwt.core.client.impl.StackTraceCreator.CollectorEmulated">
-        <when-type-is class="com.google.gwt.core.client.impl.StackTraceCreator.Collector" />
+        <when-type-is class="com.google.gwt.core.client.impl.StackTraceCreator.Collector"/>
         <none>
-            <when-property-is name="user.agent" value="gecko" />
-            <when-property-is name="user.agent" value="gecko1_8" />
-            <when-property-is name="user.agent" value="opera" />
+            <when-property-is name="user.agent" value="gecko"/>
+            <when-property-is name="user.agent" value="gecko1_8"/>
+            <when-property-is name="user.agent" value="opera"/>
         </none>
     </replace-with>
 
     <set-configuration-property name="org.fusesource.restygwt.annotationresolver"
-            value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
+                                value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
 
-    <servlet path='/foo/*' class='org.fusesource.restygwt.server.event.EchoServlet' />
+    <servlet path='/foo/*' class='org.fusesource.restygwt.server.event.EchoServlet'/>
 
     <source path='client'/>
     <source path='example/client'/>

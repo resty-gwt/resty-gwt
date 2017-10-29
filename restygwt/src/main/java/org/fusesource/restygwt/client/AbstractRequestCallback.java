@@ -52,27 +52,27 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
 
     private Logger getLogger() {
         if (GWT.isClient() && LogConfiguration.loggingIsEnabled() && this.logger == null) {
-            this.logger = Logger.getLogger( AbstractRequestCallback.class.getName() );
+            this.logger = Logger.getLogger(AbstractRequestCallback.class.getName());
         }
         return this.logger;
     }
-    
+
     @Override
     final public void onResponseReceived(Request request, Response response) {
         this.method.request = request;
         this.method.response = response;
         if (response == null) {
-            callback.onFailure(this.method,
-                    Defaults.getExceptionMapper().createNoResponseException());
+            callback.onFailure(this.method, Defaults.getExceptionMapper().createNoResponseException());
         } else if (isFailedStatus(response)) {
-            callback.onFailure(this.method,
-                    Defaults.getExceptionMapper().createFailedStatusException(method, response));
+            callback
+                .onFailure(this.method, Defaults.getExceptionMapper().createFailedStatusException(method, response));
         } else {
             T value;
-            try { 
-                if ( getLogger() != null ) {
-                    getLogger().fine("Received http response for request: " + this.method.builder.getHTTPMethod()
-                        + " " + this.method.builder.getUrl());
+            try {
+                if (getLogger() != null) {
+                    getLogger().fine(
+                        "Received http response for request: " + this.method.builder.getHTTPMethod() + " " +
+                            this.method.builder.getUrl());
                 }
                 String content = response.getText();
                 if (content != null && content.length() > 0) {
@@ -84,7 +84,7 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
                     value = null;
                 }
             } catch (Throwable e) {
-                if ( getLogger() != null ) {
+                if (getLogger() != null) {
                     getLogger().log(Level.FINE, "Could not parse response: " + e, e);
                 }
                 callback.onFailure(this.method, e);

@@ -20,9 +20,9 @@
 -->
 
 <module rename-to='example'>
-  <inherits name='com.google.gwt.user.User' />
-  <inherits name="org.fusesource.restygwt.RestyGWT" />
-  
-  <servlet path='/users' class='org.fusesource.restygwt.examples.server.RailsServlet'/>
-  <servlet path='/users/123' class='org.fusesource.restygwt.examples.server.RailsServlet'/>
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name="org.fusesource.restygwt.RestyGWT"/>
+
+    <servlet path='/users' class='org.fusesource.restygwt.examples.server.RailsServlet'/>
+    <servlet path='/users/123' class='org.fusesource.restygwt.examples.server.RailsServlet'/>
 </module>

@@ -15,8 +15,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @JacksonAnnotationsInside
-@JsonTypeInfo(use=Id.CLASS, include=As.PROPERTY)
-@JsonSubTypes(value={@Type(SubCredentialsWithProperty.class), @Type(CredentialsWithJacksonAnnotationsInside.class)}) 
+@JsonTypeInfo(use = Id.CLASS, include = As.PROPERTY)
+@JsonSubTypes(value = { @Type(SubCredentialsWithProperty.class), @Type(CredentialsWithJacksonAnnotationsInside.class) })
 public @interface TestJacksonAnnotationInside {
 
 }

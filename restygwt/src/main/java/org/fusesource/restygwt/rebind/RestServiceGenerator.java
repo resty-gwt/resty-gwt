@@ -31,7 +31,8 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 public class RestServiceGenerator extends Generator {
 
     @Override
-    public String generate(TreeLogger logger, GeneratorContext context, String source) throws UnableToCompleteException {
+    public String generate(TreeLogger logger, GeneratorContext context, String source)
+        throws UnableToCompleteException {
         try {
             JClassType restService = find(logger, context, source);
             RestServiceClassCreator generator = new RestServiceClassCreator(logger, context, restService);

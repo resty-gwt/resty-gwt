@@ -51,30 +51,29 @@ public abstract class AbstractAsyncCallback<T> implements AsyncCallback<JavaScri
     }
 
     private Logger getLogger() {
-        if ( GWT.isClient() && LogConfiguration.loggingIsEnabled() && this.logger == null) {
-            this.logger = Logger.getLogger( AbstractAsyncCallback.class.getName() );
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled() && this.logger == null) {
+            this.logger = Logger.getLogger(AbstractAsyncCallback.class.getName());
         }
         return this.logger;
     }
-    
+
     @Override
     final public void onSuccess(JavaScriptObject result) {
         try {
-            if ( getLogger() != null ) {
+            if (getLogger() != null) {
                 getLogger().fine("Received http response for jsonp request");
             }
-            if (result == null){
+            if (result == null) {
                 callback.onSuccess(this.method, null);
-            }
-            else{
+            } else {
                 JSONObject json = new JSONObject(result);
-                if ( getLogger() != null ) {
+                if (getLogger() != null) {
                     getLogger().fine(json.toString());
                 }
                 callback.onSuccess(this.method, parseResult(json));
             }
         } catch (Throwable e) {
-            if ( getLogger() != null ) {
+            if (getLogger() != null) {
                 getLogger().log(Level.FINE, "Could not parse response: " + e, e);
             }
             callback.onFailure(this.method, e);

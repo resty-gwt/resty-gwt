@@ -26,7 +26,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 
 /**
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class RailsCreateTestGWT extends GWTTestCase {
@@ -39,12 +39,12 @@ public class RailsCreateTestGWT extends GWTTestCase {
 
     static final User persistentUser = newUser();
 
-    static User newUser(){
+    static User newUser() {
         User user = new User();
         user.name = "me and the corner";
         return user;
     }
-	
+
     public void testCreate() {
         UsersRestService service = GWT.create(UsersRestService.class);
         final User user = newUser();

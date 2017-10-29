@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * Super simple servlet that simply does nothing to check if
  * timeout management is okay.
  *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>
  *
  */
 public class BasicTestGwtServlet extends HttpServlet {

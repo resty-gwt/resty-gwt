@@ -33,8 +33,7 @@ public class RestyServletRackConfig extends ServletRackConfig {
         properties.setProperty("gem.path", "./target/rubygems");
         properties.setProperty("rails.env", "development");
         properties.setProperty("jruby.rack.logging", "stdout");
-        properties.setProperty("jruby.rack.layout_class",
-                "JRuby::Rack::RailsFilesystemLayout");
+        properties.setProperty("jruby.rack.layout_class", "JRuby::Rack::RailsFilesystemLayout");
     }
 
     @Override

@@ -20,40 +20,55 @@
 -->
 
 <!DOCTYPE web-app
-    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-    "http://java.sun.com/dtd/web-app_2_3.dtd">
+        PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-  <servlet>
-    <servlet-name>pizza-service</servlet-name>
-    <servlet-class>org.fusesource.restygwt.examples.server.PizzaServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>test-service</servlet-name>
-    <servlet-class>org.fusesource.restygwt.examples.server.TestServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>jsonp-service</servlet-name>
-    <servlet-class>org.fusesource.restygwt.examples.server.JsonpServlet</servlet-class>
-  </servlet>
-   
-  <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/method</url-pattern></servlet-mapping> 
-  <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/fail</url-pattern></servlet-mapping> 
-  <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/JSONBinding/getListOfStrings</url-pattern></servlet-mapping> 
-  <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/JSONBinding/getStringMapResponse</url-pattern></servlet-mapping> 
+    <servlet>
+        <servlet-name>pizza-service</servlet-name>
+        <servlet-class>org.fusesource.restygwt.examples.server.PizzaServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>test-service</servlet-name>
+        <servlet-class>org.fusesource.restygwt.examples.server.TestServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>jsonp-service</servlet-name>
+        <servlet-class>org.fusesource.restygwt.examples.server.JsonpServlet</servlet-class>
+    </servlet>
 
-  <servlet-mapping><servlet-name>jsonp-service</servlet-name><url-pattern>/ui/jsonp-service</url-pattern></servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>test-service</servlet-name>
+        <url-pattern>/ui/test/method</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>test-service</servlet-name>
+        <url-pattern>/ui/test/fail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>test-service</servlet-name>
+        <url-pattern>/ui/test/JSONBinding/getListOfStrings</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>test-service</servlet-name>
+        <url-pattern>/ui/test/JSONBinding/getStringMapResponse</url-pattern>
+    </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>pizza-service</servlet-name>
-    <url-pattern>/ui/pizza-service</url-pattern>
-  </servlet-mapping> 
-  <servlet-mapping>
-    <servlet-name>pizza-service</servlet-name>
-    <url-pattern>/ui/pizza-service/toppings</url-pattern>
-  </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>jsonp-service</servlet-name>
+        <url-pattern>/ui/jsonp-service</url-pattern>
+    </servlet-mapping>
 
-  <welcome-file-list>
-    <welcome-file>ui/ui.html</welcome-file>
-  </welcome-file-list>
+    <servlet-mapping>
+        <servlet-name>pizza-service</servlet-name>
+        <url-pattern>/ui/pizza-service</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>pizza-service</servlet-name>
+        <url-pattern>/ui/pizza-service/toppings</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>ui/ui.html</welcome-file>
+    </welcome-file-list>
 </web-app>

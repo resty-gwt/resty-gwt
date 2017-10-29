@@ -59,10 +59,11 @@ public class AnnotationUtils {
     /**
      * Get all annotations from superclasses and superinterfaces.<br>
      * <br>
-     * Works like {@link JClassType#findAnnotationInTypeHierarchy(Class)} but returns all annotations in the type hierarchy.
-     * 
+     * Works like {@link JClassType#findAnnotationInTypeHierarchy(Class)} but returns all annotations in the type
+     * hierarchy.
+     *
      * @author Ralf Sommer {@literal <ralf.sommer.dev@gmail.com>}
-     * 
+     *
      * @param classType
      * @return annotations
      */

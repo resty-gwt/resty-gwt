@@ -30,10 +30,10 @@ public class XSRFTokenDispatcherFilter implements DispatcherFilter {
     public XSRFTokenDispatcherFilter(final XSRFToken xsrf) {
         this.xsrf = xsrf;
     }
-    
+
     @Override
     public boolean filter(final Method method, final RequestBuilder builder) {
-        if (this.xsrf.getToken() !=null) {
+        if (this.xsrf.getToken() != null) {
             method.header(this.xsrf.getHeaderKey(), this.xsrf.getToken());
         }
         return true;// continue filtering

@@ -19,7 +19,7 @@
 -->
 
 <module>
-    <inherits name='com.google.gwt.user.User' />
+    <inherits name='com.google.gwt.user.User'/>
     <inherits name='com.google.gwt.logging.Logging'/>
     <inherits name='org.fusesource.restygwt.RestyGWT'/>
 
@@ -31,17 +31,17 @@
     <source path='example/client'/>
 
     <replace-with class="com.google.gwt.core.client.impl.StackTraceCreator.CollectorEmulated">
-        <when-type-is class="com.google.gwt.core.client.impl.StackTraceCreator.Collector" />
+        <when-type-is class="com.google.gwt.core.client.impl.StackTraceCreator.Collector"/>
         <none>
-            <when-property-is name="user.agent" value="gecko" />
-            <when-property-is name="user.agent" value="gecko1_8" />
-            <when-property-is name="user.agent" value="opera" />
+            <when-property-is name="user.agent" value="gecko"/>
+            <when-property-is name="user.agent" value="gecko1_8"/>
+            <when-property-is name="user.agent" value="opera"/>
         </none>
     </replace-with>
 
     <set-configuration-property name="org.fusesource.restygwt.annotationresolver"
-            value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
+                                value="org.fusesource.restygwt.rebind.ModelChangeAnnotationResolver"/>
 
     <set-configuration-property name="org.fusesource.restygwt.restyjsonserializergenerator"
-            value="org.fusesource.restygwt.server.complex.OptionalRestySerializerGenerator"/>
+                                value="org.fusesource.restygwt.server.complex.OptionalRestySerializerGenerator"/>
 </module>

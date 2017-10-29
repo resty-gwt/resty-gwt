@@ -43,39 +43,35 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
     }
 
     private Logger getLogger() {
-        if ( GWT.isClient() && LogConfiguration.loggingIsEnabled() && this.logger == null) {
-            this.logger = Logger.getLogger( ModelChangeCallbackFilter.class.getName() );
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled() && this.logger == null) {
+            this.logger = Logger.getLogger(ModelChangeCallbackFilter.class.getName());
         }
         return this.logger;
     }
-    
+
     /**
      * the real filter method, called independent of the response code
      *
      * TODO method.getResponse() is not equal to response. unfortunately
      */
     @Override
-    public RequestCallback filter(final Method method, final Response response,
-            RequestCallback callback) {
+    public RequestCallback filter(final Method method, final Response response, RequestCallback callback) {
         final int code = response.getStatusCode();
 
         if (code < Response.SC_MULTIPLE_CHOICES // code < 300
-                && code >= Response.SC_OK) { // code >= 200
-            String modelChangeIdentifier = method.getData().get(
-                    ModelChange.MODEL_CHANGED_DOMAIN_KEY);
+            && code >= Response.SC_OK) { // code >= 200
+            String modelChangeIdentifier = method.getData().get(ModelChange.MODEL_CHANGED_DOMAIN_KEY);
 
             if (modelChangeIdentifier != null) {
-                if ( getLogger() != null ) {
-                    getLogger().fine("found modelChangeIdentifier \"" + modelChangeIdentifier + "\" in "
-                        + response);
+                if (getLogger() != null) {
+                    getLogger().fine("found modelChangeIdentifier \"" + modelChangeIdentifier + "\" in " + response);
                 }
                 JSONValue jsonValue = JSONParser.parseStrict(modelChangeIdentifier);
                 JSONArray jsonArray = jsonValue.isArray();
 
                 if (jsonArray != null) {
                     for (int i = 0; i < jsonArray.size(); ++i) {
-                        ModelChangeEvent e = new ModelChangeEvent(
-                                jsonArray.get(i).isString().stringValue());
+                        ModelChangeEvent e = new ModelChangeEvent(jsonArray.get(i).isString().stringValue());
 
                         if (getLogger() != null) {
                             getLogger().info("fire event \"" + e + "\" ...");

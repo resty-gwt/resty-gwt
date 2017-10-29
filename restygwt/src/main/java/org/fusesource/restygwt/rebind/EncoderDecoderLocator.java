@@ -9,14 +9,14 @@ import com.google.gwt.core.ext.typeinfo.JType;
 public interface EncoderDecoderLocator {
 
 
-	public String encodeExpression(JType type, String expression, Style style) throws UnableToCompleteException;
+    public String encodeExpression(JType type, String expression, Style style) throws UnableToCompleteException;
 
-	public String decodeExpression(JType type, String expression, Style style) throws UnableToCompleteException;
+    public String decodeExpression(JType type, String expression, Style style) throws UnableToCompleteException;
 
-	//TODO remove this methods
-	public boolean hasCustomEncoderDecoder(JType type);
+    //TODO remove this methods
+    public boolean hasCustomEncoderDecoder(JType type);
 
-	public boolean isCollectionType(JClassType clazz) ;
-	
-	public JClassType getListType();
+    public boolean isCollectionType(JClassType clazz);
+
+    public JClassType getListType();
 }

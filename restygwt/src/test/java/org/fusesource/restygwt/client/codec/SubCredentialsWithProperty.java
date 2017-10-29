@@ -17,8 +17,9 @@
  */
 
 /**
- * 
+ *
  */
+
 package org.fusesource.restygwt.client.codec;
 
 class SubCredentialsWithProperty extends CredentialsWithProperty {

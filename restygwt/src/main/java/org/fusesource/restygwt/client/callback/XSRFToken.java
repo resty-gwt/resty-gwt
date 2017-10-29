@@ -17,32 +17,33 @@
  */
 
 /**
- * 
+ *
  */
+
 package org.fusesource.restygwt.client.callback;
 
 public class XSRFToken {
     private final String headerKey;
-    
+
     private String token;
-    
-    public XSRFToken(){
+
+    public XSRFToken() {
         this("X-CSRF-TOKEN");
     }
-    
-    public XSRFToken(String headerKey){
+
+    public XSRFToken(String headerKey) {
         this.headerKey = headerKey;
     }
-    
-    public String getHeaderKey(){
-       return this.headerKey;
+
+    public String getHeaderKey() {
+        return this.headerKey;
     }
-    
-    public String getToken(){
+
+    public String getToken() {
         return token;
     }
-    
-    public void setToken(String token){
+
+    public void setToken(String token) {
         this.token = token;
     }
 }

@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
  * (ok). => Used to test the retrying async callback.
  * </p>
  *
- * @author <a href="mailto:mail@raphaelbauer.com">rEyez</<a>
+ * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>
  */
 public class FlakyConnectionServlet extends HttpServlet {
 
@@ -47,8 +47,7 @@ public class FlakyConnectionServlet extends HttpServlet {
     private final String DUMMY_RESPONSE = "{\"name\":\"myName\"}";
 
     @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         log.fine("GET: flakyMODE");
 

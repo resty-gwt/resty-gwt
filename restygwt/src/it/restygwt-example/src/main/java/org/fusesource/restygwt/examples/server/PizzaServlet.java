@@ -38,7 +38,7 @@ import org.fusesource.restygwt.examples.client.Topping;
 /**
  * A simple example of how you can use the Jackson object mapper reuse the
  * RestyGWT DTOs to process the RestyGWT service requests.
- * 
+ *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
 public class PizzaServlet extends HttpServlet {
@@ -63,8 +63,8 @@ public class PizzaServlet extends HttpServlet {
             confirmation.order = order;
             confirmation.price = 27.54;
             confirmation.ready_time = System.currentTimeMillis() + 1000 * 60 * 30; // in
-                                                                                   // 30
-                                                                                   // min.
+            // 30
+            // min.
 
             sw = new StringWriter();
             mapper.writeValue(sw, confirmation);
@@ -111,7 +111,7 @@ public class PizzaServlet extends HttpServlet {
     }
 
     @Override
-    protected  void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("Processing Crust prices");
         try {
             ObjectMapper mapper = new ObjectMapper();
