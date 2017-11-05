@@ -336,7 +336,12 @@
                 </plugins>
             </build>
         </profile>
-
+        <profile>
+            <id>run-examples</id>
+            <modules>
+                <module>restygwt-examples</module>
+            </modules>
+        </profile>
     </profiles>
 
     <modules>
