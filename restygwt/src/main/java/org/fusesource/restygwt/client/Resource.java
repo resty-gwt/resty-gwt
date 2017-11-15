@@ -52,19 +52,19 @@ public class Resource {
     public Resource(final String uri, final Map<String, String> headers) {
         int pos = uri.indexOf('?');
         if (pos >= 0) {
-            this.path = uri.substring(0, pos);
-            this.query = uri.substring(pos + 1);
+            path = uri.substring(0, pos);
+            query = uri.substring(pos + 1);
         } else {
             // Strip off trailing "/" so we have a known format to work off of when concatenating paths
-            this.path = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
-            this.query = null;
+            path = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
+            query = null;
         }
         this.headers = (headers != null) ? headers : defaultHeaders();
     }
 
     public Resource(final String uri, final String query, final Map<String, String> headers) {
         // Strip off trailing "/" so we have a known format to work off of when concatenating paths
-        this.path = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
+        path = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
         this.query = query;
         this.headers = (headers != null) ? headers : defaultHeaders();
     }
@@ -125,14 +125,14 @@ public class Resource {
 
         // it might be an absolute path...
         if (path.startsWith("http:") || path.startsWith("https:") || path.startsWith("file:")) {
-            return new Resource(path, this.query, this.headers);
+            return new Resource(path, query, headers);
         }
 
         // strip prefix / if needed...
         if (path.startsWith("/")) {
             path = path.substring(1);
         }
-        return new Resource(this.path + "/" + path, this.query, this.headers);
+        return new Resource(this.path + "/" + path, query, headers);
     }
 
     public Resource addQueryParam(String key, String value) {

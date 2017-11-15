@@ -82,6 +82,7 @@ public class DTOTypeResolver implements TypeIdResolver {
     }
 
     //@Override
+    @Override
     public String getDescForKnownTypeIds() {
         return null;
     }

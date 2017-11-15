@@ -96,6 +96,6 @@ public class DefaultFilterawareDispatcher implements FilterawareDispatcher {
      */
     @Override
     public void addFilter(DispatcherFilter filter) {
-        this.dispatcherFilters.add(filter);
+        dispatcherFilters.add(filter);
     }
 }

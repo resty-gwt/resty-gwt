@@ -46,7 +46,7 @@ public class GenericsTestGwt extends GWTTestCase {
         }
     }
 
-    public static interface GenericAsync<T extends Number> extends RestService {
+    public interface GenericAsync<T extends Number> extends RestService {
         @GET
         @Path("/foo")
         @Produces("application/json")

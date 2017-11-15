@@ -35,6 +35,7 @@ abstract public class LibraryItemWithProperty {
     protected LibraryItemWithProperty() {
     }
 
+    @Override
     public boolean equals(Object other) {
         return getClass().equals(other.getClass()) && id.equals(((LibraryItemWithProperty) other).id);
     }

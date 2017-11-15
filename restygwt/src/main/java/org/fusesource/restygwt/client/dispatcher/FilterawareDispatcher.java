@@ -22,6 +22,6 @@ import org.fusesource.restygwt.client.Dispatcher;
 
 public interface FilterawareDispatcher extends Dispatcher {
 
-    public void addFilter(DispatcherFilter filter);
+    void addFilter(DispatcherFilter filter);
 
 }

@@ -60,7 +60,7 @@ public class EchoServlet extends HttpServlet {
 
             sb.append("Body   :\n");
             sb.append("========\n");
-            String line = null;
+            String line;
             do {
                 line = request.getReader().readLine();
                 if (null != line) {

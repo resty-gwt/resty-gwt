@@ -8,7 +8,6 @@ import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.rebind.EncoderDecoderLocatorFactory;
 import org.fusesource.restygwt.rebind.JsonEncoderDecoderClassCreator;
-import org.fusesource.restygwt.rebind.JsonEncoderDecoderInstanceLocator;
 
 public class OptionalSerializerGenerator extends JsonEncoderDecoderClassCreator {
 

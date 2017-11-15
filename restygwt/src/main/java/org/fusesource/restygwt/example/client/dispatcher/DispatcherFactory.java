@@ -71,10 +71,7 @@ public class DispatcherFactory {
         CallbackFactory callbackFactory = new DefaultCallbackFactory(xsrfCallbackFilter);
         DispatcherFilter defaultDispatcherFilter = new DefaultDispatcherFilter(callbackFactory);
 
-        FilterawareDispatcher dispatcher =
-            new DefaultFilterawareDispatcher(xsrfDispatcherFilter, defaultDispatcherFilter);
-
-        return dispatcher;
+        return new DefaultFilterawareDispatcher(xsrfDispatcherFilter, defaultDispatcherFilter);
     }
 
     public FilterawareDispatcher cachingDispatcher() {
@@ -84,9 +81,7 @@ public class DispatcherFactory {
         CallbackFactory callbackFactory = new DefaultCallbackFactory(cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
 
-        FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(cachingDispatcherFilter);
-
-        return dispatcher;
+        return new DefaultFilterawareDispatcher(cachingDispatcherFilter);
     }
 
     public FilterawareDispatcher cachingXSRFProtectionDispatcher() {
@@ -100,10 +95,7 @@ public class DispatcherFactory {
         CallbackFactory callbackFactory = new DefaultCallbackFactory(xsrfCallbackFilter, cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
 
-        FilterawareDispatcher dispatcher =
-            new DefaultFilterawareDispatcher(xsrfDispatcherFilter, cachingDispatcherFilter);
-
-        return dispatcher;
+        return new DefaultFilterawareDispatcher(xsrfDispatcherFilter, cachingDispatcherFilter);
     }
 
     public FilterawareDispatcher retryingDispatcher() {
@@ -113,9 +105,7 @@ public class DispatcherFactory {
         CallbackFactory callbackFactory = new RetryingCallbackFactory(cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
 
-        FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(cachingDispatcherFilter);
-
-        return dispatcher;
+        return new DefaultFilterawareDispatcher(cachingDispatcherFilter);
     }
 
     public FilterawareDispatcher retryingCachingDispatcher() {
@@ -125,9 +115,7 @@ public class DispatcherFactory {
         CallbackFactory callbackFactory = new RetryingCallbackFactory(cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
 
-        FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(cachingDispatcherFilter);
-
-        return dispatcher;
+        return new DefaultFilterawareDispatcher(cachingDispatcherFilter);
     }
 
     public FilterawareDispatcher retryingCachingXSRFProtectionDispatcher() {
@@ -141,10 +129,7 @@ public class DispatcherFactory {
         CallbackFactory callbackFactory = new RetryingCallbackFactory(xsrfCallbackFilter, cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
 
-        FilterawareDispatcher dispatcher =
-            new DefaultFilterawareDispatcher(xsrfDispatcherFilter, cachingDispatcherFilter);
-
-        return dispatcher;
+        return new DefaultFilterawareDispatcher(xsrfDispatcherFilter, cachingDispatcherFilter);
     }
 
     public FilterawareDispatcher restfulCachingDispatcher() {
@@ -154,9 +139,7 @@ public class DispatcherFactory {
         CallbackFactory callbackFactory = new DefaultCallbackFactory(cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new RestfulCachingDispatcherFilter(cache, callbackFactory);
 
-        FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(cachingDispatcherFilter);
-
-        return dispatcher;
+        return new DefaultFilterawareDispatcher(cachingDispatcherFilter);
     }
 
     public FilterawareDispatcher restfulCachingXSRFProtectionDispatcher() {
@@ -170,10 +153,7 @@ public class DispatcherFactory {
         CallbackFactory callbackFactory = new DefaultCallbackFactory(xsrfCallbackFilter, cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new RestfulCachingDispatcherFilter(cache, callbackFactory);
 
-        FilterawareDispatcher dispatcher =
-            new DefaultFilterawareDispatcher(xsrfDispatcherFilter, cachingDispatcherFilter);
-
-        return dispatcher;
+        return new DefaultFilterawareDispatcher(xsrfDispatcherFilter, cachingDispatcherFilter);
     }
 
     public FilterawareDispatcher restfulRetryingCachingDispatcher() {
@@ -183,9 +163,7 @@ public class DispatcherFactory {
         CallbackFactory callbackFactory = new RetryingCallbackFactory(cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new RestfulCachingDispatcherFilter(cache, callbackFactory);
 
-        FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher(cachingDispatcherFilter);
-
-        return dispatcher;
+        return new DefaultFilterawareDispatcher(cachingDispatcherFilter);
     }
 
     public FilterawareDispatcher restfulRetryingCachingXSRFProtectionDispatcher() {
@@ -199,10 +177,7 @@ public class DispatcherFactory {
         CallbackFactory callbackFactory = new RetryingCallbackFactory(xsrfCallbackFilter, cachingCallbackFilter);
         DispatcherFilter cachingDispatcherFilter = new RestfulCachingDispatcherFilter(cache, callbackFactory);
 
-        FilterawareDispatcher dispatcher =
-            new DefaultFilterawareDispatcher(xsrfDispatcherFilter, cachingDispatcherFilter);
-
-        return dispatcher;
+        return new DefaultFilterawareDispatcher(xsrfDispatcherFilter, cachingDispatcherFilter);
     }
 
 }

@@ -82,7 +82,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         this.logger = logger;
         this.context = context;
         this.source = source;
-        this.packageName = getOpenPackageName(source.getPackage().getName());
+        packageName = getOpenPackageName(source.getPackage().getName());
 
         if (source instanceof JParameterizedType) {
             JParameterizedType ptype = (JParameterizedType) source;
@@ -91,12 +91,12 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
                 builder.append("__");
                 builder.append(parametersName2ClassName(type.getParameterizedQualifiedSourceName()));
             }
-            this.shortName = reduceName(getName(source) + builder.toString() + suffix, suffix);
+            shortName = reduceName(getName(source) + builder.toString() + suffix, suffix);
         } else {
-            this.shortName = reduceName(getName(source) + suffix, suffix);
+            shortName = reduceName(getName(source) + suffix, suffix);
         }
 
-        this.name = packageName + "." + shortName;
+        name = packageName + "." + shortName;
     }
 
 
@@ -116,16 +116,16 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
             //has generic
             String primaryName = noSufix.substring(0, noSufix.indexOf("__"));
             String genericPart = noSufix.substring(noSufix.indexOf("__") + 2);
-            StringBuffer genericBuff = new StringBuffer();
+            StringBuilder stringBuilder = new StringBuilder();
             String[] eachGeneric = genericPart.split("__");
             for (String genericType : eachGeneric) {
-                genericBuff.append("__");
-                genericBuff.append(reduceType(genericType));
+                stringBuilder.append("__");
+                stringBuilder.append(reduceType(genericType));
             }
-            String finalName = primaryName + genericBuff.toString() + suffix;
+            String finalName = primaryName + stringBuilder.toString() + suffix;
             if (finalName.length() > MAX_FILE_NAME_LENGTH) {
                 //File name is still too long wrapping it out aggressively
-                String baseName = primaryName + genericBuff.toString();
+                String baseName = primaryName + stringBuilder.toString();
 
                 int firstPosition = baseName.indexOf("__");
                 int lastPosition = baseName.lastIndexOf("__");
@@ -142,7 +142,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
     }
 
     private String reduceType(String genericType) {
-        if (genericType == null || genericType.indexOf("_") < 0) {
+        if (genericType == null || !genericType.contains("_")) {
             return genericType;
         }
         String pack = genericType.substring(0, genericType.lastIndexOf("_"));
@@ -217,9 +217,9 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
 
     public BaseSourceCreator i(int i) {
         if (i == 1) {
-            this.sourceWriter.indent();
+            sourceWriter.indent();
         } else if (i == -1) {
-            this.sourceWriter.outdent();
+            sourceWriter.outdent();
         } else {
             throw new IllegalArgumentException();
         }
@@ -227,14 +227,14 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
     }
 
     public BaseSourceCreator p(String value) {
-        this.sourceWriter.println(value);
+        sourceWriter.println(value);
 
         // System.out.println(value);
         return this;
     }
 
     protected BaseSourceCreator p() {
-        this.sourceWriter.println();
+        sourceWriter.println();
         return this;
     }
 

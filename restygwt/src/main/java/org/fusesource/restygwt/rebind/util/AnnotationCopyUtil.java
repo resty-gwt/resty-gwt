@@ -18,6 +18,7 @@
 
 package org.fusesource.restygwt.rebind.util;
 
+import javax.ws.rs.Path;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -56,7 +57,7 @@ public class AnnotationCopyUtil {
             String encodedValue = encodeAnnotationValue(value);
 
             // Strip regex expressions from Path annotation value
-            if (javax.ws.rs.Path.class == annotation.annotationType()) {
+            if (Path.class == annotation.annotationType()) {
                 encodedValue = encodedValue.replaceAll("\\{\\s*(\\S+)\\s*:\\s*[^{}]+\\}", "{$1}");
             }
 

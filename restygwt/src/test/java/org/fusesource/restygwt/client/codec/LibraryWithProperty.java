@@ -28,6 +28,7 @@ import java.util.List;
 class LibraryWithProperty {
     public List<LibraryItemWithProperty> items;
 
+    @Override
     public boolean equals(Object other) {
         return items.equals(((LibraryWithProperty) other).items);
     }

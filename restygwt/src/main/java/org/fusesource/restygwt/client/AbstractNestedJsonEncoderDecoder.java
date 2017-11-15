@@ -17,18 +17,18 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
     protected Style style;
 
     AbstractNestedJsonEncoderDecoder(AbstractJsonEncoderDecoder<F> encoder) {
-        this.nested = encoder;
+        nested = encoder;
     }
 
     AbstractNestedJsonEncoderDecoder(AbstractJsonEncoderDecoder<F> encoder, Style style) {
-        this.nested = encoder;
+        nested = encoder;
         this.style = style;
     }
 
     AbstractNestedJsonEncoderDecoder(AbstractJsonEncoderDecoder<F> keyEncoder,
                                      AbstractJsonEncoderDecoder<G> valueEncoder, Style style) {
-        this.nested = keyEncoder;
-        this.second = valueEncoder;
+        nested = keyEncoder;
+        second = valueEncoder;
         this.style = style;
     }
 

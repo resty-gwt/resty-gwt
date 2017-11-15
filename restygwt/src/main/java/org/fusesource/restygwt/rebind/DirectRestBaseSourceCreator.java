@@ -40,7 +40,7 @@ public abstract class DirectRestBaseSourceCreator extends BaseSourceCreator {
 
     @Override
     protected void generate() throws UnableToCompleteException {
-        this.OVERLAY_VALUE_TYPE = find(JavaScriptObject.class, getLogger(), context);
+        OVERLAY_VALUE_TYPE = find(JavaScriptObject.class, getLogger(), context);
     }
 
     protected ClassSourceFileComposerFactory createClassSourceComposerFactory(JavaSourceCategory createWhat,

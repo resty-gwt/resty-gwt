@@ -37,6 +37,6 @@ public interface ConfiguredService extends RestService {
 
     @GET
     @Options(expect = { 200 }, timeout = 1000 * 10)
-    public void getExampleDto(MethodCallback<ExampleDto> callback);
+    void getExampleDto(MethodCallback<ExampleDto> callback);
 
 }

@@ -34,6 +34,6 @@ public interface ConfiguredDirectService extends DirectRestService {
 
     @GET
     @Options(timeout = 1000 * 10, expect = { 200, 204 })
-    public ExampleDto getExampleDto();
+    ExampleDto getExampleDto();
 
 }

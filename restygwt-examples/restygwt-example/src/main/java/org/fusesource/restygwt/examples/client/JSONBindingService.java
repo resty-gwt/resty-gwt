@@ -37,9 +37,9 @@ public interface JSONBindingService extends RestService {
 
     @GET
     @Path("/getListOfStrings")
-    public void getListOfStrings(MethodCallback<List<String>> callback);
+    void getListOfStrings(MethodCallback<List<String>> callback);
 
-    static public class StringMapResponse {
+    class StringMapResponse {
         public Map<String, String> data = new HashMap<String, String>();
 
         @Override
@@ -57,6 +57,6 @@ public interface JSONBindingService extends RestService {
 
     @GET
     @Path("/getStringMapResponse")
-    public void getStringMapResponse(MethodCallback<StringMapResponse> callback);
+    void getStringMapResponse(MethodCallback<StringMapResponse> callback);
 
 }

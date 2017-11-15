@@ -59,7 +59,7 @@ public class FormParamTestGwt extends GWTTestCase {
     }
 
     @Path("/get")
-    static interface FormParamTestRestService extends RestService {
+    interface FormParamTestRestService extends RestService {
 
         @POST
         void get(@FormParam(value = "id") int id, MethodCallback<Echo> callback);
@@ -84,8 +84,8 @@ public class FormParamTestGwt extends GWTTestCase {
          */
         @POST
         void listStringBuilderParams(
-            @FormParam(value = "stringBuilderList") List<java.lang.StringBuilder> exampleStringBuilderList,
-            MethodCallback<Echo> callback);
+                @FormParam(value = "stringBuilderList") List<StringBuilder> exampleStringBuilderList,
+                MethodCallback<Echo> callback);
 
         @POST
         void arrayParams(@FormParam(value = "dtoArray") ExampleDto[] exampleDtoArray, MethodCallback<Echo> callback);

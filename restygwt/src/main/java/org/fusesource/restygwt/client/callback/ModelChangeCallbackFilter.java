@@ -43,10 +43,10 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
     }
 
     private Logger getLogger() {
-        if (GWT.isClient() && LogConfiguration.loggingIsEnabled() && this.logger == null) {
-            this.logger = Logger.getLogger(ModelChangeCallbackFilter.class.getName());
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled() && logger == null) {
+            logger = Logger.getLogger(ModelChangeCallbackFilter.class.getName());
         }
-        return this.logger;
+        return logger;
     }
 
     /**

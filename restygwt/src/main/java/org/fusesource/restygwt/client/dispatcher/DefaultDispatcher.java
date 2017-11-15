@@ -54,7 +54,7 @@ public class DefaultDispatcher implements Dispatcher {
                 builder.getTimeoutMillis());
 
             String content = builder.getRequestData();
-            if (content != null && content.length() > 0) {
+            if (content != null && !content.isEmpty()) {
                 logger.fine(content);
             }
         }

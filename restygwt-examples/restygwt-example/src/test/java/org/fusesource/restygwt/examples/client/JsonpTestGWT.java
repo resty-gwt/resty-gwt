@@ -21,7 +21,6 @@ package org.fusesource.restygwt.examples.client;
 import org.fusesource.restygwt.client.JsonCallback;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.Resource;
-import org.fusesource.restygwt.client.TextCallback;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
@@ -57,12 +56,14 @@ public class JsonpTestGWT extends UITestGWT {
 
     private JsonCallback expectJsonIsSetTo(final JSONObject expected) {
         return new JsonCallback() {
+            @Override
             public void onSuccess(Method method, JSONValue response) {
                 System.out.println("Got: " + response.toString());
                 assertEquals(expected.toString(), response.toString());
                 // finishTest();
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 fail(exception.getMessage());
             }

@@ -59,7 +59,7 @@ public class ResourcePassesHeadersTestGwt extends GWTTestCase {
         headersMap.put("Accept", "application/json");
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint", headersMap);
 
-        List<String> paramValues = Arrays.asList(new String[] { "v1", "v2" });
+        List<String> paramValues = Arrays.asList("v1", "v2");
         Resource resourceInTest = resource.addQueryParams("p1", paramValues);
 
         assertMapsAreEqual(headersMap, resourceInTest.getHeaders());

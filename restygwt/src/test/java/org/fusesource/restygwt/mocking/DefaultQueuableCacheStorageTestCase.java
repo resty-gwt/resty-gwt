@@ -36,13 +36,15 @@ public class DefaultQueuableCacheStorageTestCase extends TestCase {
 
     private DefaultQueueableCacheStorage storage;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         GWTMockUtilities.disarm();
 
-        this.storage = new DefaultQueueableCacheStorage();
+        storage = new DefaultQueueableCacheStorage();
     }
 
+    @Override
     protected void tearDown() {
         GWTMockUtilities.restore();
     }

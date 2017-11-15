@@ -35,7 +35,7 @@ public class MapResult {
     }
 
     public MapResult(Map<String, String> map) {
-        this.result = map;
+        result = map;
     }
 
     @Override

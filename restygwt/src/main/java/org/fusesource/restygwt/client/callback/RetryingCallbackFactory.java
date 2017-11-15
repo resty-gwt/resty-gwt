@@ -35,8 +35,8 @@ public class RetryingCallbackFactory implements CallbackFactory {
 
     public RetryingCallbackFactory(CallbackFilter... callbackFilters) {
         this.callbackFilters = callbackFilters;
-        this.gracePeriodMillis = 1000;
-        this.numberOfRetries = 5;
+        gracePeriodMillis = 1000;
+        numberOfRetries = 5;
     }
 
     /**

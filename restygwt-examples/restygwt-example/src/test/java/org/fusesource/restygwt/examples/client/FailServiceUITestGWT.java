@@ -52,10 +52,12 @@ public class FailServiceUITestGWT extends UITestGWT {
 
     private MethodCallback<String> expectFailedStatusCodeException(final int expectedStatusCode) {
         return new MethodCallback<String>() {
+            @Override
             public void onSuccess(Method method, String response) {
                 fail("Expected Failure with Status Code ");
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 assertNotNull(method);
                 assertNotNull(exception);

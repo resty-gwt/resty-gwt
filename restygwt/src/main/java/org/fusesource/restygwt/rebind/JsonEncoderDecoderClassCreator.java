@@ -128,7 +128,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         Json jsonAnnotation = getAnnotation(source, Json.class);
         final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
         final String railsWrapperName =
-            jsonAnnotation != null && jsonAnnotation.name().length() > 0 ? jsonAnnotation.name() :
+                jsonAnnotation != null && !jsonAnnotation.name().isEmpty() ? jsonAnnotation.name() :
                 sourceClazz.getName().toLowerCase();
         locator = EncoderDecoderLocatorFactory.getEncoderDecoderInstanceLocator(context, getLogger());
 
@@ -166,7 +166,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     /**
      * This method does NOT return the subtypes of the given class, but all the subtypes associated with the
-     * {@link com.fasterxml.jackson.annotation.JsonSubTypes} annotation, even if this annotation is assigned to
+     * {@link JsonSubTypes} annotation, even if this annotation is assigned to
      * a parent class or an interface.
      */
     private Collection<Type> findJsonSubTypes(JClassType clazz) {
@@ -325,11 +325,11 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                     String name = field.getName();
                                     String jsonName = name;
 
-                                    if (jsonAnnotation != null && jsonAnnotation.name().length() > 0) {
+                                    if (jsonAnnotation != null && !jsonAnnotation.name().isEmpty()) {
                                         jsonName = jsonAnnotation.name();
                                     }
                                     if (jsonPropertyAnnotation != null && jsonPropertyAnnotation.value() != null &&
-                                        jsonPropertyAnnotation.value().length() > 0) {
+                                            !jsonPropertyAnnotation.value().isEmpty()) {
                                         jsonName = jsonPropertyAnnotation.value();
                                     }
 
@@ -506,7 +506,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                     Json jsonAnnotation = getAnnotation(field, Json.class);
                                     Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
                                     String jsonName = field.getName();
-                                    if (jsonAnnotation != null && jsonAnnotation.name().length() > 0) {
+                                    if (jsonAnnotation != null && !jsonAnnotation.name().isEmpty()) {
                                         jsonName = jsonAnnotation.name();
                                     }
                                     String objectGetter = "object.get(" + wrap(jsonName) + ")";
@@ -572,11 +572,11 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                                     String name = field.getName();
                                     String jsonName = name;
 
-                                    if (jsonAnnotation != null && jsonAnnotation.name().length() > 0) {
+                                    if (jsonAnnotation != null && !jsonAnnotation.name().isEmpty()) {
                                         jsonName = jsonAnnotation.name();
                                     }
                                     if (jsonPropertyAnnotation != null && jsonPropertyAnnotation.value() != null &&
-                                        jsonPropertyAnnotation.value().length() > 0) {
+                                            !jsonPropertyAnnotation.value().isEmpty()) {
                                         jsonName = jsonPropertyAnnotation.value();
                                     }
 
@@ -762,7 +762,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
      */
     private String getGetterName(JClassType type, JField field) {
         final String methodBaseName = getMiddleNameForPrefixingAsAccessorMutator(field.getName());
-        String fieldName = null;
+        String fieldName;
         JType booleanType = null;
         try {
             booleanType = find(Boolean.class, getLogger(), context);
@@ -870,7 +870,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             return true;
         }
 
-        JType[] args = null;
+        JType[] args;
         if (isSetter) {
             args = new JType[] { field.getType() };
         } else {

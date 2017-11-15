@@ -41,7 +41,7 @@ public class ObjectEncoderDecoderTestGwt extends GWTTestCase {
         return "org.fusesource.restygwt.ObjectEncoderDecoder";
     }
 
-    public static interface Properties {
+    public interface Properties {
         @GET
         @Path("{name}")
         Object getProperty(@PathParam("name") String name);
@@ -52,7 +52,7 @@ public class ObjectEncoderDecoderTestGwt extends GWTTestCase {
     }
 
     @Path("/properties")
-    public static interface PropertiesAsync extends RestService {
+    public interface PropertiesAsync extends RestService {
         @GET
         @Path("{name}")
         void getProperty(@PathParam("name") String name, MethodCallback<Object> callback);

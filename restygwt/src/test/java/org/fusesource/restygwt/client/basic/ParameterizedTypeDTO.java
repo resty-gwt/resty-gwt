@@ -43,7 +43,7 @@ public class ParameterizedTypeDTO extends GWTTestCase {
     }
 
     @Path("/api/pdto")
-    public static interface DTOService extends RestService {
+    public interface DTOService extends RestService {
         @GET
         @Produces("application/json")
         @Path("thingList")

@@ -24,8 +24,8 @@ package org.fusesource.restygwt.client;
  */
 public interface MethodCallback<T> {
 
-    public void onFailure(Method method, Throwable exception);
+    void onFailure(Method method, Throwable exception);
 
-    public void onSuccess(Method method, T response);
+    void onSuccess(Method method, T response);
 
 }

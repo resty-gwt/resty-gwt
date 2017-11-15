@@ -25,13 +25,13 @@ public interface CacheKey {
      * Needed for saving in HashMap:
      */
     @Override
-    public int hashCode();
+    int hashCode();
 
     /**
      * Needed for saving in HashMap:
      */
     @Override
-    public boolean equals(Object anObject);
+    boolean equals(Object anObject);
 
     /**
      * string representation and effectively the cache identifier
@@ -39,5 +39,5 @@ public interface CacheKey {
      * @return
      */
     @Override
-    public String toString();
+    String toString();
 }

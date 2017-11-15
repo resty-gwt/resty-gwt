@@ -48,7 +48,7 @@ public class ModelChangeEvent extends GwtEvent<ModelChangedEventHandler> {
     }
 
     @Override
-    public com.google.gwt.event.shared.GwtEvent.Type<ModelChangedEventHandler> getAssociatedType() {
+    public GwtEvent.Type<ModelChangedEventHandler> getAssociatedType() {
         return TYPE;
     }
 

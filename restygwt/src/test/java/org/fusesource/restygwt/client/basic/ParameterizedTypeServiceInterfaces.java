@@ -44,37 +44,37 @@ public class ParameterizedTypeServiceInterfaces extends GWTTestCase {
         public int shoeSize;
     }
 
-    public static interface A<X> extends RestService {
+    public interface A<X> extends RestService {
         @GET
         @Produces("application/json")
         void getSomething(MethodCallback<X> callback);
     }
 
     @Path("/api/ptype/int")
-    public static interface AOfInt extends A<Integer> {
+    public interface AOfInt extends A<Integer> {
     }
 
     @Path("/api/ptype/thing")
-    public static interface AOfThing extends A<Thing> {
+    public interface AOfThing extends A<Thing> {
     }
 
     @Path("/api/ptype")
-    public static interface SuperOfThing extends RestService {
+    public interface SuperOfThing extends RestService {
         @Path("thing")
-        public A<Thing> getThingInterface();
+        A<Thing> getThingInterface();
 
         @Path("int")
-        public A<Integer> getIntInterface();
+        A<Integer> getIntInterface();
     }
 
-    public static interface GenericService<T extends DTOInterface> extends RestService {
+    public interface GenericService<T extends DTOInterface> extends RestService {
         @POST
         @Path("echo")
         void echoName(T dto, MethodCallback<String> callback);
     }
 
     @Path("/api/concrete")
-    public static interface ConcreteService extends GenericService<DTOImplementation> {
+    public interface ConcreteService extends GenericService<DTOImplementation> {
     }
 
     @Test
@@ -165,7 +165,6 @@ public class ParameterizedTypeServiceInterfaces extends GWTTestCase {
             @Override
             public void onSuccess(Method method, String response) {
                 assertEquals(dto.getName(), response);
-                ;
                 finishTest();
             }
         });

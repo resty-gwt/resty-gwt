@@ -37,21 +37,21 @@ import org.fusesource.restygwt.client.RestService;
 public interface MethodService extends RestService {
 
     @POST
-    public void post(MethodCallback<String> callback);
+    void post(MethodCallback<String> callback);
 
     @GET
-    public void get(MethodCallback<String> callback);
+    void get(MethodCallback<String> callback);
 
     @PUT
-    public void put(MethodCallback<String> callback);
+    void put(MethodCallback<String> callback);
 
     @DELETE
-    public void delete(MethodCallback<String> callback);
+    void delete(MethodCallback<String> callback);
 
     @HEAD
-    public void head(MethodCallback<String> callback);
+    void head(MethodCallback<String> callback);
 
     @OPTIONS
-    public void options(MethodCallback<String> callback);
+    void options(MethodCallback<String> callback);
 
 }

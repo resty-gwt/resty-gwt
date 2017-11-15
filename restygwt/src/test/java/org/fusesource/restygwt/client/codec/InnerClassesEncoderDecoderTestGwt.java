@@ -40,7 +40,7 @@ public class InnerClassesEncoderDecoderTestGwt extends GWTTestCase {
         }
     }
 
-    static interface InnerClassesRestService extends RestService {
+    interface InnerClassesRestService extends RestService {
 
         @GET
         @Path("/")

@@ -51,54 +51,54 @@ public class GetTypeInfoPropertyValueTestCase extends TestCase {
 
     @Test
     public void testClassEmpty() throws Exception {
-        check("@class", new ClassEmpty().getClass().getAnnotation(JsonTypeInfo.class));
+        check("@class", ClassEmpty.class.getAnnotation(JsonTypeInfo.class));
     }
 
     @Test
     public void testClassNotEmpty() throws Exception {
-        check("test", new ClassNotEmpty().getClass().getAnnotation(JsonTypeInfo.class));
+        check("test", ClassNotEmpty.class.getAnnotation(JsonTypeInfo.class));
     }
 
     @Test
     public void testNameEmpty() throws Exception {
-        check("@type", new NameEmpty().getClass().getAnnotation(JsonTypeInfo.class));
+        check("@type", NameEmpty.class.getAnnotation(JsonTypeInfo.class));
     }
 
     @Test
     public void testNameNotEmpty() throws Exception {
-        check("test2", new NameNotEmpty().getClass().getAnnotation(JsonTypeInfo.class));
+        check("test2", NameNotEmpty.class.getAnnotation(JsonTypeInfo.class));
     }
 
     @Test
     public void testMinEmpty() throws Exception {
-        check("@c", new MinEmpty().getClass().getAnnotation(JsonTypeInfo.class));
+        check("@c", MinEmpty.class.getAnnotation(JsonTypeInfo.class));
     }
 
     @Test
     public void testMinNotEmpty() throws Exception {
-        check("test3", new MinNotEmpty().getClass().getAnnotation(JsonTypeInfo.class));
+        check("test3", MinNotEmpty.class.getAnnotation(JsonTypeInfo.class));
     }
 
     @Test
     public void testNoneEmpty() throws Exception {
-        check(null, new NoneEmpty().getClass().getAnnotation(JsonTypeInfo.class));
+        check(null, NoneEmpty.class.getAnnotation(JsonTypeInfo.class));
     }
 
     @Test
     public void testNoneNotEmpty() throws Exception {
         //should be null ?
-        check("test4", new NoneNotEmpty().getClass().getAnnotation(JsonTypeInfo.class));
+        check("test4", NoneNotEmpty.class.getAnnotation(JsonTypeInfo.class));
     }
 
     @Test
     public void testCustomEmpty() throws Exception {
-        check(null, new CustomEmpty().getClass().getAnnotation(JsonTypeInfo.class));
+        check(null, CustomEmpty.class.getAnnotation(JsonTypeInfo.class));
     }
 
     @Test
     public void testCustomNotEmpty() throws Exception {
         //should be null ?
-        check("test5", new CustomNotEmpty().getClass().getAnnotation(JsonTypeInfo.class));
+        check("test5", CustomNotEmpty.class.getAnnotation(JsonTypeInfo.class));
     }
 
     @Test

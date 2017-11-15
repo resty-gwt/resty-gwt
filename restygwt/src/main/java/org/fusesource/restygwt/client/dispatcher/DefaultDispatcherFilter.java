@@ -41,7 +41,7 @@ public class DefaultDispatcherFilter implements DispatcherFilter {
      * @param cf
      */
     public DefaultDispatcherFilter(final CallbackFactory cf) {
-        this.callbackFactory = cf;
+        callbackFactory = cf;
     }
 
     /**

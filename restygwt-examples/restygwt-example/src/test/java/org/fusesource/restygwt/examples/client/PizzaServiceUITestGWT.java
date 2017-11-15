@@ -38,6 +38,7 @@ public class PizzaServiceUITestGWT extends UITestGWT {
         PizzaService service = GWT.create(PizzaService.class);
 
         service.listToppings(new MethodCallback<List<Topping>>() {
+            @Override
             public void onSuccess(Method method, List<Topping> response) {
                 System.out.println(response);
                 assertNotNull(response);
@@ -45,6 +46,7 @@ public class PizzaServiceUITestGWT extends UITestGWT {
                 finishTest();
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 exception.printStackTrace();
                 fail(exception.getMessage());
@@ -80,6 +82,7 @@ public class PizzaServiceUITestGWT extends UITestGWT {
         order.pizzas.add(pizza);
 
         service.order(order, new MethodCallback<OrderConfirmation>() {
+            @Override
             public void onSuccess(Method method, OrderConfirmation response) {
                 System.out.println(response);
                 assertNotNull(response);
@@ -90,6 +93,7 @@ public class PizzaServiceUITestGWT extends UITestGWT {
                 finishTest();
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 exception.printStackTrace();
                 fail(exception.getMessage());
@@ -104,14 +108,16 @@ public class PizzaServiceUITestGWT extends UITestGWT {
         // Initialize the pizza service..
         PizzaService service = GWT.create(PizzaService.class);
 
-        service.ping(new MethodCallback<java.lang.Void>() {
-            public void onSuccess(Method method, java.lang.Void response) {
+        service.ping(new MethodCallback<Void>() {
+            @Override
+            public void onSuccess(Method method, Void response) {
                 System.out.println(response);
                 assertNull(response);
 
                 finishTest();
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 exception.printStackTrace();
                 fail(exception.getMessage());
@@ -127,6 +133,7 @@ public class PizzaServiceUITestGWT extends UITestGWT {
         PizzaService service = GWT.create(PizzaService.class);
 
         service.getCurstPrices(crust, new MethodCallback<Map<Integer, Double>>() {
+            @Override
             public void onSuccess(Method method, Map<Integer, Double> response) {
                 System.out.println(response);
                 assertNotNull(response);
@@ -134,6 +141,7 @@ public class PizzaServiceUITestGWT extends UITestGWT {
                 finishTest();
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 exception.printStackTrace();
                 fail(exception.getMessage());

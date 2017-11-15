@@ -42,6 +42,6 @@ public interface DispatcherFilter {
      *
      * @return continue chain or not
      */
-    public boolean filter(Method method, RequestBuilder builder);
+    boolean filter(Method method, RequestBuilder builder);
 
 }

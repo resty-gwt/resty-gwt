@@ -18,6 +18,8 @@
 
 package org.fusesource.restygwt.examples.server;
 
+import com.sun.jersey.spi.container.servlet.ServletContainer;
+
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -35,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  */
-public class JerseyServlet extends com.sun.jersey.spi.container.servlet.ServletContainer {
+public class JerseyServlet extends ServletContainer {
 
     private static final long serialVersionUID = -273961734543645503L;
 
@@ -45,21 +47,26 @@ public class JerseyServlet extends com.sun.jersey.spi.container.servlet.ServletC
         initParams.put("com.sun.jersey.config.property.packages", "org.fusesource.restygwt.examples.server");
     }
 
+    @Override
     public void init(final ServletConfig servletConfig) throws ServletException {
         super.init(new ServletConfig() {
+            @Override
             public String getServletName() {
                 return servletConfig.getServletName();
             }
 
+            @Override
             public ServletContext getServletContext() {
                 return servletConfig.getServletContext();
             }
 
+            @Override
             @SuppressWarnings("unchecked")
             public Enumeration getInitParameterNames() {
                 return initParams.keys();
             }
 
+            @Override
             public String getInitParameter(String name) {
                 return initParams.getProperty(name);
             }

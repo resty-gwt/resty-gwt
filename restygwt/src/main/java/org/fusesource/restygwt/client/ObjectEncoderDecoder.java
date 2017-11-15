@@ -37,11 +37,11 @@ public class ObjectEncoderDecoder extends AbstractJsonEncoderDecoder<Object> {
     public static final ObjectEncoderDecoder INSTANCE = new ObjectEncoderDecoder();
 
     @Override
-    public JSONValue encode(Object value) throws org.fusesource.restygwt.client.JsonEncoderDecoder.EncodingException {
+    public JSONValue encode(Object value) throws JsonEncoderDecoder.EncodingException {
         if (value instanceof Number) {
             return new JSONNumber(((Number) value).doubleValue());
         } else if (value instanceof Boolean) {
-            return JSONBoolean.getInstance(((Boolean) value).booleanValue());
+            return JSONBoolean.getInstance((Boolean) value);
         } else if (value instanceof Iterable) {
             JSONArray array = new JSONArray();
             int ct = 0;
@@ -63,7 +63,7 @@ public class ObjectEncoderDecoder extends AbstractJsonEncoderDecoder<Object> {
     }
 
     @Override
-    public Object decode(JSONValue value) throws org.fusesource.restygwt.client.JsonEncoderDecoder.DecodingException {
+    public Object decode(JSONValue value) throws JsonEncoderDecoder.DecodingException {
         if (value instanceof JSONNumber) {
             return ((JSONNumber) value).doubleValue();
         } else if (value instanceof JSONBoolean) {

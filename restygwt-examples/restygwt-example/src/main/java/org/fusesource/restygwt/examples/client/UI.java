@@ -45,9 +45,11 @@ public class UI implements EntryPoint {
     /**
      * This is the entry point method.
      */
+    @Override
     public void onModuleLoad() {
         Button button = new Button("Place Pizza Order");
         button.addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
                 placeOrder();
             }
@@ -56,6 +58,7 @@ public class UI implements EntryPoint {
 
         button = new Button("Do Put");
         button.addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
                 doPut();
             }
@@ -64,6 +67,7 @@ public class UI implements EntryPoint {
 
         button = new Button("Do A Search on Yahoo /w Jsonp");
         button.addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
                 doJsonp();
             }
@@ -75,10 +79,12 @@ public class UI implements EntryPoint {
     protected void doPut() {
         MethodService service = GWT.create(MethodService.class);
         service.put(new MethodCallback<String>() {
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 Window.alert("Error x: " + exception);
             }
 
+            @Override
             public void onSuccess(Method method, String response) {
                 RootPanel.get().add(new Label("done."));
             }
@@ -111,10 +117,12 @@ public class UI implements EntryPoint {
         order.pizzas.add(pizza);
 
         service.order(order, new MethodCallback<OrderConfirmation>() {
+            @Override
             public void onSuccess(Method method, OrderConfirmation receipt) {
                 RootPanel.get().add(new Label("got receipt: " + receipt));
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 Window.alert("Error: " + exception);
             }
@@ -126,11 +134,13 @@ public class UI implements EntryPoint {
             "http://search.yahooapis.com/WebSearchService/V1/webSearch?appid=YahooDemo&query=finances&format=pdf" +
                 "&output=json&callback=callback");
         resource.jsonp().send(new JsonCallback() {
+            @Override
             public void onSuccess(Method method, JSONValue response) {
                 JSONObject obj = (JSONObject) ((JSONObject) response).get("ResultSet");
                 RootPanel.get().add(new Label("Search Results Available: " + obj.get("totalResultsAvailable")));
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 Window.alert("Error x: " + exception);
             }

@@ -34,6 +34,7 @@ import com.google.gwt.json.client.JSONValue;
  */
 public class ResourceUITestGWT extends UITestGWT {
 
+    @Override
     public String getModuleName() {
         return "org.fusesource.restygwt.examples.UI";
     }
@@ -46,12 +47,14 @@ public class ResourceUITestGWT extends UITestGWT {
         JSONValue request = createRequestObject();
 
         resource.post().json(request).send(new JsonCallback() {
+            @Override
             public void onSuccess(Method method, JSONValue response) {
                 assertNotNull(response);
                 System.out.println(response);
                 finishTest();
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 exception.printStackTrace();
                 fail(exception.getMessage());
@@ -76,7 +79,6 @@ public class ResourceUITestGWT extends UITestGWT {
         order.pizzas.add(pizza);
 
         PizzaOrderJED jed = GWT.create(PizzaOrderJED.class);
-        JSONValue value = jed.encode(order);
-        return value;
+        return jed.encode(order);
     }
 }

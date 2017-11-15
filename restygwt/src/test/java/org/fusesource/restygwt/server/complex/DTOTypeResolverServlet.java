@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.AbstractDTO;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO1;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO2;

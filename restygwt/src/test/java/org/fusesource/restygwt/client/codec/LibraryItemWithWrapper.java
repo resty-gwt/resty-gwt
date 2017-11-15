@@ -32,6 +32,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 abstract public class LibraryItemWithWrapper {
     public String id;
 
+    @Override
     public boolean equals(Object other) {
         return getClass().equals(other.getClass()) && id.equals(((LibraryItemWithWrapper) other).id);
     }

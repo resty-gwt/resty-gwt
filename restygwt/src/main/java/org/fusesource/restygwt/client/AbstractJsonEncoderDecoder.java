@@ -931,7 +931,7 @@ abstract public class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
         return value;
     }
 
-    static protected <T extends Object> T getValueToSet(T value, T defaultValue) {
+    static protected <T> T getValueToSet(T value, T defaultValue) {
         if (value instanceof JSONNull || value == null) {
             return defaultValue;
         }

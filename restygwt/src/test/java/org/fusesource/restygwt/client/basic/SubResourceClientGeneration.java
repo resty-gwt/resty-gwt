@@ -31,19 +31,19 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 
 public class SubResourceClientGeneration extends GWTTestCase {
-    public static interface TestInterfaceA extends RestService {
+    public interface TestInterfaceA extends RestService {
         @GET
         @Path("/foo")
-        public void getFoo(TextCallback cb);
+        void getFoo(TextCallback cb);
 
         @Path("interfaceB/{id}")
-        public TestInterfaceB getInterfaceB(@PathParam("id") String nameOfThing);
+        TestInterfaceB getInterfaceB(@PathParam("id") String nameOfThing);
     }
 
-    public static interface TestInterfaceB extends RestService {
+    public interface TestInterfaceB extends RestService {
         @GET
         @Path("/bar")
-        public void getBar(TextCallback cb);
+        void getBar(TextCallback cb);
     }
 
     @Override

@@ -33,8 +33,8 @@ import org.fusesource.restygwt.client.RestService;
 public interface GreetingService extends RestService {
 
     @GET
-    public void getGreeting(OverlayCallback<Greeting> callback);
+    void getGreeting(OverlayCallback<Greeting> callback);
 
     @POST
-    public void getCustomGreeting(NameObject nameArg, OverlayCallback<Greeting> callback);
+    void getCustomGreeting(NameObject nameArg, OverlayCallback<Greeting> callback);
 }

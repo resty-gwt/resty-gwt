@@ -26,6 +26,7 @@ import com.google.gwt.junit.client.GWTTestCase;
  */
 abstract public class UITestGWT extends GWTTestCase {
 
+    @Override
     public String getModuleName() {
         return "org.fusesource.restygwt.examples.UI";
     }

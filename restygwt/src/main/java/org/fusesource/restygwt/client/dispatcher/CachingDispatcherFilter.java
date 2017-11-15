@@ -55,7 +55,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
      */
     public CachingDispatcherFilter(final QueueableCacheStorage cacheStorage, final CallbackFactory cf) {
         this.cacheStorage = cacheStorage;
-        this.callbackFactory = cf;
+        callbackFactory = cf;
     }
 
     protected CacheKey cacheKey(RequestBuilder builder) {

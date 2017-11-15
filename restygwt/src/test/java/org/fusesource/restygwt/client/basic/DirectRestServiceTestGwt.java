@@ -43,7 +43,7 @@ public class DirectRestServiceTestGwt extends GWTTestCase {
         return "org.fusesource.restygwt.DirectRestServiceTestGwt";
     }
 
-    static interface InnerDirectRestService extends DirectRestService {
+    interface InnerDirectRestService extends DirectRestService {
         @GET
         @Path("/something")
         void getSomething();

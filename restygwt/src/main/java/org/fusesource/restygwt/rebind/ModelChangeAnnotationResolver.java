@@ -19,6 +19,7 @@
 package org.fusesource.restygwt.rebind;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +51,7 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
         ModelChange classAnnot = getAnnotation(source, ModelChange.class);
         String[] serviceDomains = null;
         ModelChange methodAnnot = getAnnotation(method, ModelChange.class);
-        final Map<String, String[]> ret = new java.util.HashMap<String, String[]>();
+        final Map<String, String[]> ret = new HashMap<String, String[]>();
 
         if (null != getAnnotation(source, Domain.class)) {
             serviceDomains = getAnnotationsAsStringArray(getAnnotation(source, Domain.class).value());
@@ -62,7 +63,7 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
         }
 
         if (methodAnnot != null) {
-            String[] domains = null;
+            String[] domains;
 
             if (methodAnnot.domain() == null || methodAnnot.domain().length == 0) {
                 if (serviceDomains == null) {
@@ -90,7 +91,7 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
         if (classAnnot != null && classAnnot.on() != null) {
             for (String s : classAnnot.on()) {
                 if (s.toUpperCase().equals(restMethod.toUpperCase())) {
-                    String[] domains = null;
+                    String[] domains;
 
                     if (classAnnot.domain() == null || classAnnot.domain().equals("")) {
                         if (serviceDomains == null) {

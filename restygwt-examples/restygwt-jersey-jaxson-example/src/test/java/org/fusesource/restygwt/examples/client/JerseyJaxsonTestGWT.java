@@ -35,6 +35,7 @@ import com.google.gwt.junit.client.GWTTestCase;
  */
 public class JerseyJaxsonTestGWT extends GWTTestCase {
 
+    @Override
     public String getModuleName() {
         return "org.fusesource.restygwt.examples.JERSEY_JAXSON";
     }
@@ -52,11 +53,13 @@ public class JerseyJaxsonTestGWT extends GWTTestCase {
 
     private <T> MethodCallback<T> expectResult(final T expectedResult) {
         return new MethodCallback<T>() {
+            @Override
             public void onSuccess(Method method, T result) {
                 assertEquals(expectedResult, result);
                 finishTest();
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 fail(exception.getMessage());
             }

@@ -135,6 +135,7 @@ public class CacheCallbackTestGwt extends GWTTestCase {
         // wait a second for callback to be back for sure
         // usually there should be something like Thread.sleep, but thats not possible here
         new Timer() {
+            @Override
             public void run() {
                 /*
                  * two calls that are handled directly by the cache
@@ -156,6 +157,7 @@ public class CacheCallbackTestGwt extends GWTTestCase {
 
         // this is the third one, started in 3 seconds
         new Timer() {
+            @Override
             public void run() {
                 service.cachingCall(0, new MethodCallback<Void>() {
                     @Override
@@ -225,6 +227,7 @@ public class CacheCallbackTestGwt extends GWTTestCase {
         final FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher();
 
         dispatcher.addFilter(new CachingDispatcherFilter(cacheStorage, new CallbackFactory() {
+            @Override
             public FilterawareRequestCallback createCallback(Method method) {
                 final FilterawareRequestCallback retryingCallback = new DefaultFilterawareRequestCallback(method);
 

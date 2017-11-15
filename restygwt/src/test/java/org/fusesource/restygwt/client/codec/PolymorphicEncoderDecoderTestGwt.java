@@ -73,10 +73,10 @@ public class PolymorphicEncoderDecoderTestGwt extends GWTTestCase {
         }
     }
 
-    static interface JsonSubTypesWithAnInterfaceCodec extends JsonEncoderDecoder<JsonSubTypesWithAnInterface> {
+    interface JsonSubTypesWithAnInterfaceCodec extends JsonEncoderDecoder<JsonSubTypesWithAnInterface> {
     }
 
-    static interface JsonSubTypesWithAnInterfaceImplementationCodec
+    interface JsonSubTypesWithAnInterfaceImplementationCodec
         extends JsonEncoderDecoder<DefaultImplementationOfSubTypeInterface> {
     }
 
@@ -124,7 +124,7 @@ public class PolymorphicEncoderDecoderTestGwt extends GWTTestCase {
         HELLO, WORLD
     }
 
-    static interface JsonSubTypesWithAnInterfaceForUseWithAnEnumCodec
+    interface JsonSubTypesWithAnInterfaceForUseWithAnEnumCodec
         extends JsonEncoderDecoder<JsonSubTypesWithAnInterfaceForUseWithAnEnum> {
     }
 
@@ -165,7 +165,7 @@ public class PolymorphicEncoderDecoderTestGwt extends GWTTestCase {
         }
     }
 
-    static interface JsonPropertyOnSuperClassCodec extends JsonEncoderDecoder<BaseForJsonProperty> {
+    interface JsonPropertyOnSuperClassCodec extends JsonEncoderDecoder<BaseForJsonProperty> {
     }
 
     public void testJsonPropertyOnSuperClass() {
@@ -212,7 +212,7 @@ public class PolymorphicEncoderDecoderTestGwt extends GWTTestCase {
         }
     }
 
-    static public interface IdNamePolymorphicCodec extends JsonEncoderDecoder<A> {
+    public interface IdNamePolymorphicCodec extends JsonEncoderDecoder<A> {
     }
 
     public void testIdNamePolymorphic() {

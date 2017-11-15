@@ -106,7 +106,7 @@ public class PossibleTypesVisitor extends JsonTypeInfoIdVisitor<List<Subtype>, U
                     possibleTypes.add(new Subtype(entry.getKey(), entryType));
                 }
             }
-            if (isLeaf && possibleTypes.size() == 0) {
+            if (isLeaf && possibleTypes.isEmpty()) {
                 logger.log(BaseSourceCreator.ERROR,
                     "Could not find entry in " + restyResolver.getClass().getName() + " for type: " + classType);
                 throw new UnableToCompleteException();
@@ -132,7 +132,7 @@ public class PossibleTypesVisitor extends JsonTypeInfoIdVisitor<List<Subtype>, U
                 }
 
             }
-            if (isLeaf && possibleTypes.size() == 0) {
+            if (isLeaf && possibleTypes.isEmpty()) {
                 logger.log(BaseSourceCreator.ERROR, "Could not find @JsonSubTypes entry for type: " + classType);
                 throw new UnableToCompleteException();
             }
