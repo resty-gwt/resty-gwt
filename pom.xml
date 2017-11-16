@@ -40,6 +40,8 @@
         <forge-project-id>restygwt</forge-project-id>
         <forge-project-id-uc>RESTYGWT</forge-project-id-uc>
         <gwt-version>2.5.1</gwt-version>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
     </properties>
 
     <url>http://${forge-project-id}.fusesource.org</url>
@@ -173,12 +175,9 @@
                 </plugin>
 
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.1</version>
-                    <configuration>
-                        <source>1.6</source>
-                        <target>1.6</target>
-                    </configuration>
+                    <version>3.7.0</version>
                 </plugin>
 
                 <plugin>
