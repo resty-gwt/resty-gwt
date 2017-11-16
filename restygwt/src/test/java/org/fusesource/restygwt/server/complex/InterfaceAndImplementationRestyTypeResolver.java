@@ -18,13 +18,13 @@
 
 package org.fusesource.restygwt.server.complex;
 
+import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOImplementation;
 import org.fusesource.restygwt.rebind.RestyJsonTypeIdResolver;
-
-import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 
 public class InterfaceAndImplementationRestyTypeResolver implements RestyJsonTypeIdResolver {
     @Override

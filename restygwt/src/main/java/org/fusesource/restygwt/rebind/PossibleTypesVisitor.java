@@ -1,8 +1,6 @@
 package org.fusesource.restygwt.rebind;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import static org.fusesource.restygwt.rebind.util.AnnotationUtils.getClassAnnotation;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
@@ -10,16 +8,18 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
-import org.fusesource.restygwt.rebind.JsonEncoderDecoderClassCreator.Subtype;
-import org.fusesource.restygwt.rebind.util.JsonTypeInfoIdVisitor;
-
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 
-import static org.fusesource.restygwt.rebind.util.AnnotationUtils.getClassAnnotation;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import org.fusesource.restygwt.rebind.JsonEncoderDecoderClassCreator.Subtype;
+import org.fusesource.restygwt.rebind.util.JsonTypeInfoIdVisitor;
 
 public class PossibleTypesVisitor extends JsonTypeInfoIdVisitor<List<Subtype>, UnableToCompleteException> {
     private GeneratorContext context;

@@ -18,11 +18,11 @@
 
 package org.fusesource.restygwt.client.callback;
 
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
-
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
+
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 
 public class XSRFTokenCallbackFilter implements CallbackFilter {
 

@@ -18,6 +18,10 @@
 
 package org.fusesource.restygwt.server.complex;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.gwt.thirdparty.guava.common.collect.Lists;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -26,13 +30,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.AbstractDTO;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO1;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO2;
-
-import com.google.gwt.thirdparty.guava.common.collect.Lists;
 
 public class DTOTypeResolverServlet extends HttpServlet {
     private static final long serialVersionUID = 8761900300798640874L;

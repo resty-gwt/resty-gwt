@@ -2,6 +2,7 @@ package org.fusesource.restygwt.server.complex;
 
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
+
 import org.fusesource.restygwt.client.basic.Optional;
 import org.fusesource.restygwt.rebind.JsonEncoderDecoderClassCreator;
 import org.fusesource.restygwt.rebind.RestyJsonSerializerGenerator;

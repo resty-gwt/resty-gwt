@@ -1,11 +1,12 @@
 package org.fusesource.restygwt.client.codec;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt.Email;
 
 class WithArraysAndCollections {

@@ -18,6 +18,17 @@
 
 package org.fusesource.restygwt.client.basic;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.user.client.Timer;
+
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Defaults;
@@ -36,17 +47,6 @@ import org.fusesource.restygwt.client.callback.ModelChangeCallbackFilter;
 import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 import org.fusesource.restygwt.client.dispatcher.DispatcherFilter;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.SimpleEventBus;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.logging.client.LogConfiguration;
-import com.google.gwt.user.client.Timer;
 
 /**
  * @author <a href="mailto:mail@raphaelbauer.com">rEyez</a>

@@ -18,9 +18,6 @@
 
 package org.fusesource.restygwt.rebind;
 
-import java.io.PrintWriter;
-import java.util.HashSet;
-
 import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.PropertyOracle;
@@ -32,6 +29,9 @@ import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.user.rebind.AbstractSourceCreator;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+
+import java.io.PrintWriter;
+import java.util.HashSet;
 
 /**
  * provides additional helper methods for generating source..

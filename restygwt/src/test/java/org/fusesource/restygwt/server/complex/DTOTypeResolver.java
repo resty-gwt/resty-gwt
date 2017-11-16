@@ -18,11 +18,6 @@
 
 package org.fusesource.restygwt.server.complex;
 
-import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO1;
-import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO2;
-import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOCustom1;
-import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOCustom2;
-
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.databind.DatabindContext;
 import com.fasterxml.jackson.databind.JavaType;
@@ -30,6 +25,11 @@ import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 import com.fasterxml.jackson.databind.type.SimpleType;
 
 import java.io.IOException;
+
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO1;
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO2;
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOCustom1;
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOCustom2;
 
 public class DTOTypeResolver implements TypeIdResolver {
     @Override

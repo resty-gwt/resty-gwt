@@ -1,14 +1,14 @@
 package org.fusesource.restygwt.client;
 
+import com.google.gwt.json.client.JSONNull;
+import com.google.gwt.json.client.JSONValue;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.fusesource.restygwt.client.Json.Style;
-
-import com.google.gwt.json.client.JSONNull;
-import com.google.gwt.json.client.JSONValue;
 
 public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends AbstractJsonEncoderDecoder<E> {
 

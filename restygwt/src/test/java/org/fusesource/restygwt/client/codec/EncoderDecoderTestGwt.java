@@ -18,6 +18,18 @@
 
 package org.fusesource.restygwt.client.codec;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.junit.client.GWTTestCase;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -33,11 +45,7 @@ import java.util.TreeMap;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.fusesource.restygwt.client.AbstractJsonEncoderDecoder;
 import org.fusesource.restygwt.client.AbstractNestedJsonEncoderDecoder;
@@ -49,16 +57,6 @@ import org.fusesource.restygwt.client.ObjectEncoderDecoder;
 import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.basic.Optional;
 import org.fusesource.restygwt.client.codec.EncoderDecoderTestGwt.WithEnum.Cycle;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONString;
-import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.junit.client.GWTTestCase;
-
-import javax.xml.bind.annotation.XmlTransient;
 
 public class EncoderDecoderTestGwt extends GWTTestCase {
 

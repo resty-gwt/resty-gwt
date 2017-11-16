@@ -16,11 +16,11 @@
 
 package org.fusesource.restygwt.client;
 
-import java.util.Set;
-
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+
+import java.util.Set;
 
 /**
  * Helper class to check the Set of expected statuses

@@ -18,6 +18,8 @@
 
 package org.fusesource.restygwt.examples.server;
 
+import com.sun.jersey.spi.resource.Singleton;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -28,8 +30,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.fusesource.restygwt.examples.client.MapResult;
-
-import com.sun.jersey.spi.resource.Singleton;
 
 @Path("/mapservice")
 @Consumes({ MediaType.APPLICATION_JSON })

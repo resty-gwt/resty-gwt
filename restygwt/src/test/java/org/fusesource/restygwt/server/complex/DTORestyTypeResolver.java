@@ -18,6 +18,8 @@
 
 package org.fusesource.restygwt.server.complex;
 
+import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,8 +28,6 @@ import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTO2;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOCustom1;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOCustom2;
 import org.fusesource.restygwt.rebind.RestyJsonTypeIdResolver;
-
-import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 
 public class DTORestyTypeResolver implements RestyJsonTypeIdResolver {
     @Override

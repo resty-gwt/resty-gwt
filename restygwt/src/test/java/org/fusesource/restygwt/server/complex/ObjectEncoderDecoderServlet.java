@@ -18,6 +18,8 @@
 
 package org.fusesource.restygwt.server.complex;
 
+import com.google.gwt.dev.util.collect.Maps;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,8 +31,6 @@ import org.fusesource.restygwt.client.complex.ObjectEncoderDecoderTestGwt;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 import org.jboss.resteasy.spi.Registry;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
-
-import com.google.gwt.dev.util.collect.Maps;
 
 public class ObjectEncoderDecoderServlet extends HttpServletDispatcher {
     private static final long serialVersionUID = 1L;

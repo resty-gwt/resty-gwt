@@ -1,5 +1,7 @@
 package org.fusesource.restygwt.rebind;
 
+import static org.fusesource.restygwt.rebind.DirectRestServiceInterfaceClassCreator.DIRECT_REST_SERVICE_SUFFIX;
+
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -8,14 +10,13 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
+
 import org.fusesource.restygwt.client.Dispatcher;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.client.callback.CallbackAware;
 import org.fusesource.restygwt.rebind.util.OnceFirstIterator;
-
-import static org.fusesource.restygwt.rebind.DirectRestServiceInterfaceClassCreator.DIRECT_REST_SERVICE_SUFFIX;
 
 public class DirectRestServiceClassCreator extends DirectRestBaseSourceCreator {
     public static final String DIRECT_REST_IMPL_SUFFIX = DIRECT_REST_SERVICE_SUFFIX + "Impl";

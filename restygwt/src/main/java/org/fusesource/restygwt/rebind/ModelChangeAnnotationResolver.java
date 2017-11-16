@@ -18,6 +18,13 @@
 
 package org.fusesource.restygwt.rebind;
 
+import static org.fusesource.restygwt.rebind.util.AnnotationUtils.getAnnotation;
+
+import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JMethod;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,13 +33,6 @@ import java.util.Map;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.client.cache.Domain;
-
-import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.UnableToCompleteException;
-import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JMethod;
-
-import static org.fusesource.restygwt.rebind.util.AnnotationUtils.getAnnotation;
 
 /**
  * Implementation for an annotationparser which is responsible to put

@@ -18,11 +18,11 @@
 
 package org.fusesource.restygwt.client.complex.string;
 
+import com.google.gwt.core.client.GWT;
+
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.complex.string.service.StringRestService;
-
-import com.google.gwt.core.client.GWT;
 
 public class StringEncoderDecoderAutodetectPlainTextTestGwt extends StringEncoderDecoderTestGwt {
 

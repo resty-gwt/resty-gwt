@@ -18,8 +18,6 @@
 
 package org.fusesource.restygwt.client;
 
-import java.util.Map;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -30,6 +28,8 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.xml.client.Document;
+
+import java.util.Map;
 
 /**
  * A specialized method which accesses a resource as a JSONP request.

@@ -18,18 +18,18 @@
 
 package org.fusesource.restygwt.client.cache;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Header;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.logging.client.LogConfiguration;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.Header;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.logging.client.LogConfiguration;
 
 /**
  * this implementation stores Response objects until they are removed or purged. when retrieved from

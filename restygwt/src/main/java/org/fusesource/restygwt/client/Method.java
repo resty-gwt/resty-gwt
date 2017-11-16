@@ -18,16 +18,6 @@
 
 package org.fusesource.restygwt.client;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.fusesource.restygwt.rebind.AnnotationResolver;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;
@@ -41,6 +31,16 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.fusesource.restygwt.rebind.AnnotationResolver;
 
 /**
  *

@@ -18,11 +18,6 @@
 
 package org.fusesource.restygwt.client.callback;
 
-import java.util.logging.Logger;
-
-import org.fusesource.restygwt.client.FailedStatusCodeException;
-import org.fusesource.restygwt.client.Method;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -31,6 +26,11 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+
+import java.util.logging.Logger;
+
+import org.fusesource.restygwt.client.FailedStatusCodeException;
+import org.fusesource.restygwt.client.Method;
 
 public class RetryingFilterawareRequestCallback extends DefaultFilterawareRequestCallback {
 

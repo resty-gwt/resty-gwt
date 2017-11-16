@@ -18,22 +18,22 @@
 
 package org.fusesource.restygwt.client.dispatcher;
 
-import java.util.logging.Logger;
-
-import org.fusesource.restygwt.client.Dispatcher;
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.cache.CacheKey;
-import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
-import org.fusesource.restygwt.client.cache.ComplexCacheKey;
-import org.fusesource.restygwt.client.callback.CallbackFactory;
-import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.logging.client.LogConfiguration;
+
+import java.util.logging.Logger;
+
+import org.fusesource.restygwt.client.Dispatcher;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.cache.CacheKey;
+import org.fusesource.restygwt.client.cache.ComplexCacheKey;
+import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.callback.CallbackFactory;
+import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
 
 public class CachingDispatcherFilter implements DispatcherFilter {
 

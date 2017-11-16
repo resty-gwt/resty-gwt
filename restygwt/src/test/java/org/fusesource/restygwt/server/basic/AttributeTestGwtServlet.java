@@ -2,12 +2,14 @@ package org.fusesource.restygwt.server.basic;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.fusesource.restygwt.client.basic.AttributeDTO;
+
+import java.io.IOException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.fusesource.restygwt.client.basic.AttributeDTO;
 
 /**
  * just echos back the request path and the request parameters.

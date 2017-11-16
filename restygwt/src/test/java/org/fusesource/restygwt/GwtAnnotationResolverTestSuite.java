@@ -18,13 +18,13 @@
 
 package org.fusesource.restygwt;
 
+import com.google.gwt.junit.tools.GWTTestSuite;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.fusesource.restygwt.client.event.ModelChangeAnnotationTestGwt;
 import org.fusesource.restygwt.rebind.AnnotationResolver;
-
-import com.google.gwt.junit.tools.GWTTestSuite;
 
 
 /**

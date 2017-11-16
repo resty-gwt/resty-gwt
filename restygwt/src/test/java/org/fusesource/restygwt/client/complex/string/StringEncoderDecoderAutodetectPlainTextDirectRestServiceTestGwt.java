@@ -18,13 +18,13 @@
 
 package org.fusesource.restygwt.client.complex.string;
 
+import com.google.gwt.core.client.GWT;
+
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.REST;
 import org.fusesource.restygwt.client.TextCallback;
 import org.fusesource.restygwt.client.complex.string.service.StringDirectRestService;
-
-import com.google.gwt.core.client.GWT;
 
 public class StringEncoderDecoderAutodetectPlainTextDirectRestServiceTestGwt
     extends StringEncoderDecoderDirectRestServiceTestGwt {

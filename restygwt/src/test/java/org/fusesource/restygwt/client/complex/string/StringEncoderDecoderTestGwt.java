@@ -18,15 +18,15 @@
 
 package org.fusesource.restygwt.client.complex.string;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONException;
+import com.google.gwt.junit.client.GWTTestCase;
+
 import org.fusesource.restygwt.client.FailedResponseException;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.TextCallback;
 import org.fusesource.restygwt.client.complex.string.service.StringRestService;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONException;
-import com.google.gwt.junit.client.GWTTestCase;
 
 public class StringEncoderDecoderTestGwt extends GWTTestCase {
 

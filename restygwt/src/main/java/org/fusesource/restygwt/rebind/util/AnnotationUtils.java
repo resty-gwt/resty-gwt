@@ -1,5 +1,9 @@
 package org.fusesource.restygwt.rebind.util;
 
+import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
+import com.google.gwt.core.ext.typeinfo.HasAnnotations;
+import com.google.gwt.core.ext.typeinfo.JClassType;
+
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,10 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
-import com.google.gwt.core.ext.typeinfo.HasAnnotations;
-import com.google.gwt.core.ext.typeinfo.JClassType;
 
 public class AnnotationUtils {
 

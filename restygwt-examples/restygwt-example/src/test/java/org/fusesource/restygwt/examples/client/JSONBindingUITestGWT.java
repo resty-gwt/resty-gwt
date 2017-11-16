@@ -18,15 +18,14 @@
 
 package org.fusesource.restygwt.examples.client;
 
+import com.google.gwt.core.client.GWT;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.examples.client.JSONBindingService;
 import org.fusesource.restygwt.examples.client.JSONBindingService.StringMapResponse;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * This test verifies that all the http methods can be accessed via a

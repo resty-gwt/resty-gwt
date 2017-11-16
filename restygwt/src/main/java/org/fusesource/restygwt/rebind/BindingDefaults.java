@@ -18,12 +18,12 @@
 
 package org.fusesource.restygwt.rebind;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * compile-time defaults

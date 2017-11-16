@@ -18,15 +18,15 @@
 
 package org.fusesource.restygwt.client.dispatcher;
 
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.logging.client.LogConfiguration;
+
 import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Dispatcher;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
 import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
-
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.logging.client.LogConfiguration;
 
 public class DefaultDispatcherFilter implements DispatcherFilter {
 

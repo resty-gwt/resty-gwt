@@ -18,14 +18,14 @@
 
 package org.fusesource.restygwt.client.callback;
 
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.Response;
+
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.UrlCacheKey;
 import org.fusesource.restygwt.client.dispatcher.RestfulCachingDispatcherFilter;
-
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.Response;
 
 /**
  * see {@link RestfulCachingDispatcherFilter}

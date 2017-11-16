@@ -18,18 +18,18 @@
 
 package org.fusesource.restygwt.mocking;
 
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.junit.GWTMockUtilities;
+
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.DefaultQueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.DefaultQueueableCacheStorage.ResponseWrapper;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.SimpleCacheKey;
-import org.fusesource.restygwt.client.cache.DefaultQueueableCacheStorage.ResponseWrapper;
-
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.junit.GWTMockUtilities;
 
 
 public class DefaultQueuableCacheStorageTestCase extends TestCase {

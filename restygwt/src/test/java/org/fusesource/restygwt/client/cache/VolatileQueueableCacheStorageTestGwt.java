@@ -18,10 +18,6 @@
 
 package org.fusesource.restygwt.client.cache;
 
-import org.fusesource.restygwt.client.cache.CacheKey;
-import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorage;
-import org.fusesource.restygwt.client.cache.SimpleCacheKey;
-
 import com.google.gwt.http.client.Header;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.junit.client.GWTTestCase;

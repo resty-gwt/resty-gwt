@@ -18,16 +18,16 @@
 
 package org.fusesource.restygwt.client.dispatcher;
 
-import java.util.logging.Logger;
-
-import org.fusesource.restygwt.client.Dispatcher;
-import org.fusesource.restygwt.client.Method;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.logging.client.LogConfiguration;
+
+import java.util.logging.Logger;
+
+import org.fusesource.restygwt.client.Dispatcher;
+import org.fusesource.restygwt.client.Method;
 
 /**
  * Some valuable ideas came from:

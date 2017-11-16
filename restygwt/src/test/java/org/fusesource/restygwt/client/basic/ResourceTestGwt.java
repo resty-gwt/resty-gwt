@@ -18,13 +18,13 @@
 
 package org.fusesource.restygwt.client.basic;
 
+import com.google.gwt.junit.client.GWTTestCase;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.Resource;
-
-import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  * Tests the construction of {@link Resource} as well as the expected behavior

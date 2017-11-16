@@ -18,6 +18,11 @@
 
 package org.fusesource.restygwt;
 
+import com.google.gwt.junit.tools.GWTTestSuite;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+
 import org.fusesource.restygwt.client.basic.BasicGwtJacksonTestGwt;
 import org.fusesource.restygwt.client.basic.BasicTestGwt;
 import org.fusesource.restygwt.client.basic.CacheCallbackTestGwt;
@@ -48,11 +53,6 @@ import org.fusesource.restygwt.client.codec.PolymorphicEncoderDecoderTestGwt;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver;
 import org.fusesource.restygwt.client.complex.string.StringEncoderDecoderAutodetectPlainTextTestGwt;
 import org.fusesource.restygwt.client.complex.string.StringEncoderDecoderTestGwt;
-
-import com.google.gwt.junit.tools.GWTTestSuite;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
 
 /**
  *

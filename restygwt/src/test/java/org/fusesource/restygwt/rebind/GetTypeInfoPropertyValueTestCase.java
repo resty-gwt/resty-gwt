@@ -1,10 +1,11 @@
 package org.fusesource.restygwt.rebind;
 
-import junit.framework.TestCase;
-
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+
+import junit.framework.TestCase;
+
 import org.junit.Test;
 
 public class GetTypeInfoPropertyValueTestCase extends TestCase {

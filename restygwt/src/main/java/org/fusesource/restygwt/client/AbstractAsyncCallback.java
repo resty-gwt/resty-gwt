@@ -18,15 +18,15 @@
 
 package org.fusesource.restygwt.client;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *

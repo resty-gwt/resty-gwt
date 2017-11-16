@@ -18,6 +18,8 @@
 
 package org.fusesource.restygwt.server.complex;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -26,8 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOImplementation;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class DTOImplementationServlet extends HttpServlet {
     private static final long serialVersionUID = 8761900300798640874L;

@@ -18,6 +18,10 @@
 
 package org.fusesource.restygwt.client.complex;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.junit.client.GWTTestCase;
+
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -30,10 +34,6 @@ import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.server.complex.DTOTypeResolver;
 import org.fusesource.restygwt.server.complex.InterfaceAndImplementationTypeResolver;
 import org.junit.Test;
-
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.junit.client.GWTTestCase;
 
 public class JsonTypeIdResolver extends GWTTestCase {
     // is this needed?

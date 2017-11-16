@@ -18,6 +18,9 @@
 
 package org.fusesource.restygwt.client.basic;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.junit.client.GWTTestCase;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -29,9 +32,6 @@ import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOImplementation;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOInterface;
 import org.junit.Test;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.junit.client.GWTTestCase;
 
 public class ParameterizedTypeServiceInterfaces extends GWTTestCase {
     @Override

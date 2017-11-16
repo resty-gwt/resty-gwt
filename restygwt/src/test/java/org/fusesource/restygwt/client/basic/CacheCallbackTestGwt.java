@@ -18,27 +18,27 @@
 
 package org.fusesource.restygwt.client.basic;
 
-import org.fusesource.restygwt.client.Defaults;
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.Resource;
-import org.fusesource.restygwt.client.RestServiceProxy;
-import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorage;
-import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
-import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
-import org.fusesource.restygwt.client.callback.CallbackFactory;
-import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
-import org.fusesource.restygwt.client.callback.DefaultFilterawareRequestCallback;
-import org.fusesource.restygwt.client.callback.ModelChangeCallbackFilter;
-import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
-import org.fusesource.restygwt.client.dispatcher.FilterawareDispatcher;
-import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.Timer;
+
+import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.Resource;
+import org.fusesource.restygwt.client.RestServiceProxy;
+import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
+import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorage;
+import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
+import org.fusesource.restygwt.client.callback.CallbackFactory;
+import org.fusesource.restygwt.client.callback.DefaultFilterawareRequestCallback;
+import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
+import org.fusesource.restygwt.client.callback.ModelChangeCallbackFilter;
+import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
+import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
+import org.fusesource.restygwt.client.dispatcher.FilterawareDispatcher;
 
 /**
  * test to check if {@link CachingCallbackFilter} {@link QueueableCacheStorage}

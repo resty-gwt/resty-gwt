@@ -18,15 +18,6 @@
 
 package org.fusesource.restygwt.client.callback;
 
-import java.util.List;
-import java.util.logging.Logger;
-
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.cache.CacheKey;
-import org.fusesource.restygwt.client.cache.ComplexCacheKey;
-import org.fusesource.restygwt.client.cache.Domain;
-import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -36,6 +27,15 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.logging.client.LogConfiguration;
+
+import java.util.List;
+import java.util.logging.Logger;
+
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.cache.CacheKey;
+import org.fusesource.restygwt.client.cache.ComplexCacheKey;
+import org.fusesource.restygwt.client.cache.Domain;
+import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 
 public class CachingCallbackFilter implements CallbackFilter {
 

@@ -18,6 +18,9 @@
 
 package org.fusesource.restygwt.server.complex;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -28,9 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.fusesource.restygwt.client.basic.ParameterizedTypeServiceInterfaces;
 import org.fusesource.restygwt.client.basic.ParameterizedTypeServiceInterfaces.Thing;
 import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOInterface;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 
 @SuppressWarnings("serial")
 public class ParameterizedTypeServlet {

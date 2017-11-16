@@ -18,16 +18,14 @@
 
 package org.fusesource.restygwt.examples.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.junit.client.GWTTestCase;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.examples.client.MapResult;
-import org.fusesource.restygwt.examples.client.MapService;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  *

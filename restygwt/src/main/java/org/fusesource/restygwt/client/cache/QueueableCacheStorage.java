@@ -18,10 +18,10 @@
 
 package org.fusesource.restygwt.client.cache;
 
-import java.util.List;
-
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
+
+import java.util.List;
 
 /**
  * more enhanced cache interface caching Response objects.

@@ -18,11 +18,6 @@
 
 package org.fusesource.restygwt.examples.client;
 
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.OverlayCallback;
-import org.fusesource.restygwt.client.Resource;
-import org.fusesource.restygwt.client.RestServiceProxy;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -33,6 +28,11 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
+
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.OverlayCallback;
+import org.fusesource.restygwt.client.Resource;
+import org.fusesource.restygwt.client.RestServiceProxy;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
