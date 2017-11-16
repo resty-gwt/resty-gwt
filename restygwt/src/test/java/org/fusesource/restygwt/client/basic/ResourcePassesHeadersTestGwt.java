@@ -18,15 +18,15 @@
 
 package org.fusesource.restygwt.client.basic;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.junit.client.GWTTestCase;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.fusesource.restygwt.client.Resource;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  * Tests if the headers a {@link Resource} was generated with will be passed to 

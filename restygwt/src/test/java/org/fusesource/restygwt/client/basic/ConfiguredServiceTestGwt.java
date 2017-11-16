@@ -16,6 +16,9 @@
 
 package org.fusesource.restygwt.client.basic;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.junit.client.GWTTestCase;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,9 +28,6 @@ import org.fusesource.restygwt.client.MethodAccessHelperDispatcher;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.REST;
 import org.fusesource.restygwt.client.RestServiceProxy;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  * @author <a href="mailto:mail@ralf.sommer.dev@gmail.com">Ralf Sommer</a>

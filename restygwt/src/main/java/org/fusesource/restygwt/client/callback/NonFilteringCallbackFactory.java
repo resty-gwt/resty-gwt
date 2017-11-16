@@ -18,9 +18,9 @@
 
 package org.fusesource.restygwt.client.callback;
 
-import org.fusesource.restygwt.client.Method;
-
 import com.google.gwt.http.client.RequestCallback;
+
+import org.fusesource.restygwt.client.Method;
 
 /**
  * just returns a new callback from builder from given method. 

@@ -18,6 +18,8 @@
 
 package org.fusesource.restygwt.server.complex;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +29,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fusesource.restygwt.client.basic.ParameterizedTypeDTO.DTO;
 import org.fusesource.restygwt.client.basic.ParameterizedTypeDTO.Thing;
 

@@ -19,10 +19,10 @@
 package org.fusesource.restygwt.client;
 
 
-import org.fusesource.restygwt.client.dispatcher.DefaultDispatcher;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.shared.TimeZone;
+
+import org.fusesource.restygwt.client.dispatcher.DefaultDispatcher;
 
 /**
  * Provides ability to set the default date format and service root (defaults to

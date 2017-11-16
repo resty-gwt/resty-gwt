@@ -5,6 +5,7 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JParameterizedType;
+
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.rebind.EncoderDecoderLocatorFactory;
 import org.fusesource.restygwt.rebind.JsonEncoderDecoderClassCreator;

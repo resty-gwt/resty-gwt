@@ -18,13 +18,13 @@
 
 package org.fusesource.restygwt.rebind;
 
-import org.fusesource.restygwt.client.Json.Style;
-
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JType;
+
+import org.fusesource.restygwt.client.Json.Style;
 
 /**
  *

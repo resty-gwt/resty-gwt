@@ -18,10 +18,10 @@
 
 package org.fusesource.restygwt.client.dispatcher;
 
+import com.google.gwt.http.client.RequestBuilder;
+
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.callback.XSRFToken;
-
-import com.google.gwt.http.client.RequestBuilder;
 
 public class XSRFTokenDispatcherFilter implements DispatcherFilter {
 

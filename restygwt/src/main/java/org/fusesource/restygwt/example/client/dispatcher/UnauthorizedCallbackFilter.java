@@ -18,16 +18,16 @@
 
 package org.fusesource.restygwt.example.client.dispatcher;
 
-import java.util.logging.Logger;
-
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.callback.CallbackFilter;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Window;
+
+import java.util.logging.Logger;
+
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.callback.CallbackFilter;
 
 public class UnauthorizedCallbackFilter implements CallbackFilter {
 

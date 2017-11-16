@@ -18,11 +18,10 @@
 
 package org.fusesource.restygwt.examples.client;
 
+import com.google.gwt.core.client.GWT;
+
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.examples.client.MethodService;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * This test verifies that all the http methods can be accessed via a

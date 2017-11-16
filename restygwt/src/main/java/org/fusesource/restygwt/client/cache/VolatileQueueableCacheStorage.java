@@ -18,13 +18,13 @@
 
 package org.fusesource.restygwt.client.cache;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import com.google.gwt.http.client.Response;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class VolatileQueueableCacheStorage extends DefaultQueueableCacheStorage {
 

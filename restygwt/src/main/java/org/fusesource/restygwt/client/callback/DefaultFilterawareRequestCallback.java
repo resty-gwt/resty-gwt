@@ -18,14 +18,14 @@
 
 package org.fusesource.restygwt.client.callback;
 
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.fusesource.restygwt.client.AbstractNestedRequestCallback;
 import org.fusesource.restygwt.client.Method;
-
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
 
 public class DefaultFilterawareRequestCallback extends AbstractNestedRequestCallback
     implements FilterawareRequestCallback {

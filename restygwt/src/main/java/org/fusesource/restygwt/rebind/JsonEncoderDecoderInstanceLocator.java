@@ -24,6 +24,17 @@ import static org.fusesource.restygwt.rebind.BaseSourceCreator.INFO;
 import static org.fusesource.restygwt.rebind.BaseSourceCreator.TRACE;
 import static org.fusesource.restygwt.rebind.BaseSourceCreator.WARN;
 
+import com.google.gwt.core.ext.BadPropertyValueException;
+import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
+import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
+import com.google.gwt.core.ext.typeinfo.JType;
+import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.xml.client.Document;
+
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -39,17 +50,6 @@ import org.fusesource.restygwt.client.AbstractNestedJsonEncoderDecoder;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
 import org.fusesource.restygwt.client.ObjectEncoderDecoder;
-
-import com.google.gwt.core.ext.BadPropertyValueException;
-import com.google.gwt.core.ext.GeneratorContext;
-import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.UnableToCompleteException;
-import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JParameterizedType;
-import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
-import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.xml.client.Document;
 
 /**
  *

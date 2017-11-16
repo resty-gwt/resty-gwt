@@ -19,6 +19,8 @@
 package org.fusesource.restygwt.mocking;
 
 import com.google.gwt.http.client.Request;
+import com.google.gwt.junit.GWTMockUtilities;
+
 import junit.framework.TestCase;
 
 import org.fusesource.restygwt.client.Method;
@@ -26,8 +28,6 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.basic.ExampleDto;
 import org.fusesource.restygwt.client.basic.ExampleService;
 import org.junit.Before;
-
-import com.google.gwt.junit.GWTMockUtilities;
 
 /**
  * Just a real world usability example how services can be mocked in a simple manner.

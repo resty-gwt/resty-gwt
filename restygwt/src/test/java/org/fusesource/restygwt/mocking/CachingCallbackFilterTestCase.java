@@ -18,6 +18,11 @@
 
 package org.fusesource.restygwt.mocking;
 
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.junit.GWTMockUtilities;
+
 import java.util.HashMap;
 
 import junit.framework.TestCase;
@@ -28,11 +33,6 @@ import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.DefaultQueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.SimpleCacheKey;
 import org.fusesource.restygwt.client.callback.CachingCallbackFilter;
-
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.junit.GWTMockUtilities;
 
 
 public class CachingCallbackFilterTestCase extends TestCase {

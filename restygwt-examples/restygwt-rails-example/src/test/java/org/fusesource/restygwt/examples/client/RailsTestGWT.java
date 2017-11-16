@@ -18,6 +18,8 @@
 
 package org.fusesource.restygwt.examples.client;
 
+import com.google.gwt.core.client.GWT;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +27,6 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestServiceProxy;
 import org.fusesource.restygwt.example.client.dispatcher.DispatcherFactory;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  *

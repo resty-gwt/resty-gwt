@@ -18,6 +18,8 @@
 
 package org.fusesource.restygwt.client.event;
 
+import com.google.gwt.json.client.JSONValue;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PUT;
@@ -29,8 +31,6 @@ import org.fusesource.restygwt.client.ModelChange;
 import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.cache.Domain;
 import org.fusesource.restygwt.client.event.type.Foo;
-
-import com.google.gwt.json.client.JSONValue;
 
 /**
  * @author <a href="mailto:andi.balke@gmail.com">Andi</a>

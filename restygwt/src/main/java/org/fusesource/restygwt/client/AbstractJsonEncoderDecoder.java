@@ -31,9 +31,6 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
 
-import org.fusesource.restygwt.client.Json.Style;
-import org.fusesource.restygwt.client.util.Base64Codec;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -45,6 +42,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import org.fusesource.restygwt.client.Json.Style;
+import org.fusesource.restygwt.client.util.Base64Codec;
 
 /**
  *

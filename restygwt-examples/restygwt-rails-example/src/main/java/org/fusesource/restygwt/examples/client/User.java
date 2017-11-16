@@ -18,10 +18,10 @@
 
 package org.fusesource.restygwt.examples.client;
 
+import java.util.List;
+
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
-
-import java.util.List;
 
 @Json(style = Style.RAILS)
 public class User {

@@ -18,6 +18,9 @@
 
 package org.fusesource.restygwt.client.complex;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.junit.client.GWTTestCase;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,9 +34,6 @@ import javax.ws.rs.PathParam;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.junit.client.GWTTestCase;
 
 public class ObjectEncoderDecoderTestGwt extends GWTTestCase {
     @Override

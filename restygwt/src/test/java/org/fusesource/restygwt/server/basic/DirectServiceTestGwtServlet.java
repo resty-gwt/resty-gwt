@@ -18,10 +18,11 @@
 
 package org.fusesource.restygwt.server.basic;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * A servlet that just implements the services required for the direct service test.

@@ -18,8 +18,6 @@
 
 package org.fusesource.restygwt.server.complex;
 
-import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOImplementation;
-
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.databind.DatabindContext;
 import com.fasterxml.jackson.databind.JavaType;
@@ -27,6 +25,8 @@ import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 import com.fasterxml.jackson.databind.type.SimpleType;
 
 import java.io.IOException;
+
+import org.fusesource.restygwt.client.complex.JsonTypeIdResolver.DTOImplementation;
 
 public class InterfaceAndImplementationTypeResolver implements TypeIdResolver {
     @Override

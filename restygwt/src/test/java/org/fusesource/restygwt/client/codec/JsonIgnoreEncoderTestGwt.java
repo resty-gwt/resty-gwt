@@ -18,8 +18,6 @@
 
 package org.fusesource.restygwt.client.codec;
 
-import org.fusesource.restygwt.client.JsonEncoderDecoder;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
@@ -30,6 +28,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
+
+import org.fusesource.restygwt.client.JsonEncoderDecoder;
 
 public class JsonIgnoreEncoderTestGwt extends GWTTestCase {
 

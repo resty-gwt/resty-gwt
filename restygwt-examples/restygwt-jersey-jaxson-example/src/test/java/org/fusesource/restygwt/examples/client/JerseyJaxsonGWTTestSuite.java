@@ -18,10 +18,10 @@
 
 package org.fusesource.restygwt.examples.client;
 
+import com.google.gwt.junit.tools.GWTTestSuite;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
-import com.google.gwt.junit.tools.GWTTestSuite;
 
 /**
  *

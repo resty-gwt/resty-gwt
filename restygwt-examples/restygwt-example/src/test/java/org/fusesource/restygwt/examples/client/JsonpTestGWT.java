@@ -18,14 +18,14 @@
 
 package org.fusesource.restygwt.examples.client;
 
-import org.fusesource.restygwt.client.JsonCallback;
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.Resource;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
+
+import org.fusesource.restygwt.client.JsonCallback;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.Resource;
 
 /**
  * This test verifies that all the http methods can be accessed via a

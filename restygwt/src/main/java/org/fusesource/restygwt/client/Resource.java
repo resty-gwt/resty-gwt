@@ -18,9 +18,9 @@
 
 package org.fusesource.restygwt.client;
 
-import java.util.Map;
-
 import com.google.gwt.http.client.URL;
+
+import java.util.Map;
 
 /**
  *

@@ -18,13 +18,6 @@
 
 package org.fusesource.restygwt.rebind;
 
-import java.lang.annotation.Annotation;
-
-import org.fusesource.restygwt.client.RestService;
-import org.fusesource.restygwt.rebind.util.AnnotationCopyUtil;
-import org.fusesource.restygwt.rebind.util.AnnotationUtils;
-import org.fusesource.restygwt.rebind.util.OnceFirstIterator;
-
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -33,6 +26,13 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
+
+import java.lang.annotation.Annotation;
+
+import org.fusesource.restygwt.client.RestService;
+import org.fusesource.restygwt.rebind.util.AnnotationCopyUtil;
+import org.fusesource.restygwt.rebind.util.AnnotationUtils;
+import org.fusesource.restygwt.rebind.util.OnceFirstIterator;
 
 /**
  * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</a>

@@ -18,6 +18,11 @@
 
 package org.fusesource.restygwt.client.basic;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.junit.client.GWTTestCase;
+
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Dispatcher;
 import org.fusesource.restygwt.client.Method;
@@ -34,11 +39,6 @@ import org.fusesource.restygwt.client.callback.RetryingCallbackFactory;
 import org.fusesource.restygwt.client.dispatcher.CachingDispatcherFilter;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 import org.fusesource.restygwt.client.dispatcher.DispatcherFilter;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.SimpleEventBus;
-import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  * check a server sided failure response will not cause the failure call immediately.

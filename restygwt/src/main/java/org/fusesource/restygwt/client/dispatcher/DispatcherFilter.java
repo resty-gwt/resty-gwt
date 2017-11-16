@@ -18,9 +18,9 @@
 
 package org.fusesource.restygwt.client.dispatcher;
 
-import org.fusesource.restygwt.client.Method;
-
 import com.google.gwt.http.client.RequestBuilder;
+
+import org.fusesource.restygwt.client.Method;
 
 public interface DispatcherFilter {
 

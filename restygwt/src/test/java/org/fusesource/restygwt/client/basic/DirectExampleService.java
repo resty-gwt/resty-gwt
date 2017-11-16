@@ -18,7 +18,8 @@
 
 package org.fusesource.restygwt.client.basic;
 
-import org.fusesource.restygwt.client.DirectRestService;
+import java.util.Date;
+import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -26,8 +27,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
-import java.util.Date;
-import java.util.List;
+import org.fusesource.restygwt.client.DirectRestService;
 
 /**
  * Example of using the DirectRestService call.

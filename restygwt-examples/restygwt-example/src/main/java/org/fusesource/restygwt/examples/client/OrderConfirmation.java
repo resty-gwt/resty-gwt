@@ -18,9 +18,9 @@
 
 package org.fusesource.restygwt.examples.client;
 
-import org.fusesource.restygwt.client.JsonEncoderDecoder;
-
 import com.google.gwt.core.client.GWT;
+
+import org.fusesource.restygwt.client.JsonEncoderDecoder;
 
 /**
  *

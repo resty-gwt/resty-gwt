@@ -18,6 +18,8 @@
 
 package org.fusesource.restygwt.examples.server;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -29,7 +31,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.examples.client.OrderConfirmation;
 import org.fusesource.restygwt.examples.client.PizzaOrder;

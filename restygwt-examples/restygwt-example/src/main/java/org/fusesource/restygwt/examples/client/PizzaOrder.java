@@ -18,12 +18,12 @@
 
 package org.fusesource.restygwt.examples.client;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gwt.core.client.GWT;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import com.google.gwt.core.client.GWT;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
 

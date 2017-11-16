@@ -20,6 +20,13 @@ package org.fusesource.restygwt.client.basic;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.DirectRestService;
 import org.fusesource.restygwt.client.Method;
@@ -27,12 +34,6 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.REST;
 import org.fusesource.restygwt.client.Resource;
 import org.fusesource.restygwt.client.RestServiceProxy;
-
-import java.util.Date;
-import java.util.List;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 
 /**
  * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</a>

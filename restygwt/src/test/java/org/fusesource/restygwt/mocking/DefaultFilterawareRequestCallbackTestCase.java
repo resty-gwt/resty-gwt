@@ -18,6 +18,12 @@
 
 package org.fusesource.restygwt.mocking;
 
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.junit.GWTMockUtilities;
+
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
@@ -25,12 +31,6 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.callback.CallbackFilter;
 import org.fusesource.restygwt.client.callback.DefaultFilterawareRequestCallback;
 import org.fusesource.restygwt.client.callback.FilterawareRequestCallback;
-
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.junit.GWTMockUtilities;
 
 
 public class DefaultFilterawareRequestCallbackTestCase extends TestCase {

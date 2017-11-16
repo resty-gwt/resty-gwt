@@ -18,12 +18,12 @@
 
 package org.fusesource.restygwt.client.basic;
 
-import org.fusesource.restygwt.client.JsonEncoderDecoder;
-import org.junit.Test;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
+
+import org.fusesource.restygwt.client.JsonEncoderDecoder;
+import org.junit.Test;
 
 public class JsonCreatorWithBoolean extends GWTTestCase {
 

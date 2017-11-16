@@ -20,8 +20,6 @@ package org.fusesource.restygwt.client;
 
 import junit.framework.TestCase;
 
-import org.fusesource.restygwt.client.FileSystemHelper;
-
 public class FileSystemHelperTest extends TestCase {
 
     public void testFileSystemHelper() {

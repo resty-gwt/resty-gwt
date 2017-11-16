@@ -18,12 +18,12 @@
 
 package org.fusesource.restygwt.client.dispatcher;
 
+import com.google.gwt.http.client.RequestBuilder;
+
 import org.fusesource.restygwt.client.cache.CacheKey;
 import org.fusesource.restygwt.client.cache.QueueableCacheStorage;
 import org.fusesource.restygwt.client.cache.UrlCacheKey;
 import org.fusesource.restygwt.client.callback.CallbackFactory;
-
-import com.google.gwt.http.client.RequestBuilder;
 
 /**
  * using a different caching 'algorithm' obeying the restful paradigm, i.e.
