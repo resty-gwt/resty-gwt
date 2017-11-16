@@ -15,7 +15,7 @@ public class IsLeafTestCase extends TestCase {
     private interface IGranSon extends ISon {
     }
 
-    private static abstract class Parent implements IParent {
+    private abstract static class Parent implements IParent {
     }
 
     private static class Son extends Parent implements ISon {

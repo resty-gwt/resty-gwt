@@ -79,6 +79,7 @@
         <module name="MissingSwitchDefault"/>
         <module name="FallThrough"/>
         <module name="UpperEll"/>
+        <module name="ModifierOrder"/>
         <module name="SeparatorWrap">
             <property name="id" value="SeparatorWrapDot"/>
             <property name="tokens" value="DOT"/>

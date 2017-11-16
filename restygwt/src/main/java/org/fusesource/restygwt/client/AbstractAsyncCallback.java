@@ -46,7 +46,7 @@ public abstract class AbstractAsyncCallback<T> implements AsyncCallback<JavaScri
     }
 
     @Override
-    final public void onFailure(Throwable exception) {
+    public final void onFailure(Throwable exception) {
         callback.onFailure(method, exception);
     }
 
@@ -58,7 +58,7 @@ public abstract class AbstractAsyncCallback<T> implements AsyncCallback<JavaScri
     }
 
     @Override
-    final public void onSuccess(JavaScriptObject result) {
+    public final void onSuccess(JavaScriptObject result) {
         try {
             if (getLogger() != null) {
                 getLogger().fine("Received http response for jsonp request");
@@ -81,5 +81,5 @@ public abstract class AbstractAsyncCallback<T> implements AsyncCallback<JavaScri
         }
     }
 
-    abstract protected T parseResult(JSONValue result) throws Exception;
+    protected abstract T parseResult(JSONValue result) throws Exception;
 }

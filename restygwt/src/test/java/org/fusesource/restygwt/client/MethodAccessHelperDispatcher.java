@@ -32,5 +32,5 @@ public abstract class MethodAccessHelperDispatcher implements Dispatcher {
         return null;
     }
 
-    abstract protected void expect(Set<Integer> expectedStatuses, boolean anyStatus);
+    protected abstract void expect(Set<Integer> expectedStatuses, boolean anyStatus);
 }

@@ -40,9 +40,9 @@ public class JsonCreatorWithSubtypes extends GWTTestCase {
         return "org.fusesource.restygwt.BasicTestGwt";
     }
 
+    @JsonSubTypes({@Type(Thing1.class), @Type(Thing2.class)})
     @JsonTypeInfo(use = Id.NAME, include = As.PROPERTY, property = "@type")
-    @JsonSubTypes({ @Type(Thing1.class), @Type(Thing2.class) })
-    public static abstract class AbstractThing {
+    public abstract static class AbstractThing {
         private final String name;
 
         protected AbstractThing(String name) {

@@ -27,9 +27,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
-@JsonSubTypes({ @JsonSubTypes.Type(value = SpriteBasedItemWithArrayWrapper.class) })
 @JsonTypeInfo(use = Id.CLASS, include = As.WRAPPER_ARRAY)
-abstract public class LibraryItemWithArrayWrapper {
+@JsonSubTypes({@JsonSubTypes.Type(value = SpriteBasedItemWithArrayWrapper.class)})
+public abstract class LibraryItemWithArrayWrapper {
     public String id;
 
     @Override

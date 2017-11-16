@@ -61,7 +61,7 @@ public class Method {
      *
      * @author chirino
      */
-    static private class MethodRequestBuilder extends RequestBuilder {
+    private static class MethodRequestBuilder extends RequestBuilder {
         public MethodRequestBuilder(String method, String url) {
 
             super(method, url);

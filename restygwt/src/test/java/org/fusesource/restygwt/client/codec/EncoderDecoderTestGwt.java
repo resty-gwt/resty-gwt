@@ -722,7 +722,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         @JsonIgnore
         String firstName;
 
-        transient public byte[] document;
+        public transient byte[] document;
 
         public void setDocument(String v) {
             document = v.getBytes();
@@ -1008,7 +1008,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         }
     }
 
-    static public class LangRequest {
+    public static class LangRequest {
         public Language lang;
     }
 

@@ -49,7 +49,7 @@ public class DefaultFilterawareDispatcher implements FilterawareDispatcher {
     /**
      * list of dispatcherfilters to be performed when an request is done
      */
-    final protected List<DispatcherFilter> dispatcherFilters = new ArrayList<DispatcherFilter>();
+    protected final List<DispatcherFilter> dispatcherFilters = new ArrayList<DispatcherFilter>();
 
     /**
      * get one instance of this class
