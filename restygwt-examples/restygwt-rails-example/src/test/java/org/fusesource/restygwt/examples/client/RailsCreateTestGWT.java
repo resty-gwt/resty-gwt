@@ -18,7 +18,6 @@
 
 package org.fusesource.restygwt.examples.client;
 
-import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
@@ -31,6 +30,7 @@ import com.google.gwt.junit.client.GWTTestCase;
  */
 public class RailsCreateTestGWT extends GWTTestCase {
 
+    @Override
     public String getModuleName() {
         return "org.fusesource.restygwt.examples.RAILS";
     }
@@ -49,6 +49,7 @@ public class RailsCreateTestGWT extends GWTTestCase {
         UsersRestService service = GWT.create(UsersRestService.class);
         final User user = newUser();
         service.create(user, new MethodCallback<User>() {
+            @Override
             public void onSuccess(Method method, User result) {
                 persistentUser.id = result.id;
                 persistentUser.name = result.name;
@@ -57,6 +58,7 @@ public class RailsCreateTestGWT extends GWTTestCase {
                 finishTest();
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 fail(exception.getMessage());
             }

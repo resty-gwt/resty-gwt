@@ -150,7 +150,7 @@ public class TestServlet extends HttpServlet {
     private void transfer(InputStream is, OutputStream os) throws IOException {
         try {
             try {
-                int c = 0;
+                int c;
                 while ((c = is.read()) >= 0) {
                     os.write(c);
                 }

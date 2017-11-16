@@ -21,6 +21,8 @@ package org.fusesource.restygwt.examples.client;
 import org.fusesource.restygwt.client.Json;
 import org.fusesource.restygwt.client.Json.Style;
 
+import java.util.List;
+
 @Json(style = Style.RAILS)
 public class User {
 
@@ -28,7 +30,7 @@ public class User {
 
     public String name;
 
-    public java.util.List<Group> groups;
+    public List<Group> groups;
 
     @Override
     public boolean equals(Object obj) {

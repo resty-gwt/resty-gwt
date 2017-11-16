@@ -48,7 +48,7 @@ public class DTOTypeResolverInsideServlet extends HttpServlet {
 
     private static class AbstractCustomDtoList extends ArrayList<AbstractCustomDto> {
         public AbstractCustomDtoList(List<AbstractCustomDto> abstractAccountTransactionDTOs) {
-            this.addAll(abstractAccountTransactionDTOs);
+            addAll(abstractAccountTransactionDTOs);
         }
     }
 

@@ -39,12 +39,13 @@ class WithArraysAndCollections {
 
     Map<Email, Map<String, Set<Email>>> personalEmailSetMap;
 
+    @Override
     public String toString() {
         return Arrays.toString(ages) + "," + Arrays.toString(emailArray) + "," + emailList + "," + personalEmailList +
-            "," + ageSet + "," + emailSet + "," + personalEmailSet + "," + Arrays.toString(emailListArray) + "," +
-            Arrays.toString(emailSetArray) + "," + personalEmailListArray.keySet() + "=>" +
-            Arrays.toString(personalEmailListArray.values().iterator().next()) + "," + personalEmailSetArray.keySet() +
-            "=>" + Arrays.toString(personalEmailSetArray.values().iterator().next()) + "," + personalEmailSetList +
-            "," + personalEmailListSet + "," + personalEmailSetMap;
+                "," + ageSet + "," + emailSet + "," + personalEmailSet + "," + Arrays.toString(emailListArray) + "," +
+                Arrays.toString(emailSetArray) + "," + personalEmailListArray.keySet() + "=>" +
+                Arrays.toString(personalEmailListArray.values().iterator().next()) + "," + personalEmailSetArray.keySet() +
+                "=>" + Arrays.toString(personalEmailSetArray.values().iterator().next()) + "," + personalEmailSetList +
+                "," + personalEmailListSet + "," + personalEmailSetMap;
     }
 }

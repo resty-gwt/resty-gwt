@@ -182,9 +182,9 @@ public class Method {
             anyStatus = true;
         } else {
             anyStatus = false;
-            this.expectedStatuses.clear();
+            expectedStatuses.clear();
             for (int status : statuses) {
-                this.expectedStatuses.add(status);
+                expectedStatuses.add(status);
             }
         }
         return this;
@@ -207,7 +207,7 @@ public class Method {
         } else if (anyStatus) {
             return true;
         } else {
-            return this.expectedStatuses.contains(status);
+            return expectedStatuses.contains(status);
         }
     }
 
@@ -220,10 +220,10 @@ public class Method {
     }
 
     private Logger getLogger() {
-        if (GWT.isClient() && LogConfiguration.loggingIsEnabled() && this.logger == null) {
-            this.logger = Logger.getLogger(Method.class.getName());
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled() && logger == null) {
+            logger = Logger.getLogger(Method.class.getName());
         }
-        return this.logger;
+        return logger;
     }
 
     public Object send(final TextCallback callback) {

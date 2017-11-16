@@ -81,13 +81,13 @@ public class JsonEncoderDecoderInstanceLocator implements EncoderDecoderLocator 
         this.context = context;
         this.logger = logger;
 
-        this.STRING_TYPE = find(String.class);
-        this.JSON_VALUE_TYPE = find(JSONValue.class);
-        this.DOCUMENT_TYPE = find(Document.class);
-        this.MAP_TYPE = find(Map.class);
-        this.SET_TYPE = find(Set.class);
-        this.LIST_TYPE = find(List.class);
-        this.COLLECTION_TYPE = find(Collection.class);
+        STRING_TYPE = find(String.class);
+        JSON_VALUE_TYPE = find(JSONValue.class);
+        DOCUMENT_TYPE = find(Document.class);
+        MAP_TYPE = find(Map.class);
+        SET_TYPE = find(Set.class);
+        LIST_TYPE = find(List.class);
+        COLLECTION_TYPE = find(Collection.class);
 
         builtInEncoderDecoders.put(JPrimitiveType.BOOLEAN, JSON_ENCODER_DECODER_CLASS + ".BOOLEAN");
         builtInEncoderDecoders.put(JPrimitiveType.BYTE, JSON_ENCODER_DECODER_CLASS + ".BYTE");
@@ -415,8 +415,7 @@ public class JsonEncoderDecoderInstanceLocator implements EncoderDecoderLocator 
         if (parameterizedType == null || parameterizedType.getTypeArgs() == null) {
             return null;
         }
-        JClassType[] types = parameterizedType.getTypeArgs();
-        return types;
+        return parameterizedType.getTypeArgs();
     }
 
     @Override

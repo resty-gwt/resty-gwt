@@ -221,28 +221,28 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
         locator = EncoderDecoderLocatorFactory.getEncoderDecoderInstanceLocator(context, getLogger());
 
-        this.XML_CALLBACK_TYPE = find(XmlCallback.class, getLogger(), context);
-        this.METHOD_CALLBACK_TYPE = find(MethodCallback.class, getLogger(), context);
-        this.TEXT_CALLBACK_TYPE = find(TextCallback.class, getLogger(), context);
-        this.JSON_CALLBACK_TYPE = find(JsonCallback.class, getLogger(), context);
-        this.OVERLAY_CALLBACK_TYPE = find(OverlayCallback.class, getLogger(), context);
-        this.DOCUMENT_TYPE = find(Document.class, getLogger(), context);
-        this.METHOD_TYPE = find(Method.class, getLogger(), context);
-        this.STRING_TYPE = find(String.class, getLogger(), context);
-        this.DATE_TYPE = find(Date.class, getLogger(), context);
-        this.JSON_VALUE_TYPE = find(JSONValue.class, getLogger(), context);
-        this.OVERLAY_VALUE_TYPE = find(JavaScriptObject.class, getLogger(), context);
-        this.OVERLAY_ARRAY_TYPES = new HashSet<JClassType>();
-        this.OVERLAY_ARRAY_TYPES.add(find(JsArray.class, getLogger(), context));
-        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayBoolean.class, getLogger(), context));
-        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayInteger.class, getLogger(), context));
-        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayNumber.class, getLogger(), context));
-        this.OVERLAY_ARRAY_TYPES.add(find(JsArrayString.class, getLogger(), context));
-        this.QUERY_PARAM_LIST_TYPES = new HashSet<JClassType>();
-        this.QUERY_PARAM_LIST_TYPES.add(find(Collection.class, getLogger(), context));
-        this.QUERY_PARAM_LIST_TYPES.add(find(List.class, getLogger(), context));
-        this.QUERY_PARAM_LIST_TYPES.add(find(Set.class, getLogger(), context));
-        this.REST_SERVICE_TYPE = find(RestService.class, getLogger(), context);
+        XML_CALLBACK_TYPE = find(XmlCallback.class, getLogger(), context);
+        METHOD_CALLBACK_TYPE = find(MethodCallback.class, getLogger(), context);
+        TEXT_CALLBACK_TYPE = find(TextCallback.class, getLogger(), context);
+        JSON_CALLBACK_TYPE = find(JsonCallback.class, getLogger(), context);
+        OVERLAY_CALLBACK_TYPE = find(OverlayCallback.class, getLogger(), context);
+        DOCUMENT_TYPE = find(Document.class, getLogger(), context);
+        METHOD_TYPE = find(Method.class, getLogger(), context);
+        STRING_TYPE = find(String.class, getLogger(), context);
+        DATE_TYPE = find(Date.class, getLogger(), context);
+        JSON_VALUE_TYPE = find(JSONValue.class, getLogger(), context);
+        OVERLAY_VALUE_TYPE = find(JavaScriptObject.class, getLogger(), context);
+        OVERLAY_ARRAY_TYPES = new HashSet<JClassType>();
+        OVERLAY_ARRAY_TYPES.add(find(JsArray.class, getLogger(), context));
+        OVERLAY_ARRAY_TYPES.add(find(JsArrayBoolean.class, getLogger(), context));
+        OVERLAY_ARRAY_TYPES.add(find(JsArrayInteger.class, getLogger(), context));
+        OVERLAY_ARRAY_TYPES.add(find(JsArrayNumber.class, getLogger(), context));
+        OVERLAY_ARRAY_TYPES.add(find(JsArrayString.class, getLogger(), context));
+        QUERY_PARAM_LIST_TYPES = new HashSet<JClassType>();
+        QUERY_PARAM_LIST_TYPES.add(find(Collection.class, getLogger(), context));
+        QUERY_PARAM_LIST_TYPES.add(find(List.class, getLogger(), context));
+        QUERY_PARAM_LIST_TYPES.add(find(Set.class, getLogger(), context));
+        REST_SERVICE_TYPE = find(RestService.class, getLogger(), context);
 
         String path = getPathFromSource(source);
 
@@ -582,10 +582,10 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                             method.getReadableDeclaration());
                     throw new UnableToCompleteException();
                 }
-                if (jsonpAnnotation.callbackParam().length() > 0) {
+                if (!jsonpAnnotation.callbackParam().isEmpty()) {
                     p("__method.callbackParam(" + wrap(jsonpAnnotation.callbackParam()) + ");");
                 }
-                if (jsonpAnnotation.failureCallbackParam().length() > 0) {
+                if (!jsonpAnnotation.failureCallbackParam().isEmpty()) {
                     p("__method.failureCallbackParam(" + wrap(jsonpAnnotation.failureCallbackParam()) + ");");
                 }
             } else {
@@ -1044,7 +1044,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     // TODO remove suppression
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private List<AnnotationResolver> getAnnotationResolvers(final GeneratorContext context, final TreeLogger logger) {
-        java.lang.reflect.Method m = null;
+        java.lang.reflect.Method m;
         ArrayList args = new ArrayList();
         ArrayList types = new ArrayList();
 
@@ -1064,7 +1064,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             throw new RuntimeException("could not resolve method `getAnnotationResolvers´ on " + BINDING_DEFAULTS, e);
         }
 
-        List<AnnotationResolver> l = new ArrayList<AnnotationResolver>();
+        List<AnnotationResolver> l;
         try {
             l = (List<AnnotationResolver>) m.invoke(null, context, logger);
         } catch (IllegalArgumentException e) {

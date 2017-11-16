@@ -23,6 +23,6 @@ import com.google.gwt.http.client.RequestCallback;
 
 public interface FilterawareRequestCallback extends RequestCallback {
 
-    public void addFilter(CallbackFilter filter);
+    void addFilter(CallbackFilter filter);
 
 }

@@ -76,11 +76,13 @@ public class MethodServiceUITestGWT extends UITestGWT {
 
     private MethodCallback<String> expectHeaderIsSetTo(final String name, final String value) {
         return new MethodCallback<String>() {
+            @Override
             public void onSuccess(Method method, String response) {
                 assertEquals(value, method.getResponse().getHeader(name));
                 finishTest();
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 fail(exception.getMessage());
             }

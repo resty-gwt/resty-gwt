@@ -46,7 +46,7 @@ public class PathParamTestGwt extends GWTTestCase {
         return "org.fusesource.restygwt.EchoTestGwt";
     }
 
-    static interface TestRestService extends RestService {
+    interface TestRestService extends RestService {
 
         @Path("/get")
         void get(MethodCallback<Echo> callback);

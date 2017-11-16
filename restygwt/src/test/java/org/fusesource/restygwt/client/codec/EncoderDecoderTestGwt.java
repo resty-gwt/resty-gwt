@@ -306,7 +306,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         BigInteger age;
     }
 
-    static interface BigCodec extends JsonEncoderDecoder<B> {
+    interface BigCodec extends JsonEncoderDecoder<B> {
     }
 
     public void testBigIntegers() {
@@ -511,12 +511,13 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
     static class Email {
         String name, email;
 
+        @Override
         public String toString() {
             return name + "<" + email + ">";
         }
     }
 
-    static interface EmailCodec extends JsonEncoderDecoder<Email> {
+    interface EmailCodec extends JsonEncoderDecoder<Email> {
     }
 
     public void testTypeMapWithComplexDecode() {
@@ -598,7 +599,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
                 keyEncoder, valueEncoder, Json.Style.JETTISON_NATURAL).toString());
     }
 
-    static interface WithArraysAndCollectionsCodec extends JsonEncoderDecoder<WithArraysAndCollections> {
+    interface WithArraysAndCollectionsCodec extends JsonEncoderDecoder<WithArraysAndCollections> {
     }
 
     @SuppressWarnings("unchecked")
@@ -747,11 +748,11 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         }
 
         void setAge(String age) {
-            this.noAge = age;
+            noAge = age;
         }
     }
 
-    static interface CCCCodec extends JsonEncoderDecoder<CCC> {
+    interface CCCCodec extends JsonEncoderDecoder<CCC> {
     }
 
     public void testIgnores() {
@@ -801,7 +802,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
 
     }
 
-    static interface ShortyCodec extends JsonEncoderDecoder<Shorty> {
+    interface ShortyCodec extends JsonEncoderDecoder<Shorty> {
     }
 
     public void testShortys() {
@@ -852,7 +853,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         }
 
         void setAge(int a) {
-            this.myAge = a;
+            myAge = a;
         }
 
         void setYearOfBirth(long a) {
@@ -876,10 +877,10 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         }
     }
 
-    static interface BeanCodec extends JsonEncoderDecoder<Bean> {
+    interface BeanCodec extends JsonEncoderDecoder<Bean> {
     }
 
-    static interface NestedBeanCodec extends JsonEncoderDecoder<NestedBean> {
+    interface NestedBeanCodec extends JsonEncoderDecoder<NestedBean> {
     }
 
     public void testBean() {
@@ -947,11 +948,11 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         }
 
         void setAge(int a) {
-            this.age = a;
+            age = a;
         }
 
         void setYearOfBirth(long a) {
-            this.yearOfBirth = a;
+            yearOfBirth = a;
         }
 
         long getYearOfBirth() {
@@ -959,7 +960,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         }
 
         void setName(String name) {
-            this.n = name;
+            n = name;
         }
 
         @JsonProperty("my-name")
@@ -968,7 +969,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         }
     }
 
-    static interface RenamedCodec extends JsonEncoderDecoder<Renamed> {
+    interface RenamedCodec extends JsonEncoderDecoder<Renamed> {
     }
 
     public void testRenamed() {
@@ -993,13 +994,13 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         assertEquals(roundTrip.getName(), "marvin the robot");
     }
 
-    static public enum Language {
+    public enum Language {
         ENGLISH("en"), FRENCH("fr");
 
         private String name;
 
         @JsonCreator
-        private Language(String name) {
+        Language(String name) {
             this.name = name;
         }
 
@@ -1013,7 +1014,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         public Language lang;
     }
 
-    static interface LangRequestCodec extends JsonEncoderDecoder<LangRequest> {
+    interface LangRequestCodec extends JsonEncoderDecoder<LangRequest> {
     }
 
     public void testEnumAndJsonValue() {
@@ -1044,7 +1045,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
 
     }
 
-    static interface WithEnumCodec extends JsonEncoderDecoder<WithEnum> {
+    interface WithEnumCodec extends JsonEncoderDecoder<WithEnum> {
     }
 
     public void testWithEnum() {
@@ -1073,7 +1074,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         public Optional<Integer> bar;
     }
 
-    static interface WithOptionalPrimitiveCodec extends JsonEncoderDecoder<WithOptionalPrimitive> {
+    interface WithOptionalPrimitiveCodec extends JsonEncoderDecoder<WithOptionalPrimitive> {
     }
 
     public void testCustomWithOptionalPrimitive() {
@@ -1098,7 +1099,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         public Optional<Name> name;
     }
 
-    static interface WithOptionalPojoCodec extends JsonEncoderDecoder<WithOptionalPojo> {
+    interface WithOptionalPojoCodec extends JsonEncoderDecoder<WithOptionalPojo> {
     }
 
     public void testCustomWithOptionalPojo() {
@@ -1137,7 +1138,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
     static class Other extends Base {
     }
 
-    static interface SubClassHierarchyRestService extends RestService {
+    interface SubClassHierarchyRestService extends RestService {
         @GET
         @Path("/")
         void myendpoint(MethodCallback<OneMoreExtBase> callback);
@@ -1163,14 +1164,14 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         }
     }
 
-    static interface MoreSpecificFieldThanConstructorCodec
+    interface MoreSpecificFieldThanConstructorCodec
         extends JsonEncoderDecoder<MoreSpecificFieldThanConstructor> {
     }
 
     public void testMapFieldAsConstructorParam() {
         MoreSpecificFieldThanConstructorCodec codec = GWT.create(MoreSpecificFieldThanConstructorCodec.class);
         JSONValue value =
-            codec.encode(new MoreSpecificFieldThanConstructor(Collections.<String, String>singletonMap("foo", "bar")));
+                codec.encode(new MoreSpecificFieldThanConstructor(Collections.singletonMap("foo", "bar")));
         assertEquals(value.toString(), codec.encode(codec.decode(value)).toString());
     }
 
@@ -1195,7 +1196,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         }
     }
 
-    static interface BeanNamingConventionCodec extends JsonEncoderDecoder<BeanNamingConvention> {
+    interface BeanNamingConventionCodec extends JsonEncoderDecoder<BeanNamingConvention> {
     }
 
     public void testBeanNamingConvention() {
@@ -1218,20 +1219,21 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         }
 
         void setName(String a) {
-            this.name = a;
+            name = a;
         }
 
     }
 
     static class SubclassWithoutEncoderDecoder extends ClassWithSubclass {
 
+        @Override
         String getName() {
             return super.getName() + " --> subclass";
         }
 
     }
 
-    static interface ClassWithSubclassCodec extends JsonEncoderDecoder<ClassWithSubclass> {
+    interface ClassWithSubclassCodec extends JsonEncoderDecoder<ClassWithSubclass> {
     }
 
     public void testSubclassCanBeEncodedBySuperclassEncoder() {

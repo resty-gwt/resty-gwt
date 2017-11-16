@@ -19,9 +19,9 @@ public class MapInRestServiceEncoderDecoderTestGwt extends GWTTestCase {
         return "org.fusesource.restygwt.EncoderDecoderTestGwt";
     }
 
-    static enum Key { MESSAGE }
+    enum Key {MESSAGE}
 
-    static interface MapWithEnumKeyRestService extends RestService {
+    interface MapWithEnumKeyRestService extends RestService {
 
         @GET
         @Path("/")
@@ -29,7 +29,7 @@ public class MapInRestServiceEncoderDecoderTestGwt extends GWTTestCase {
 
         @GET
         @Path("/api/testMap")
-        public void testMap(MethodCallback<Map<Integer, List<String>>> callback);
+        void testMap(MethodCallback<Map<Integer, List<String>>> callback);
     }
 
     public void test() {

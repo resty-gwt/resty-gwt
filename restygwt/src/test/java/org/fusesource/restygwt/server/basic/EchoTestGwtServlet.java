@@ -21,7 +21,6 @@ package org.fusesource.restygwt.server.basic;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +57,7 @@ public class EchoTestGwtServlet extends HttpServlet {
 
         echo.params = new HashMap<String, String>();
         ObjectMapper mapper = new ObjectMapper();
-        for (Map.Entry<String, String[]> entry : (Set<Map.Entry<String, String[]>>) request.getParameterMap()
+        for (Map.Entry<String, String[]> entry : request.getParameterMap()
             .entrySet()) {
             if (entry.getValue().length == 1) {
                 echo.params.put(entry.getKey(), entry.getValue()[0]);

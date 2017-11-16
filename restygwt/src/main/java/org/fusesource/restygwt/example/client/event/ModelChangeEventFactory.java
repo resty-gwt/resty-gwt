@@ -46,8 +46,7 @@ public class ModelChangeEventFactory {
      */
     @SuppressWarnings("rawtypes")
     public static GwtEvent factory(final String domainName) {
-        final GwtEvent e = new ModelChangeEvent(domainName);
 
-        return e;
+        return new ModelChangeEvent(domainName);
     }
 }

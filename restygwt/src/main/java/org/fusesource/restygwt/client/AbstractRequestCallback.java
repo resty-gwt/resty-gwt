@@ -46,36 +46,36 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
 
     @Override
     final public void onError(Request request, Throwable exception) {
-        this.method.request = request;
-        callback.onFailure(this.method, exception);
+        method.request = request;
+        callback.onFailure(method, exception);
     }
 
     private Logger getLogger() {
-        if (GWT.isClient() && LogConfiguration.loggingIsEnabled() && this.logger == null) {
-            this.logger = Logger.getLogger(AbstractRequestCallback.class.getName());
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled() && logger == null) {
+            logger = Logger.getLogger(AbstractRequestCallback.class.getName());
         }
-        return this.logger;
+        return logger;
     }
 
     @Override
     final public void onResponseReceived(Request request, Response response) {
-        this.method.request = request;
-        this.method.response = response;
+        method.request = request;
+        method.response = response;
         if (response == null) {
-            callback.onFailure(this.method, Defaults.getExceptionMapper().createNoResponseException());
+            callback.onFailure(method, Defaults.getExceptionMapper().createNoResponseException());
         } else if (isFailedStatus(response)) {
             callback
-                .onFailure(this.method, Defaults.getExceptionMapper().createFailedStatusException(method, response));
+                    .onFailure(method, Defaults.getExceptionMapper().createFailedStatusException(method, response));
         } else {
             T value;
             try {
                 if (getLogger() != null) {
                     getLogger().fine(
-                        "Received http response for request: " + this.method.builder.getHTTPMethod() + " " +
-                            this.method.builder.getUrl());
+                            "Received http response for request: " + method.builder.getHTTPMethod() + " " +
+                                    method.builder.getUrl());
                 }
                 String content = response.getText();
-                if (content != null && content.length() > 0) {
+                if (content != null && !content.isEmpty()) {
                     if (getLogger() != null) {
                         getLogger().finest(content);
                     }
@@ -87,16 +87,16 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
                 if (getLogger() != null) {
                     getLogger().log(Level.FINE, "Could not parse response: " + e, e);
                 }
-                callback.onFailure(this.method, e);
+                callback.onFailure(method, e);
                 return;
             }
 
-            callback.onSuccess(this.method, value);
+            callback.onSuccess(method, value);
         }
     }
 
     protected boolean isFailedStatus(Response response) {
-        return !this.method.isExpected(response.getStatusCode());
+        return !method.isExpected(response.getStatusCode());
     }
 
     abstract protected T parseResult() throws Exception;

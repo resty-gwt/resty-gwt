@@ -6,15 +6,13 @@ import org.junit.Test;
 
 public class IsLeafTestCase extends TestCase {
 
-    private static interface IParent {
+    private interface IParent {
     }
 
-    ;
-
-    private static interface ISon extends IParent {
+    private interface ISon extends IParent {
     }
 
-    private static interface IGranSon extends ISon {
+    private interface IGranSon extends ISon {
     }
 
     private static abstract class Parent implements IParent {

@@ -128,10 +128,12 @@ public class CachingTestGwt extends GWTTestCase {
 
                 try {
                     ajax.sendRequest("", new RequestCallback() {
+                        @Override
                         public void onError(Request request, Throwable exception) {
 
                         }
 
+                        @Override
                         public void onResponseReceived(Request request, Response response) {
                             String text = response.getText();
 

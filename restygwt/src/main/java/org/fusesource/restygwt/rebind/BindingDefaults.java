@@ -103,9 +103,7 @@ public class BindingDefaults {
         // return a copy
         List<AnnotationResolver> ret = new ArrayList<AnnotationResolver>();
 
-        for (AnnotationResolver a : annotationResolvers) {
-            ret.add(a);
-        }
+        ret.addAll(annotationResolvers);
         return _annotationResolversRequested = ret;
     }
 

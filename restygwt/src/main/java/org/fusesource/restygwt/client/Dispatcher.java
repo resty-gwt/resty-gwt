@@ -33,6 +33,6 @@ import com.google.gwt.http.client.RequestException;
  */
 public interface Dispatcher {
 
-    public Request send(Method method, RequestBuilder builder) throws RequestException;
+    Request send(Method method, RequestBuilder builder) throws RequestException;
 
 }

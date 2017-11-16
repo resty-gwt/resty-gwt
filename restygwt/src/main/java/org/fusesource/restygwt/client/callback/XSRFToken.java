@@ -36,7 +36,7 @@ public class XSRFToken {
     }
 
     public String getHeaderKey() {
-        return this.headerKey;
+        return headerKey;
     }
 
     public String getToken() {

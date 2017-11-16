@@ -65,11 +65,13 @@ public class RailsTestGWT extends RailsCreateTestGWT {
         user.id = persistentUser.id;
         service.update(user, new MethodCallback<User>() {
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 assertEquals("Not Found", exception.getMessage());
                 finishTest();
             }
 
+            @Override
             public void onSuccess(Method method, User response) {
                 fail("expected some failture do to missing xsrf token");
             }
@@ -79,11 +81,13 @@ public class RailsTestGWT extends RailsCreateTestGWT {
 
     private <T> MethodCallback<T> expectResult(final T expectedResult) {
         return new MethodCallback<T>() {
+            @Override
             public void onSuccess(Method method, T result) {
                 assertEquals(expectedResult, result);
                 finishTest();
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 fail(exception.getMessage());
             }

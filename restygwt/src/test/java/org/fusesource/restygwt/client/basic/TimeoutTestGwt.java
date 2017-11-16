@@ -18,6 +18,7 @@
 
 package org.fusesource.restygwt.client.basic;
 
+import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Resource;
@@ -39,7 +40,7 @@ public class TimeoutTestGwt extends GWTTestCase {
 
     public void testTimeout() {
 
-        org.fusesource.restygwt.client.Defaults.setRequestTimeout(1000);
+        Defaults.setRequestTimeout(1000);
 
         Resource resource = new Resource(GWT.getModuleBaseURL() + "api/getendpoint");
 

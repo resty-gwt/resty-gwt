@@ -25,7 +25,6 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.examples.client.JSONBindingService;
 import org.fusesource.restygwt.examples.client.JSONBindingService.StringMapResponse;
-import org.junit.Before;
 
 import com.google.gwt.core.client.GWT;
 
@@ -40,6 +39,7 @@ public class JSONBindingUITestGWT extends UITestGWT {
     private static final int REQUEST_TIMEOUT = 2000;
     private JSONBindingService service;
 
+    @Override
     protected void gwtSetUp() throws Exception {
         service = GWT.create(JSONBindingService.class);
     }
@@ -63,11 +63,13 @@ public class JSONBindingUITestGWT extends UITestGWT {
 
     private <T> MethodCallback<T> expectResult(final T expectedResult) {
         return new MethodCallback<T>() {
+            @Override
             public void onSuccess(Method method, T result) {
                 assertEquals(expectedResult, result);
                 finishTest();
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 fail(exception.getMessage());
             }

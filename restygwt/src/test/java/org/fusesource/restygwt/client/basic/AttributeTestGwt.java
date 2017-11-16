@@ -100,6 +100,7 @@ public class AttributeTestGwt extends GWTTestCase {
 
     }
 
+    @Override
     public void gwtTearDown() {
 
         // wait... we are in async testing...

@@ -34,7 +34,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ FIELD, PARAMETER, TYPE })
 public @interface Json {
 
-    public enum Style {
+    enum Style {
         DEFAULT, SIMPLE, JETTISON_NATURAL, RAILS,
     }
 

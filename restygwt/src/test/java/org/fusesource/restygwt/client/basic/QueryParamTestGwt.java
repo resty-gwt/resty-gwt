@@ -46,7 +46,7 @@ public class QueryParamTestGwt extends GWTTestCase {
     }
 
     @Path("/get")
-    static interface QueryTestRestService extends RestService {
+    interface QueryTestRestService extends RestService {
 
         void get(@QueryParam(value = "id") int id, MethodCallback<Echo> callback);
 
@@ -119,6 +119,7 @@ public class QueryParamTestGwt extends GWTTestCase {
 
     }
 
+    @Override
     public void gwtTearDown() {
 
         // wait... we are in async testing...

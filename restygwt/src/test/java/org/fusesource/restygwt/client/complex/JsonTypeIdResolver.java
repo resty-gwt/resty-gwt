@@ -52,10 +52,10 @@ public class JsonTypeIdResolver extends GWTTestCase {
     }
 
     @Path("api/jsontypeid")
-    public static interface ServiceInterface extends RestService {
+    public interface ServiceInterface extends RestService {
         @GET
         @Produces("application/json")
-        public void getSomeDTOs(MethodCallback<List<AbstractDTO>> callback);
+        void getSomeDTOs(MethodCallback<List<AbstractDTO>> callback);
     }
 
     @AbstractJacksonAnnotationsInside
@@ -72,10 +72,10 @@ public class JsonTypeIdResolver extends GWTTestCase {
     }
 
     @Path("api/jsontypeidinside")
-    public static interface ServiceInterfaceInside extends RestService {
+    public interface ServiceInterfaceInside extends RestService {
         @GET
         @Produces("application/json")
-        public void getSomeDTOs(MethodCallback<List<AbstractCustomDto>> callback);
+        void getSomeDTOs(MethodCallback<List<AbstractCustomDto>> callback);
     }
 
     @Override
@@ -134,16 +134,16 @@ public class JsonTypeIdResolver extends GWTTestCase {
     }
 
     @Path("api/interfaceandimpl")
-    public static interface InterfaceAndImplementationService extends RestService {
+    public interface InterfaceAndImplementationService extends RestService {
         @GET
         @Path("interface")
         @Produces("application/json")
-        public void getInterface(MethodCallback<List<DTOInterface>> callback);
+        void getInterface(MethodCallback<List<DTOInterface>> callback);
 
         @GET
         @Path("implementation")
         @Produces("application/json")
-        public void getImplementation(MethodCallback<List<DTOImplementation>> callback);
+        void getImplementation(MethodCallback<List<DTOImplementation>> callback);
     }
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")

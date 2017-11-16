@@ -40,24 +40,24 @@ public class JsonCreatorWithBoolean extends GWTTestCase {
         private Boolean m_bigBoolean;
 
         public boolean isSmallBoolean() {
-            return this.m_smallBoolean;
+            return m_smallBoolean;
         }
 
         public void setSmallBoolean(boolean smallBoolean) {
-            this.m_smallBoolean = smallBoolean;
+            m_smallBoolean = smallBoolean;
         }
 
         public Boolean isBigBoolean() {
-            return this.m_bigBoolean;
+            return m_bigBoolean;
         }
 
         public void setBigBoolean(Boolean bigBoolean) {
-            this.m_bigBoolean = bigBoolean;
+            m_bigBoolean = bigBoolean;
         }
 
     }
 
-    static interface BooleanWithIsGetterCodec extends JsonEncoderDecoder<BooleanWithIsGetter> {
+    interface BooleanWithIsGetterCodec extends JsonEncoderDecoder<BooleanWithIsGetter> {
     }
 
     @Test
@@ -88,24 +88,24 @@ public class JsonCreatorWithBoolean extends GWTTestCase {
         private Boolean m_bigBoolean;
 
         public boolean hasSmallBoolean() {
-            return this.m_smallBoolean;
+            return m_smallBoolean;
         }
 
         public void setSmallBoolean(boolean smallBoolean) {
-            this.m_smallBoolean = smallBoolean;
+            m_smallBoolean = smallBoolean;
         }
 
         public Boolean hasBigBoolean() {
-            return this.m_bigBoolean;
+            return m_bigBoolean;
         }
 
         public void setBigBoolean(Boolean bigBoolean) {
-            this.m_bigBoolean = bigBoolean;
+            m_bigBoolean = bigBoolean;
         }
 
     }
 
-    static interface BooleanWithHasGetterCodec extends JsonEncoderDecoder<BooleanWithHasGetter> {
+    interface BooleanWithHasGetterCodec extends JsonEncoderDecoder<BooleanWithHasGetter> {
     }
 
     @Test

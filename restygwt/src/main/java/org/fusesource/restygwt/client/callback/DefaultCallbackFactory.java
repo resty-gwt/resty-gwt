@@ -32,7 +32,7 @@ public class DefaultCallbackFactory implements CallbackFactory {
     private final CallbackFilter[] callbackFilters;
 
     public DefaultCallbackFactory(CallbackFilter... callbackFilter) {
-        this.callbackFilters = callbackFilter;
+        callbackFilters = callbackFilter;
     }
 
     /**

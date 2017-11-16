@@ -41,14 +41,15 @@ public class CachingCallbackFilterTestCase extends TestCase {
     private DefaultQueueableCacheStorage storage;
     private SimpleCacheKey key;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         GWTMockUtilities.disarm();
 
-        this.storage = new DefaultQueueableCacheStorage();
-        this.key = new SimpleCacheKey("key");
+        storage = new DefaultQueueableCacheStorage();
+        key = new SimpleCacheKey("key");
         final CacheKey k = key;
-        this.filter = new CachingCallbackFilter(this.storage) {
+        filter = new CachingCallbackFilter(storage) {
 
             @Override
             protected CacheKey cacheKey(RequestBuilder builder) {
@@ -57,6 +58,7 @@ public class CachingCallbackFilterTestCase extends TestCase {
         };
     }
 
+    @Override
     protected void tearDown() {
         GWTMockUtilities.restore();
     }
@@ -72,7 +74,7 @@ public class CachingCallbackFilterTestCase extends TestCase {
 
         EasyMock.verify(response, method);
         // hashCode should be good enough
-        assertEquals(response.hashCode(), this.storage.getResultOrReturnNull(key).hashCode());
+        assertEquals(response.hashCode(), storage.getResultOrReturnNull(key).hashCode());
     }
 
     public void testNoCallbacksError() throws Exception {
@@ -84,7 +86,7 @@ public class CachingCallbackFilterTestCase extends TestCase {
         filter.filter(method, response, null);
 
         EasyMock.verify(response, method);
-        assertNull(this.storage.getResultOrReturnNull(key));
+        assertNull(storage.getResultOrReturnNull(key));
     }
 
     public void testManyCallbacksSuccess() throws Exception {
@@ -102,8 +104,8 @@ public class CachingCallbackFilterTestCase extends TestCase {
 
         EasyMock.replay(response, method);
 
-        for (int i = 0; i < myCallbacks.length; i++) {
-            this.storage.addCallback(key, myCallbacks[i]);
+        for (RequestCallback myCallback : myCallbacks) {
+            storage.addCallback(key, myCallback);
         }
 
         RequestCallback callback = filter.filter(method, response, myCallbacks[0]);
@@ -117,6 +119,6 @@ public class CachingCallbackFilterTestCase extends TestCase {
             EasyMock.verify(rc);
         }
         // hashCode should be good enough
-        assertEquals(response.hashCode(), this.storage.getResultOrReturnNull(key).hashCode());
+        assertEquals(response.hashCode(), storage.getResultOrReturnNull(key).hashCode());
     }
 }

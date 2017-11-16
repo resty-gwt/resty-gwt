@@ -30,13 +30,13 @@ public abstract class AbstractNestedRequestCallback implements RequestCallback {
 
     public AbstractNestedRequestCallback(Method method, RequestCallback callback) {
         this.method = method;
-        this.requestCallback = callback;
+        requestCallback = callback;
     }
 
     @Override
     public void onResponseReceived(Request request, Response response) {
-        this.method.request = request;
-        this.method.response = response;
+        method.request = request;
+        method.response = response;
         if (response == null) {
             requestCallback.onError(request, Defaults.getExceptionMapper().createNoResponseException());
         } else if (isFailedStatus(response)) {
@@ -54,12 +54,12 @@ public abstract class AbstractNestedRequestCallback implements RequestCallback {
 
     @Override
     public void onError(Request request, Throwable exception) {
-        this.method.request = request;
+        method.request = request;
         requestCallback.onError(request, exception);
     }
 
     protected boolean isFailedStatus(Response response) {
-        return !this.method.isExpected(response.getStatusCode());
+        return !method.isExpected(response.getStatusCode());
     }
 
 }

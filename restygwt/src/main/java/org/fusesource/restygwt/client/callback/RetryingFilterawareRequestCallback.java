@@ -53,7 +53,7 @@ public class RetryingFilterawareRequestCallback extends DefaultFilterawareReques
 
     public RetryingFilterawareRequestCallback(Method method, int gracePeriodMillis, int numberOfRetries) {
         super(method);
-        this.gracePeriod = gracePeriodMillis;
+        gracePeriod = gracePeriodMillis;
         this.numberOfRetries = numberOfRetries;
     }
 

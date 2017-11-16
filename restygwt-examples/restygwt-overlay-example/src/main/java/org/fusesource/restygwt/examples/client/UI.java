@@ -18,7 +18,6 @@
 
 package org.fusesource.restygwt.examples.client;
 
-import org.fusesource.restygwt.client.JsonCallback;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.OverlayCallback;
 import org.fusesource.restygwt.client.Resource;
@@ -29,8 +28,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
@@ -47,9 +44,11 @@ public class UI implements EntryPoint {
     /**
      * This is the entry point method.
      */
+    @Override
     public void onModuleLoad() {
         Button button = new Button("Get Greeting");
         button.addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
                 getGreeting();
             }
@@ -74,10 +73,12 @@ public class UI implements EntryPoint {
         ((RestServiceProxy) service).setResource(resource);
 
         service.getGreeting(new OverlayCallback<Greeting>() {
+            @Override
             public void onSuccess(Method method, Greeting greeting) {
                 RootPanel.get().add(new Label("server said: " + greeting.getGreeting()));
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 Window.alert("Error: " + exception);
             }
@@ -92,10 +93,12 @@ public class UI implements EntryPoint {
         arg.setName(name);
 
         service.getCustomGreeting(arg, new OverlayCallback<Greeting>() {
+            @Override
             public void onSuccess(Method method, Greeting greeting) {
                 RootPanel.get().add(new Label("server said: " + greeting.getGreeting()));
             }
 
+            @Override
             public void onFailure(Method method, Throwable exception) {
                 Window.alert("Error: " + exception);
             }

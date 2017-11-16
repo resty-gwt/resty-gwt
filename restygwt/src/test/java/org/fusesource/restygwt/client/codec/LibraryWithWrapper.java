@@ -28,6 +28,7 @@ import java.util.List;
 class LibraryWithWrapper {
     public List<LibraryItemWithWrapper> items;
 
+    @Override
     public boolean equals(Object other) {
         return items.equals(((LibraryWithWrapper) other).items);
     }

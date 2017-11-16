@@ -35,6 +35,6 @@ public interface ConfiguredWithoutExpectService extends RestService {
 
     @GET
     @Options(timeout = 1000 * 10)
-    public void getExampleDto(MethodCallback<ExampleDto> callback);
+    void getExampleDto(MethodCallback<ExampleDto> callback);
 
 }

@@ -45,21 +45,26 @@ public class CxfServlet extends CXFNonSpringJaxrsServlet {
         initParams.put("jaxrs.providers", "org.codehaus.jackson.jaxrs.JacksonJsonProvider");
     }
 
+    @Override
     public void init(final ServletConfig servletConfig) throws ServletException {
         super.init(new ServletConfig() {
+            @Override
             public String getServletName() {
                 return servletConfig.getServletName();
             }
 
+            @Override
             public ServletContext getServletContext() {
                 return servletConfig.getServletContext();
             }
 
+            @Override
             @SuppressWarnings("unchecked")
             public Enumeration getInitParameterNames() {
                 return initParams.keys();
             }
 
+            @Override
             public String getInitParameter(String name) {
                 return initParams.getProperty(name);
             }

@@ -36,7 +36,7 @@ public class AnnotationUtils {
     }
 
     public static <T extends Annotation> T getClassAnnotation(JClassType classType, Class<T> annotationType) {
-        T annotation = null;
+        T annotation;
 
         if (classType == null) {
             return null;
@@ -83,9 +83,7 @@ public class AnnotationUtils {
 
             // Get the annotations only from current, no inherited
             Annotation[] annotations = current.getDeclaredAnnotations();
-            for (Annotation annotation : annotations) {
-                resultAnnotations.add(annotation);
-            }
+            Collections.addAll(resultAnnotations, annotations);
 
             if (current.getSuperclass() != null) {
                 // Add the superclass to the queue

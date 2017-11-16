@@ -55,6 +55,6 @@ public interface AnnotationResolver {
      * e.g. returning ``new String[]{"key", "value"}``
      *      will result in ``__method.addData("key", "value")``
      */
-    public Map<String, String[]> resolveAnnotation(TreeLogger logger, JClassType source, JMethod method,
-                                                   final String restMethod) throws UnableToCompleteException;
+    Map<String, String[]> resolveAnnotation(TreeLogger logger, JClassType source, JMethod method,
+                                            final String restMethod) throws UnableToCompleteException;
 }

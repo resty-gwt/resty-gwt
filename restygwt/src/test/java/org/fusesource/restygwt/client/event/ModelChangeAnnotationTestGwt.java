@@ -70,6 +70,7 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
         final FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher();
 
         dispatcher.addFilter(new CachingDispatcherFilter(cacheStorage, new CallbackFactory() {
+            @Override
             public FilterawareRequestCallback createCallback(Method method) {
                 final FilterawareRequestCallback retryingCallback = new DefaultFilterawareRequestCallback(method);
 

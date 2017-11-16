@@ -39,7 +39,7 @@ public @interface Domain {
      *
      * Information about the cache-domain is stored in the key::
      */
-    public static final String CACHE_DOMAIN_KEY = "cd";
+    String CACHE_DOMAIN_KEY = "cd";
 
     Class<?>[] value();
 }

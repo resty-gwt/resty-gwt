@@ -37,7 +37,7 @@ public @interface ModelChange {
      * what is the key on that ``put`` (and later ``get``) operation, we have this
      * constant here.
      */
-    public static final String MODEL_CHANGED_DOMAIN_KEY = "mc";
+    String MODEL_CHANGED_DOMAIN_KEY = "mc";
 
     /**
      * on which HTTP methods will events be published.

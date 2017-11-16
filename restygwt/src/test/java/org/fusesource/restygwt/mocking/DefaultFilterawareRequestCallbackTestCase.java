@@ -35,12 +35,14 @@ import com.google.gwt.junit.GWTMockUtilities;
 
 public class DefaultFilterawareRequestCallbackTestCase extends TestCase {
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         GWTMockUtilities.disarm();
 
     }
 
+    @Override
     protected void tearDown() {
         GWTMockUtilities.restore();
     }
@@ -95,8 +97,8 @@ public class DefaultFilterawareRequestCallbackTestCase extends TestCase {
         }
 
         // verify the calls on the mocks
-        for (int i = 0; i < filters.length; i++) {
-            EasyMock.verify(filters[i]);
+        for (CallbackFilter filter : filters) {
+            EasyMock.verify(filter);
         }
         EasyMock.verify(method, builder, resp);
     }

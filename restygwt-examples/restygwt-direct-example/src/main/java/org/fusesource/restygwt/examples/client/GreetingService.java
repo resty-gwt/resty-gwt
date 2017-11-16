@@ -23,8 +23,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 import org.fusesource.restygwt.client.DirectRestService;
-import org.fusesource.restygwt.client.OverlayCallback;
-import org.fusesource.restygwt.client.RestService;
 
 /**
  * Simple service to demo the use of overlay objects.

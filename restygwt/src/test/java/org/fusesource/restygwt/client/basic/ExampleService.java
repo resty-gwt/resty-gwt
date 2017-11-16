@@ -33,14 +33,14 @@ import javax.ws.rs.Path;
  */
 public interface ExampleService extends RestService {
     @GET
-    public void getExampleDto(MethodCallback<ExampleDto> callback);
+    void getExampleDto(MethodCallback<ExampleDto> callback);
 
     /**
      * Used to make sure the generator handles Request result. 
      * It can be used to cancel requests.
      */
     @GET
-    public Request getExampleDtoCancelable(MethodCallback<ExampleDto> callback);
+    Request getExampleDtoCancelable(MethodCallback<ExampleDto> callback);
 
     @POST
     @Path("/store")

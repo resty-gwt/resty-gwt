@@ -23,7 +23,7 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 
 public interface RestyJsonTypeIdResolver {
-    public Class<? extends TypeIdResolver> getTypeIdResolverClass();
+    Class<? extends TypeIdResolver> getTypeIdResolverClass();
 
-    public Map<String, Class<?>> getIdClassMap();
+    Map<String, Class<?>> getIdClassMap();
 }

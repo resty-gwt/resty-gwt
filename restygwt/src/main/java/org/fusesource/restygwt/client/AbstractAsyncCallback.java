@@ -47,14 +47,14 @@ public abstract class AbstractAsyncCallback<T> implements AsyncCallback<JavaScri
 
     @Override
     final public void onFailure(Throwable exception) {
-        callback.onFailure(this.method, exception);
+        callback.onFailure(method, exception);
     }
 
     private Logger getLogger() {
-        if (GWT.isClient() && LogConfiguration.loggingIsEnabled() && this.logger == null) {
-            this.logger = Logger.getLogger(AbstractAsyncCallback.class.getName());
+        if (GWT.isClient() && LogConfiguration.loggingIsEnabled() && logger == null) {
+            logger = Logger.getLogger(AbstractAsyncCallback.class.getName());
         }
-        return this.logger;
+        return logger;
     }
 
     @Override
@@ -64,19 +64,19 @@ public abstract class AbstractAsyncCallback<T> implements AsyncCallback<JavaScri
                 getLogger().fine("Received http response for jsonp request");
             }
             if (result == null) {
-                callback.onSuccess(this.method, null);
+                callback.onSuccess(method, null);
             } else {
                 JSONObject json = new JSONObject(result);
                 if (getLogger() != null) {
                     getLogger().fine(json.toString());
                 }
-                callback.onSuccess(this.method, parseResult(json));
+                callback.onSuccess(method, parseResult(json));
             }
         } catch (Throwable e) {
             if (getLogger() != null) {
                 getLogger().log(Level.FINE, "Could not parse response: " + e, e);
             }
-            callback.onFailure(this.method, e);
+            callback.onFailure(method, e);
             return;
         }
     }

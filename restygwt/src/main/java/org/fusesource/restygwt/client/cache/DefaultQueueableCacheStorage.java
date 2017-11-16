@@ -20,6 +20,7 @@ package org.fusesource.restygwt.client.cache;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -107,7 +108,7 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
         }
 
         ResponseWrapper(Response resp) {
-            this.response = resp;
+            response = resp;
         }
     }
 
@@ -180,7 +181,7 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
     public void addCallback(final CacheKey k, final RequestCallback rc) {
         // init value of key if not there...
         if (!pendingCallbacks.containsKey(k)) {
-            pendingCallbacks.put(k, new java.util.LinkedList<RequestCallback>());
+            pendingCallbacks.put(k, new LinkedList<RequestCallback>());
         }
 
         // just add callbacks which are not already there

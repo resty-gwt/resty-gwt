@@ -5,9 +5,9 @@ import com.google.gwt.http.client.Response;
 /**
  * This class is used by AbstractRequestCallback to map the status code into an exception that is more appropriate for
  * the application. A new ExceptionMapper can be specified through the method
- * {@link org.fusesource.restygwt.client.Defaults#setExceptionMapper(ExceptionMapper)}.
+ * {@link Defaults#setExceptionMapper(ExceptionMapper)}.
  *
- * This default implementation does exactly what {@link org.fusesource.restygwt.client.AbstractRequestCallback} used
+ * This default implementation does exactly what {@link AbstractRequestCallback} used
  * to do.
  *
  * See <a href="https://github.com/resty-gwt/resty-gwt/issues/209">Issue 209</a>

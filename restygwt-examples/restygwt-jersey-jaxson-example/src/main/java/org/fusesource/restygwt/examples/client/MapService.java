@@ -32,6 +32,6 @@ import org.fusesource.restygwt.client.RestService;
 public interface MapService extends RestService {
 
     @GET
-    public void get(MethodCallback<MapResult> callback);
+    void get(MethodCallback<MapResult> callback);
 
 }

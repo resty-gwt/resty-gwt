@@ -40,6 +40,7 @@ import com.google.gwt.junit.GWTMockUtilities;
  */
 public class MockedTest extends TestCase {
 
+    @Override
     @Before
     public void setUp() throws Exception {
         GWTMockUtilities.disarm();

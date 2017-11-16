@@ -40,19 +40,19 @@ import java.util.Map;
 public interface PizzaService extends RestService {
 
     @POST
-    public void order(PizzaOrder request, MethodCallback<OrderConfirmation> callback);
+    void order(PizzaOrder request, MethodCallback<OrderConfirmation> callback);
 
     @GET
     @Path("/toppings")
     @Produces(MediaType.APPLICATION_JSON)
-    public void listToppings(MethodCallback<List<Topping>> callback);
+    void listToppings(MethodCallback<List<Topping>> callback);
 
     @OPTIONS
     @Path("/crusts")
     @Produces(MediaType.APPLICATION_JSON)
-    public void getCurstPrices(Crust crust, MethodCallback<Map<Integer, Double>> callback);
+    void getCurstPrices(Crust crust, MethodCallback<Map<Integer, Double>> callback);
 
     @DELETE
     @Path("/ping")
-    public void ping(MethodCallback<java.lang.Void> callback);
+    void ping(MethodCallback<Void> callback);
 }
