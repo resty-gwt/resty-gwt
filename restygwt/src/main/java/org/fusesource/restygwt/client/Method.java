@@ -211,7 +211,7 @@ public class Method {
         }
     }
 
-    public Object send(final RequestCallback callback) throws RequestException {
+    public Object send(RequestCallback callback) throws RequestException {
         doSetTimeout();
         builder.setCallback(callback);
         // lazily load dispatcher from defaults, if one is not set yet.
@@ -226,11 +226,11 @@ public class Method {
         return logger;
     }
 
-    public Object send(final TextCallback callback) {
+    public Object send(TextCallback callback) {
         return send((MethodCallback<String>) callback);
     }
 
-    public Object send(final MethodCallback<String> callback) {
+    public Object send(MethodCallback<String> callback) {
         defaultAcceptType(Resource.CONTENT_TYPE_TEXT);
         try {
             return send(new AbstractRequestCallback<String>(this, callback) {
@@ -249,7 +249,7 @@ public class Method {
         }
     }
 
-    public Object send(final JsonCallback callback) {
+    public Object send(JsonCallback callback) {
         defaultAcceptType(Resource.CONTENT_TYPE_JSON);
 
         try {
@@ -273,7 +273,7 @@ public class Method {
         }
     }
 
-    public Object send(final XmlCallback callback) {
+    public Object send(XmlCallback callback) {
         defaultAcceptType(Resource.CONTENT_TYPE_XML);
         try {
             return send(new AbstractRequestCallback<Document>(this, callback) {
@@ -296,7 +296,7 @@ public class Method {
         }
     }
 
-    public <T extends JavaScriptObject> Object send(final OverlayCallback<T> callback) {
+    public <T extends JavaScriptObject> Object send(OverlayCallback<T> callback) {
 
 
         defaultAcceptType(Resource.CONTENT_TYPE_JSON);

@@ -53,7 +53,7 @@ public class EchoServlet extends HttpServlet {
             sb.append("Headers:\n");
             sb.append("========\n");
             while (headerNames.hasMoreElements()) {
-                final String s = headerNames.nextElement();
+                String s = headerNames.nextElement();
                 sb.append("  ").append(s).append(": ").append(request.getHeader(s)).append("\n");
             }
             sb.append("========\n");
@@ -89,7 +89,7 @@ public class EchoServlet extends HttpServlet {
         // wait if necessary
         if (null != request.getHeader(RESPONSETIME_IN_SEC_HEADER_NAME)) {
             try {
-                final int waitingTime = Integer.parseInt(request.getHeader(RESPONSETIME_IN_SEC_HEADER_NAME)) * 1000;
+                int waitingTime = Integer.parseInt(request.getHeader(RESPONSETIME_IN_SEC_HEADER_NAME)) * 1000;
                 log.fine("need to wait for: " + waitingTime + " milliseconds");
                 Thread.sleep(waitingTime);
             } catch (InterruptedException e) {

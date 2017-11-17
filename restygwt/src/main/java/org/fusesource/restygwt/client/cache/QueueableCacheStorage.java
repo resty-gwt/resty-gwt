@@ -33,9 +33,9 @@ public interface QueueableCacheStorage extends CacheStorage<Response> {
 
     String RESTY_CACHE_HEADER = "X-Resty-Cache";
 
-    boolean hasCallback(final CacheKey k);
+    boolean hasCallback(CacheKey k);
 
-    void addCallback(final CacheKey k, final RequestCallback rc);
+    void addCallback(CacheKey k, RequestCallback rc);
 
-    List<RequestCallback> removeCallbacks(final CacheKey k);
+    List<RequestCallback> removeCallbacks(CacheKey k);
 }

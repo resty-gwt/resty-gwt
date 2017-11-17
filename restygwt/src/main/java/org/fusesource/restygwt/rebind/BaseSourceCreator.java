@@ -78,7 +78,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         return RestServiceGenerator.find(logger, context, type.getName().replace('$', '.'));
     }
 
-    public BaseSourceCreator(final TreeLogger logger, GeneratorContext context, JClassType source, String suffix) {
+    public BaseSourceCreator(TreeLogger logger, GeneratorContext context, JClassType source, String suffix) {
         this.logger = logger;
         this.context = context;
         this.source = source;

@@ -107,13 +107,13 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     @Override
     public void generate() throws UnableToCompleteException {
-        final JsonTypeInfo typeInfo = getClassAnnotation(source, JsonTypeInfo.class);
-        final boolean isLeaf = isLeaf(source);
+        JsonTypeInfo typeInfo = getClassAnnotation(source, JsonTypeInfo.class);
+        boolean isLeaf = isLeaf(source);
 
-        final List<Subtype> possibleTypes = getPossibleTypes(typeInfo, isLeaf);
+        List<Subtype> possibleTypes = getPossibleTypes(typeInfo, isLeaf);
         Collections.sort(possibleTypes);
 
-        final JClassType sourceClazz = source.isClass() == null ? source.isInterface() : source.isClass();
+        JClassType sourceClazz = source.isClass() == null ? source.isInterface() : source.isClass();
         if (sourceClazz == null) {
             getLogger().log(ERROR, "Type is not a class");
             throw new UnableToCompleteException();
@@ -126,8 +126,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             }
         }
         Json jsonAnnotation = getAnnotation(source, Json.class);
-        final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
-        final String railsWrapperName =
+        Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
+        String railsWrapperName =
                 jsonAnnotation != null && !jsonAnnotation.name().isEmpty() ? jsonAnnotation.name() :
                 sourceClazz.getName().toLowerCase();
         locator = EncoderDecoderLocatorFactory.getEncoderDecoderInstanceLocator(context, getLogger());
@@ -147,7 +147,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         return composerFactory;
     }
 
-    private List<Subtype> getPossibleTypes(final JsonTypeInfo typeInfo, final boolean isLeaf)
+    private List<Subtype> getPossibleTypes(JsonTypeInfo typeInfo, boolean isLeaf)
         throws UnableToCompleteException {
         if (typeInfo == null) {
             return Lists.newArrayList(new Subtype(null, source));
@@ -246,8 +246,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                 } else {
 
                     // Try to find a constructor that is annotated as creator
-                    final JConstructor creator = findCreator(possibleType.clazz);
-                    final List<JField> fields = getFields(possibleType.clazz);
+                    JConstructor creator = findCreator(possibleType.clazz);
+                    List<JField> fields = getFields(possibleType.clazz);
 
                     List<JField> orderedFields = creator == null ? null : getOrderedFields(fields, creator);
 
@@ -384,7 +384,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         p();
     }
 
-    private void generateEnumEncodeMethodBody(final Subtype possibleType, final JsonTypeInfo typeInfo) {
+    private void generateEnumEncodeMethodBody(Subtype possibleType, JsonTypeInfo typeInfo) {
         p("if( value==null ) {").i(1);
         {
             p("return " + JSON_NULL_CLASS + ".getInstance();").i(-1);
@@ -488,7 +488,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     generateEnumDecodeMethodBody(possibleType.clazz);
                 } else {
                     // Try to find a constuctor that is annotated as creator
-                    final JConstructor creator = findCreator(possibleType.clazz);
+                    JConstructor creator = findCreator(possibleType.clazz);
 
                     List<JField> orderedFields = null;
                     if (creator != null) {
@@ -761,7 +761,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
      *         getter can't be found.
      */
     private String getGetterName(JClassType type, JField field) {
-        final String methodBaseName = getMiddleNameForPrefixingAsAccessorMutator(field.getName());
+        String methodBaseName = getMiddleNameForPrefixingAsAccessorMutator(field.getName());
         String fieldName;
         JType booleanType = null;
         try {
@@ -953,8 +953,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             }
         }
         for (Map.Entry<String, JMethod> entry : getters.entrySet()) {
-            final JMethod getter = entry.getValue();
-            final JMethod setter = setters.get(entry.getKey());
+            JMethod getter = entry.getValue();
+            JMethod setter = setters.get(entry.getKey());
 
             if (null != setter && setter.getParameterTypes()[0].equals(getter.getReturnType())) {
                 String name = entry.getKey().substring(0, 1).toLowerCase() + entry.getKey().substring(1);
@@ -992,7 +992,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
         // remove fields annotated with JsonIgnore
         for (Iterator<JField> iter = allFields.iterator(); iter.hasNext(); ) {
-            final JField field = iter.next();
+            JField field = iter.next();
             if (isJsonIgnored(field)) {
                 iter.remove();
             }
@@ -1029,7 +1029,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         return allFields;
     }
 
-    public static String getTypeInfoPropertyValue(final JsonTypeInfo typeInfo) {
+    public static String getTypeInfoPropertyValue(JsonTypeInfo typeInfo) {
         if (typeInfo.include() == JsonTypeInfo.As.PROPERTY) {
             if (typeInfo.property() == null || "".equals(typeInfo.property())) {
                 return typeInfo.use().getDefaultPropertyName();

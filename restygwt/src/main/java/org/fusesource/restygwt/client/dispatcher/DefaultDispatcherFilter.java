@@ -40,7 +40,7 @@ public class DefaultDispatcherFilter implements DispatcherFilter {
      * the one and only constructor
      * @param cf
      */
-    public DefaultDispatcherFilter(final CallbackFactory cf) {
+    public DefaultDispatcherFilter(CallbackFactory cf) {
         callbackFactory = cf;
     }
 
@@ -50,7 +50,7 @@ public class DefaultDispatcherFilter implements DispatcherFilter {
      * @return continue filtering or not
      */
     @Override
-    public boolean filter(final Method method, final RequestBuilder builder) {
+    public boolean filter(Method method, RequestBuilder builder) {
         if (LogConfiguration.loggingIsEnabled()) {
             Logger.getLogger(Dispatcher.class.getName())
                 .info("Sending http request: " + builder.getHTTPMethod() + " " + builder.getUrl());

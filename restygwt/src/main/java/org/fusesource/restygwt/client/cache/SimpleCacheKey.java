@@ -27,7 +27,7 @@ public class SimpleCacheKey implements CacheKey {
 
     private final String identifier;
 
-    public SimpleCacheKey(final String identifier) {
+    public SimpleCacheKey(String identifier) {
         this.identifier = identifier;
     }
 

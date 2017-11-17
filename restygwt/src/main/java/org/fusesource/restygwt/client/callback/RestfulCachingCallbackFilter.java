@@ -42,15 +42,15 @@ public class RestfulCachingCallbackFilter extends CachingCallbackFilter {
     }
 
     @Override
-    protected boolean isCachingStatusCode(final int code) {
+    protected boolean isCachingStatusCode(int code) {
         return code == Response.SC_CONFLICT || super.isCachingStatusCode(code);
     }
 
     @Override
     protected void cacheResult(Method method, Response response) {
-        final CacheKey cacheKey;
+        CacheKey cacheKey;
         if (response.getStatusCode() == Response.SC_CREATED && response.getHeader("Location") != null) {
-            final String uri;
+            String uri;
             if (response.getHeader("Location").startsWith("http")) {
                 uri = response.getHeader("Location");
             } else {

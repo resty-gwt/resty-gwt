@@ -43,6 +43,7 @@ public class MockedTest extends TestCase {
     @Override
     @Before
     public void setUp() throws Exception {
+        super.setUp();
         GWTMockUtilities.disarm();
     }
 

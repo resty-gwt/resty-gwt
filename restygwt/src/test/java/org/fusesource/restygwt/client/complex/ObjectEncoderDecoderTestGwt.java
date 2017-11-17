@@ -62,7 +62,7 @@ public class ObjectEncoderDecoderTestGwt extends GWTTestCase {
         void setProperty(@PathParam("name") String name, Object value, MethodCallback<Void> callback);
     }
 
-    private void performTest(final String property, final Object expected) {
+    private void performTest(String property, final Object expected) {
         PropertiesAsync properties = GWT.create(PropertiesAsync.class);
         properties.getProperty(property, new MethodCallback<Object>() {
             @Override

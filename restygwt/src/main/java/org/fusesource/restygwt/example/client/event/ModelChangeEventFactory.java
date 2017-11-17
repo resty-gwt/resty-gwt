@@ -45,7 +45,7 @@ public class ModelChangeEventFactory {
      * @return
      */
     @SuppressWarnings("rawtypes")
-    public static GwtEvent factory(final String domainName) {
+    public static GwtEvent factory(String domainName) {
 
         return new ModelChangeEvent(domainName);
     }

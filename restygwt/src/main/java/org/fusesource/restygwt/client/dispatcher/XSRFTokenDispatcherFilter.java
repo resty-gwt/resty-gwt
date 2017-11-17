@@ -27,12 +27,12 @@ public class XSRFTokenDispatcherFilter implements DispatcherFilter {
 
     private XSRFToken xsrf;
 
-    public XSRFTokenDispatcherFilter(final XSRFToken xsrf) {
+    public XSRFTokenDispatcherFilter(XSRFToken xsrf) {
         this.xsrf = xsrf;
     }
 
     @Override
-    public boolean filter(final Method method, final RequestBuilder builder) {
+    public boolean filter(Method method, RequestBuilder builder) {
         if (xsrf.getToken() != null) {
             method.header(xsrf.getHeaderKey(), xsrf.getToken());
         }

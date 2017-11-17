@@ -67,12 +67,12 @@ public class ModelChangeAnnotationTestGwt extends GWTTestCase {
          */
         final EventBus eventBus = new SimpleEventBus();
         final QueueableCacheStorage cacheStorage = new VolatileQueueableCacheStorage();
-        final FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher();
+        FilterawareDispatcher dispatcher = new DefaultFilterawareDispatcher();
 
         dispatcher.addFilter(new CachingDispatcherFilter(cacheStorage, new CallbackFactory() {
             @Override
             public FilterawareRequestCallback createCallback(Method method) {
-                final FilterawareRequestCallback retryingCallback = new DefaultFilterawareRequestCallback(method);
+                FilterawareRequestCallback retryingCallback = new DefaultFilterawareRequestCallback(method);
 
                 retryingCallback.addFilter(new CachingCallbackFilter(cacheStorage));
                 retryingCallback.addFilter(new ModelChangeCallbackFilter(eventBus));

@@ -1153,7 +1153,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         private final TreeMap<String, String> elements;
 
         @JsonCreator
-        MoreSpecificFieldThanConstructor(@JsonProperty("elements") final Map<String, String> elements) {
+        MoreSpecificFieldThanConstructor(@JsonProperty("elements") Map<String, String> elements) {
             this.elements = new TreeMap<String, String>(elements);
         }
 

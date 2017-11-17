@@ -87,8 +87,8 @@ public class VolatileQueueableCacheStorageTestGwt extends GWTTestCase {
     }
 
     public void testPurge() throws Exception {
-        final VolatileQueueableCacheStorage storage = new VolatileQueueableCacheStorage();
-        final CacheKey key = new SimpleCacheKey("first");
+        VolatileQueueableCacheStorage storage = new VolatileQueueableCacheStorage();
+        CacheKey key = new SimpleCacheKey("first");
         Response resp = new ResponseMock();
 
         storage.putResult(key, resp);

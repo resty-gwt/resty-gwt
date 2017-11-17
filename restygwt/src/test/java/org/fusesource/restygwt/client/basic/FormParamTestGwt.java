@@ -190,7 +190,7 @@ public class FormParamTestGwt extends GWTTestCase {
 
     public void testPostWithDtoList() {
         final ObjectEncoderDecoder objectEncoderDecoder = new ObjectEncoderDecoder();
-        final List<ExampleDto> dtoList = Collections.singletonList(createDtoObject());
+        List<ExampleDto> dtoList = Collections.singletonList(createDtoObject());
 
         service.listParams(dtoList, new MethodCallback<Echo>() {
             @Override
@@ -203,11 +203,11 @@ public class FormParamTestGwt extends GWTTestCase {
                 assertEquals(1, response.params.size());
 
                 JSONValue jsonDto = JSONParser.parseStrict(response.params.get("dtoList"));
-                final Object decoded_object = objectEncoderDecoder.decode(jsonDto);
+                Object decoded_object = objectEncoderDecoder.decode(jsonDto);
                 if (decoded_object instanceof Collection) {
-                    final Collection<String> decoded_list = (Collection<String>) decoded_object;
-                    final List decoded_elem_list = new ArrayList();
-                    for (final String json_elem : decoded_list) {
+                    Collection<String> decoded_list = (Collection<String>) decoded_object;
+                    List decoded_elem_list = new ArrayList();
+                    for (String json_elem : decoded_list) {
                         decoded_elem_list.add(objectEncoderDecoder.decode(json_elem));
                     }
                     assertEquals(createDtoObjectAsList(), decoded_elem_list);
@@ -235,11 +235,11 @@ public class FormParamTestGwt extends GWTTestCase {
                 assertEquals(1, response.params.size());
 
                 JSONValue jsonValue = AbstractJsonEncoderDecoder.JSON_VALUE.decode(response.params.get("stringList"));
-                final Object decoded_object = objectEncoderDecoder.decode(jsonValue);
+                Object decoded_object = objectEncoderDecoder.decode(jsonValue);
                 if (decoded_object instanceof Collection) {
-                    final Collection<String> decoded_list = (Collection<String>) decoded_object;
-                    final List decoded_elem_list = new ArrayList();
-                    for (final String json_elem : decoded_list) {
+                    Collection<String> decoded_list = (Collection<String>) decoded_object;
+                    List decoded_elem_list = new ArrayList();
+                    for (String json_elem : decoded_list) {
                         decoded_elem_list.add(objectEncoderDecoder.decode(json_elem));
                     }
                     assertEquals(stringList, decoded_elem_list);
@@ -286,11 +286,11 @@ public class FormParamTestGwt extends GWTTestCase {
 
                 JSONValue jsonValue =
                     AbstractJsonEncoderDecoder.JSON_VALUE.decode(response.params.get("stringBuilderList"));
-                final Object decoded_object = objectEncoderDecoder.decode(jsonValue);
+                Object decoded_object = objectEncoderDecoder.decode(jsonValue);
                 if (decoded_object instanceof Collection) {
-                    final Collection<String> decoded_list = (Collection<String>) decoded_object;
-                    final List decoded_elem_list = new ArrayList();
-                    for (final String json_elem : decoded_list) {
+                    Collection<String> decoded_list = (Collection<String>) decoded_object;
+                    List decoded_elem_list = new ArrayList();
+                    for (String json_elem : decoded_list) {
                         decoded_elem_list.add(objectEncoderDecoder.decode(json_elem));
                     }
                     assertListEquals(stringBuilderList, decoded_elem_list);
@@ -305,7 +305,7 @@ public class FormParamTestGwt extends GWTTestCase {
 
     public void testPostWithDtoArray() {
         final ObjectEncoderDecoder objectEncoderDecoder = new ObjectEncoderDecoder();
-        final ExampleDto[] dtoList = new ExampleDto[] { createDtoObject() };
+        ExampleDto[] dtoList = new ExampleDto[]{createDtoObject()};
 
         service.arrayParams(dtoList, new MethodCallback<Echo>() {
             @Override
@@ -379,7 +379,7 @@ public class FormParamTestGwt extends GWTTestCase {
     }
 
     private ExampleDto createDtoObject() {
-        final ExampleDto dto = new ExampleDto();
+        ExampleDto dto = new ExampleDto();
         dto.name = "dtoName";
         dto.complexMap1 = new HashMap<Integer, String>();
         dto.complexMap1.put(1, "one");

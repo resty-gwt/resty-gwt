@@ -69,7 +69,7 @@ public class JsonEncoderDecoderClassCreatorTestCase extends TestCase {
         check(Id.NONE, false, true);
     }
 
-    private void check(final Id id, final boolean classMethodVisited, final boolean otherMethodVisited)
+    private void check(Id id, boolean classMethodVisited, boolean otherMethodVisited)
         throws Throwable {
         MyPossibleTypesVisitor v = new MyPossibleTypesVisitor(null, null, true, new TreeLogger() {
             @Override

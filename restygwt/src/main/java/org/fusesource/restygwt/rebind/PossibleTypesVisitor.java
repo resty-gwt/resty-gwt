@@ -28,8 +28,8 @@ public class PossibleTypesVisitor extends JsonTypeInfoIdVisitor<List<Subtype>, U
     private TreeLogger logger;
     private Collection<JsonSubTypes.Type> types;
 
-    public PossibleTypesVisitor(GeneratorContext context, JClassType classType, final boolean isLeaf, TreeLogger logger,
-                                final Collection<Type> types) {
+    public PossibleTypesVisitor(GeneratorContext context, JClassType classType, boolean isLeaf, TreeLogger logger,
+                                Collection<Type> types) {
         this.context = context;
         this.classType = classType;
         this.isLeaf = isLeaf;
@@ -72,12 +72,12 @@ public class PossibleTypesVisitor extends JsonTypeInfoIdVisitor<List<Subtype>, U
 
 
     protected List<Subtype> getPossibleTypesForOther(GeneratorContext context, JClassType classType,
-                                                     final boolean isLeaf, TreeLogger logger,
-                                                     final Collection<JsonSubTypes.Type> types)
+                                                     boolean isLeaf, TreeLogger logger,
+                                                     Collection<JsonSubTypes.Type> types)
         throws UnableToCompleteException {
-        final List<Subtype> possibleTypes = Lists.newArrayList();
+        List<Subtype> possibleTypes = Lists.newArrayList();
 
-        final JsonTypeIdResolver typeResolver = getClassAnnotation(classType, JsonTypeIdResolver.class);
+        JsonTypeIdResolver typeResolver = getClassAnnotation(classType, JsonTypeIdResolver.class);
         if (typeResolver != null) {
             Class<? extends TypeIdResolver> resolverClass = typeResolver.value();
             RestyJsonTypeIdResolver restyResolver;
@@ -143,11 +143,11 @@ public class PossibleTypesVisitor extends JsonTypeInfoIdVisitor<List<Subtype>, U
         return possibleTypes;
     }
 
-    protected List<Subtype> getPossibleTypesForClass(GeneratorContext context, JClassType classType, final Id id,
-                                                     final boolean isLeaf, TreeLogger logger,
-                                                     final Collection<JsonSubTypes.Type> types)
+    protected List<Subtype> getPossibleTypesForClass(GeneratorContext context, JClassType classType, Id id,
+                                                     boolean isLeaf, TreeLogger logger,
+                                                     Collection<JsonSubTypes.Type> types)
         throws UnableToCompleteException {
-        final List<Subtype> possibleTypes = Lists.newArrayList();
+        List<Subtype> possibleTypes = Lists.newArrayList();
         List<JClassType> resolvedSubtypes = Lists.newArrayList();
 
         if (types != null && !types.isEmpty()) {

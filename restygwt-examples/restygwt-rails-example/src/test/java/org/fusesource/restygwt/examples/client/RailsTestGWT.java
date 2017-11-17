@@ -53,7 +53,7 @@ public class RailsTestGWT extends RailsCreateTestGWT {
     public void testUpdate() {
         UsersRestService service = GWT.create(UsersRestService.class);
         ((RestServiceProxy) service).setDispatcher(new DispatcherFactory().xsrfProtectionDispatcher());
-        final User user = newUser();
+        User user = newUser();
         user.id = persistentUser.id;
         service.update(user, expectResult(persistentUser));
         delayTestFinish(REQUEST_TIMEOUT);
@@ -61,7 +61,7 @@ public class RailsTestGWT extends RailsCreateTestGWT {
 
     public void testUpdateWithoutXSRF() {
         UsersRestService service = GWT.create(UsersRestService.class);
-        final User user = newUser();
+        User user = newUser();
         user.id = persistentUser.id;
         service.update(user, new MethodCallback<User>() {
 

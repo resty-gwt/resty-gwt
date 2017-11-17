@@ -37,7 +37,7 @@ public class RailsServlet extends RackServlet {
             System.out.println("setup rails application via jruby-rack - started . . .");
             ServletContext ctx = config.getServletContext();
             ServletRackConfig rackConfig = new RestyServletRackConfig(ctx);
-            final RackApplicationFactory fac = new SharedRackApplicationFactory(new RailsRackApplicationFactory());
+            RackApplicationFactory fac = new SharedRackApplicationFactory(new RailsRackApplicationFactory());
             ctx.setAttribute(RackApplicationFactory.FACTORY, fac);
             ServletRackContext rackContext = new ServletRackContext(rackConfig);
             ctx.setAttribute(RackApplicationFactory.RACK_CONTEXT, rackContext);

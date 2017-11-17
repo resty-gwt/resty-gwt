@@ -103,8 +103,8 @@ public class GetTypeInfoPropertyValueTestCase extends TestCase {
     }
 
     @Test
-    private void check(final String expected, final JsonTypeInfo annotation) {
-        final String value = JsonEncoderDecoderClassCreator.getTypeInfoPropertyValue(annotation);
+    private void check(String expected, JsonTypeInfo annotation) {
+        String value = JsonEncoderDecoderClassCreator.getTypeInfoPropertyValue(annotation);
         assertEquals(expected, value);
     }
 }

@@ -36,6 +36,6 @@ public interface CallbackFilter {
      *
      * @return continue chain or not
      */
-    RequestCallback filter(final Method method, final Response response, RequestCallback callback);
+    RequestCallback filter(Method method, Response response, RequestCallback callback);
 
 }

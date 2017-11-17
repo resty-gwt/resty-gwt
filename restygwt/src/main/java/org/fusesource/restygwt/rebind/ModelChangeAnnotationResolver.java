@@ -47,11 +47,11 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
 
     @Override
     public Map<String, String[]> resolveAnnotation(TreeLogger logger, JClassType source, JMethod method,
-                                                   final String restMethod) throws UnableToCompleteException {
+                                                   String restMethod) throws UnableToCompleteException {
         ModelChange classAnnot = getAnnotation(source, ModelChange.class);
         String[] serviceDomains = null;
         ModelChange methodAnnot = getAnnotation(method, ModelChange.class);
-        final Map<String, String[]> ret = new HashMap<String, String[]>();
+        Map<String, String[]> ret = new HashMap<String, String[]>();
 
         if (null != getAnnotation(source, Domain.class)) {
             serviceDomains = getAnnotationsAsStringArray(getAnnotation(source, Domain.class).value());
@@ -121,7 +121,7 @@ public class ModelChangeAnnotationResolver implements AnnotationResolver {
      * @return
      */
     @SuppressWarnings("rawtypes")
-    private String[] getAnnotationsAsStringArray(final Class[] classes) {
+    private String[] getAnnotationsAsStringArray(Class[] classes) {
         if (null == classes) {
             return null;
         }
