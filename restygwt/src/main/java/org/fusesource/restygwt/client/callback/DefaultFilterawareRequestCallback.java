@@ -31,7 +31,7 @@ public class DefaultFilterawareRequestCallback extends AbstractNestedRequestCall
     implements FilterawareRequestCallback {
 
 
-    final protected List<CallbackFilter> callbackFilters = new ArrayList<CallbackFilter>();
+    protected final List<CallbackFilter> callbackFilters = new ArrayList<CallbackFilter>();
 
     public DefaultFilterawareRequestCallback(Method method) {
         // need to keep requestcallback here, as ``method.builder.getCallback()`` does not

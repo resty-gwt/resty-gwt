@@ -32,7 +32,7 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
         this.style = style;
     }
 
-    static public <T> AbstractJsonEncoderDecoder<T[]> arrayEncoderDecoder(AbstractJsonEncoderDecoder<T> encoder) {
+    public static <T> AbstractJsonEncoderDecoder<T[]> arrayEncoderDecoder(AbstractJsonEncoderDecoder<T> encoder) {
         return new AbstractNestedJsonEncoderDecoder<T[], T, Void>(encoder) {
 
             @Override
@@ -48,7 +48,7 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
         };
     }
 
-    static public <T> AbstractJsonEncoderDecoder<Collection<T>> collectionEncoderDecoder(
+    public static <T> AbstractJsonEncoderDecoder<Collection<T>> collectionEncoderDecoder(
         AbstractJsonEncoderDecoder<T> encoder) {
         return new AbstractNestedJsonEncoderDecoder<Collection<T>, T, Void>(encoder) {
 
@@ -65,7 +65,7 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
         };
     }
 
-    static public <T> AbstractJsonEncoderDecoder<List<T>> listEncoderDecoder(AbstractJsonEncoderDecoder<T> encoder) {
+    public static <T> AbstractJsonEncoderDecoder<List<T>> listEncoderDecoder(AbstractJsonEncoderDecoder<T> encoder) {
         return new AbstractNestedJsonEncoderDecoder<List<T>, T, Void>(encoder) {
 
             @SuppressWarnings("unchecked")
@@ -81,7 +81,7 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
         };
     }
 
-    static public <T> AbstractJsonEncoderDecoder<Set<T>> setEncoderDecoder(AbstractJsonEncoderDecoder<T> encoder) {
+    public static <T> AbstractJsonEncoderDecoder<Set<T>> setEncoderDecoder(AbstractJsonEncoderDecoder<T> encoder) {
         return new AbstractNestedJsonEncoderDecoder<Set<T>, T, Void>(encoder) {
 
             @Override
@@ -96,7 +96,7 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
         };
     }
 
-    static public <T> AbstractJsonEncoderDecoder<Map<String, T>> mapEncoderDecoder(
+    public static <T> AbstractJsonEncoderDecoder<Map<String, T>> mapEncoderDecoder(
         AbstractJsonEncoderDecoder<T> encoder, Style style) {
         return new AbstractNestedJsonEncoderDecoder<Map<String, T>, T, Void>(encoder, style) {
 
@@ -112,7 +112,7 @@ public abstract class AbstractNestedJsonEncoderDecoder<E, F, G> extends Abstract
         };
     }
 
-    static public <T, S> AbstractJsonEncoderDecoder<Map<T, S>> mapEncoderDecoder(
+    public static <T, S> AbstractJsonEncoderDecoder<Map<T, S>> mapEncoderDecoder(
         AbstractJsonEncoderDecoder<T> keyEncoder, AbstractJsonEncoderDecoder<S> valueEncoder, Style style) {
         return new AbstractNestedJsonEncoderDecoder<Map<T, S>, T, S>(keyEncoder, valueEncoder, style) {
 

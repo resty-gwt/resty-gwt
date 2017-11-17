@@ -677,7 +677,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         }
     }
 
-    static public void clearRestyResolverClassMap() {
+    public static void clearRestyResolverClassMap() {
         sTypeIdResolverMap = null;
     }
 

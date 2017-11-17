@@ -37,7 +37,7 @@ public class ParameterizedTypeServlet {
     /**
      * Ignores input and outputs a value.
      */
-    public static abstract class JacksonOutputServlet extends HttpServlet {
+    public abstract static class JacksonOutputServlet extends HttpServlet {
         @Override
         protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             Object o = getThing();

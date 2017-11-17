@@ -27,9 +27,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
-@JsonSubTypes({ @JsonSubTypes.Type(value = SpriteBasedItemWithProperty.class) })
 @JsonTypeInfo(use = Id.CLASS, include = As.PROPERTY)
-abstract public class LibraryItemWithProperty {
+@JsonSubTypes({@JsonSubTypes.Type(value = SpriteBasedItemWithProperty.class)})
+public abstract class LibraryItemWithProperty {
     public String id;
 
     protected LibraryItemWithProperty() {

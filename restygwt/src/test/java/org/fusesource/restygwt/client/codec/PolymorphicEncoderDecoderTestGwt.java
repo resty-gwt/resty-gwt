@@ -46,7 +46,7 @@ public class PolymorphicEncoderDecoderTestGwt extends GWTTestCase {
         String getValue();
     }
 
-    static abstract class AbstractSubType implements JsonSubTypesWithAnInterface {
+    abstract static class AbstractSubType implements JsonSubTypesWithAnInterface {
     }
 
     static class DefaultImplementationOfSubTypeInterface extends AbstractSubType {
@@ -185,10 +185,10 @@ public class PolymorphicEncoderDecoderTestGwt extends GWTTestCase {
 
     // ######################################################################################
 
-    @JsonSubTypes({ @Type(A.class), @Type(B.class) })
+    @JsonTypeInfo(use = Id.NAME, include = As.PROPERTY, property = "@class")
     @JsonTypeName("A")
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
-    static public class A {
+    @JsonSubTypes({@Type(A.class), @Type(B.class)})
+    public static class A {
         private String code;
 
         public String getCode() {
@@ -201,7 +201,7 @@ public class PolymorphicEncoderDecoderTestGwt extends GWTTestCase {
     }
 
     @JsonTypeName("B")
-    static public class B extends A {
+    public static class B extends A {
         private String desc;
 
         public String getDesc() {

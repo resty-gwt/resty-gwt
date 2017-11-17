@@ -37,9 +37,9 @@ import org.junit.Test;
 
 public class JsonTypeIdResolver extends GWTTestCase {
     // is this needed?
-    @JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, include = JsonTypeInfo.As.PROPERTY, property = "@type")
     @com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver(DTOTypeResolver.class)
-    public static abstract class AbstractDTO {
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, include = JsonTypeInfo.As.PROPERTY, property = "@type")
+    public abstract static class AbstractDTO {
         public String name;
     }
 
@@ -59,7 +59,7 @@ public class JsonTypeIdResolver extends GWTTestCase {
     }
 
     @AbstractJacksonAnnotationsInside
-    public static abstract class AbstractCustomDto {
+    public abstract static class AbstractCustomDto {
         public String name;
     }
 

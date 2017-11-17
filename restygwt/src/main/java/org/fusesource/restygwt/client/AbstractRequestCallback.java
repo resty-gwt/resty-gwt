@@ -45,7 +45,7 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
     }
 
     @Override
-    final public void onError(Request request, Throwable exception) {
+    public final void onError(Request request, Throwable exception) {
         method.request = request;
         callback.onFailure(method, exception);
     }
@@ -58,7 +58,7 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
     }
 
     @Override
-    final public void onResponseReceived(Request request, Response response) {
+    public final void onResponseReceived(Request request, Response response) {
         method.request = request;
         method.response = response;
         if (response == null) {
@@ -99,5 +99,5 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
         return !method.isExpected(response.getStatusCode());
     }
 
-    abstract protected T parseResult() throws Exception;
+    protected abstract T parseResult() throws Exception;
 }

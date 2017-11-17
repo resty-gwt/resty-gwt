@@ -58,9 +58,9 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
     private TreeLogger logger;
     private PrintWriter writer;
 
-    static final private ThreadLocal<HashSet<String>> GENERATED_CLASSES = new ThreadLocal<HashSet<String>>();
+    private static final ThreadLocal<HashSet<String>> GENERATED_CLASSES = new ThreadLocal<HashSet<String>>();
 
-    static public HashSet<String> getGeneratedClasses() {
+    public static HashSet<String> getGeneratedClasses() {
         HashSet<String> rc = GENERATED_CLASSES.get();
         if (rc == null) {
             rc = new HashSet<String>();
@@ -69,7 +69,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         return rc;
     }
 
-    static public void clearGeneratedClasses() {
+    public static void clearGeneratedClasses() {
         GENERATED_CLASSES.set(null);
     }
 
@@ -264,7 +264,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         return sb.toString();
     }
 
-    final public String create() throws UnableToCompleteException {
+    public final String create() throws UnableToCompleteException {
         writer = writer();
         if (writer == null) {
             return name;
@@ -294,7 +294,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         return defaultValue;
     }
 
-    abstract protected ClassSourceFileComposerFactory createComposerFactory() throws UnableToCompleteException;
+    protected abstract ClassSourceFileComposerFactory createComposerFactory() throws UnableToCompleteException;
 
-    abstract protected void generate() throws UnableToCompleteException;
+    protected abstract void generate() throws UnableToCompleteException;
 }

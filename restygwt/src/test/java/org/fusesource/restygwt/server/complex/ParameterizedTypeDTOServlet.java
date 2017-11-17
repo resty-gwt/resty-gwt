@@ -34,7 +34,7 @@ import org.fusesource.restygwt.client.basic.ParameterizedTypeDTO.Thing;
 
 @SuppressWarnings("serial")
 public class ParameterizedTypeDTOServlet {
-    public static abstract class JacksonServlet extends HttpServlet {
+    public abstract static class JacksonServlet extends HttpServlet {
         @Override
         protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             Object o = getThing();
