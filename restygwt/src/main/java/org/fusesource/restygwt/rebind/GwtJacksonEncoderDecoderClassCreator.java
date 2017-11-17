@@ -64,7 +64,7 @@ public class GwtJacksonEncoderDecoderClassCreator extends BaseSourceCreator {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        final JClassType sourceClazz = source.isClass() == null ? source.isInterface() : source.isClass();
+        JClassType sourceClazz = source.isClass() == null ? source.isInterface() : source.isClass();
         if (sourceClazz == null) {
             getLogger().log(ERROR, "Type is not a class");
             throw new UnableToCompleteException();

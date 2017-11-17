@@ -95,7 +95,7 @@ public class JsonpMethod extends Method {
      * helper method to make RestServiceClassCreator easier to maintain
      * @param callback
      */
-    public Object send(final AsyncCallback<JavaScriptObject> callback) {
+    public Object send(AsyncCallback<JavaScriptObject> callback) {
         return jsonpBuilder.requestObject(resource.getUri(), callback);
     }
 

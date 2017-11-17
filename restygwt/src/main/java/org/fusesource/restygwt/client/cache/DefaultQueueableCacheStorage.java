@@ -130,8 +130,8 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
     }
 
     @Override
-    public Response getResultOrReturnNull(final CacheKey key, final String scope) {
-        final HashMap<CacheKey, Response> scoped = cache.get(scope);
+    public Response getResultOrReturnNull(CacheKey key, String scope) {
+        HashMap<CacheKey, Response> scoped = cache.get(scope);
         if (null != scoped) {
             Response result = scoped.get(key);
             if (result != null) {
@@ -143,11 +143,11 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
     }
 
     @Override
-    public void putResult(final CacheKey key, final Response response) {
+    public void putResult(CacheKey key, Response response) {
         putResult(key, response, DEFAULT_SCOPE);
     }
 
-    protected void putResult(final CacheKey key, final Response response, final String scope) {
+    protected void putResult(CacheKey key, Response response, String scope) {
         HashMap<CacheKey, Response> scoped = cache.get(scope);
 
         if (null == scoped) {
@@ -173,12 +173,12 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
     }
 
     @Override
-    public boolean hasCallback(final CacheKey k) {
+    public boolean hasCallback(CacheKey k) {
         return pendingCallbacks.containsKey(k);
     }
 
     @Override
-    public void addCallback(final CacheKey k, final RequestCallback rc) {
+    public void addCallback(CacheKey k, RequestCallback rc) {
         // init value of key if not there...
         if (!pendingCallbacks.containsKey(k)) {
             pendingCallbacks.put(k, new LinkedList<RequestCallback>());
@@ -191,7 +191,7 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
     }
 
     @Override
-    public List<RequestCallback> removeCallbacks(final CacheKey k) {
+    public List<RequestCallback> removeCallbacks(CacheKey k) {
         return pendingCallbacks.remove(k);
     }
 
@@ -205,7 +205,7 @@ public class DefaultQueueableCacheStorage implements QueueableCacheStorage {
     }
 
     @Override
-    public void purge(final String scope) {
+    public void purge(String scope) {
         HashMap<CacheKey, Response> scoped = cache.get(scope);
 
         // TODO handle timers in scoping too

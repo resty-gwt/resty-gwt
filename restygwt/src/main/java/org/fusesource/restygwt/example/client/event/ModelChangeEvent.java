@@ -39,7 +39,7 @@ public class ModelChangeEvent extends GwtEvent<ModelChangedEventHandler> {
      */
     private String domainIdentifier;
 
-    public ModelChangeEvent(final String domainIdentifier) {
+    public ModelChangeEvent(String domainIdentifier) {
         this.domainIdentifier = domainIdentifier;
     }
 

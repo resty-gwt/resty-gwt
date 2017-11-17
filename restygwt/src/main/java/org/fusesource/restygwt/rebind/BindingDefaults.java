@@ -58,8 +58,8 @@ public class BindingDefaults {
      *
      * @return a copy of all AnnotationResolvers
      */
-    public static List<AnnotationResolver> getAnnotationResolvers(final GeneratorContext context,
-                                                                  final TreeLogger logger) {
+    public static List<AnnotationResolver> getAnnotationResolvers(GeneratorContext context,
+                                                                  TreeLogger logger) {
 
         // do this only the first time call
         if (null == _annotationResolversRequested) {
@@ -68,12 +68,12 @@ public class BindingDefaults {
                 for (String className : context.getPropertyOracle()
                     .getConfigurationProperty("org.fusesource.restygwt.annotationresolver").getValues()) {
                     logger.log(TreeLogger.INFO, "classname to resolve: " + className);
-                    Class<?> clazz = null;
+                    Class<?> clazz;
 
                     try {
                         clazz = Class.forName(className);
                     } catch (ClassNotFoundException e) {
-                        new RuntimeException("could not resolve class " + className + " " + e.getMessage());
+                        throw new RuntimeException("could not resolve class " + className + " " + e.getMessage());
                     }
 
                     if (null != clazz) {
@@ -81,9 +81,9 @@ public class BindingDefaults {
                             logger.log(TreeLogger.INFO, "add annotationresolver: " + clazz.getName());
                             addAnnotationResolver((AnnotationResolver) clazz.newInstance());
                         } catch (InstantiationException e) {
-                            new RuntimeException("could not instanciate class " + className + " " + e.getMessage());
+                            throw new RuntimeException("could not instanciate class " + className + " " + e.getMessage());
                         } catch (IllegalAccessException e) {
-                            new RuntimeException("could not access class " + className + " " + e.getMessage());
+                            throw new RuntimeException("could not access class " + className + " " + e.getMessage());
                         }
                     } else {
                         throw new RuntimeException("could not create instance for classname " + className);

@@ -161,7 +161,7 @@ public abstract class AbstractJsonEncoderDecoder<T> implements JsonEncoderDecode
             if (value == null || value.isNull() != null) {
                 return null;
             }
-            final JSONString valueString = value.isString();
+            JSONString valueString = value.isString();
             if (valueString != null) {
                 return Long.parseLong(valueString.stringValue());
             }

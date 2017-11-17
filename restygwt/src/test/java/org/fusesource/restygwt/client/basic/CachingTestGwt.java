@@ -74,7 +74,7 @@ public class CachingTestGwt extends GWTTestCase {
      */
     public void testIfCachingWorks() {
         //configure RESTY to use cache:
-        final EventBus eventBus = new SimpleEventBus();
+        EventBus eventBus = new SimpleEventBus();
         QueueableCacheStorage cache = new VolatileQueueableCacheStorage();
         CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
         CallbackFactory callbackFactory =
@@ -123,7 +123,7 @@ public class CachingTestGwt extends GWTTestCase {
         Timer timerCheck = new Timer() {
             @Override
             public void run() {
-                final RequestBuilder ajax =
+                RequestBuilder ajax =
                     new RequestBuilder(RequestBuilder.GET, GWT.getModuleBaseURL() + "api/getnumberofcontacts");
 
                 try {

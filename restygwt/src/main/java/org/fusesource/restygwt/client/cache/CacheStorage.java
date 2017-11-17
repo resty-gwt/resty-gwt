@@ -19,14 +19,14 @@
 package org.fusesource.restygwt.client.cache;
 
 public interface CacheStorage<T> {
-    T getResultOrReturnNull(final CacheKey key);
+    T getResultOrReturnNull(CacheKey key);
 
-    T getResultOrReturnNull(final CacheKey key, final String scope);
+    T getResultOrReturnNull(CacheKey key, String scope);
 
     /**
      * default put method
      */
-    void putResult(final CacheKey key, final T response);
+    void putResult(CacheKey key, T response);
 
     /**
      * put by ident/scope. e.g. to invalidate later on by domain class
@@ -35,12 +35,12 @@ public interface CacheStorage<T> {
      * @param scope
      * @param response
      */
-    void putResult(final CacheKey key, final T response, final String... scope);
+    void putResult(CacheKey key, T response, String... scope);
 
     /**
      * default delete method
      */
-    void remove(final CacheKey key);
+    void remove(CacheKey key);
 
     /**
      * delete by ident/scope. e.g. to invalidate later on by domain class
@@ -48,7 +48,7 @@ public interface CacheStorage<T> {
      * @param key
      * @param scopes
      */
-    void remove(final CacheKey key, final String... scopes);
+    void remove(CacheKey key, String... scopes);
 
     /**
      * purge the complete cache
@@ -58,6 +58,6 @@ public interface CacheStorage<T> {
     /**
      * purge a particular ident, e.g. domain scope
      */
-    void purge(final String scope);
+    void purge(String scope);
 
 }

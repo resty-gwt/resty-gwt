@@ -43,7 +43,7 @@ public class DefaultCallbackFactory implements CallbackFactory {
      */
     @Override
     public FilterawareRequestCallback createCallback(Method method) {
-        final FilterawareRequestCallback callback = new DefaultFilterawareRequestCallback(method);
+        FilterawareRequestCallback callback = new DefaultFilterawareRequestCallback(method);
 
         for (CallbackFilter filter : callbackFilters) {
             callback.addFilter(filter);

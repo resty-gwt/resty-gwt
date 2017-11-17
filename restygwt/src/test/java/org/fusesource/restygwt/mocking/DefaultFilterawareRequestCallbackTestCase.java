@@ -43,7 +43,8 @@ public class DefaultFilterawareRequestCallbackTestCase extends TestCase {
     }
 
     @Override
-    protected void tearDown() {
+    protected void tearDown() throws Exception {
+        super.tearDown();
         GWTMockUtilities.restore();
     }
 

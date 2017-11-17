@@ -62,11 +62,11 @@ public class ObjectEncoderDecoderServlet extends HttpServletDispatcher {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
-        final ResteasyProviderFactory providerFactory =
+        ResteasyProviderFactory providerFactory =
             (ResteasyProviderFactory) config.getServletContext().getAttribute(ResteasyProviderFactory.class.getName());
         providerFactory.registerProvider(JsonStringProvider.class);
 
-        final Registry registry = (Registry) config.getServletContext().getAttribute(Registry.class.getName());
+        Registry registry = (Registry) config.getServletContext().getAttribute(Registry.class.getName());
         // the prefix must be manually specified because the config's servlet context is does not properly specify it.
         registry.addPerRequestResource(PropertiesImpl.class, "/org.fusesource.restygwt.ObjectEncoderDecoder.JUnit");
     }

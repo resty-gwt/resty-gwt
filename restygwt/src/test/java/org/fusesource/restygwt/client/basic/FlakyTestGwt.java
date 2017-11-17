@@ -88,13 +88,13 @@ public class FlakyTestGwt extends GWTTestCase {
         /*
          * configure RESTY to use cache, usually done in gin
          */
-        final EventBus eventBus = new SimpleEventBus();
-        final QueueableCacheStorage cache = new VolatileQueueableCacheStorage();
+        EventBus eventBus = new SimpleEventBus();
+        QueueableCacheStorage cache = new VolatileQueueableCacheStorage();
 
-        final CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
-        final CallbackFactory callbackFactory =
+        CallbackFilter cachingCallbackFilter = new CachingCallbackFilter(cache);
+        CallbackFactory callbackFactory =
             new RetryingCallbackFactory(cachingCallbackFilter, new ModelChangeCallbackFilter(eventBus));
-        final DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
+        DispatcherFilter cachingDispatcherFilter = new CachingDispatcherFilter(cache, callbackFactory);
 
         Dispatcher dispatcher = new DefaultFilterawareDispatcher(cachingDispatcherFilter);
 

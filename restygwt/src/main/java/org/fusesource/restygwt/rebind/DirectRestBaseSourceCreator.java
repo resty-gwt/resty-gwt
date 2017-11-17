@@ -93,7 +93,7 @@ public abstract class DirectRestBaseSourceCreator extends BaseSourceCreator {
     }
 
     protected boolean isOverlayMethod(JMethod method) {
-        final JClassType aClass = method.getReturnType().isClass();
+        JClassType aClass = method.getReturnType().isClass();
         return aClass != null && OVERLAY_VALUE_TYPE.isAssignableFrom(aClass);
     }
 }

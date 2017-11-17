@@ -49,7 +49,7 @@ public class Resource {
         this(uri, query, null);
     }
 
-    public Resource(final String uri, final Map<String, String> headers) {
+    public Resource(String uri, Map<String, String> headers) {
         int pos = uri.indexOf('?');
         if (pos >= 0) {
             path = uri.substring(0, pos);
@@ -62,7 +62,7 @@ public class Resource {
         this.headers = (headers != null) ? headers : defaultHeaders();
     }
 
-    public Resource(final String uri, final String query, final Map<String, String> headers) {
+    public Resource(String uri, String query, Map<String, String> headers) {
         // Strip off trailing "/" so we have a known format to work off of when concatenating paths
         path = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
         this.query = query;

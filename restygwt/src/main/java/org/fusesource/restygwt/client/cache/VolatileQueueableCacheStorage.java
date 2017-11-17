@@ -46,8 +46,8 @@ public class VolatileQueueableCacheStorage extends DefaultQueueableCacheStorage 
     private final List<Timer> timers = new ArrayList<Timer>();
 
     @Override
-    protected void putResult(final CacheKey key, final Response response, final String scope) {
-        final Timer t = new Timer() {
+    protected void putResult(final CacheKey key, Response response, final String scope) {
+        Timer t = new Timer() {
             @Override
             public void run() {
                 try {

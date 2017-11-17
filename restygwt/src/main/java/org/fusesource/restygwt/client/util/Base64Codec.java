@@ -12,6 +12,7 @@ import java.util.logging.Logger;
  * @author Larkin Lowrey
  *
  */
+@SuppressWarnings("ALL")
 public class Base64Codec {
     public static byte[] decode(String base64) {
         Logger log = Logger.getLogger("base64 decode");

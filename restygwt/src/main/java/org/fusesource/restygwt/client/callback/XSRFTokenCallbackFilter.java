@@ -33,7 +33,7 @@ public class XSRFTokenCallbackFilter implements CallbackFilter {
     }
 
     @Override
-    public RequestCallback filter(final Method method, final Response response, RequestCallback callback) {
+    public RequestCallback filter(Method method, Response response, RequestCallback callback) {
         String token = response.getHeader(xsrf.getHeaderKey());
         String restyCacheHeader = response.getHeader(QueueableCacheStorage.RESTY_CACHE_HEADER);
         if (token != null && (restyCacheHeader == null || restyCacheHeader.isEmpty())) {

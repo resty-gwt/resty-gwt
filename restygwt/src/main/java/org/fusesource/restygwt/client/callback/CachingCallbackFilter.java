@@ -51,8 +51,8 @@ public class CachingCallbackFilter implements CallbackFilter {
      * TODO method.getResponse() is not equal to response. unfortunately
      */
     @Override
-    public RequestCallback filter(final Method method, final Response response, RequestCallback callback) {
-        final int code = response.getStatusCode();
+    public RequestCallback filter(Method method, Response response, RequestCallback callback) {
+        int code = response.getStatusCode();
 
         final CacheKey ck = cacheKey(method.builder);
         final List<RequestCallback> removedCallbacks = cache.removeCallbacks(ck);
@@ -110,16 +110,16 @@ public class CachingCallbackFilter implements CallbackFilter {
         return callback;
     }
 
-    protected boolean isCachingStatusCode(final int code) {
+    protected boolean isCachingStatusCode(int code) {
         return code < Response.SC_MULTIPLE_CHOICES // code < 300
             && code >= Response.SC_OK; // code >= 200
     }
 
-    protected CacheKey cacheKey(final RequestBuilder builder) {
+    protected CacheKey cacheKey(RequestBuilder builder) {
         return new ComplexCacheKey(builder);
     }
 
-    protected void cacheResult(final Method method, final Response response) {
+    protected void cacheResult(Method method, Response response) {
         CacheKey cacheKey = cacheKey(method.builder);
         if (GWT.isClient() && LogConfiguration.loggingIsEnabled()) {
             Logger.getLogger(CachingCallbackFilter.class.getName()).finer("cache to " + cacheKey + ": " + response);
@@ -134,19 +134,19 @@ public class CachingCallbackFilter implements CallbackFilter {
      *
      * @return array of names of cache domains
      */
-    protected String[] getCacheDomains(final Method method) {
+    protected String[] getCacheDomains(Method method) {
         if (null == method.getData().get(Domain.CACHE_DOMAIN_KEY)) {
             return null;
         }
 
-        final JSONValue jsonValue = JSONParser.parseStrict(method.getData().get(Domain.CACHE_DOMAIN_KEY));
+        JSONValue jsonValue = JSONParser.parseStrict(method.getData().get(Domain.CACHE_DOMAIN_KEY));
         if (null == jsonValue) {
             return null;
         }
 
-        final JSONArray jsonArray = jsonValue.isArray();
+        JSONArray jsonArray = jsonValue.isArray();
         if (null != jsonArray) {
-            final String[] dd = new String[jsonArray.size()];
+            String[] dd = new String[jsonArray.size()];
             for (int i = 0; i < jsonArray.size(); ++i) {
                 dd[i] = jsonArray.get(i).isString().stringValue();
             }

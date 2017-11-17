@@ -47,7 +47,7 @@ public class RetryingCallbackFactory implements CallbackFactory {
      */
     @Override
     public FilterawareRequestCallback createCallback(Method method) {
-        final FilterawareRequestCallback retryingCallback =
+        FilterawareRequestCallback retryingCallback =
             new RetryingFilterawareRequestCallback(method, gracePeriodMillis, numberOfRetries);
 
         for (CallbackFilter filter : callbackFilters) {

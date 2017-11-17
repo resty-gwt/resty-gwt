@@ -446,7 +446,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         }
 
         Json jsonAnnotation = getAnnotation(source, Json.class);
-        final Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
+        Style classStyle = jsonAnnotation != null ? jsonAnnotation.style() : Style.DEFAULT;
 
         Options options = getAnnotation(method, Options.class);
 
@@ -454,7 +454,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         {
             String restMethod = getRestMethod(method);
             LinkedList<JParameter> args = new LinkedList<JParameter>(Arrays.asList(method.getParameters()));
-            for (final JParameter arg : args.subList(0, args.size() - 1)) {
+            for (JParameter arg : args.subList(0, args.size() - 1)) {
                 p("final " + arg.getType().getParameterizedQualifiedSourceName() + " final_" + arg.getName() + " = " +
                     arg.getName() + ";");
             }
@@ -552,7 +552,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             // Handle JSONP specific configuration...
             JSONP jsonpAnnotation = getAnnotation(method, JSONP.class);
 
-            final boolean isJsonp = restMethod.equals(METHOD_JSONP) && jsonpAnnotation != null;
+            boolean isJsonp = restMethod.equals(METHOD_JSONP) && jsonpAnnotation != null;
 
             p("final " + (isJsonp ? JSONP_METHOD_CLASS : METHOD_CLASS) + " __method =");
 
@@ -602,7 +602,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             String contentTypeHeaderValue = null;
 
             if (jsonpAnnotation == null) {
-                final String acceptHeader;
+                String acceptHeader;
                 Produces producesAnnotation = findAnnotationOnMethodOrEnclosingType(method, Produces.class);
                 if (producesAnnotation != null) {
                     // Do not use autodetection, if accept type already set
@@ -699,13 +699,13 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             for (AnnotationResolver a : annotationResolvers) {
                 getLogger().log(TreeLogger.DEBUG,
                     "(" + a.getClass().getName() + ") resolve `" + source.getName() + "#" + method.getName() + "´ ...");
-                final Map<String, String[]> addDataParams =
+                Map<String, String[]> addDataParams =
                     a.resolveAnnotation(getLogger(), source, method, restMethod);
 
                 if (addDataParams != null) {
                     for (String s : addDataParams.keySet()) {
-                        final StringBuilder sb = new StringBuilder();
-                        final List<String> classList = Arrays.asList(addDataParams.get(s));
+                        StringBuilder sb = new StringBuilder();
+                        List<String> classList = Arrays.asList(addDataParams.get(s));
 
                         sb.append("[");
                         for (int i = 0; i < classList.size(); ++i) {
@@ -804,8 +804,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         i(-1).p("}");
     }
 
-    private <T extends Annotation> T findAnnotationOnMethodOrEnclosingType(final JMethod method,
-                                                                           final Class<T> annotationType) {
+    private <T extends Annotation> T findAnnotationOnMethodOrEnclosingType(JMethod method,
+                                                                           Class<T> annotationType) {
         T annotation = getAnnotation(method, annotationType);
         if (annotation == null) {
             annotation = getAnnotation(method.getEnclosingType(), annotationType);
@@ -855,7 +855,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         }
 
         Json jsonAnnotation = getAnnotation(argument, Json.class);
-        final Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
+        Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
 
         return locator.encodeExpression(type, expr, style) + ".toString()";
     }
@@ -863,12 +863,12 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     protected String toIteratedFormStringExpression(JParameter argument, Style classStyle)
         throws UnableToCompleteException {
         assert isQueryParamListType(argument.getType().isClassOrInterface());
-        final JClassType[] type_args = argument.getType().isParameterized().getTypeArgs();
+        JClassType[] type_args = argument.getType().isParameterized().getTypeArgs();
         assert (type_args.length == 1);
-        final JClassType class_type = type_args[0];
-        final String argument_expr = "final_" + argument.getName();
+        JClassType class_type = type_args[0];
+        String argument_expr = "final_" + argument.getName();
 
-        final StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder();
         result.append(argument_expr + " == null ? null : ");
         result.append("new java.lang.Iterable<String> () {\n");
         result.append(" @Override\n");
@@ -883,7 +883,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         result.append("         }\n");
         result.append("         @Override\n");
         result.append("         public String next() {\n");
-        final String expr = "baseIterator.next()";
+        String expr = "baseIterator.next()";
         String returnExpr;
         if (class_type.isPrimitive() != null) {
             returnExpr = "\"\"+" + expr;
@@ -898,7 +898,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
             returnExpr = "obj != null ? obj.toString() : null";
         } else {
             Json jsonAnnotation = getAnnotation(argument, Json.class);
-            final Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
+            Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
             returnExpr = locator.encodeExpression(class_type, expr, style) + ".toString()";
         }
         result.append("             return " + returnExpr + ";\n");
@@ -996,7 +996,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     String getRestMethod(JMethod method) throws UnableToCompleteException {
         String restMethod = null;
 
-        final Annotation[] annotations = method.getAnnotations();
+        Annotation[] annotations = method.getAnnotations();
         for (Annotation annotation : annotations) {
             HttpMethod httpMethod = annotation.annotationType().getAnnotation(HttpMethod.class);
             // Check is HttpMethod
@@ -1043,7 +1043,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
      */
     // TODO remove suppression
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private List<AnnotationResolver> getAnnotationResolvers(final GeneratorContext context, final TreeLogger logger) {
+    private List<AnnotationResolver> getAnnotationResolvers(GeneratorContext context, TreeLogger logger) {
         java.lang.reflect.Method m;
         ArrayList args = new ArrayList();
         ArrayList types = new ArrayList();

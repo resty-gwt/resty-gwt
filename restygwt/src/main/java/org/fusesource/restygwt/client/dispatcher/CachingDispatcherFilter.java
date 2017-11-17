@@ -53,7 +53,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
      * @param cacheStorage
      * @param cf
      */
-    public CachingDispatcherFilter(final QueueableCacheStorage cacheStorage, final CallbackFactory cf) {
+    public CachingDispatcherFilter(QueueableCacheStorage cacheStorage, CallbackFactory cf) {
         this.cacheStorage = cacheStorage;
         callbackFactory = cf;
     }
@@ -71,8 +71,8 @@ public class CachingDispatcherFilter implements DispatcherFilter {
      * @return continue filtering or not
      */
     @Override
-    public boolean filter(final Method method, final RequestBuilder builder) {
-        final CacheKey cacheKey = cacheKey(builder);
+    public boolean filter(Method method, final RequestBuilder builder) {
+        CacheKey cacheKey = cacheKey(builder);
 
         if (cacheKey != null) {
             final Response cachedResponse = cacheStorage.getResultOrReturnNull(cacheKey);
@@ -93,7 +93,7 @@ public class CachingDispatcherFilter implements DispatcherFilter {
                 });
                 return false;
             }
-            final RequestCallback callback = callbackFactory.createCallback(method);
+            RequestCallback callback = callbackFactory.createCallback(method);
 
             //case 2: => no cache in result => queue it....
             if (!cacheStorage.hasCallback(cacheKey)) {

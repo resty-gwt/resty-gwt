@@ -55,8 +55,8 @@ public class ModelChangeCallbackFilter implements CallbackFilter {
      * TODO method.getResponse() is not equal to response. unfortunately
      */
     @Override
-    public RequestCallback filter(final Method method, final Response response, RequestCallback callback) {
-        final int code = response.getStatusCode();
+    public RequestCallback filter(Method method, Response response, RequestCallback callback) {
+        int code = response.getStatusCode();
 
         if (code < Response.SC_MULTIPLE_CHOICES // code < 300
             && code >= Response.SC_OK) { // code >= 200
