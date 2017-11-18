@@ -42,6 +42,7 @@ import org.fusesource.restygwt.client.basic.PathParamTestGwt;
 import org.fusesource.restygwt.client.basic.QueryParamTestGwt;
 import org.fusesource.restygwt.client.basic.ResourcePassesHeadersTestGwt;
 import org.fusesource.restygwt.client.basic.ResourceTestGwt;
+import org.fusesource.restygwt.client.basic.ResteasyGwtJacksonTestGwt;
 import org.fusesource.restygwt.client.basic.SubResourceClientGeneration;
 import org.fusesource.restygwt.client.basic.TimeoutTestGwt;
 import org.fusesource.restygwt.client.cache.VolatileQueueableCacheStorageTestGwt;
@@ -80,6 +81,7 @@ public class GwtCompleteTestSuite extends TestCase {
         GWTTestSuite suite = new GWTTestSuite("all GwtTestCases but AnnotationResolver");
 
         suite.addTestSuite(BasicGwtJacksonTestGwt.class);
+        suite.addTestSuite(ResteasyGwtJacksonTestGwt.class);
         suite.addTestSuite(BasicTestGwt.class);
         // keep the cache-callback at the beginning to get it pass
         // TODO why ? and what goes wrong when at located at the end ?

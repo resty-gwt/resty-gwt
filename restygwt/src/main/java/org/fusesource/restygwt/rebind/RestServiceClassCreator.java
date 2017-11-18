@@ -35,6 +35,7 @@ import com.google.gwt.core.ext.typeinfo.JGenericType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
+import com.google.gwt.core.ext.typeinfo.JRealClassType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.JTypeParameter;
 import com.google.gwt.http.client.Request;
@@ -63,6 +64,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nonnull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
@@ -850,7 +852,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         if (type.isClass() != null && OVERLAY_VALUE_TYPE.isAssignableFrom(type.isClass())) {
             return "(new " + JSON_OBJECT_CLASS + "(" + expr + ")).toString()";
         }
-        if (type.getQualifiedBinaryName().startsWith("java.lang.") || type.isEnum() != null) {
+        if ((!isThrowable(type) && type.getQualifiedBinaryName().startsWith("java.lang.")) || type.isEnum() != null) {
             return String.format("(%s != null ? %s.toString() : null)", expr, expr);
         }
 
@@ -858,6 +860,16 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
 
         return locator.encodeExpression(type, expr, style) + ".toString()";
+    }
+
+    private static boolean isThrowable(@Nonnull JType type) {
+        if (type.getQualifiedSourceName().equals(Throwable.class.getCanonicalName())) {
+            return true;
+        }
+        if (type instanceof JRealClassType && ((JRealClassType) type).getSuperclass() != null) {
+            return isThrowable(((JRealClassType) type).getSuperclass());
+        }
+        return false;
     }
 
     protected String toIteratedFormStringExpression(JParameter argument, Style classStyle)
