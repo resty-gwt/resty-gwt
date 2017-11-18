@@ -89,7 +89,6 @@
     <set-property name="restygwt.encodeDecode.useGwtJackson" value="false"/>
 
     <source path="client"/>
-    <source path="example/client"/>
     <super-source path="supersrc"/>
 
 </module>
