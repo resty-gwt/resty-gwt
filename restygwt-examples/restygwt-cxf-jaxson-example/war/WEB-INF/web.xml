@@ -34,7 +34,7 @@
         </init-param>
         <init-param>
             <param-name>jaxrs.providers</param-name>
-            <param-value>org.codehaus.jackson.jaxrs.JacksonJsonProvider</param-value>
+            <param-value>com.fasterxml.jackson.jaxrs.JacksonJsonProvider</param-value>
         </init-param>
         <init-param>
             <param-name>jaxrs.address</param-name>
