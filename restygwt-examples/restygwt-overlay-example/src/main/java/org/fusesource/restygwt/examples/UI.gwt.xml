@@ -21,16 +21,10 @@
 
 <module rename-to='ui'>
 
-
     <inherits name='com.google.gwt.user.User'/>
     <inherits name="org.fusesource.restygwt.RestyGWT"/>
 
-    <servlet path='/pizza-service' class='org.fusesource.restygwt.examples.server.PizzaServlet'/>
-    <servlet path='/jsonp-service' class='org.fusesource.restygwt.examples.server.JsonpServlet'/>
-    <servlet path='/test/method' class='org.fusesource.restygwt.examples.server.TestServlet'/>
-    <servlet path='/test/fail' class='org.fusesource.restygwt.examples.server.TestServlet'/>
-    <servlet path='/test/JSONBinding/getListOfStrings' class='org.fusesource.restygwt.examples.server.TestServlet'/>
-    <servlet path='/test/JSONBinding/getStringMapResponse' class='org.fusesource.restygwt.examples.server.TestServlet'/>
+    <servlet path='/greeting-service' class='org.fusesource.restygwt.examples.server.GreetingServlet'/>
 
     <entry-point class='org.fusesource.restygwt.examples.client.UI'/>
     <stylesheet src='ui.css'/>
