@@ -42,7 +42,7 @@ public class CxfServlet extends CXFNonSpringJaxrsServlet {
     static {
         initParams.put("jaxrs.address", "/org.fusesource.restygwt.examples.CXF_JAXSON.JUnit/rest/");
         initParams.put("jaxrs.serviceClasses", MapService.class.getName() + " ");
-        initParams.put("jaxrs.providers", "org.codehaus.jackson.jaxrs.JacksonJsonProvider");
+        initParams.put("jaxrs.providers", "com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider");
     }
 
     @Override

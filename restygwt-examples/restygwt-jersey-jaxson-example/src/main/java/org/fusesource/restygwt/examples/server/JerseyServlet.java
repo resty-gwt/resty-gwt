@@ -45,7 +45,7 @@ public class JerseyServlet extends ServletContainer {
 
     static {
         initParams.put("com.sun.jersey.config.property.packages",
-            "org.fusesource.restygwt.examples.server;org.codehaus.jackson.jaxrs");
+                "org.fusesource.restygwt.examples.server;com.fasterxml.jackson.jaxrs");
     }
 
     @Override
