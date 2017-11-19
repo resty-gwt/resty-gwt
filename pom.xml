@@ -39,7 +39,7 @@
     <properties>
         <forge-project-id>restygwt</forge-project-id>
         <forge-project-id-uc>RESTYGWT</forge-project-id-uc>
-        <gwt-version>2.5.1</gwt-version>
+        <gwt-version>2.7.0</gwt-version>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
     </properties>

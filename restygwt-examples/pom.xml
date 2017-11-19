@@ -130,7 +130,7 @@
                     <gen>${project.build.directory}</gen>
                     <logLevel>INFO</logLevel>
                     <style>DETAILED</style>
-                    <treeLogger>true</treeLogger>
+                    <superDevMode>true</superDevMode>
                     <extraJvmArgs>-Xmx512m</extraJvmArgs>
                     <runTarget>ui/ui.html</runTarget>
                     <includes>**/RestyGWTTestSuite.java</includes>
