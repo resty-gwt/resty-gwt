@@ -28,6 +28,8 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.ws.rs.ProcessingException;
@@ -45,43 +47,51 @@ public class ResteasyServlet extends HttpServletDispatcher {
     private static final long serialVersionUID = 1L;
 
     public static class ResteasyServiceImpl implements ResteasyService {
+        @Nullable
         @Override
-        public String getString(String string) {
+        public String getString(@Nullable String string) {
             return string;
         }
 
+        @Nullable
         @Override
-        public String postString(String string) {
+        public String postString(@Nullable String string) {
             return string;
         }
 
+        @Nonnull
         @Override
-        public Bean postBean(Bean bean) {
+        public Bean postBean(@Nonnull Bean bean) {
             return bean;
         }
 
+        @Nonnull
         @Override
-        public List<Bean> postBeans(List<Bean> beans) {
+        public List<Bean> postBeans(@Nonnull List<Bean> beans) {
             return beans;
         }
 
+        @Nonnull
         @Override
-        public Bean postBeanAsFormParam(Bean bean) {
+        public Bean postBeanAsFormParam(@Nonnull Bean bean) {
             return bean;
         }
 
+        @Nonnull
         @Override
-        public List<Bean> postBeansAsFormParams(Bean bean0, Bean bean1) {
+        public List<Bean> postBeansAsFormParams(@Nonnull Bean bean0, @Nonnull Bean bean1) {
             return Arrays.asList(bean0, bean1);
         }
 
+        @Nonnull
         @Override
-        public List<Bean> postBeansAsFormParam(List<Bean> beans) {
+        public List<Bean> postBeansAsFormParam(@Nonnull List<Bean> beans) {
             return beans;
         }
 
+        @Nonnull
         @Override
-        public String postThrowable(Throwable throwable) {
+        public String postThrowable(@Nonnull Throwable throwable) {
             try {
                 return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(throwable);
             } catch (JsonProcessingException e) {
@@ -89,18 +99,21 @@ public class ResteasyServlet extends HttpServletDispatcher {
             }
         }
 
+        @Nonnull
         @Override
-        public String postCustomException(CustomException customException) {
+        public String postCustomException(@Nonnull CustomException customException) {
             return postThrowable(customException);
         }
 
+        @Nonnull
         @Override
-        public String postCustomExceptionAsFormParam(CustomException customException) {
+        public String postCustomExceptionAsFormParam(@Nonnull CustomException customException) {
             return postThrowable(customException);
         }
 
+        @Nonnull
         @Override
-        public String postThrowableAsFormParam(Throwable throwable) {
+        public String postThrowableAsFormParam(@Nonnull Throwable throwable) {
             return postThrowable(throwable);
         }
     }

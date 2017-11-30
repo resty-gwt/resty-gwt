@@ -56,7 +56,8 @@ public class DirectRestServiceInterfaceClassCreator extends DirectRestBaseSource
         super.generate();
 
         for (JMethod method : source.getInheritableMethods()) {
-            p(getAnnotationsAsString(method.getAnnotations()));
+            Annotation[] supportedAnnotations = AnnotationUtils.findSupportedAnnotations(method.getAnnotations());
+            p(getAnnotationsAsString(supportedAnnotations));
             p("void " + method.getName() + "(" + getMethodParameters(method) + getMethodCallback(method) + ");");
         }
     }
@@ -65,7 +66,8 @@ public class DirectRestServiceInterfaceClassCreator extends DirectRestBaseSource
         StringBuilder result = new StringBuilder("");
 
         for (JParameter parameter : method.getParameters()) {
-            result.append(getAnnotationsAsString(parameter.getAnnotations())).append(" ")
+            Annotation[] supportedAnnotations = AnnotationUtils.findSupportedAnnotations(parameter.getAnnotations());
+            result.append(getAnnotationsAsString(supportedAnnotations)).append(" ")
                 .append(parameter.getType().getParameterizedQualifiedSourceName()).append(" ")
                 .append(parameter.getName()).append(", ");
         }

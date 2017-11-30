@@ -5,6 +5,7 @@ import com.google.gwt.core.ext.typeinfo.HasAnnotations;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -97,4 +98,14 @@ public class AnnotationUtils {
         return resultAnnotations.toArray(new Annotation[resultAnnotations.size()]);
     }
 
+    public static Annotation[] findSupportedAnnotations(Annotation[] annotations) {
+        List<Annotation> result = new ArrayList<Annotation>();
+        for (Annotation annotation : annotations) {
+            String name = annotation.annotationType().getCanonicalName();
+            if (name.startsWith("javax.ws.rs") || name.startsWith("org.fusesource.restygwt.client")) {
+                result.add(annotation);
+            }
+        }
+        return result.toArray(new Annotation[]{});
+    }
 }
