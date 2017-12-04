@@ -21,6 +21,8 @@ package org.fusesource.restygwt.client.complex;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -36,52 +38,63 @@ public interface ResteasyService extends DirectRestService {
 
     @GET
     @Path("getString")
-    String getString(@QueryParam("string") String string);
+    @Nullable
+    String getString(@Nullable @QueryParam("string") String string);
 
     @POST
     @Path("postString")
-    String postString(@FormParam("string") String string);
+    @Nullable
+    String postString(@Nullable @FormParam("string") String string);
 
     @POST
     @Path("postBean")
-    Bean postBean(Bean bean);
+    @Nonnull
+    Bean postBean(@Nonnull Bean bean);
 
     @POST
     @Path("postBeans")
-    List<Bean> postBeans(List<Bean> beans);
+    @Nonnull
+    List<Bean> postBeans(@Nonnull List<Bean> beans);
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("postBeanAsFormParam")
-    Bean postBeanAsFormParam(@FormParam("bean") Bean bean);
+    @Nonnull
+    Bean postBeanAsFormParam(@Nonnull @FormParam("bean") Bean bean);
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("postBeansAsFormParams")
-    List<Bean> postBeansAsFormParams(@FormParam("bean0") Bean bean0, @FormParam("bean1") Bean bean1);
+    @Nonnull
+    List<Bean> postBeansAsFormParams(@Nonnull @FormParam("bean0") Bean bean0, @Nonnull @FormParam("bean1") Bean bean1);
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("postBeansAsFormParam")
-    List<Bean> postBeansAsFormParam(@FormParam("beans") List<Bean> beans);
+    @Nonnull
+    List<Bean> postBeansAsFormParam(@Nonnull @FormParam("beans") List<Bean> beans);
 
     @POST
     @Path("postThrowable")
-    String postThrowable(Throwable throwable);
+    @Nonnull
+    String postThrowable(@Nonnull Throwable throwable);
 
     @POST
     @Path("postCustomException")
-    String postCustomException(CustomException customException);
+    @Nonnull
+    String postCustomException(@Nonnull CustomException customException);
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("postCustomExceptionAsFormParam")
-    String postCustomExceptionAsFormParam(@FormParam("customException") CustomException customException);
+    @Nonnull
+    String postCustomExceptionAsFormParam(@Nonnull @FormParam("customException") CustomException customException);
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("postThrowableAsFormParam")
-    String postThrowableAsFormParam(@FormParam("throwable") Throwable throwable);
+    @Nonnull
+    String postThrowableAsFormParam(@Nonnull @FormParam("throwable") Throwable throwable);
 
     class Bean {
         public String string;
