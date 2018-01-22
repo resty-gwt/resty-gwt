@@ -97,7 +97,7 @@
         <dependency>
             <groupId>com.github.nmorel.gwtjackson</groupId>
             <artifactId>gwt-jackson</artifactId>
-            <version>0.14.2</version>
+            <version>0.15.0</version>
         </dependency>
     </dependencies>
 
