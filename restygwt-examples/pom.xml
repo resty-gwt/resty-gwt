@@ -26,13 +26,12 @@
     <parent>
         <groupId>org.fusesource.restygwt</groupId>
         <artifactId>restygwt-project</artifactId>
-        <version>2.2.3-SNAPSHOT</version>
+        <version>2.2.4-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
     <groupId>org.fusesource.restygwt</groupId>
     <artifactId>restygwt-examples</artifactId>
-    <version>2.2.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>RestyGWT examples</name>
@@ -83,7 +82,7 @@
         <dependency>
             <groupId>org.fusesource.restygwt</groupId>
             <artifactId>restygwt</artifactId>
-            <version>2.2.3-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
