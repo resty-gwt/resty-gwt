@@ -17,4 +17,9 @@ Features
 * Java Object to JSON encoding/decoding
 * Easy to use REST API
 
+Releasing
+---------
+
+mvn release:prepare -Prun-examples
+mvn release:perform
 
