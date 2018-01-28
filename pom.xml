@@ -30,7 +30,7 @@
 
     <groupId>org.fusesource.restygwt</groupId>
     <artifactId>restygwt-project</artifactId>
-    <version>2.2.3-SNAPSHOT</version>
+    <version>2.2.3</version>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
