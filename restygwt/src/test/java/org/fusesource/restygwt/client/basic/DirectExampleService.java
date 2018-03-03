@@ -43,6 +43,10 @@ public interface DirectExampleService extends DirectRestService {
     @Path("/date")
     Long getDate(@QueryParam("date") Date date);
 
+    @GET
+    @Path("/dateIso8601")
+    Long getDateIso8601(@QueryParam("date") Date date);
+
     @POST
     @Path("/store")
     void storeDto(ExampleDto exampleDto);

@@ -19,6 +19,8 @@
 package org.fusesource.restygwt.server.basic;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +41,13 @@ public class DirectServiceTestGwtServlet extends HttpServlet {
 
         if (request.getRequestURI().endsWith("/date")) {
             response.getWriter().print(Long.parseLong(request.getParameter("date")));
+        } else if (request.getRequestURI().endsWith("/dateIso8601")) {
+            try {
+                String date = request.getParameter("date");
+                response.getWriter().print(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX").parse(date).getTime());
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
         } else if (request.getRequestURI().endsWith("/api/list")) {
             response.getWriter().print(THREE_ELEMENT_LIST);
         } else if (request.getRequestURI().matches(".+/\\d+")) {

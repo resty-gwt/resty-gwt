@@ -19,6 +19,7 @@
 package org.fusesource.restygwt.client.basic;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.junit.client.GWTTestCase;
 
 import java.util.Date;
@@ -105,6 +106,30 @@ public class DirectRestServiceTestGwt extends GWTTestCase {
                 fail(e.getMessage());
             }
         }).call(directExampleService).getDate(date);
+    }
+
+    public void testDateFormatIso8601() {
+        delayTestFinish(10000);
+        DirectExampleService directExampleService = GWT.create(DirectExampleService.class);
+
+        Resource resource = new Resource(GWT.getModuleBaseURL() + "api");
+        ((RestServiceProxy) directExampleService).setResource(resource);
+
+        Defaults.setDateFormat(DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.ISO_8601).getPattern());
+
+        final Date date = new Date(1506224400000L);
+        REST.withCallback(new MethodCallback<Long>() {
+            @Override
+            public void onSuccess(Method method, Long response) {
+                assertEquals(date.getTime(), response.longValue());
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable e) {
+                fail(e.getMessage());
+            }
+        }).call(directExampleService).getDateIso8601(date);
     }
 
     public void testRegexPathParamCall() {
