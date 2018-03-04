@@ -936,7 +936,11 @@ public class RestServiceClassCreator extends BaseSourceCreator {
 
         if (DATE_TYPE == type) {
             String encoded = locator.encodeExpression(DATE_TYPE, expr, Style.DEFAULT);
-            return "java.util.Objects.toString(" + encoded + ", null)";
+            return String.format(
+                    "%s instanceof com.google.gwt.json.client.JSONString ?" +
+                            " ((com.google.gwt.json.client.JSONString) %s).stringValue() :" +
+                            " java.util.Objects.toString(%s, null)",
+                    encoded, encoded, encoded);
         }
 
         if (type.isClass() != null && isOverlayArrayType(type.isClass())) {

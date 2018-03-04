@@ -44,7 +44,24 @@ public class DirectServiceTestGwtServlet extends HttpServlet {
         } else if (request.getRequestURI().endsWith("/dateIso8601")) {
             try {
                 String date = request.getParameter("date");
-                response.getWriter().print(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX").parse(date).getTime());
+                if (!"null".equals(date)) {
+                    response.getWriter().print(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX").parse(date)
+                            .getTime());
+                } else {
+                    response.getWriter().print((Long) null);
+                }
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        } else if (request.getRequestURI().endsWith("/dateCustomPattern")) {
+            try {
+                String date = request.getParameter("date");
+                if (!"null".equals(date)) {
+                    response.getWriter().print(new SimpleDateFormat("\"''yyyy-MM-dd'T'HH:mm:ss.SSSX").parse(date)
+                            .getTime());
+                } else {
+                    response.getWriter().print((Long) null);
+                }
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
