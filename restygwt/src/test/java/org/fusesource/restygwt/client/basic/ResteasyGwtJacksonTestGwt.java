@@ -134,7 +134,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         REST.withCallback(new MethodCallback<String>() {
             @Override
             public void onSuccess(Method method, String response) {
-                assertEqualsStringStripWhiteSpace(THROWABLE_JSON, response);
+                assertEquals(THROWABLE_JSON, response);
                 finishTest();
             }
 
@@ -153,7 +153,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         REST.withCallback(new MethodCallback<String>() {
             @Override
             public void onSuccess(Method method, String response) {
-                assertEqualsStringStripWhiteSpace(THROWABLE_JSON, response);
+            	assertEquals(THROWABLE_JSON, response);
                 finishTest();
             }
 
@@ -172,8 +172,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         REST.withCallback(new MethodCallback<String>() {
             @Override
             public void onSuccess(Method method, String response) {
-                //assertEquals(THROWABLE_JSON, response);
-                assertEqualsStringStripWhiteSpace(THROWABLE_JSON, response);
+                assertEquals(THROWABLE_JSON, response);
                 finishTest();
             }
 
@@ -192,7 +191,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         REST.withCallback(new MethodCallback<String>() {
             @Override
             public void onSuccess(Method method, String response) {
-                assertEqualsStringStripWhiteSpace(THROWABLE_JSON, response);
+            	assertEquals(THROWABLE_JSON, response);
                 finishTest();
             }
 
@@ -306,14 +305,5 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
                 fail(e.getMessage());
             }
         }).call(resteasyService).postBeansAsFormParam(beans);
-    }
-    
-    private void assertEqualsStringStripWhiteSpace(String expected, String actual) {
-        expected = expected.replaceAll("\\s", "");
-
-        actual = actual.replaceAll("\\s", "");
-        
-        assertTrue(expected.equalsIgnoreCase(actual));
-        
     }
 }
