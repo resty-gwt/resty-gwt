@@ -30,6 +30,8 @@ import com.google.gwt.user.rebind.AbstractSourceCreator;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 
+import static org.fusesource.restygwt.rebind.util.ClassSourceFileComposerFactoryImportUtil.addFuseSourceStaticImports;
+
 import java.io.PrintWriter;
 import java.util.HashSet;
 
@@ -272,6 +274,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         logger = getLogger().branch(TreeLogger.DEBUG, "Generating: " + name);
 
         ClassSourceFileComposerFactory composerFactory = createComposerFactory();
+        addFuseSourceStaticImports(composerFactory);
         sourceWriter = composerFactory.createSourceWriter(context, writer);
 
         generate();
