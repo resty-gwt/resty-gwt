@@ -53,8 +53,8 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
             "      \"className\" : \"com.fusesource.Class2\",\n" +
             "      \"nativeMethod\" : false\n" +
             "    } ],\n" +
-            "    \"message\" : \"Var cannot be null.\",\n" +
             "    \"localizedMessage\" : \"Var cannot be null.\",\n" +
+            "    \"message\" : \"Var cannot be null.\",\n" +
             "    \"suppressed\" : [ ]\n" +
             "  },\n" +
             "  \"stackTrace\" : [ {\n" +
@@ -64,8 +64,8 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
             "    \"className\" : \"com.fusesource.Class3\",\n" +
             "    \"nativeMethod\" : false\n" +
             "  } ],\n" +
-            "  \"message\" : \"Shouldn't happen.\",\n" +
             "  \"localizedMessage\" : \"Shouldn't happen.\",\n" +
+            "  \"message\" : \"Shouldn't happen.\",\n" +
             "  \"suppressed\" : [ ]\n" +
             "}";
 
@@ -134,7 +134,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         REST.withCallback(new MethodCallback<String>() {
             @Override
             public void onSuccess(Method method, String response) {
-                assertEquals(THROWABLE_JSON, response);
+                assertEqualsStringStripWhiteSpace(THROWABLE_JSON, response);
                 finishTest();
             }
 
@@ -153,7 +153,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         REST.withCallback(new MethodCallback<String>() {
             @Override
             public void onSuccess(Method method, String response) {
-                assertEquals(THROWABLE_JSON, response);
+                assertEqualsStringStripWhiteSpace(THROWABLE_JSON, response);
                 finishTest();
             }
 
@@ -172,7 +172,8 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         REST.withCallback(new MethodCallback<String>() {
             @Override
             public void onSuccess(Method method, String response) {
-                assertEquals(THROWABLE_JSON, response);
+                //assertEquals(THROWABLE_JSON, response);
+                assertEqualsStringStripWhiteSpace(THROWABLE_JSON, response);
                 finishTest();
             }
 
@@ -191,7 +192,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         REST.withCallback(new MethodCallback<String>() {
             @Override
             public void onSuccess(Method method, String response) {
-                assertEquals(THROWABLE_JSON, response);
+                assertEqualsStringStripWhiteSpace(THROWABLE_JSON, response);
                 finishTest();
             }
 
@@ -305,5 +306,14 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
                 fail(e.getMessage());
             }
         }).call(resteasyService).postBeansAsFormParam(beans);
+    }
+    
+    private void assertEqualsStringStripWhiteSpace(String expected, String actual) {
+        expected = expected.replaceAll("\\s", "");
+
+        actual = actual.replaceAll("\\s", "");
+        
+        assertTrue(expected.equalsIgnoreCase(actual));
+        
     }
 }
