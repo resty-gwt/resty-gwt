@@ -373,7 +373,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         } else if ((firstString = first.isString()) != null) {
             JSONString secondString;
             if ((secondString = second.isString()) == null) {
-                fail("First " + first + " was a JSONBoolean while Second " + second + "was not");
+                fail("First " + first + " was a JSONString while Second " + second + "was not");
             }
             assertTrue(firstString.stringValue().equals(secondString.stringValue()));
         } else if ((firstBoolean = first.isBoolean()) != null) {
@@ -383,10 +383,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
             }
             assertTrue(firstBoolean.booleanValue() == secondBoolean.booleanValue());
         } else {
-        	fail("Unknown JSONValue");
+            fail("Unknown JSONValue");
         }
-        //Check if Object
-        //Check if Array
-        //Check if 
     }
 }
