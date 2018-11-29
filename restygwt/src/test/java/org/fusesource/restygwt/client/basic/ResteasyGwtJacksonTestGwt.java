@@ -22,11 +22,20 @@ import static org.fusesource.restygwt.client.complex.ResteasyService.Bean;
 import static org.fusesource.restygwt.client.complex.ResteasyService.CustomException;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
+import com.google.gwt.json.client.JSONNull;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -36,7 +45,6 @@ import org.fusesource.restygwt.client.REST;
 import org.fusesource.restygwt.client.complex.ResteasyService;
 
 public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
-
     private static final String THROWABLE_JSON = "{\n" +
             "  \"cause\" : {\n" +
             "    \"cause\" : null,\n" +
@@ -53,8 +61,8 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
             "      \"className\" : \"com.fusesource.Class2\",\n" +
             "      \"nativeMethod\" : false\n" +
             "    } ],\n" +
-            "    \"localizedMessage\" : \"Var cannot be null.\",\n" +
             "    \"message\" : \"Var cannot be null.\",\n" +
+            "    \"localizedMessage\" : \"Var cannot be null.\",\n" +
             "    \"suppressed\" : [ ]\n" +
             "  },\n" +
             "  \"stackTrace\" : [ {\n" +
@@ -64,8 +72,8 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
             "    \"className\" : \"com.fusesource.Class3\",\n" +
             "    \"nativeMethod\" : false\n" +
             "  } ],\n" +
-            "  \"localizedMessage\" : \"Shouldn't happen.\",\n" +
             "  \"message\" : \"Shouldn't happen.\",\n" +
+            "  \"localizedMessage\" : \"Shouldn't happen.\",\n" +
             "  \"suppressed\" : [ ]\n" +
             "}";
 
@@ -134,7 +142,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         REST.withCallback(new MethodCallback<String>() {
             @Override
             public void onSuccess(Method method, String response) {
-            	assertEqualsIgnoreWhiteSpace(THROWABLE_JSON, response);
+                convertToJSONValueAndAssertEqual(THROWABLE_JSON, response);
                 finishTest();
             }
 
@@ -153,7 +161,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         REST.withCallback(new MethodCallback<String>() {
             @Override
             public void onSuccess(Method method, String response) {
-            	assertEqualsIgnoreWhiteSpace(THROWABLE_JSON, response);
+                convertToJSONValueAndAssertEqual(THROWABLE_JSON, response);
                 finishTest();
             }
 
@@ -172,7 +180,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         REST.withCallback(new MethodCallback<String>() {
             @Override
             public void onSuccess(Method method, String response) {
-            	assertEqualsIgnoreWhiteSpace(THROWABLE_JSON, response);
+                convertToJSONValueAndAssertEqual(THROWABLE_JSON, response);
                 finishTest();
             }
 
@@ -191,7 +199,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         REST.withCallback(new MethodCallback<String>() {
             @Override
             public void onSuccess(Method method, String response) {
-            	assertEqualsIgnoreWhiteSpace(THROWABLE_JSON, response);
+                convertToJSONValueAndAssertEqual(THROWABLE_JSON, response);
                 finishTest();
             }
 
@@ -307,10 +315,78 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         }).call(resteasyService).postBeansAsFormParam(beans);
     }
     
-    private void assertEqualsIgnoreWhiteSpace(String first, String second) {
-    	first = first.replaceAll("\\s", "");
-    	second = second.replaceAll("\\s", "");
-    	
-    	assertEquals(first, second);
+    private void convertToJSONValueAndAssertEqual(String first, String second) {
+        JSONValue firstValue = JSONParser.parseStrict(first);
+        JSONValue secondValue = JSONParser.parseStrict(second);
+        compareJSONValue(firstValue, secondValue);
+        //assertTrue(firstValue.equals(secondValue));
+//        first = first.replaceAll("\\s", "");
+//        second = second.replaceAll("\\s", "");
+//        
+        //assertEquals(first, second);
+    }
+    
+    private void compareJSONValue(JSONValue first, JSONValue second) {
+        JSONObject firstObject;
+        JSONBoolean firstBoolean;
+        JSONArray firstArray;
+        JSONNull firstNull;
+        JSONNumber firstNumber;
+        JSONString firstString;
+        if ((firstObject = first.isObject()) != null) {
+            JSONObject secondObject;
+            if ((secondObject = second.isObject()) == null) {
+                fail("First " + first + " was a JSONObject while Second " + second + "was not");
+            }
+            Set<String> firstKeySet = firstObject.keySet();
+            Set<String> secondKeySet = secondObject.keySet();
+            assertTrue(firstKeySet.containsAll(secondKeySet));
+            assertTrue(secondKeySet.containsAll(firstKeySet));
+            for (String key : firstKeySet) {
+                JSONValue firstValue = firstObject.get(key);
+                JSONValue secondValue = secondObject.get(key);
+                compareJSONValue(firstValue, secondValue);
+            }
+        } else if ((firstArray = first.isArray()) != null) {
+            JSONArray secondArray;
+            if ((secondArray = second.isArray()) == null) {
+                fail("First " + first + " was a JSONArray while Second " + second + "was not");
+            }
+            assertTrue(secondArray.size() == firstArray.size());
+            for (int x = 0; x < secondArray.size(); x++) {
+                JSONValue firstValue = firstArray.get(x);
+                JSONValue secondValue = secondArray.get(x);
+                compareJSONValue(firstValue, secondValue);
+            }
+        } else if ((firstNull = first.isNull()) != null) {
+            JSONNull secondNull;
+            if ((secondNull = second.isNull()) == null) {
+                fail("First " + first + " was a JSONNull while Second " + second + "was not");
+            }
+            assertTrue(true);
+        } else if ((firstNumber = first.isNumber()) != null) {
+            JSONNumber secondNumber;
+            if ((secondNumber = second.isNumber()) == null) {
+                fail("First " + first + " was a JSONNumber while Second " + second + "was not");
+            }
+            assertTrue(firstNumber.doubleValue() == secondNumber.doubleValue());
+        } else if ((firstString = first.isString()) != null) {
+            JSONString secondString;
+            if ((secondString = second.isString()) == null) {
+                fail("First " + first + " was a JSONBoolean while Second " + second + "was not");
+            }
+            assertTrue(firstString.stringValue().equals(secondString.stringValue()));
+        } else if ((firstBoolean = first.isBoolean()) != null) {
+            JSONBoolean secondBoolean;
+            if ((secondBoolean = second.isBoolean()) == null) {
+                fail("First " + first + " was a JSONBoolean while Second " + second + "was not");
+            }
+            assertTrue(firstBoolean.booleanValue() == secondBoolean.booleanValue());
+        } else {
+        	fail("Unknown JSONValue");
+        }
+        //Check if Object
+        //Check if Array
+        //Check if 
     }
 }
