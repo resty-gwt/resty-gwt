@@ -89,30 +89,30 @@ public class JsonEncoderDecoderInstanceLocator implements EncoderDecoderLocator 
         LIST_TYPE = find(List.class);
         COLLECTION_TYPE = find(Collection.class);
 
-        builtInEncoderDecoders.put(JPrimitiveType.BOOLEAN, JSON_ENCODER_DECODER_CLASS + ".BOOLEAN");
-        builtInEncoderDecoders.put(JPrimitiveType.BYTE, JSON_ENCODER_DECODER_CLASS + ".BYTE");
-        builtInEncoderDecoders.put(JPrimitiveType.CHAR, JSON_ENCODER_DECODER_CLASS + ".CHAR");
-        builtInEncoderDecoders.put(JPrimitiveType.SHORT, JSON_ENCODER_DECODER_CLASS + ".SHORT");
-        builtInEncoderDecoders.put(JPrimitiveType.INT, JSON_ENCODER_DECODER_CLASS + ".INT");
-        builtInEncoderDecoders.put(JPrimitiveType.LONG, JSON_ENCODER_DECODER_CLASS + ".LONG");
-        builtInEncoderDecoders.put(JPrimitiveType.FLOAT, JSON_ENCODER_DECODER_CLASS + ".FLOAT");
-        builtInEncoderDecoders.put(JPrimitiveType.DOUBLE, JSON_ENCODER_DECODER_CLASS + ".DOUBLE");
-        builtInEncoderDecoders.put(find(Boolean.class), JSON_ENCODER_DECODER_CLASS + ".BOOLEAN");
-        builtInEncoderDecoders.put(find(Byte.class), JSON_ENCODER_DECODER_CLASS + ".BYTE");
-        builtInEncoderDecoders.put(find(Character.class), JSON_ENCODER_DECODER_CLASS + ".CHAR");
-        builtInEncoderDecoders.put(find(Short.class), JSON_ENCODER_DECODER_CLASS + ".SHORT");
-        builtInEncoderDecoders.put(find(Integer.class), JSON_ENCODER_DECODER_CLASS + ".INT");
-        builtInEncoderDecoders.put(find(Long.class), JSON_ENCODER_DECODER_CLASS + ".LONG");
-        builtInEncoderDecoders.put(find(Float.class), JSON_ENCODER_DECODER_CLASS + ".FLOAT");
-        builtInEncoderDecoders.put(find(Double.class), JSON_ENCODER_DECODER_CLASS + ".DOUBLE");
-        builtInEncoderDecoders.put(find(BigDecimal.class), JSON_ENCODER_DECODER_CLASS + ".BIG_DECIMAL");
-        builtInEncoderDecoders.put(find(BigInteger.class), JSON_ENCODER_DECODER_CLASS + ".BIG_INTEGER");
+        builtInEncoderDecoders.put(JPrimitiveType.BOOLEAN, "BOOLEAN");
+        builtInEncoderDecoders.put(JPrimitiveType.BYTE, "BYTE");
+        builtInEncoderDecoders.put(JPrimitiveType.CHAR, "CHAR");
+        builtInEncoderDecoders.put(JPrimitiveType.SHORT, "SHORT");
+        builtInEncoderDecoders.put(JPrimitiveType.INT, "INT");
+        builtInEncoderDecoders.put(JPrimitiveType.LONG, "LONG");
+        builtInEncoderDecoders.put(JPrimitiveType.FLOAT, "FLOAT");
+        builtInEncoderDecoders.put(JPrimitiveType.DOUBLE, "DOUBLE");
+        builtInEncoderDecoders.put(find(Boolean.class), "BOOLEAN");
+        builtInEncoderDecoders.put(find(Byte.class), "BYTE");
+        builtInEncoderDecoders.put(find(Character.class), "CHAR");
+        builtInEncoderDecoders.put(find(Short.class), "SHORT");
+        builtInEncoderDecoders.put(find(Integer.class), "INT");
+        builtInEncoderDecoders.put(find(Long.class), "LONG");
+        builtInEncoderDecoders.put(find(Float.class), "FLOAT");
+        builtInEncoderDecoders.put(find(Double.class), "DOUBLE");
+        builtInEncoderDecoders.put(find(BigDecimal.class), "BIG_DECIMAL");
+        builtInEncoderDecoders.put(find(BigInteger.class), "BIG_INTEGER");
 
-        builtInEncoderDecoders.put(STRING_TYPE, JSON_ENCODER_DECODER_CLASS + ".STRING");
-        builtInEncoderDecoders.put(DOCUMENT_TYPE, JSON_ENCODER_DECODER_CLASS + ".DOCUMENT");
-        builtInEncoderDecoders.put(JSON_VALUE_TYPE, JSON_ENCODER_DECODER_CLASS + ".JSON_VALUE");
+        builtInEncoderDecoders.put(STRING_TYPE, "STRING");
+        builtInEncoderDecoders.put(DOCUMENT_TYPE, "DOCUMENT");
+        builtInEncoderDecoders.put(JSON_VALUE_TYPE, "JSON_VALUE");
 
-        builtInEncoderDecoders.put(find(Date.class), JSON_ENCODER_DECODER_CLASS + ".DATE");
+        builtInEncoderDecoders.put(find(Date.class), "DATE");
 
         builtInEncoderDecoders.put(find(Object.class), ObjectEncoderDecoder.class.getName() + ".INSTANCE");
 
@@ -192,9 +192,8 @@ public class JsonEncoderDecoderInstanceLocator implements EncoderDecoderLocator 
     */
     @Override
     public String encodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
-        return encodeDecodeExpression(type, expression, style, "encode", JSON_ENCODER_DECODER_CLASS + ".toJSON",
-            JSON_ENCODER_DECODER_CLASS + ".toJSON", JSON_ENCODER_DECODER_CLASS + ".toJSON",
-            JSON_ENCODER_DECODER_CLASS + ".toJSON");
+        return encodeDecodeExpression(type, expression, style, "encode", "toJSON","toJSON", "toJSON",
+            "toJSON");
     }
 
     /* (non-Javadoc)
@@ -203,9 +202,7 @@ public class JsonEncoderDecoderInstanceLocator implements EncoderDecoderLocator 
     */
     @Override
     public String decodeExpression(JType type, String expression, Style style) throws UnableToCompleteException {
-        return encodeDecodeExpression(type, expression, style, "decode", JSON_ENCODER_DECODER_CLASS + ".toMap",
-            JSON_ENCODER_DECODER_CLASS + ".toSet", JSON_ENCODER_DECODER_CLASS + ".toList",
-            JSON_ENCODER_DECODER_CLASS + ".toArray");
+        return encodeDecodeExpression(type, expression, style, "decode", "toMap", "toSet", "toList", "toArray");
     }
 
     private String encodeDecodeExpression(JType type, String expression, Style style, String encoderMethod,
