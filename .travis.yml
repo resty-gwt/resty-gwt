@@ -1,0 +1,25 @@
+language: java
+
+sudo: false
+
+jdk:
+  - openjdk7
+  - oraclejdk8
+
+env:
+  # - GWT_VERSION=2.8.0-beta1
+  - GWT_VERSION=2.7.0
+  - GWT_VERSION=2.5.1
+  
+script: mvn install -Dgwt.version=$GWT_VERSION
+matrix:
+  include:
+    - jdk: openjdk7
+      script: cd restygwt-examples; mvn verify -Prun-examples -Dmaven.test.skip -pl restygwt-overlay-example -s settings.xml
+    - jdk: oraclejdk8
+      script: cd restygwt-examples; mvn verify -Prun-examples -Dmaven.test.skip -pl restygwt-example -s settings.xml
+    - jdk: oraclejdk8
+      script: cd restygwt-examples; mvn verify -Prun-examples -Dmaven.test.skip -pl restygwt-direct-example -s settings.xml
+    - jdk: oraclejdk8
+      script: cd restygwt-examples; mvn verify -Prun-examples -Dmaven.test.skip -pl restygwt-jersey-jaxb-example,restygwt-jersey-jaxson-example,restygwt-cxf-jaxson-example -s settings.xml
+

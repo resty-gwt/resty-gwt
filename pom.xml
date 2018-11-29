@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2009-2012 the original author or authors.
+    See the notice.md file distributed with this work for additional
+    information regarding copyright ownership.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+    <groupId>org.fusesource.restygwt</groupId>
+    <artifactId>restygwt-project</artifactId>
+    <version>2.2.4-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>${project.artifactId}</name>
+    <description>RestyGWT is a GWT generator for REST services and JSON encoded data transfer objects</description>
+
+    <properties>
+        <forge-project-id>restygwt</forge-project-id>
+        <forge-project-id-uc>RESTYGWT</forge-project-id-uc>
+        <gwt-version>2.7.0</gwt-version>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+    </properties>
+
+    <url>http://${forge-project-id}.fusesource.org</url>
+    <inceptionYear>2010</inceptionYear>
+
+    <issueManagement>
+        <system>github</system>
+        <url>http://github.com/resty-gwt/resty-gwt/issues</url>
+    </issueManagement>
+
+    <mailingLists>
+        <mailingList>
+            <name>RestyGWT Development List</name>
+            <archive>http://groups.google.com/group/restygwt</archive>
+            <post>restygwt@googlegroups.com</post>
+            <subscribe>restygwt+subscribe@googlegroups.com</subscribe>
+            <unsubscribe>restygwt+unsubscribe@googlegroups.com</unsubscribe>
+        </mailingList>
+    </mailingLists>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git://github.com/resty-gwt/resty-gwt.git</connection>
+        <developerConnection>scm:git:git@github.com:resty-gwt/resty-gwt.git</developerConnection>
+        <url>https://github.com/resty-gwt/resty-gwt</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>chirino</id>
+            <name>Hiram Chirino</name>
+            <email>hiram@hiramchirino.com</email>
+            <url>http://hiramchirino.com</url>
+            <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <id>mkristian</id>
+            <name>Christian Meier</name>
+            <email>m.kristian@web.de</email>
+        </developer>
+        <developer>
+            <id>ronanquillevere</id>
+            <name>Ronan Quillevere</name>
+            <email>ronan.quillevere@gmail.com</email>
+        </developer>
+    </developers>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.fusesource.mvnplugins</groupId>
+                                    <artifactId>fuse-javadoc-skin</artifactId>
+                                    <version>1.9</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/javadoc-skin</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.17</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <configuration>
+                            <configLocation>checkstyle.xml</configLocation>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                            <failOnViolation>true</failOnViolation>
+                            <maxAllowedViolations>0</maxAllowedViolations>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <!-- Stick to 6.19 to be jdk7 runtime compliant -->
+                        <!-- http://checkstyle.sourceforge.net/releasenotes.html#Release_6.19 -->
+                        <version>6.19</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>gwt-maven-plugin</artifactId>
+                    <version>${gwt-version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>resources</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <!-- <gwtHome>${env.GWT_HOME}</gwtHome> -->
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.7.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.4.3</version>
+                    <configuration>
+                        <failIfNoTests>false</failIfNoTests>
+                        <useFile>false</useFile>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.7</version>
+
+                    <configuration>
+                        <charset>UTF-8</charset>
+                        <docencoding>UTF-8</docencoding>
+                        <version>false</version>
+                        <author>true</author>
+                        <keywords>true</keywords>
+
+                        <stylesheetfile>${project.build.directory}/javadoc-skin/stylesheet.css</stylesheetfile>
+
+                        <doctitle>${project.name} API Reference (${project.version})</doctitle>
+                        <windowtitle>${project.name} API Reference (${project.version})</windowtitle>
+                        <links>
+                            <link>http://download.oracle.com/javase/6/docs/api</link>
+                            <link>http://google-web-toolkit.googlecode.com/svn/javadoc/2.2</link>
+                        </links>
+                        <encoding>UTF-8</encoding>
+                        <locale>en_US</locale>
+                        <linksource>true</linksource>
+                        <excludePackageNames>*.internal</excludePackageNames>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <!--
+                        This plugin's configuration is used to store Eclipse
+                        m2e settings only. It has no influence on the Maven build itself.
+
+                        @see: http://stackoverflow.com/questions/6352208/how-to-solve-plugin-execution-not-covered-by-lifecycle-configuration-for-spring
+                        -->
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.codehaus.mojo</groupId>
+                                        <artifactId>gwt-maven-plugin</artifactId>
+                                        <versionRange>[${gwt-version},)</versionRange>
+                                        <goals>
+                                            <goal>css</goal>
+                                            <goal>i18n</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute />
+                                    </action>
+                                </pluginExecution>
+
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.codehaus.mojo</groupId>
+                                        <artifactId>gwt-maven-plugin</artifactId>
+                                        <versionRange>[${gwt-version},)</versionRange>
+                                        <goals>
+                                            <goal>resources</goal>
+                                            <goal>test</goal>
+                                            <goal>compile</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-dependency-plugin</artifactId>
+                                        <versionRange>[2.3,)</versionRange>
+                                        <goals>
+                                            <goal>unpack</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <!--
+            Do a license check by running       : mvn -P license license:check
+            UPdate the license check by running : mvn -P license license:format
+          -->
+        <profile>
+            <id>license</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.mycila.maven-license-plugin</groupId>
+                        <artifactId>maven-license-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <configuration>
+                            <quiet>false</quiet>
+                            <header>src/main/resources/license-header.txt</header>
+                            <aggregate>true</aggregate>
+                            <includes>
+                                <include>src/**</include>
+                                <include>**/pom.xml</include>
+                            </includes>
+                            <excludes>
+                                <!-- ignore files produced during a build -->
+                                <exclude>**/target/**</exclude>
+                                <exclude>**/WEB-INF/classes/**</exclude>
+
+                                <exclude>**/*.response-headers</exclude>
+                                <exclude>**/*.response</exclude>
+
+                                <!-- ignore binary files -->
+                                <exclude>**/*.jpg</exclude>
+                                <exclude>**/*.png</exclude>
+                                <exclude>**/*.gif</exclude>
+                                <exclude>**/*.ico</exclude>
+                                <exclude>**/*.ipr</exclude>
+                                <exclude>**/*.iml</exclude>
+                                <exclude>**/*.iws</exclude>
+                            </excludes>
+                            <useDefaultExcludes>false</useDefaultExcludes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>run-examples</id>
+            <modules>
+                <module>restygwt-examples</module>
+            </modules>
+        </profile>
+    </profiles>
+
+    <modules>
+        <module>restygwt</module>
+    </modules>
+
+</project>
