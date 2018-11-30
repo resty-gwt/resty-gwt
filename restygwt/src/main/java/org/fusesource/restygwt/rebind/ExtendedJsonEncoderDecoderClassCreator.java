@@ -25,6 +25,8 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 
+import static org.fusesource.restygwt.rebind.util.ClassSourceFileComposerFactoryImportUtil.addFuseSourceStaticImports;
+
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
 
 /**
@@ -43,6 +45,7 @@ public class ExtendedJsonEncoderDecoderClassCreator extends BaseSourceCreator {
     @Override
     protected ClassSourceFileComposerFactory createComposerFactory() throws UnableToCompleteException {
         ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
+        addFuseSourceStaticImports(composerFactory);
         JClassType encodedType = getEncodedType(getLogger(), context, source);
         JsonEncoderDecoderClassCreator generator =
             new JsonEncoderDecoderClassCreator(getLogger(), context, encodedType);

@@ -20,6 +20,7 @@ package org.fusesource.restygwt.rebind;
 
 import static org.fusesource.restygwt.rebind.util.AnnotationUtils.getAnnotation;
 import static org.fusesource.restygwt.rebind.util.AnnotationUtils.getClassAnnotation;
+import static org.fusesource.restygwt.rebind.util.ClassSourceFileComposerFactoryImportUtil.addFuseSourceStaticImports;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -142,6 +143,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     @Override
     protected ClassSourceFileComposerFactory createComposerFactory() {
         ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
+        addFuseSourceStaticImports(composerFactory);
         composerFactory
             .setSuperclass(JSON_ENCODER_DECODER_CLASS + "<" + source.getParameterizedQualifiedSourceName() + ">");
         return composerFactory;
@@ -254,8 +256,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                     if (typeInfo != null) {
                         switch (typeInfo.include()) {
                             case PROPERTY:
-                                p("com.google.gwt.json.client.JSONValue className=org.fusesource.restygwt.client" +
-                                    ".AbstractJsonEncoderDecoder.STRING.encode(\"" + possibleType.tag + "\");");
+                                p("com.google.gwt.json.client.JSONValue className=STRING.encode(\"" + possibleType.tag + "\");");
                                 p("if( className!=null ) { ").i(1);
                                 p("rc.put(" + wrap(getTypeInfoPropertyValue(typeInfo)) + ", className);");
                                 i(-1).p("}");
@@ -268,7 +269,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                             case WRAPPER_ARRAY:
                                 returnWrapper = true;
                                 p(JSON_ARRAY_CLASS + " rrc = new " + JSON_ARRAY_CLASS + "();");
-                                p("rrc.set(0, org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.encode" +
+                                p("rrc.set(0, STRING.encode" +
                                     "(\"" + possibleType.tag + "\"));");
                                 p("rrc.set(1, rc);");
                                 break;
@@ -391,7 +392,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         }
         p("}");
         p(JSON_OBJECT_CLASS + " rrc = new " + JSON_OBJECT_CLASS + "();");
-        p(JSON_VALUE_CLASS + " className=org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.encode(\"" +
+        p(JSON_VALUE_CLASS + " className=STRING.encode(\"" +
             possibleType.tag + "\");");
         p("rrc.put(" + wrap(getTypeInfoPropertyValue(typeInfo)) + ", className);");
         p("rrc.put(\"name\", new " + JSON_STRING_CLASS + "(value." + getValueMethod(possibleType.clazz) + "()));");
@@ -444,7 +445,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             } else if (typeInfo != null && typeInfo.include() == As.WRAPPER_ARRAY) {
                 p(JSON_ARRAY_CLASS + " array = (" + JSON_ARRAY_CLASS + ")value;");
                 if (!isLeaf) {
-                    p("String sourceName = org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.decode" +
+                    p("String sourceName = STRING.decode" +
                         "(array.get(0));");
                 }
                 p(JSON_OBJECT_CLASS + " object = toObject(array.get(1));");
@@ -453,7 +454,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             }
 
             if (!isLeaf && typeInfo != null && typeInfo.include() == As.PROPERTY) {
-                p("String sourceName = org.fusesource.restygwt.client.AbstractJsonEncoderDecoder.STRING.decode(object" +
+                p("String sourceName = STRING.decode(object" +
                     ".get(" + wrap(getTypeInfoPropertyValue(typeInfo)) + "));");
             }
 
@@ -478,7 +479,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                             p("if(sourceName == null || sourceName.equals(\"" + possibleType.tag + "\"))");
                             p("{");
                         } else {
-                            p("if(sourceName != null && sourceName.equals(\"" + possibleType.tag + "\"))");
+                            p("if(\"" + possibleType.tag + "\".equals(sourceName))");
                             p("{");
                         }
                     }
