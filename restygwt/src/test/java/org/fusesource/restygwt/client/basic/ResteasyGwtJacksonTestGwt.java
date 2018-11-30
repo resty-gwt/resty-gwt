@@ -329,7 +329,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         if ((firstObject = first.isObject()) != null) {
             JSONObject secondObject;
             if ((secondObject = second.isObject()) == null) {
-                fail("First " + first + " was a JSONObject while Second " + second + "was not");
+                fail("First " + first + " was a JSONObject while Second " + second + " was not");
             }
             Set<String> firstKeySet = firstObject.keySet();
             Set<String> secondKeySet = secondObject.keySet();
@@ -343,7 +343,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         } else if ((firstArray = first.isArray()) != null) {
             JSONArray secondArray;
             if ((secondArray = second.isArray()) == null) {
-                fail("First " + first + " was a JSONArray while Second " + second + "was not");
+                fail("First " + first + " was a JSONArray while Second " + second + " was not");
             }
             assertTrue(secondArray.size() == firstArray.size());
             for (int x = 0; x < secondArray.size(); x++) {
@@ -353,25 +353,25 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
             }
         } else if (first.isNull() != null) {
             if (second.isNull() == null) {
-                fail("First " + first + " was a JSONNull while Second " + second + "was not");
+                fail("First " + first + " was a JSONNull while Second " + second + " was not");
             }
             assertTrue(true);
         } else if ((firstNumber = first.isNumber()) != null) {
             JSONNumber secondNumber;
             if ((secondNumber = second.isNumber()) == null) {
-                fail("First " + first + " was a JSONNumber while Second " + second + "was not");
+                fail("First " + first + " was a JSONNumber while Second " + second + " was not");
             }
             assertTrue(firstNumber.doubleValue() == secondNumber.doubleValue());
         } else if ((firstString = first.isString()) != null) {
             JSONString secondString;
             if ((secondString = second.isString()) == null) {
-                fail("First " + first + " was a JSONString while Second " + second + "was not");
+                fail("First " + first + " was a JSONString while Second " + second + " was not");
             }
             assertTrue(firstString.stringValue().equals(secondString.stringValue()));
         } else if ((firstBoolean = first.isBoolean()) != null) {
             JSONBoolean secondBoolean;
             if ((secondBoolean = second.isBoolean()) == null) {
-                fail("First " + first + " was a JSONBoolean while Second " + second + "was not");
+                fail("First " + first + " was a JSONBoolean while Second " + second + " was not");
             }
             assertTrue(firstBoolean.booleanValue() == secondBoolean.booleanValue());
         } else {
