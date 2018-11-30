@@ -24,7 +24,6 @@ import static org.fusesource.restygwt.client.complex.ResteasyService.CustomExcep
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
-import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -319,18 +318,12 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         JSONValue firstValue = JSONParser.parseStrict(first);
         JSONValue secondValue = JSONParser.parseStrict(second);
         compareJSONValue(firstValue, secondValue);
-        //assertTrue(firstValue.equals(secondValue));
-//        first = first.replaceAll("\\s", "");
-//        second = second.replaceAll("\\s", "");
-//        
-        //assertEquals(first, second);
     }
     
     private void compareJSONValue(JSONValue first, JSONValue second) {
         JSONObject firstObject;
         JSONBoolean firstBoolean;
         JSONArray firstArray;
-        JSONNull firstNull;
         JSONNumber firstNumber;
         JSONString firstString;
         if ((firstObject = first.isObject()) != null) {
@@ -358,9 +351,8 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
                 JSONValue secondValue = secondArray.get(x);
                 compareJSONValue(firstValue, secondValue);
             }
-        } else if ((firstNull = first.isNull()) != null) {
-            JSONNull secondNull;
-            if ((secondNull = second.isNull()) == null) {
+        } else if (first.isNull() != null) {
+            if (second.isNull() == null) {
                 fail("First " + first + " was a JSONNull while Second " + second + "was not");
             }
             assertTrue(true);
