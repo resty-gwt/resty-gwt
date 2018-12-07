@@ -18,6 +18,8 @@
 
 package org.fusesource.restygwt.rebind;
 
+import static org.fusesource.restygwt.rebind.util.ClassSourceFileComposerFactoryImportUtil.addFuseSourceStaticImports;
+
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.github.nmorel.gwtjackson.client.ObjectMapper;
 import com.google.gwt.core.client.GWT;
@@ -91,6 +93,7 @@ public class GwtJacksonEncoderDecoderClassCreator extends BaseSourceCreator {
     @Override
     protected ClassSourceFileComposerFactory createComposerFactory() {
         ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory(packageName, shortName);
+        addFuseSourceStaticImports(composerFactory);
         composerFactory.setSuperclass(JsonEncoderDecoderInstanceLocator.JSON_ENCODER_DECODER_CLASS + "<" +
             source.getParameterizedQualifiedSourceName() + ">");
         return composerFactory;
