@@ -24,13 +24,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.server.complex.DTOTypeResolver;
+import org.fusesource.restygwt.server.complex.InterfaceAndImplementationTypeResolver;
 import org.junit.Test;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 
@@ -149,4 +150,83 @@ public class JsonTypeIdResolver extends GWTTestCase
 		});
 		delayTestFinish(10000);
 	}
+
+	@Path("api/interfaceandimpl")
+	public static interface InterfaceAndImplementationService extends RestService
+	{
+		@GET
+		@Path("interface")
+		@Produces("application/json")
+		public void getInterface(MethodCallback<List<DTOInterface>> callback);
+		@GET
+		@Path("implementation")
+		@Produces("application/json")
+		public void getImplementation(MethodCallback<List<DTOImplementation>> callback);
+	}
+
+	@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+	@com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver(InterfaceAndImplementationTypeResolver.class)
+	public interface DTOInterface {
+		String getName();
+		void setName(String name);
+	}
+	
+	public static class DTOImplementation implements DTOInterface {
+		private String name;
+		@Override
+		public String getName() {
+			return name;
+		}
+		@Override
+		public void setName(String name) {
+			this.name = name;
+		}
+	} 
+
+	@Test
+	public void testInterface()
+	{
+		InterfaceAndImplementationService service = GWT.create(InterfaceAndImplementationService.class);
+		service.getInterface(new MethodCallback<List<DTOInterface>>()
+		{
+			@Override
+			public void onFailure(Method method, Throwable exception)
+			{
+				fail(exception.getMessage());
+			}
+
+			@Override
+			public void onSuccess(Method method, List<DTOInterface> response)
+			{
+				assertTrue(response.get(0) instanceof DTOImplementation);
+				assertEquals("interface", response.get(0).getName());
+				finishTest();
+			}
+		});
+		delayTestFinish(10000);
+	}	
+
+	@Test
+	public void testImplementation()
+	{
+		InterfaceAndImplementationService service = GWT.create(InterfaceAndImplementationService.class);
+		service.getImplementation(new MethodCallback<List<DTOImplementation>>()
+		{
+			@Override
+			public void onFailure(Method method, Throwable exception)
+			{
+				fail(exception.getMessage());
+			}
+
+			@Override
+			public void onSuccess(Method method, List<DTOImplementation> response)
+			{
+				assertTrue(response.get(0) instanceof DTOImplementation);
+				assertEquals("implementation", response.get(0).getName());
+				finishTest();
+			}
+		});
+		delayTestFinish(10000);
+	}
+	
 }
