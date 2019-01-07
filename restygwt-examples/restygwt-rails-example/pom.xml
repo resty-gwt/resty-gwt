@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.fusesource.restygwt</groupId>
         <artifactId>restygwt-examples</artifactId>
-        <version>2.2.4-SNAPSHOT</version>
+        <version>2.2.5-SNAPSHOT</version>
     </parent>
     <artifactId>restygwt-rails-example</artifactId>
     <packaging>war</packaging>
