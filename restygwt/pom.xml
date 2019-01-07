@@ -135,7 +135,8 @@
                     <gen>${project.build.directory}/.generated</gen>
                     <logLevel>INFO</logLevel>
                     <noServer>false</noServer>
-                    <extraJvmArgs>-Xmx1024m</extraJvmArgs>
+                    <!-- resteasy servlets needs this legacy sort -->
+                    <extraJvmArgs>-Xmx1024m -Djava.util.Arrays.useLegacyMergeSort=true</extraJvmArgs>
                     <mode>htmlunit</mode>
                     <testTimeOut>300</testTimeOut>
                 </configuration>
