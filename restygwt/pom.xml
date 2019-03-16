@@ -97,7 +97,7 @@
         <dependency>
             <groupId>com.github.nmorel.gwtjackson</groupId>
             <artifactId>gwt-jackson</artifactId>
-            <version>0.15.2</version>
+            <version>0.15.4</version>
         </dependency>
     </dependencies>
 
@@ -201,7 +201,7 @@
         <!--Must stay on 3.0.x branch to be buildable with JDK7 (3.1.x branch requires JDK8).-->
         <resteasy.version>3.0.24.Final</resteasy.version>
         <!-- we need to keep this in sync with gwt-jackson's dependencies -->
-        <jackson.version>2.9.5</jackson.version>
+        <jackson.version>2.9.6</jackson.version>
         <gwt.version>2.7.0</gwt.version>
     </properties>
 </project>
