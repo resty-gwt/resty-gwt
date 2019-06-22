@@ -59,6 +59,18 @@ public class ResteasyServlet extends HttpServletDispatcher {
             return string;
         }
 
+        @Nullable
+        @Override
+        public String getStringAsPlainText(@Nullable String string) {
+            return string;
+        }
+
+        @Nullable
+        @Override
+        public String postStringAsPlainText(@Nullable String string) {
+            return string;
+        }
+
         @Nonnull
         @Override
         public Bean postBean(@Nonnull Bean bean) {
