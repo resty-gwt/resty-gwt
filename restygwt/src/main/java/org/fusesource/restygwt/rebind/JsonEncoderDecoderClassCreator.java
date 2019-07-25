@@ -432,7 +432,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             generateEnumDecodeMethod(classType, JSON_VALUE_CLASS);
             return;
         }
-
+        List<Subtype> assignableSubTypes = new ArrayList<Subtype>();
         p("public " + source.getParameterizedQualifiedSourceName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
         {
             p("if( value == null || value.isNull()!=null ) {").i(1);
@@ -457,7 +457,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                 p("String sourceName = STRING.decode(object" +
                     ".get(" + wrap(getTypeInfoPropertyValue(typeInfo)) + "));");
             }
-
+            
             for (Subtype possibleType : possibleTypes) {
 
                 if (!possibleType.clazz.isAssignableTo(classType)) {
@@ -466,7 +466,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         classType.getParameterizedQualifiedSourceName());
                     continue;
                 }
-
+                assignableSubTypes.add(possibleType);
                 if (typeInfo != null) {
                     if (typeInfo.include() == As.WRAPPER_OBJECT) {
                         if (!isLeaf) {
@@ -484,130 +484,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         }
                     }
                 }
-
-                if (possibleType.clazz.isEnum() != null) {
-                    generateEnumDecodeMethodBody(possibleType.clazz);
-                } else {
-                    // Try to find a constuctor that is annotated as creator
-                    JConstructor creator = findCreator(possibleType.clazz);
-
-                    List<JField> orderedFields = null;
-                    if (creator != null) {
-                        p("// We found a creator so we use the annotated constructor");
-                        p("" + possibleType.clazz.getParameterizedQualifiedSourceName() + " rc = new " +
-                            possibleType.clazz.getParameterizedQualifiedSourceName() + "(");
-                        i(1).p("// The arguments are placed in the order they appear within the annotated constructor")
-                            .i(-1);
-                        orderedFields = getOrderedFields(getFields(possibleType.clazz), creator);
-                        final JField lastField = orderedFields.get(orderedFields.size() - 1);
-                        for (final JField field : orderedFields) {
-                            branch("Processing field: " + field.getName(), new Branch<Void>() {
-                                @Override
-                                public Void execute() throws UnableToCompleteException {
-                                    Json jsonAnnotation = getAnnotation(field, Json.class);
-                                    Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
-                                    String jsonName = field.getName();
-                                    if (jsonAnnotation != null && !jsonAnnotation.name().isEmpty()) {
-                                        jsonName = jsonAnnotation.name();
-                                    }
-                                    String objectGetter = "object.get(" + wrap(jsonName) + ")";
-                                    String expression = locator.decodeExpression(field.getType(), objectGetter, style);
-
-                                    String defaultValue = getDefaultValue(field);
-                                    i(1).p("" + (objectGetter + " == null || " + objectGetter + " instanceof " +
-                                        JSON_NULL_CLASS + " ? " + defaultValue + " : " + expression +
-                                        ((field != lastField) ? ", " : ""))).i(-1);
-
-                                    return null;
-                                }
-                            });
-                        }
-                        p(");");
-                    }
-
-                    if (orderedFields == null) {
-                        p("" + possibleType.clazz.getParameterizedQualifiedSourceName() + " rc = new " +
-                            possibleType.clazz.getParameterizedQualifiedSourceName() + "();");
-                    }
-
-                    for (final JField field : getFields(possibleType.clazz)) {
-
-                        boolean ignoreField = false;
-                        if (getAnnotation(possibleType.clazz, JsonIgnoreProperties.class) != null) {
-                            for (String s : getAnnotation(possibleType.clazz, JsonIgnoreProperties.class).value()) {
-                                if (s.equals(field.getName())) {
-                                    ignoreField = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (ignoreField) {
-                            continue;
-                        }
-
-                        if (orderedFields != null && orderedFields.contains(field)) {
-                            continue;
-                        }
-
-                        final String setterName = getSetterName(field);
-
-                        // If can ignore some fields right off the back..
-                        if (setterName == null && (field.isStatic() || field.isFinal() || field.isTransient()) ||
-                            isIgnored(field)) {
-                            continue;
-                        }
-
-                        branch("Processing field: " + field.getName(), new Branch<Void>() {
-                            @Override
-                            public Void execute() throws UnableToCompleteException {
-
-                                // TODO: try to set the field with a setter
-                                // or JSNI
-                                if (setterName != null || field.isDefaultAccess() || field.isProtected() ||
-                                    field.isPublic()) {
-
-                                    Json jsonAnnotation = getAnnotation(field, Json.class);
-                                    Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
-                                    JsonProperty jsonPropertyAnnotation = getAnnotation(field, JsonProperty.class);
-
-                                    String name = field.getName();
-                                    String jsonName = name;
-
-                                    if (jsonAnnotation != null && !jsonAnnotation.name().isEmpty()) {
-                                        jsonName = jsonAnnotation.name();
-                                    }
-                                    if (jsonPropertyAnnotation != null && jsonPropertyAnnotation.value() != null &&
-                                            !jsonPropertyAnnotation.value().isEmpty()) {
-                                        jsonName = jsonPropertyAnnotation.value();
-                                    }
-
-                                    String objectGetter = "object.get(" + wrap(jsonName) + ")";
-                                    String expression = locator.decodeExpression(field.getType(), objectGetter, style);
-
-                                    boolean isShort = field.getType().isPrimitive() == JPrimitiveType.SHORT;
-                                    String defaultValue = getDefaultValue(field);
-
-                                    String methodName = isShort ? "getValueToSetForShort" : "getValueToSet";
-
-                                    if (setterName != null) {
-                                        p("rc." + setterName + "(" + methodName + "(" + expression + ", " +
-                                            defaultValue + "));");
-                                    } else {
-                                        p("rc." + name + "= " + methodName + "(" + expression + "," + defaultValue +
-                                            ");");
-                                    }
-
-                                } else {
-                                    getLogger().log(DEBUG, "private field gets ignored: " +
-                                        field.getEnclosingType().getQualifiedSourceName() + "." + field.getName());
-                                }
-                                return null;
-                            }
-                        });
-                    }
-
-                    p("return rc;");
-                }
+                //
+                p("return " + getDecodeMethodName(possibleType) + "(object);");
                 if (typeInfo != null && !isLeaf) {
                     p("}");
                 }
@@ -618,9 +496,151 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             }
             i(-1).p("}");
             p();
+            
         }
+        for (Subtype type : assignableSubTypes) {
+            p("private " + source.getParameterizedQualifiedSourceName() + " " + getDecodeMethodName(type) + "(" + JSON_OBJECT_CLASS + " object) {").i(1);
+            {
+                buildPossibleSubtypeIfLogic(type, classStyle);
+                i(-1).p("}");
+                p();
+            }
+            
+        }
+        //TODO: Create separate methods for sub classes
     }
 
+    private String getDecodeMethodName(Subtype type) {
+        return "decode" + type.clazz.getSimpleSourceName() + type.hashCode();
+    }
+    
+    private void buildPossibleSubtypeIfLogic(Subtype possibleType, final Style classStyle)
+          throws UnableToCompleteException {
+        if (possibleType.clazz.isEnum() != null) {
+            generateEnumDecodeMethodBody(possibleType.clazz);
+        } else {
+            // Try to find a constuctor that is annotated as creator
+            JConstructor creator = findCreator(possibleType.clazz);
+
+            List<JField> orderedFields = null;
+            if (creator != null) {
+                p("// We found a creator so we use the annotated constructor");
+                p("" + possibleType.clazz.getParameterizedQualifiedSourceName() + " rc = new " +
+                    possibleType.clazz.getParameterizedQualifiedSourceName() + "(");
+                i(1).p("// The arguments are placed in the order they appear within the annotated constructor")
+                    .i(-1);
+                orderedFields = getOrderedFields(getFields(possibleType.clazz), creator);
+                final JField lastField = orderedFields.get(orderedFields.size() - 1);
+                for (final JField field : orderedFields) {
+                    branch("Processing field: " + field.getName(), new Branch<Void>() {
+                        @Override
+                        public Void execute() throws UnableToCompleteException {
+                            Json jsonAnnotation = getAnnotation(field, Json.class);
+                            Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
+                            String jsonName = field.getName();
+                            if (jsonAnnotation != null && !jsonAnnotation.name().isEmpty()) {
+                                jsonName = jsonAnnotation.name();
+                            }
+                            String objectGetter = "object.get(" + wrap(jsonName) + ")";
+                            String expression = locator.decodeExpression(field.getType(), objectGetter, style);
+
+                            String defaultValue = getDefaultValue(field);
+                            i(1).p("" + (objectGetter + " == null || " + objectGetter + " instanceof " +
+                                JSON_NULL_CLASS + " ? " + defaultValue + " : " + expression +
+                                ((field != lastField) ? ", " : ""))).i(-1);
+
+                            return null;
+                        }
+                    });
+                }
+                p(");");
+            }
+
+            if (orderedFields == null) {
+                p("" + possibleType.clazz.getParameterizedQualifiedSourceName() + " rc = new " +
+                    possibleType.clazz.getParameterizedQualifiedSourceName() + "();");
+            }
+
+            for (final JField field : getFields(possibleType.clazz)) {
+
+                boolean ignoreField = false;
+                if (getAnnotation(possibleType.clazz, JsonIgnoreProperties.class) != null) {
+                    for (String s : getAnnotation(possibleType.clazz, JsonIgnoreProperties.class).value()) {
+                        if (s.equals(field.getName())) {
+                            ignoreField = true;
+                            break;
+                        }
+                    }
+                }
+                if (ignoreField) {
+                    continue;
+                }
+
+                if (orderedFields != null && orderedFields.contains(field)) {
+                    continue;
+                }
+
+                final String setterName = getSetterName(field);
+
+                // If can ignore some fields right off the back..
+                if (setterName == null && (field.isStatic() || field.isFinal() || field.isTransient()) ||
+                    isIgnored(field)) {
+                    continue;
+                }
+
+                branch("Processing field: " + field.getName(), new Branch<Void>() {
+                    @Override
+                    public Void execute() throws UnableToCompleteException {
+
+                        // TODO: try to set the field with a setter
+                        // or JSNI
+                        if (setterName != null || field.isDefaultAccess() || field.isProtected() ||
+                            field.isPublic()) {
+
+                            Json jsonAnnotation = getAnnotation(field, Json.class);
+                            Style style = jsonAnnotation != null ? jsonAnnotation.style() : classStyle;
+                            JsonProperty jsonPropertyAnnotation = getAnnotation(field, JsonProperty.class);
+
+                            String name = field.getName();
+                            String jsonName = name;
+
+                            if (jsonAnnotation != null && !jsonAnnotation.name().isEmpty()) {
+                                jsonName = jsonAnnotation.name();
+                            }
+                            if (jsonPropertyAnnotation != null && jsonPropertyAnnotation.value() != null &&
+                                    !jsonPropertyAnnotation.value().isEmpty()) {
+                                jsonName = jsonPropertyAnnotation.value();
+                            }
+
+                            String objectGetter = "object.get(" + wrap(jsonName) + ")";
+                            String expression = locator.decodeExpression(field.getType(), objectGetter, style);
+
+                            boolean isShort = field.getType().isPrimitive() == JPrimitiveType.SHORT;
+                            String defaultValue = getDefaultValue(field);
+
+                            String methodName = isShort ? "getValueToSetForShort" : "getValueToSet";
+
+                            if (setterName != null) {
+                                p("rc." + setterName + "(" + methodName + "(" + expression + ", " +
+                                    defaultValue + "));");
+                            } else {
+                                p("rc." + name + "= " + methodName + "(" + expression + "," + defaultValue +
+                                    ");");
+                            }
+
+                        } else {
+                            getLogger().log(DEBUG, "private field gets ignored: " +
+                                field.getEnclosingType().getQualifiedSourceName() + "." + field.getName());
+                        }
+                        return null;
+                    }
+                });
+            }
+
+            p("return rc;");
+        }
+    }
+    
     private void generateEnumDecodeMethodBody(JClassType classType) {
         p(JSON_VALUE_CLASS + " str = object.get(\"name\");");
         p("if( null == str || str.isString() == null ) {").i(1);
