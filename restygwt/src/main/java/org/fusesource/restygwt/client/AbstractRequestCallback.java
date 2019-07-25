@@ -67,15 +67,18 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
             callback
                     .onFailure(method, Defaults.getExceptionMapper().createFailedStatusException(method, response));
         } else {
+            if (getLogger() != null) {
+                getLogger().fine(
+                        "Received http response for request: " + method.builder.getHTTPMethod() + " " +
+                                method.builder.getUrl());
+            }
+            if (Response.SC_NO_CONTENT == response.getStatusCode()) {
+                callback.onSuccess(method, null);
+            }
             T value;
             try {
-                if (getLogger() != null) {
-                    getLogger().fine(
-                            "Received http response for request: " + method.builder.getHTTPMethod() + " " +
-                                    method.builder.getUrl());
-                }
                 String content = response.getText();
-                if (content != null && !content.isEmpty()) {
+                if (content != null) {
                     if (getLogger() != null) {
                         getLogger().finest(content);
                     }
