@@ -41,6 +41,7 @@ import javax.annotation.Nonnull;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.REST;
+import org.fusesource.restygwt.client.TextCallback;
 import org.fusesource.restygwt.client.complex.ResteasyService;
 
 public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
@@ -82,7 +83,7 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         return "org.fusesource.restygwt.ResteasyGwtJacksonTestGwt";
     }
 
-    public void testGetString() {
+    public void testGetStringAnyString() {
         delayTestFinish(10000);
         ResteasyService resteasyService = GWT.create(ResteasyService.class);
 
@@ -101,7 +102,45 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
         }).call(resteasyService).getString(name);
     }
 
-    public void testPostString() {
+    public void testGetStringEmptyString() {
+        delayTestFinish(10000);
+        ResteasyService resteasyService = GWT.create(ResteasyService.class);
+
+        final String name = "";
+        REST.withCallback(new MethodCallback<String>() {
+            @Override
+            public void onSuccess(Method method, String response) {
+                assertEquals(name, response);
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable e) {
+                fail(e.getMessage());
+            }
+        }).call(resteasyService).getString(name);
+    }
+
+    public void testGetStringNullString() {
+        delayTestFinish(10000);
+        ResteasyService resteasyService = GWT.create(ResteasyService.class);
+
+        final String name = null;
+        REST.withCallback(new MethodCallback<String>() {
+            @Override
+            public void onSuccess(Method method, String response) {
+                assertEquals(name, response);
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable e) {
+                fail(e.getMessage());
+            }
+        }).call(resteasyService).getString(name);
+    }
+
+    public void testPostStringAnyString() {
         delayTestFinish(10000);
         ResteasyService resteasyService = GWT.create(ResteasyService.class);
 
@@ -118,6 +157,189 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
                 fail(e.getMessage());
             }
         }).call(resteasyService).postString(name);
+    }
+
+    public void testPostStringEmptyString() {
+        delayTestFinish(10000);
+        ResteasyService resteasyService = GWT.create(ResteasyService.class);
+
+        final String name = "";
+        REST.withCallback(new MethodCallback<String>() {
+            @Override
+            public void onSuccess(Method method, String response) {
+                assertEquals(name, response);
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable e) {
+                fail(e.getMessage());
+            }
+        }).call(resteasyService).postString(name);
+    }
+
+    public void testPostStringNullString() {
+        delayTestFinish(10000);
+        ResteasyService resteasyService = GWT.create(ResteasyService.class);
+
+        final String name = null;
+        REST.withCallback(new MethodCallback<String>() {
+            @Override
+            public void onSuccess(Method method, String response) {
+                assertEquals(name, response);
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable e) {
+                fail(e.getMessage());
+            }
+        }).call(resteasyService).postString(name);
+    }
+
+    public void testGetStringAsPlainTextAnyString() {
+        delayTestFinish(10000);
+        ResteasyService resteasyService = GWT.create(ResteasyService.class);
+
+        final String name = "Any string";
+        REST.withCallback(new TextCallback() {
+            @Override
+            public void onSuccess(Method method, String response) {
+                assertEquals(name, response);
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable e) {
+                fail(e.getMessage());
+            }
+        }).call(resteasyService).getStringAsPlainText(name);
+    }
+
+    @Override
+    protected void reportUncaughtException(Throwable ex) {
+        if (ex instanceof ExpectedTestException) {
+            finishTest();
+            return;
+        }
+        super.reportUncaughtException(ex);
+    }
+
+    class ExpectedTestException extends RuntimeException {
+    }
+
+    public void testGetStringAsPlainTextNullStringException() {
+        delayTestFinish(10000);
+        ResteasyService resteasyService = GWT.create(ResteasyService.class);
+
+        final String name = null;
+        REST.withCallback(new TextCallback() {
+            @Override
+            public void onSuccess(Method method, String response) {
+                assertEquals(name, response);
+                throw new ExpectedTestException();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable e) {
+                fail(e.getMessage());
+            }
+        }).call(resteasyService).getStringAsPlainText(name);
+    }
+
+    public void testGetStringAsPlainTextEmptyString() {
+        delayTestFinish(10000);
+        ResteasyService resteasyService = GWT.create(ResteasyService.class);
+
+        final String name = "";
+        REST.withCallback(new TextCallback() {
+            @Override
+            public void onSuccess(Method method, String response) {
+                assertEquals(name, response);
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable e) {
+                fail(e.getMessage());
+            }
+        }).call(resteasyService).getStringAsPlainText(name);
+    }
+
+    public void testGetStringAsPlainTextNullString() {
+        delayTestFinish(10000);
+        ResteasyService resteasyService = GWT.create(ResteasyService.class);
+
+        final String name = null;
+        REST.withCallback(new TextCallback() {
+            @Override
+            public void onSuccess(Method method, String response) {
+                assertEquals(name, response);
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable e) {
+                fail(e.getMessage());
+            }
+        }).call(resteasyService).getStringAsPlainText(name);
+    }
+
+    public void testPostStringAsPlainTextAnyString() {
+        delayTestFinish(10000);
+        ResteasyService resteasyService = GWT.create(ResteasyService.class);
+
+        final String name = "Any string";
+        REST.withCallback(new TextCallback() {
+            @Override
+            public void onSuccess(Method method, String response) {
+                assertEquals(name, response);
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable e) {
+                fail(e.getMessage());
+            }
+        }).call(resteasyService).postStringAsPlainText(name);
+    }
+
+    public void testPostStringAsPlainTextEmptyString() {
+        delayTestFinish(10000);
+        ResteasyService resteasyService = GWT.create(ResteasyService.class);
+
+        final String name = "";
+        REST.withCallback(new TextCallback() {
+            @Override
+            public void onSuccess(Method method, String response) {
+                assertEquals(name, response);
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable e) {
+                fail(e.getMessage());
+            }
+        }).call(resteasyService).postStringAsPlainText(name);
+    }
+
+    public void testPostStringAsPlainTextNullString() {
+        delayTestFinish(10000);
+        ResteasyService resteasyService = GWT.create(ResteasyService.class);
+
+        final String name = null;
+        REST.withCallback(new TextCallback() {
+            @Override
+            public void onSuccess(Method method, String response) {
+                assertEquals(name, response);
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable e) {
+                fail(e.getMessage());
+            }
+        }).call(resteasyService).postStringAsPlainText(name);
     }
 
     @Nonnull

@@ -28,6 +28,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
@@ -45,6 +46,18 @@ public interface ResteasyService extends DirectRestService {
     @Path("postString")
     @Nullable
     String postString(@Nullable @FormParam("string") String string);
+
+    @GET
+    @Path("getStringAsPlainText")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Nullable
+    String getStringAsPlainText(@Nullable @QueryParam("string") String string);
+
+    @POST
+    @Path("getStringAsPlainText")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Nullable
+    String postStringAsPlainText(@Nullable @QueryParam("string") String string);
 
     @POST
     @Path("postBean")
