@@ -26,6 +26,7 @@
     <inherits name="com.github.nmorel.gwtjackson.GwtJackson"/>
 
     <set-property name="restygwt.encodeDecode.useGwtJackson" value="true"/>
+    <set-property name="restygwt.autodetect.plainText" value="true"/>
 
     <source path='client'/>
     <source path='example/client'/>

@@ -30,7 +30,7 @@
 
     <groupId>org.fusesource.restygwt</groupId>
     <artifactId>restygwt-project</artifactId>
-    <version>2.2.5-QFREE-SNAPSHOT</version>
+    <version>2.2.6-QFREE-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
@@ -46,20 +46,7 @@
 
     <url>http://${forge-project-id}.fusesource.org</url>
     <inceptionYear>2010</inceptionYear>
-	
-	<distributionManagement>
-		<repository>
-			<id>orci</id>
-			<name>Internal Releases</name>
-			<url>http://nexus.openroadsconsulting.com/content/repositories/orci/</url>
-		</repository>
-		<snapshotRepository>
-			<id>orci-snapshots</id>
-			<name>Internal Snapshots</name>
-			<url>http://nexus.openroadsconsulting.com/content/repositories/orci-snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
-		
+
     <issueManagement>
         <system>github</system>
         <url>http://github.com/resty-gwt/resty-gwt/issues</url>
