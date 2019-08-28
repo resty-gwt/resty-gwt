@@ -1,16 +1,18 @@
+dist: trusty
+
 language: java
 
 sudo: false
 
 jdk:
   - openjdk7
-  - oraclejdk8
+  - openjdk8
 
 env:
   # - GWT_VERSION=2.8.0-beta1
   - GWT_VERSION=2.7.0
   - GWT_VERSION=2.6.0
-  
+
 script: mvn install -Dgwt.version=$GWT_VERSION
 matrix:
   include:
