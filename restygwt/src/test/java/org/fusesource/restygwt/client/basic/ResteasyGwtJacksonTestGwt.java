@@ -324,15 +324,16 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
     }
 
     public void testPostStringAsPlainTextNullString() {
-        delayTestFinish(10000);
         ResteasyService resteasyService = GWT.create(ResteasyService.class);
 
+        final AtomicBoolean onSuccessConsumed = new AtomicBoolean();
         final String name = null;
         REST.withCallback(new TextCallback() {
             @Override
             public void onSuccess(Method method, String response) {
+                assertFalse("onSuccess should be called only once", onSuccessConsumed.isValue());
+                onSuccessConsumed.setValue(true);
                 assertEquals(name, response);
-                finishTest();
             }
 
             @Override
@@ -598,6 +599,18 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
             assertTrue(firstBoolean.booleanValue() == secondBoolean.booleanValue());
         } else {
             fail("Unknown JSONValue");
+        }
+    }
+
+    public static class AtomicBoolean {
+        private boolean value;
+
+        public boolean isValue() {
+            return value;
+        }
+
+        public void setValue(boolean value) {
+            this.value = value;
         }
     }
 }
