@@ -74,6 +74,7 @@ public abstract class AbstractRequestCallback<T> implements RequestCallback {
             }
             if (Response.SC_NO_CONTENT == response.getStatusCode()) {
                 callback.onSuccess(method, null);
+                return;
             }
             T value;
             try {
