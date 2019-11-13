@@ -536,6 +536,49 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
             }
         }).call(resteasyService).postBeansAsFormParam(beans);
     }
+
+    public void testPostLongsAsFormParamException() {
+        ResteasyService resteasyService = GWT.create(ResteasyService.class);
+
+        try {
+            REST.withCallback(new MethodCallback<List<Long>>() {
+                @Override
+                public void onSuccess(Method method, List<Long> response) {
+                    fail();
+                }
+
+                @Override
+                public void onFailure(Method method, Throwable e) {
+                    fail(e.getMessage());
+                }
+            }).call(resteasyService).postLongsAsFormParam(Arrays.asList(1L, null));
+        } catch (Exception e) {
+            assertEquals(UnsupportedOperationException.class, e.getClass());
+            assertEquals("null is not supported as part of parameters when using @FormParam", e.getMessage());
+            return;
+        }
+        fail();
+    }
+
+    public void testPostLongsAsFormParam() {
+        delayTestFinish(10000);
+        ResteasyService resteasyService = GWT.create(ResteasyService.class);
+
+        final List<Long> longs = Arrays.asList(1L, Long.MIN_VALUE, Long.MAX_VALUE);
+
+        REST.withCallback(new MethodCallback<List<Long>>() {
+            @Override
+            public void onSuccess(Method method, List<Long> response) {
+                assertEquals(longs, response);
+                finishTest();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable e) {
+                fail(e.getMessage());
+            }
+        }).call(resteasyService).postLongsAsFormParam(longs);
+    }
     
     private void convertToJSONValueAndAssertEqual(String first, String second) {
         JSONValue firstValue = JSONParser.parseStrict(first);

@@ -22,7 +22,8 @@ public class FormPostContent {
         key = URL.encodeQueryString(key);
         for (String value : values) {
             if (value == null) {
-                continue;
+                throw new UnsupportedOperationException("null is not supported as part of parameters when using " +
+                        "@FormParam");
             }
 
             textContent.append((ampersand ? "&" : "") + key + "=" + URL.encodeQueryString(value));

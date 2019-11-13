@@ -103,6 +103,12 @@ public class ResteasyServlet extends HttpServletDispatcher {
 
         @Nonnull
         @Override
+        public List<Long> postLongsAsFormParam(@Nonnull List<Long> longs) {
+            return longs;
+        }
+
+        @Nonnull
+        @Override
         public String postThrowable(@Nonnull Throwable throwable) {
             try {
                 return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(throwable);
