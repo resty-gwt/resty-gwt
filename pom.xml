@@ -149,9 +149,9 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <!-- Stick to 6.19 to be jdk7 runtime compliant -->
+                        <!-- Stick to 8.29 to be jdk7 runtime compliant -->
                         <!-- http://checkstyle.sourceforge.net/releasenotes.html#Release_6.19 -->
-                        <version>6.19</version>
+                        <version>8.29</version>
                     </dependency>
                 </dependencies>
             </plugin>
