@@ -26,10 +26,10 @@
     <parent>
         <groupId>org.fusesource.restygwt</groupId>
         <artifactId>restygwt-examples</artifactId>
-        <version>2.2.7-SNAPSHOT</version>
+        <version>2.2.8-SNAPSHOT</version>
     </parent>
     <artifactId>restygwt-jersey-jaxb-example</artifactId>
-    <version>2.2.7-SNAPSHOT</version>
+    <version>2.2.8-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>RestyGWT Jersey JAXB Example</name>
