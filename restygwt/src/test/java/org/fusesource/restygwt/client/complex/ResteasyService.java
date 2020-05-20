@@ -88,6 +88,12 @@ public interface ResteasyService extends DirectRestService {
     List<Bean> postBeansAsFormParam(@Nonnull @FormParam("beans") List<Bean> beans);
 
     @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Path("postLongsAsFormParam")
+    @Nonnull
+    List<Long> postLongsAsFormParam(@Nonnull @FormParam("longs") List<Long> longs);
+
+    @POST
     @Path("postThrowable")
     @Nonnull
     String postThrowable(@Nonnull Throwable throwable);
