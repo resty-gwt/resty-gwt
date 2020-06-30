@@ -753,7 +753,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                             i(-1).p("} catch (Throwable __e) {").i(1);
                             {
                                 p("throw new " + RESPONSE_FORMAT_EXCEPTION_CLASS +
-                                    "(\"Response was NOT a valid JSON document\", __e);");
+                                        "(\"Response was NOT a valid JSON document\", __e, __method.getRequest()," +
+                                        " __method.getResponse());");
                             }
                             i(-1).p("}");
                         }
@@ -784,7 +785,8 @@ public class RestServiceClassCreator extends BaseSourceCreator {
                                 i(-1).p("} catch (Throwable __e) {").i(1);
                                 {
                                     p("throw new " + RESPONSE_FORMAT_EXCEPTION_CLASS +
-                                        "(\"Response was NOT a valid JSON document\", __e);");
+                                            "(\"Response was NOT a valid JSON document\", __e, __method.getRequest()," +
+                                            " __method.getResponse());");
                                 }
                                 i(-1).p("}");
                             }

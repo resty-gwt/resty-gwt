@@ -259,7 +259,7 @@ public class Method {
                     try {
                         return JSONParser.parseStrict(response.getText());
                     } catch (Throwable e) {
-                        throw new ResponseFormatException("Response was NOT a valid JSON document", e);
+                        throw new ResponseFormatException("Response was NOT a valid JSON document", e, request, response);
                     }
                 }
             });
@@ -282,7 +282,7 @@ public class Method {
                     try {
                         return XMLParser.parse(response.getText());
                     } catch (Throwable e) {
-                        throw new ResponseFormatException("Response was NOT a valid XML document", e);
+                        throw new ResponseFormatException("Response was NOT a valid XML document", e, request, response);
                     }
                 }
             });
@@ -312,12 +312,12 @@ public class Method {
                         } else if (val.isArray() != null) {
                             return (T) val.isArray().getJavaScriptObject();
                         } else {
-                            throw new ResponseFormatException("Response was NOT a JSON object");
+                            throw new ResponseFormatException("Response was NOT a JSON object", request, response);
                         }
                     } catch (JSONException e) {
-                        throw new ResponseFormatException("Response was NOT a valid JSON document", e);
+                        throw new ResponseFormatException("Response was NOT a valid JSON document", e, request, response);
                     } catch (IllegalArgumentException e) {
-                        throw new ResponseFormatException("Response was NOT a valid JSON document", e);
+                        throw new ResponseFormatException("Response was NOT a valid JSON document", e, request, response);
                     }
                 }
             });
