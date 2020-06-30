@@ -20,6 +20,7 @@ package org.fusesource.restygwt.client.basic;
 
 import static org.fusesource.restygwt.client.complex.ResteasyService.Bean;
 import static org.fusesource.restygwt.client.complex.ResteasyService.CustomException;
+import static org.fusesource.restygwt.client.complex.ResteasyService.InvalidBean;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
@@ -41,6 +42,7 @@ import javax.annotation.Nonnull;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.REST;
+import org.fusesource.restygwt.client.ResponseFormatException;
 import org.fusesource.restygwt.client.TextCallback;
 import org.fusesource.restygwt.client.complex.ResteasyService;
 
@@ -536,13 +538,36 @@ public class ResteasyGwtJacksonTestGwt extends GWTTestCase {
             }
         }).call(resteasyService).postBeansAsFormParam(beans);
     }
-    
+
+    public void testfetchInvalidBean() {
+        delayTestFinish(10000);
+        ResteasyService resteasyService = GWT.create(ResteasyService.class);
+
+        REST.withCallback(new MethodCallback<InvalidBean>() {
+            @Override
+            public void onSuccess(Method method, InvalidBean response) {
+                fail();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable e) {
+                assertTrue(e instanceof ResponseFormatException);
+                assertEquals("Response was NOT a valid JSON document", e.getMessage());
+                ResponseFormatException responseFormatException = (ResponseFormatException) e;
+                assertFalse(responseFormatException.getRequest().isPending());
+                assertEquals("[]", responseFormatException.getResponse().getText());
+                assertEquals(200, responseFormatException.getResponse().getStatusCode());
+                finishTest();
+            }
+        }).call(resteasyService).getInvalidBean();
+    }
+
     private void convertToJSONValueAndAssertEqual(String first, String second) {
         JSONValue firstValue = JSONParser.parseStrict(first);
         JSONValue secondValue = JSONParser.parseStrict(second);
         compareJSONValue(firstValue, secondValue);
     }
-    
+
     private void compareJSONValue(JSONValue first, JSONValue second) {
         JSONObject firstObject;
         JSONBoolean firstBoolean;

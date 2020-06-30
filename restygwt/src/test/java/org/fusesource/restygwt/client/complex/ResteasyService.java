@@ -109,6 +109,15 @@ public interface ResteasyService extends DirectRestService {
     @Nonnull
     String postThrowableAsFormParam(@Nonnull @FormParam("throwable") Throwable throwable);
 
+    @GET
+    @Path("getInvalidBean")
+    @Nonnull
+    InvalidBean getInvalidBean();
+
+    class InvalidBean {
+        public String message;
+    }
+
     class Bean {
         public String string;
         public Date date;

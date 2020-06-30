@@ -18,9 +18,16 @@
 
 package org.fusesource.restygwt.server.complex;
 
+import static org.fusesource.restygwt.client.complex.ResteasyService.InvalidBean;
+
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -128,13 +135,32 @@ public class ResteasyServlet extends HttpServletDispatcher {
         public String postThrowableAsFormParam(@Nonnull Throwable throwable) {
             return postThrowable(throwable);
         }
+
+        @Nonnull
+        @Override
+        public InvalidBean getInvalidBean() {
+            return new InvalidBean();
+        }
     }
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(InvalidBean.class, new JsonSerializer<InvalidBean>() {
+            @Override
+            public void serialize(InvalidBean value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+                // Generate a JSON Array instead of JSON Object to simulate an invalid JSON
+                gen.writeStartArray();
+                gen.writeEndArray();
+            }
+        });
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(module);
+
         ResteasyProviderFactory providerFactory = servletContainerDispatcher.getDispatcher().getProviderFactory();
+        providerFactory.register(new JacksonJaxbJsonProvider(objectMapper, JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
         providerFactory.registerProvider(JsonStringProvider.class);
         providerFactory.registerProvider(JacksonJsonParamConverterProvider.class);
 
