@@ -85,6 +85,10 @@ public class Resource {
         return new Method(this, "POST").headers(headers);
     }
 
+    public Method patch() {
+        return new Method(this, "PATCH").headers(headers);
+    }
+
     public Method delete() {
         return new Method(this, "DELETE").headers(headers);
     }

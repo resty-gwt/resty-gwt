@@ -139,6 +139,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
     private static final String METHOD_JSONP = "jsonp";
     private static final String METHOD_PUT = "put";
     private static final String METHOD_POST = "post";
+    private static final String METHOD_PATCH = "patch";
     private static final String METHOD_OPTIONS = "options";
     private static final String METHOD_HEAD = "head";
     private static final String METHOD_GET = "get";
@@ -155,6 +156,7 @@ public class RestServiceClassCreator extends BaseSourceCreator {
         REST_METHODS.add(METHOD_HEAD);
         REST_METHODS.add(METHOD_OPTIONS);
         REST_METHODS.add(METHOD_POST);
+        REST_METHODS.add(METHOD_PATCH);
         REST_METHODS.add(METHOD_PUT);
         REST_METHODS.add(METHOD_JSONP);
     }
