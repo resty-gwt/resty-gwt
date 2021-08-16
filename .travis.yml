@@ -25,3 +25,7 @@ matrix:
     - jdk: oraclejdk8
       script: cd restygwt-examples; mvn verify -Prun-examples -Dmaven.test.skip -pl restygwt-jersey-jaxb-example,restygwt-jersey-jaxson-example,restygwt-cxf-jaxson-example -s settings.xml
 
+
+cache:
+  directories:
+  - $HOME/.m2
