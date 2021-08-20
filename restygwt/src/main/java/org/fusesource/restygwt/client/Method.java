@@ -74,6 +74,15 @@ public class Method {
                 setHeader("X-HTTP-Method-Override", method);
             }
         }
+
+		@Override
+		public void setHeader(String header, String value) {
+			// prevent setting null or empty string
+			if ((value == null) || (0 == value.trim().length()))
+				return;
+			super.setHeader(header, value);
+		}
+        
     }
 
     public RequestBuilder builder;
