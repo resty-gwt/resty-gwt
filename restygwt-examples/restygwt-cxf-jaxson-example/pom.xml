@@ -35,7 +35,7 @@
     <name>RestyGWT CXF JAXB Example</name>
 
     <properties>
-        <cxf-version>2.2.6</cxf-version>
+        <cxf-version>2.6.11</cxf-version>
     </properties>
 
     <dependencies>
