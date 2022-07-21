@@ -33,6 +33,7 @@ GEM
     erubis (2.6.6)
       abstract (>= 1.0.0)
     i18n (0.5.4)
+    json (1.8.6)
     json (1.8.6-java)
     mail (2.2.20)
       activesupport (>= 2.3.6)
@@ -63,14 +64,16 @@ GEM
     rake (12.3.0)
     rdoc (3.12.2)
       json (~> 1.4)
+    sqlite3 (1.4.4)
     thor (0.14.6)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.53)
+    tzinfo (0.3.61)
 
 PLATFORMS
   java
+  ruby
 
 DEPENDENCIES
   rails (~> 3.0.20)
