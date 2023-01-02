@@ -62,7 +62,7 @@
         <dependency>
             <groupId>org.codehaus.jettison</groupId>
             <artifactId>jettison</artifactId>
-            <version>1.0</version>
+            <version>1.5.2</version>
             <scope>provided</scope>
         </dependency>
 
